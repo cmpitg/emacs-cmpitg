@@ -22,6 +22,30 @@
 (defvar *config-dir* (expand-file-name "~/emacs-config")
   "Path to main config directory.")
 
+(defvar *essential-packages*
+  '(dash                                ; "Modern" list processing
+    ht                                  ; The missing hashtable library
+    s                                   ; "Modern" string processing
+    f                                   ; "Modern" file APIs
+    cl                                  ; Common Lisp subset in Emacs Lisp
+    cl-lib                              ; Common Lisp library
+    helm                                ; Smart completion framework
+    thingatpt                           ; Getting thing at current pointg
+    multiple-cursors                    ; Sublime-like multiple cursors
+    expand-region                       ; Expand selection based-on semantic
+                                        ; units
+    eldoc                               ; Echo area function signature
+    popwin                              ; Better popwin window management,
+                                        ; dispose with Esc or C-g
+    color-theme
+    smooth-scrolling
+    smartscan                           ; Jump between occurrences of a symbol
+    smex                                ; Better M-x
+    fiplr                               ; Find file with fuzzy matching
+    )
+  "List of packages that are vital to this config and must be
+installed and loaded.")
+
 ;;
 ;; Essential functions, used to load other things
 ;;
