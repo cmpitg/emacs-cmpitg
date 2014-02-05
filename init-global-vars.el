@@ -43,19 +43,6 @@
   "List of packages that are vital to this config and must be
 installed and loaded.")
 
-(setq openwith-associations
-  '(("\\.pdf\\'" "evince" (file))
-    ("\\.mp3\\'" "smplayer" (file))
-    ("\\.odt\\'" "libreoffice" (file))
-    ("\\.\\(?:mpe?g\\|avi\\|wmv\\|mp4\\|m4v\\)\\'" "smplayer" (file))
-    ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
-
-(setq *custom-functions-path*  "~/emacs-config/config-default/custom-functions.el"
-      *snippet-dir*            "~/emacs-config/snippets"
-      *custom-els-dir*         "~/emacs-config/config-default/"
-      *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
-      *elpa-package-dir*       "~/.emacs.d/elpa/")
-
 (defvar *elpa-package-list* 
   '(jedi                                ; Autocomplete and cool stuff for
                                         ; Python development
@@ -75,10 +62,6 @@ installed and loaded.")
     openwith                            ; Open file with external program, in
                                         ; any file-browsing modes like Sunrise
                                         ; Commander or Dired
-    evil                                ; Vim emulator
-    evil-nerd-commenter                 ; Vim commenter
-    evil-leader                         ; Vim leader command
-    evil-paredit                        ; Paredit-like mode for evil
     yasnippet                           ; Textmate-like snippet and better
     gist                                ; Interface to Github's gist
     json                                ; JSON lib for Emacs
@@ -117,3 +100,19 @@ installed and loaded.")
     picolisp
     ack-and-a-half                      ; Ack - a better grep
     ))
+
+(setq openwith-associations
+  '(("\\.pdf\\'" "evince" (file))
+    ("\\.mp3\\'" "smplayer" (file))
+    ("\\.odt\\'" "libreoffice" (file))
+    ("\\.\\(?:mpe?g\\|avi\\|wmv\\|mp4\\|m4v\\)\\'" "smplayer" (file))
+    ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
+
+(setq *custom-functions-path*  "~/emacs-config/config-default/custom-functions.el"
+      *snippet-dir*            "~/emacs-config/snippets"
+      *custom-els-dir*         "~/emacs-config/config-default/"
+      *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
+      *elpa-package-dir*       "~/.emacs.d/elpa/"
+      *el-get-package-dir*     "~/.emacs.d/el-get/"
+      *license-dir*            "~/emacs-config/license-list"
+      *me*                     "Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))")
