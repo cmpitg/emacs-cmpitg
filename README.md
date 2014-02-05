@@ -26,6 +26,8 @@ My specialized Emacs configuration, started as
 * Although it looks ugly, to prevent name clash, all of my functions have the
   `-` prefix.
 
+* All functions should be loaded properly without package being installed.
+
 ### Recipes ###
 
 ```

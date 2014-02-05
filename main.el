@@ -74,12 +74,6 @@
   "Yourself.")
 
 ;;
-;; Load all the convenient functions
-;;
-
-(load-file *custom-functions-path*)
-
-;;
 ;; Start Emacs server
 ;;
 
