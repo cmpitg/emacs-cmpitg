@@ -8,6 +8,15 @@ My specialized Emacs configuration, started as
 
 ## Ideas ##
 
+* Package configurations are managed with *recipes*.
+
+* Tightly integrated with my current environment: TODO: screenshots.
+  - Window manager: [i3 window manager](http://i3wm.org/). TODO: config.
+  - Web browser: Firefox, with `-no-remote` and multiple profiles.
+  - Panel: XFCE4 panel.
+  - Music player: Audacious.
+  - Main language: [Racket](http://racket-lang.org).
+
 ### Recipes ###
 
 ```
@@ -19,11 +28,11 @@ emacs-cmpitg/
     disabled-packages.el
 ```
 
-* A recipe is a configuration set for one package
+* A recipe is a configuration set for one package.
 
-* Reside in `./recipes/`
+* Reside in `./recipes/`.
 
-* Follow the filenaming convention: `./recipes/package-name.el`
+* Follow the filenaming convention: `./recipes/package-name.el`.
 
 * Are automatically loaded, unless `package-name` is in
   [`./recipes/disabled-packages.el`](./recipes/disabled-packages.el).
