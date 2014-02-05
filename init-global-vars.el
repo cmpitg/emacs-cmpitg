@@ -55,3 +55,65 @@ installed and loaded.")
       *custom-els-dir*         "~/emacs-config/config-default/"
       *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
       *elpa-package-dir*       "~/.emacs.d/elpa/")
+
+(defvar *elpa-package-list* 
+  '(jedi                                ; Autocomplete and cool stuff for
+                                        ; Python development
+    ruby-mode
+    ruby-dev                            ; Ruby and Pry
+    yaml-mode
+    go-mode
+    haskell-mode
+    markdown-mode
+    markdown-mode+
+    sr-speedbar                         ; Speedbar in the same frame
+    paredit                             ; Parentheses manipulation in Lisp
+                                        ; modes
+    smartparens                         ; Auto-pairing parentheses
+    auto-complete
+    slime                               ; Best Common Lisp development tool
+    openwith                            ; Open file with external program, in
+                                        ; any file-browsing modes like Sunrise
+                                        ; Commander or Dired
+    evil                                ; Vim emulator
+    evil-nerd-commenter                 ; Vim commenter
+    evil-leader                         ; Vim leader command
+    evil-paredit                        ; Paredit-like mode for evil
+    yasnippet                           ; Textmate-like snippet and better
+    gist                                ; Interface to Github's gist
+    json                                ; JSON lib for Emacs
+    js2-mode                            ; JavaScript
+    pabbrev                             ; Better abbrev
+    dired-details+                      ; Better Dired information control
+    magit                               ; Best Git interface for Emacs
+    monky                               ; Magit-like mode for Mercurial
+    zlc                                 ; Zsh completion
+    hexrgb                              ; Color manipulation
+    flx-ido                             ; Better ido
+    projectile                          ; Better project management
+    helm-projectile                     ; Projectile-Helm integration
+    grizzl                              ; Grizzl fuzzy matching method
+
+    ;; ack-and-a-half ; -> Failed to require when installed with Elpa
+    wgrep-ack                           ; Edittable Ack
+    )
+  "List of packages using in this Emacs configuration.")
+
+(defvar *el-get-package-list*
+  '(later-do                            ; Async eval
+    powerline                           ; @johnathanchu version, beautiful
+                                        ; modeline
+                                        ; https://github.com/jonathanchu/emacs-powerline
+    multi-scratch                       ; Multiple scratch buffers
+    moz-repl                            ; MozRepl
+    whitespace                          ; Display trailing whitespace
+    )
+  "List of packages not available in ELPA but available to install with el-get.")
+
+(defvar *local-package-list*
+  '(acme-mouse                          ; Acme-like mouse chords binding
+    ibus                                ; iBus interface
+    rsense                              ; Comprehensive Ruby development
+    picolisp
+    ack-and-a-half                      ; Ack - a better grep
+    ))

@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2012-2013 Duong H. Nguyen <cmpitgATgmaildotcom>
+;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -58,6 +58,14 @@
 
 (add-to-list 'el-get-recipe-path "~/emacs-config/el-get-user/recipes")
 (el-get 'sync)
+
+;;
+;; Add all el-get packages to load-path
+;;
+
+(dolist (path (directory-files "~/.emacs.d/el-get/"))
+  (when (file-directory-p path)
+    (add-to-list 'load-path path)))
 
 ;;
 ;; Add all local packages to load-path
