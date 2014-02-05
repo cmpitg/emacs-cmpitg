@@ -43,7 +43,7 @@
   "List of packages that are vital to this config and must be
 installed and loaded.")
 
-(defvar *elpa-package-list* 
+(defvar *elpa-packages*
   '(jedi                                ; Autocomplete and cool stuff for
                                         ; Python development
     ruby-mode
@@ -82,7 +82,7 @@ installed and loaded.")
     )
   "List of packages using in this Emacs configuration.")
 
-(defvar *el-get-package-list*
+(defvar *el-get-packages*
   '(later-do                            ; Async eval
     powerline                           ; @johnathanchu version, beautiful
                                         ; modeline
@@ -93,7 +93,7 @@ installed and loaded.")
     )
   "List of packages not available in ELPA but available to install with el-get.")
 
-(defvar *local-package-list*
+(defvar *local-packages*
   '(ibus                                ; iBus interface
     picolisp
     ack-and-a-half                      ; Ack - a better grep
