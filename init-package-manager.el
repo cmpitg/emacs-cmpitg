@@ -75,3 +75,9 @@
   (dolist (dirname (directory-files local-package-dir))
     (add-to-list 'load-path
                  (concat local-package-dir dirname))))
+;;
+;; Activate use-package
+;;
+
+(el-get-install 'use-package)
+(require 'use-package)
