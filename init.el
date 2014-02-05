@@ -52,6 +52,8 @@ does nothing more than concat-ing `*config-dir' with `feature'."
 (font-lock-add-keywords 'emacs-lisp-mode
   '(("use-package" . font-lock-keyword-face)))
 
+(start-emacs-server)
+
 (-load-files-if-exists- (-get-local-config-dir- "init-package-manager.el")
                         (-get-local-config-dir- "init-essential-packages.el"))
 
