@@ -79,5 +79,6 @@
 ;; Activate use-package
 ;;
 
-(el-get-install 'use-package)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 (require 'use-package)
