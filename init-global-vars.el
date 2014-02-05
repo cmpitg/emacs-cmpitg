@@ -106,11 +106,14 @@ installed and loaded.")
     ("\\.\\(?:mpe?g\\|avi\\|wmv\\|mp4\\|m4v\\)\\'" "smplayer" (file))
     ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
 
-(setq *custom-functions-path*  "~/emacs-config/config-default/custom-functions.el"
-      *snippet-dir*            "~/emacs-config/snippets"
-      *custom-els-dir*         "~/emacs-config/config-default/"
+(setq *snippet-dir*            (concat *config-dir* "/snippets")
+      *custom-els-dir*         (concat *config-dir* "/config-default")
+      *snippet-dir*            (concat *config-dir* "/snippets")
+      *license-dir*            (concat *config-dir* "/license-list")
+
+      *ctags-path*             "/usr/bin/ctags"
       *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
       *elpa-package-dir*       "~/.emacs.d/elpa/"
       *el-get-package-dir*     "~/.emacs.d/el-get/"
-      *license-dir*            "~/emacs-config/license-list"
+
       *me*                     "Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))")
