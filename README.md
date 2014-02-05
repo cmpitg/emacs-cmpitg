@@ -17,6 +17,12 @@ My specialized Emacs configuration, started as
   - Music player: Audacious.
   - Main language: [Racket](http://racket-lang.org).
 
+* Prefer convention over configuration.
+
+* Changes should be committed manually (for performance reason).
+
+* Emacs is running in server mode.
+
 ### Recipes ###
 
 ```
