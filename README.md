@@ -1,27 +1,40 @@
-# cmpitg's Emacs config #
+# cmpitg's personal Emacs config #
 
 ## Introduction ##
 
-This is my (cmpitg's) personal Emacs 24 configuration.  This configuration is
-packaged so it could be automagically installed in any new system which runs
-Emacs 24+.  The best and most recommended way to use is via the installation
-method mentioned below.  You could use this configuration in parallel with any
-Emacs configuration (such as
-[Emacs Prelude](https://github.com/bbatsov/prelude)) as long as other
-configurations don't mess up with the `~/emacs-config` directory.
+My specialized Emacs configuration, started as
+[a clone of my config](https://github.com/cmpitg/emacs-config) as of February
+2014.
+
+## Ideas ##
+
+### Recipes ###
+
+```
+emacs-cmpitg/
+  recipes/
+    package1.el
+    package2.el
+    ...
+    disabled-packages.el
+```
+
+* A recipe is a configuration set for one package
+
+* Reside in `./recipes/`
+
+* Follow the filenaming convention: `./recipes/package-name.el`
+
+* Are automatically loaded, unless `package-name` is in
+  [`./recipes/disabled-packages.el`](./recipes/disabled-packages.el).
 
 ## Screenshot ##
 
-![My Emacs screenshot](http://i.imgur.com/FNnCESN.png "My Emacs setup")
-
 ## Requirements ##
 
-* A \*nix system, I *don't and probably never will* support
-  [Window$](https://en.wikipedia.org/wiki/Microsoft_Windows)
+* A \*nix system
 
 * Emacs 24+
-
-* [Xiki](http://xiki.org) (optional)
 
 * For the GUI file browser:
 
@@ -29,7 +42,7 @@ configurations don't mess up with the `~/emacs-config` directory.
     be achieved by using the `init.el` config or simply evaluating
     `(server-start)` in your Emacs.
 
-  - PySide for Python 3 (`python3-pyside` package in Debian-based systems).
+  - Python 3 PyQt (coming soon)
 
 * For file opening: zenity (GTK+ GUI dialog, used for file choosing)
 
@@ -38,154 +51,7 @@ configurations don't mess up with the `~/emacs-config` directory.
 * For Python development:
   - Packages `jedi epc` for auto-completion.
 
-* For Ruby development:
-  - [RSense](http://cx4a.org/software/rsense/) for Ruby completion
-  - Gems: `pry pry-doc yard` for Ruby-dev and [Pry](http://pryrepl.org/)
-    integration.
-
-### Installing Requirements in Debian ###
-
-Im my system, I install Ruby using [RVM](https://rvm.io/), use Python 3.2, and
-switch from `su` to `sudo`.  So the installation process is roughly:
-
-```sh
-# Install Emacs 24+, I built it manually #
-sudo aptitude install python3-pyside python-xlib zenity
-sudo pip-3.2 install python-xlib jedi epc
-gem install -V pry pry-doc yard
-# Install Xiki, refer to https://github.com/trogdoro/xiki #
-```
-
-## Installation ##
-
-* First, clone the repository to your `$HOME`:
-
-  ```sh
-  cd ~
-  git clone git://github.com/cmpitg/emacs-config.git
-  ```
-
-* Make sure you have a local `bin` directory for executable files.  You can
-  skip this step if you've already had:
-
-  ```sh
-  mkdir -p ~/bin/
-  echo "export PATH=$HOME/bin:$PATH" >> ~/.bashrc
-  # For non-Bash users, add the same thing to your rc, e.g. with Zsh:
-  # echo "export PATH=$HOME/bin:$PATH" >> ~/.zshrc
-  ```
-* Now, symlink all the executables to your `$HOME/bin` and the desktop file to
-  your `~/.local/share/applications/`:
-
-  ```sh
-  ln -s ~/emacs-config/bin/filebrowser-emacs.py ~/bin/
-  ln -s ~/emacs-config/bin/emacs-cmpitg ~/bin/
-  ln -s ~/emacs-config/bin/emacs-xiki ~/bin/
-  ln -s ~/emacs-config/rsense/bin/rsense ~/bin/
-  mkdir -p ~/.local/share/applications/
-  ln -s ~/emacs-config/emacs-cmpitg.desktop ~/.local/share/applications/
-  ```
-
-* Create `~/.rsense` for RSense:
-
-  ```sh
-  ~/emacs-config/bin/rsense-init
-  ```
-
-* Disable Pry's pager (for Emacs-Pry integration):
-
-  ```sh
-  echo "Pry.config.pager = false" >> ~/.pryrc
-  ```
-
-* Edit Xiki path in `~/emacs-config/emacs-xiki.el`
-
-* Make your own customization file if necessary, edit and have fun:
-
-  ```sh
-  # Main custom file, loaded after everything has done
-  touch ~/emacs-custom.el
-
-  # Loaded foremost
-  touch ~/emacs-custom-foremost.el
-  ```
-
-## Update ##
-
-```sh
-cd ~/emacs-config/
-git pull
-```
-
-Then restart Emacs.  Note that if you have made some changes to files other
-than `emacs-custom.el`, `git rebase` is better than `git pull`.  Consult Stack
-Overflow for
-[the reason why](http://stackoverflow.com/questions/3357122/git-pull-vs-git-fetch-git-rebase).
-
-## Uninstallation ##
-
-Just remove the `~/emacs-config` directory, your `~/emacs-custom.el` and
-`~/emacs-custom-foremost.el` if necessary:
-
-```sh
-rm -rf ~/emacs-config
-rm -f ~/.local/share/applications/emacs-cmpitg.desktop
-rm -f ~/emacs-custom.el
-rm -f ~/emacs-custom-foremost.el
-```
-
-And the executable files:
-
-```sh
-rm ~/bin/{filebrowser-emacs.py,emacs-xiki,emacs-cmpitg}
-```
-
-## Running ##
-
-* Run the `emacs-cmpitg` (or `~/bin/emacs-cmpitg`) command or run `GNU Emacs
-  (cmpitg)` from your menu.
-
-* If you're using Xiki, install Xiki and run `emacs-xiki`.
-
-* By default, the variable `$RSENSE_HOME` is set to
-  `$HOME/emacs-config/rsense`.  To change this, search for `(setenv
-  "$RSENSE_HOME"` in `the `.el` file(s) and change it as you need.
-
-* Emacs uses [Yasnippet](https://github.com/capitaomorte/yasnippet) for
-  [Textmate-like](https://macromates.com) snippet feature.  Put your custom
-  snippets in your `*snippet-dir*` directory.  By default, `*snippet-dir*` is
-  `~/emacs-config/snippets/` and can be changed in `.el` files.
-
-* A default Emacs server is automagically started when your Emacs starts.  Use
-
-  ```sh
-  emacsclient -e "Some Emacs Lisp code"
-  ```
-
-  to evaluate a piece of Emacs Lisp code using the current server.  Eval
-  `($start-server)` to restart the Emacs server.  You might shut down the
-  Emacs server, but the file browser (see below) would fail to work though.
-
-### Customization ###
-
-* `~/emacs-custom.el` is your main customization file.  This file will be
-  loaded after cmpitg configuration has been loaded.
-
-* `~/emacs-custom-foremost.el` would be loaded **before everything** is
-  loaded.
-
-  This file is usually used to disable packages which are loaded by default
-  during startup (by modifying `*disabled-package-list*`) or install and load
-  packages from ELPA and [el-get](https://github.com/dimitri/el-get).
-
-  See `emacs-custom-foremost-sample.el` for more detail and `package-list.el`
-  for full list of packages that are loaded by default.
-
-* Other things related to Xiki enrivonment should be customized in
-  `~/emacs-config/init-xiki.el`.
-
-**Notes**: If you would like to know how it works, `init.el` (or
-`init-xiki.el` for Xiki version) is/are first place(s) to get started.
+TODO
 
 ## Detailed Description ##
 
