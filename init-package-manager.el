@@ -71,7 +71,7 @@
 ;; Add all local packages to load-path
 ;;
 
-(let ((local-package-dir (-get-local-config-dir- "emacs-local-packages/")))
+(let ((local-package-dir (-get-local-config-dir- "local-packages/")))
   (dolist (dirname (directory-files local-package-dir))
     (add-to-list 'load-path
                  (concat local-package-dir dirname))))
