@@ -47,45 +47,13 @@ does nothing more than concat-ing `*config-dir' with `feature'."
 
 (-load-all-custom-functions)
 
-(-load-files-if-exists- (-get-local-config-dir- "init-package-manager.el"))
+;; TODO: Document me
+(put 'use-package 'lisp-indent-function 1)
+(font-lock-add-keywords 'emacs-lisp-mode
+  '(("use-package" . font-lock-keyword-face)))
 
-;; ;;
-;; ;; Load and config must-have packages
-;; ;;
-
-;; ;;
-;; ;; Dash
-;; ;;
-;; ;; https://github.com/magnars/dash.el
-
-;; (eval-after-load 'dash
-;;   '(dash-enable-font-lock))
-
-;; ;;
-;; ;; Helm for completion framework
-;; ;;
-
-;; (require 'helm-config)
-
-;; (eval-after-load "helm-regexp"
-;;   '(helm-attrset 'follow 1 helm-source-moccur))
-
-;; ;; Don't auto change-dir
-;; (setq-default helm-ff-auto-update-initial-value nil)
-
-;; ;;
-;; ;; Smex for enhancing M-x
-;; ;;
-
-;; (smex-initialize)
-
-;; ;;
-;; ;; Smooth scrolling
-;; ;;
-;; ;; http://www.emacswiki.org/emacs/SmoothScrolling
-
-;; (require 'smooth-scrolling)
-
+(-load-files-if-exists- (-get-local-config-dir- "init-package-manager.el")
+                        (-get-local-config-dir- "init-essential-packages.el"))
 
 ;; (-load-files-if-exists- "~/emacs-config/package-list.el"
 ;;                         "~/emacs-custom-foremost.el" ; User-defined
