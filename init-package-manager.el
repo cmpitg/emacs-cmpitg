@@ -56,14 +56,14 @@
        (goto-char (point-max))
        (eval-print-last-sexp))))))
 
-(add-to-list 'el-get-recipe-path "~/emacs-config/el-get-user/recipes")
+(add-to-list 'el-get-recipe-path (-get-local-config-dir- "el-get-user/recipes"))
 (el-get 'sync)
 
 ;;
 ;; Add all el-get packages to load-path
 ;;
 
-(dolist (path (directory-files "~/.emacs.d/el-get/"))
+(dolist (path (directory-files *el-get-package-dir*))
   (when (file-directory-p path)
     (add-to-list 'load-path path)))
 
