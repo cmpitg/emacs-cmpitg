@@ -106,8 +106,7 @@ installed and loaded.")
     ("\\.\\(?:mpe?g\\|avi\\|wmv\\|mp4\\|m4v\\)\\'" "smplayer" (file))
     ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
 
-(setq *snippet-dir*            (concat *config-dir* "/snippets")
-      *custom-els-dir*         (concat *config-dir* "/config-default")
+(setq *custom-els-dir*         (concat *config-dir* "/config-default")
       *snippet-dir*            (concat *config-dir* "/snippets")
       *license-dir*            (concat *config-dir* "/license-list")
 
