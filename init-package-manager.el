@@ -14,36 +14,6 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
-;;; Description:
-;;
-;; This file initializes the package manager and loads all the essential
-;; packages that are required for this (cmpitg) configuration to function
-;; properly
-;;
-
-(defvar *must-have-package-list*
-  '(dash                                ; "Modern" list processing
-    ht                                  ; The missing hashtable library
-    s                                   ; "Modern" string processing
-    f                                   ; "Modern" file APIs
-    cl                                  ; Common Lisp subset in Emacs Lisp
-    cl-lib                              ; Common Lisp library
-    helm                                ; Smart completion framework
-    thingatpt                           ; Getting thing at current pointg
-    multiple-cursors                    ; Sublime-like multiple cursors
-    expand-region                       ; Expand selection based-on semantic
-                                        ; units
-    eldoc                               ; Echo area function signature
-    popwin                              ; Better popwin window management,
-                                        ; dispose with Esc or C-g
-    color-theme
-    smooth-scrolling
-    smartscan                           ; Jump between occurrences of a symbol
-    smex                                ; Better M-x
-    fiplr                               ; Find file with fuzzy matching
-    )
-  "List of packages that are vital to this config and must be
-installed and loaded.")
 
 ;;
 ;; ELPA
@@ -90,60 +60,10 @@ installed and loaded.")
 (el-get 'sync)
 
 ;;
-;; Add all local packages list in `$HOME/emacs-config/emacs-local-packages` to
-;; `loadpath`
+;; Add all local packages to load-path
 ;;
 
-;;; TODO: use variable for "~/emacs-config/emacs-local-packages/"
-(let ((local-package-dir "~/emacs-config/emacs-local-packages/"))
+(let ((local-package-dir (-get-local-config-dir- "emacs-local-packages/")))
   (dolist (dirname (directory-files local-package-dir))
     (add-to-list 'load-path
                  (concat local-package-dir dirname))))
-
-(add-to-list 'load-path "~/emacs-config/rsense/etc/")
-
-;;
-;; Install and load all must-have packages with ELPA
-;;
-
-(dolist (package *must-have-package-list*)
-  (when (not (package-installed-p package))
-    (package-install package))
-  (require package))
-
-;;
-;; Load and config must-have packages
-;;
-
-;;
-;; Dash
-;;
-;; https://github.com/magnars/dash.el
-
-(eval-after-load 'dash
-  '(dash-enable-font-lock))
-
-;;
-;; Helm for completion framework
-;;
-
-(require 'helm-config)
-
-(eval-after-load "helm-regexp"
-  '(helm-attrset 'follow 1 helm-source-moccur))
-
-;; Don't auto change-dir
-(setq-default helm-ff-auto-update-initial-value nil)
-
-;;
-;; Smex for enhancing M-x
-;;
-
-(smex-initialize)
-
-;;
-;; Smooth scrolling
-;;
-;; http://www.emacswiki.org/emacs/SmoothScrolling
-
-(require 'smooth-scrolling)
