@@ -15,8 +15,16 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;;
+;; Global variables
+;;
+
 (defvar *config-dir* (expand-file-name "~/emacs-config")
   "Path to main config directory.")
+
+;;
+;; Essential functions, used to load other things
+;;
 
 (defun -load-files-if-exists- (&rest paths)
   "Load files when they exists."
@@ -29,10 +37,16 @@
 does nothing more than concat-ing `*config-dir' with `feature'."
   (format "%s/%s" *config-dir* feature))
 
+;;
+;; Main code
+;;
+
 (add-to-list 'load-path *config-dir*)
 (add-to-list 'load-path (-get-local-config-dir- "functions"))
 
 (require 'cmpitg-functions)
+
+(-load-all-custom-functions)
 
 ;; (-load-files-if-exists- "~/emacs-config/package-list.el"
 ;;                         "~/emacs-custom-foremost.el" ; User-defined
