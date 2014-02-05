@@ -94,9 +94,7 @@ installed and loaded.")
   "List of packages not available in ELPA but available to install with el-get.")
 
 (defvar *local-package-list*
-  '(acme-mouse                          ; Acme-like mouse chords binding
-    ibus                                ; iBus interface
-    rsense                              ; Comprehensive Ruby development
+  '(ibus                                ; iBus interface
     picolisp
     ack-and-a-half                      ; Ack - a better grep
     ))
