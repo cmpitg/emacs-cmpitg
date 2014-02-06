@@ -265,10 +265,29 @@ selection."
     (save-excursion
       (let* ((new-symbol (read-string "New symbol: " (~current-selection)))
              (old-symbol (read-string "Old symbol: " (~current-selection))))
-        (call-interactively 'end-of-buffer)
-        (insert-string (format "(defalias '%s '%s)\n"
-                               new-symbol old-symbol))))))
+        (~insert-text-at-the-end (format "(defalias '%s '%s)\n"
+                                         new-symbol old-symbol))))))
 
+(defun ~insert-text-at-the-end (&optional text)
+  "Insert current selected text at the end of current buffer."
+  (interactive)
+  (let ((text (cond ((stringp text)
+                     text)
+                    ((~is-selecting?)
+                     (~current-selection))
+                    (t
+                     (read-string "Text: ")))))
+    (call-interactively 'end-of-buffer)
+    (insert-string text)))
+
+(defun ~paste-text-at-the-end ()
+  "Insert current selected text at the end of current buffer."
+  (interactive)
+  (call-interactively 'kill-ring-save)
+  (end-of-buffer)
+  (call-interactively 'yank))
+
+(defalias 'insert-text-at-the-end '~insert-text-at-the-end)
 (defalias 'emacs-lisp-make-alias '~emacs-lisp-make-alias)
 (defalias 'electrify-return-if-match '~electrify-return-if-match)
 (defalias 'goto-selection-end '~goto-selection-end)
@@ -296,3 +315,4 @@ selection."
 (defalias 'markdown-embolden '~markdown-embolden)
 (defalias 'markdown-rawify '~markdown-rawify)
 (defalias 'surround '~surround)
+(defalias 'paste-text-at-the-end '~paste-text-at-the-end)
