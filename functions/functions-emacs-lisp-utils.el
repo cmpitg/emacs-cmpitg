@@ -15,12 +15,12 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defun -eval-string (str)
+(defun ~eval-string (str)
   "Eval a string."
   (interactive)
   (eval (read str)))
 
-(defun -insert-into-emacs-lisp-docstring (string)
+(defun ~insert-into-emacs-lisp-docstring (string)
   "Interactive command.  Prompt and insert a string and escape it
 as Emacs Lisp docstring format.
 
@@ -35,7 +35,7 @@ E.g.
                            ("\"" . "\\\\\""))
                          string)))
 
-(defun -add-bracket-and-eval (&optional string)
+(defun ~add-bracket-and-eval (&optional string)
   "Add outer-most surrounding bracket if necessary and eval the
 string.  This function may be called interactively.  If it's in
 interactive mode and there's current a selection, the selection
@@ -63,8 +63,13 @@ E.g.
                              (s-ends-with?   ")" preprocessed-sexp)))
                  (format "(%s)" preprocessed-sexp)
                  preprocessed-sexp)))
-    (-eval-string sexp)))
+    (~eval-string sexp)))
 
-(defun -add-load-path (path)
+(defun ~add-load-path (path)
   "Add path to load-path."
   (add-to-list 'load-path path))
+
+(defalias 'eval-string '~eval-string)
+(defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
+(defalias 'add-bracket-and-eval '~add-bracket-and-eval)
+(defalias 'add-load-path '~add-load-path)
