@@ -19,10 +19,15 @@
 ;; Install all packages
 ;;
 
-(apply #'elpa-install-packages *elpa-packages*)
+(apply #'elpa-install-packages   *elpa-packages*)
 (apply #'el-get-install-packages *el-get-packages*)
 
 ;;; Load all recipes from `./recipes/` except for disabled recipes from
 ;;; `./recipes/disabled-packages.el`
 
-;;; TODO
+(load "./recipes/disabled-packages.el")
+
+(dolist (file-path (sort (directory-files "./recipes/") #'string<))
+  (when (and (string-match "\\.el$" file-path)
+             (not (memq (file-name-base file-path) *disabled-packages*)))
+    (load (concat "./recipes/" file-path))))
