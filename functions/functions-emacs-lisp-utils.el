@@ -69,7 +69,20 @@ E.g.
   "Add path to load-path."
   (add-to-list 'load-path path))
 
+(defun ~save-macro (name)
+  "Take a name as argument and save the last defined macro."
+  (interactive "SName of the macro: ")
+  (kmacro-name-last-macro name)                ; Use this name for the macro
+  (find-file *saved-macro-path*)               ; Load the macro file
+  (goto-char (point-max))
+  (newline)
+  (insert-kbd-macro name)                      ; Copy the macro
+  (newline)
+  (save-buffer)
+  (kill-buffer))
+
 (defalias 'eval-string '~eval-string)
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
+(defalias 'save-macro '~save-macro)
