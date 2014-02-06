@@ -81,8 +81,55 @@ E.g.
   (save-buffer)
   (kill-buffer))
 
+(defun ~is-var-defined? (symbol)
+  "Check if the variable corresponding to the symbol is defined.
+
+E.g.
+
+\(~is-var-defined? 'a-random-symbol-unlikely-to-be-defined\)  ; => nil
+\(~is-var-defined? 'c-mode-map\)                              ; => t"
+  (boundp symbol))
+
+(defun ~is-function-defined? (symbol)
+  "Check if the function corresponding to the symbol is defined.
+
+E.g.
+\(~is-function-defined? 'a-random-symbol-unlikely-to-be-defined\)  ; => nil
+\(~is-function-defined? '$is-function-defined?\)                   ; => t"
+  (fboundp symbol))
+
+(defmacro ~nonnil-or-get-selection-or (var &rest body)
+  "Short form for
+
+\(cond \(var
+       var\)
+      \(\(~is-selecting?\)
+       \(~get-selection\)\)
+      \(t
+       body\)\)
+
+Useful when building interactive functions.
+
+E.g.
+
+\(defun _say-something \(&optional var\)
+  \(interactive\)
+  \(let \(\(var \(~nonnil-or-get-selection-or var
+                                          \(read-string \"Var? \"\)\)\)\)
+    \(message-box \"%s\" var\)\)\)
+"
+  `(cond (,var
+          ,var)
+         ((~is-selecting?)
+          (~get-selection))
+         (t
+          ,@body)))
+
 (defalias 'eval-string '~eval-string)
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
 (defalias 'save-macro '~save-macro)
+(defalias 'is-var-defined? '~is-var-defined?)
+(defalias 'is-function-defined? '~is-function-defined?)
+(defalias 'nonnil-or-get-selection-or '~nonnil-or-get-selection-or)
