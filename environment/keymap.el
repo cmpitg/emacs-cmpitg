@@ -24,3 +24,11 @@
 ;;
 
 (bind-key "RET" 'electrify-return-if-match)
+
+;;
+;; (Emacs) Lisp mode
+;;
+
+(eval-after-load 'emacs-lisp-mode
+  '(progn
+     (bind-key "C-c l m a" '~emacs-lisp-make-alias emacs-lisp-mode-map)))
