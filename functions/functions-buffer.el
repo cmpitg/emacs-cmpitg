@@ -106,6 +106,31 @@ E.g.
   (interactive "MString: ")
   (search-forward str nil t))
 
+(defun ~goto-snippets-dir ()
+  "Go to personal snippets directory."
+  (interactive)
+  (find-file *snippet-dir*))
+
+(defun ~goto-next-DEBUG ()
+  "Go to next DEBUG."
+  (interactive)
+  (search-forward "DEBUG"))
+
+(defun ~goto-prev-DEBUG ()
+  "Go to prev DEBUG."
+  (interactive)
+  (search-backward "DEBUG"))
+
+(defun ~goto-next-FIXME ()
+  "Go to next FIXME."
+  (interactive)
+  (search-forward "FIXME"))
+
+(defun ~goto-prev-FIXME ()
+  "Go to prev FIXME."
+  (interactive)
+  (search-backward "FIXME"))
+
 (defalias 'next-file-buffer '~next-file-buffer)
 (defalias 'move-to-compilation-buffer '~move-to-compilation-buffer)
 (defalias 'current-buffer-name '~current-buffer-name)
@@ -116,3 +141,8 @@ E.g.
 (defalias 'geiser-send-string '~geiser-send-string)
 (defalias 'popup-message '~popup-message)
 (defalias 'goto-str '~goto-str)
+(defalias 'goto-snippets-dir '~goto-snippets-dir)
+(defalias 'goto-next-DEBUG '~goto-next-DEBUG)
+(defalias 'goto-prev-DEBUG '~goto-prev-DEBUG)
+(defalias 'goto-next-FIXME '~goto-next-FIXME)
+(defalias 'goto-prev-FIXME '~goto-prev-FIXME)
