@@ -80,6 +80,10 @@ text."
     (setf text (substring text 0 (- (length text) 1))))
   text)
 
+(defun ->string (exp)
+  "Convert an expression to string with `format'."
+  (format "%s" exp))
+
 (defalias 'string-empty? '~string-empty?)
 (defalias 'string-start-with? '~string-start-with?)
 (defalias 'string-end-with? '~string-end-with?)
