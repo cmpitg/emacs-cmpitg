@@ -95,31 +95,31 @@
   :init (progn
           (popwin-mode 1)
 
-          (push '("\*anything*" :regexp t :height 20)        popwin:special-display-config)
+          (push '("\*anything*" :regexp t :height 20) popwin:special-display-config)
 
           (setq anything-samewindow nil)
 
-          (push '("*anything*" :height 20)                   popwin:special-display-config)
+          (push '("*anything*" :height 20)            popwin:special-display-config)
 
-          (push '(dired-mode :position top)                  popwin:special-display-config)
+          (push '(dired-mode :position top)           popwin:special-display-config)
 
-          (push "*Backtrace*"                                popwin:special-display-config)
-          (push "*Shell Command Output*"                     popwin:special-display-config)
-          (push '(compilation-mode :noselect t)              popwin:special-display-config)
+          (push "*Backtrace*"                         popwin:special-display-config)
+          (push "*Shell Command Output*"              popwin:special-display-config)
+          (push '(compilation-mode :noselect t)       popwin:special-display-config)
 
           ;; slime
-          (push "*slime-apropos*"                            popwin:special-display-config)
-          (push "*slime-macroexpansion*"                     popwin:special-display-config)
-          (push "*slime-description*"                        popwin:special-display-config)
-          (push '("*slime-compilation*" :noselect t)         popwin:special-display-config)
-          (push "*slime-xref*"                               popwin:special-display-config)
-          (push '(sldb-mode :stick t)                        popwin:special-display-config)
-          (push 'slime-repl-mode                             popwin:special-display-config)
-          (push 'slime-connection-list-mode                  popwin:special-display-config)
+          (push "*slime-apropos*"                     popwin:special-display-config)
+          (push "*slime-macroexpansion*"              popwin:special-display-config)
+          (push "*slime-description*"                 popwin:special-display-config)
+          (push '("*slime-compilation*" :noselect t)  popwin:special-display-config)
+          (push "*slime-xref*"                        popwin:special-display-config)
+          (push '(sldb-mode :stick t)                 popwin:special-display-config)
+          (push 'slime-repl-mode                      popwin:special-display-config)
+          (push 'slime-connection-list-mode           popwin:special-display-config)
 
           ;; vc
-          (push "*vc-diff*"                                  popwin:special-display-config)
-          (push "*vc-change-log*"                            popwin:special-display-config)
+          (push "*vc-diff*"                           popwin:special-display-config)
+          (push "*vc-change-log*"                     popwin:special-display-config)
 
           ;; undo-tree
           (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)))
