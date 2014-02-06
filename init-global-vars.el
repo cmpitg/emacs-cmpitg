@@ -109,6 +109,7 @@ installed and loaded.")
 (setq *custom-els-dir*         (concat *config-dir* "/config-default")
       *snippet-dir*            (concat *config-dir* "/snippets")
       *license-dir*            (concat *config-dir* "/license-list")
+      *saved-macro-path*       (concat *config-dir* "/functions/saved-macros.el")
 
       *ctags-path*             "/usr/bin/ctags"
       *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
