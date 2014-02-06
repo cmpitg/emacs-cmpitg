@@ -15,7 +15,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defun next-file-buffer ()
+(defun ~next-file-buffer ()
   "Move to the next non-special buffer, unless it's *scratch*."
   (interactive)
   (let* ((name "") (pos nil) (stop nil))
@@ -58,13 +58,6 @@
   (interactive)
   (switch-to-buffer (other-buffer)))
 
-(defun ~insert-text-at-the-end ()
-  "Insert current selected text at the end of current buffer."
-  (interactive)
-  (call-interactively 'kill-ring-save)
-  (end-of-buffer)
-  (call-interactively 'yank))
-
 (defun ~last-sexp ()
   "Return the sexp right before the current cursor."
   (interactive)
@@ -91,3 +84,12 @@
 (defun ~current-line-comment-syntax ()
   "Return the current line-comment syntax for current buffer mode."
   comment-start)
+
+(defalias 'next-file-buffer '~next-file-buffer)
+(defalias 'move-to-compilation-buffer '~move-to-compilation-buffer)
+(defalias 'current-buffer-name '~current-buffer-name)
+(defalias 'kill-current-buffer '~kill-current-buffer)
+(defalias 'switch-to-last-buffer '~switch-to-last-buffer)
+(defalias 'last-sexp '~last-sexp)
+(defalias 'geiser-repl-process '~geiser-repl-process)
+(defalias 'geiser-send-string '~geiser-send-string)
