@@ -24,7 +24,7 @@ My specialized Emacs configuration, started as
 * Emacs is running in server mode.
 
 * Although it looks ugly, to prevent name clash, all of my functions have the
-  `-` prefix.
+  `~` prefix.
 
 * All functions should be loaded properly without package being installed.
 
