@@ -33,10 +33,19 @@
 ;; Now, load them
 ;;
 
+(use-package cl)                        ; Common Lisp subset
+(use-package cl-lib)                    ; Some Common Lisp libraries
+(use-package s)                         ; Better string APIs
+(use-package f)                         ; Better APIs to work with file and
+                                        ; directories
+(use-package ht)                        ; Better hashtable APIs
+
+
 ;; Dash
 
 ;; Docs:
 ;;   https://github.com/magnars/dash.el
+
 (use-package dash
   :init (progn
           (dash-enable-font-lock)))
