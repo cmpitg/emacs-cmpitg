@@ -18,3 +18,5 @@
 (defun ~setup-moz-javascript ()
   "Setting JavaScript mode with MozRepl."
   (moz-minor-mode 1))
+
+(defalias 'setup-moz-javascript '~setup-moz-javascript)
