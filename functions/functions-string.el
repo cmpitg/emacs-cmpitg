@@ -49,9 +49,19 @@ string."
   "Check if a string contains a substring."
   (not (null (string-match substring str))))
 
+(defun ~symbol->string (symbol)
+  "Convert a symbol to a string."
+  (symbol-name symbol))
+
+(defun ~string->symbol (string)
+  "Convert a string into an uninterned symbol."
+  (make-symbol string))
+
 (defalias 'string-empty? '~string-empty?)
 (defalias 'string-start-with? '~string-start-with?)
 (defalias 'string-end-with? '~string-end-with?)
 (defalias 'string-empty? '~string-empty?)
 (defalias 'string-but-last '~string-but-last)
 (defalias 'string-contains? '~string-contains?)
+(defalias 'symbol->string '~symbol->string)
+(defalias 'string->symbol '~string->symbol)
