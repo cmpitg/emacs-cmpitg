@@ -54,8 +54,9 @@ buffer."
 
 Example:
 
-    \($auto-load-mode \"\\\\.rake$\" 'ruby-mode\)
-    \($auto-load-mode '(\"\\\\.md$\" \"\\\\.markdown$\") 'markdown-mode\)"
+  \($auto-load-mode \"\\\\.rake$\" 'ruby-mode\)
+  \($auto-load-mode '(\"\\\\.md$\" \"\\\\.markdown$\") 'markdown-mode\)
+"
   (if (stringp filetypes)
     (add-to-list 'auto-mode-alist (cons filetypes mode))
     (dolist (filetype filetypes)
