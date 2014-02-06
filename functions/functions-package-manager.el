@@ -60,13 +60,13 @@ The vector DESC has the form [VERSION-LIST REQS DOCSTRING].
   DOCSTRING is a brief description of the package."
   package-alist)
 
-(defun elpa-install-packages (&rest packages)
+(defun ~elpa-install-packages (&rest packages)
   "Install package using Elpa if not installed."
   (dolist (package packages)
     (unless (package-installed-p package)
       (package-install package))))
 
-(defun el-get-install-packages (&rest packages)
+(defun ~el-get-install-packages (&rest packages)
   "Install package using el-get if not installed."
   (dolist (package packages)
     (unless (or (package-installed-p package)
@@ -80,10 +80,10 @@ The vector DESC has the form [VERSION-LIST REQS DOCSTRING].
       (~local-package-is-installed? package-symbol)))
 
 (defun ~local-package-is-installed? (package-symbol)
-  "Determine if a package is installed at
-`-HOME/emacs-config/emacs-local-packages`."
-  ;; TODO to be implemented
-  nil)
+  "Determine if a local package is installed at
+`*config-dir*/local-packages/`.  Note that this function works by
+using feature name, not directory name."
+  (memq package-symbol features))
 
 (defun ~install-or-update-el-get ()
   "Install/update el-get."
@@ -98,3 +98,8 @@ The vector DESC has the form [VERSION-LIST REQS DOCSTRING].
      (lambda (s)
        (goto-char (point-max))
        (eval-print-last-sexp))))))
+
+(defalias 'elpa-install-packages '~elpa-install-packages)
+(defalias 'el-get-install-packages '~el-get-install-packages)
+(defalias 'local-package-is-installed? '~local-package-is-installed?)
+(defalias 'install-or-update-el-get '~install-or-update-el-get)
