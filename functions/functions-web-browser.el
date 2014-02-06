@@ -15,17 +15,17 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defun -google (keyword)
+(defun ~google (keyword)
   "Google a keyword in Firefox."
-  (interactive (list (-read-string "Keyword: "
+  (interactive (list (~read-string "Keyword: "
                                    :initial-input (get-selection))))
-  (-open-url-in-firefox
+  (~open-url-in-firefox
    (format "https://encrypted.google.com/search?q=%s" keyword)))
 
-(defun -open-url-in-firefox (url)
+(defun ~open-url-in-firefox (url)
   "Open a URL in Firefox."
   (interactive
-   (list (-read-string
+   (list (~read-string
           "URL: "
           :initial-input (cond
                           ((is-selecting?)
@@ -34,28 +34,28 @@
                            (thing-at-point-url-at-point))
                           (t
                            "https://encrypted.google.com/")))))
-  (-send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url)))
+  (~send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url)))
 
-(defun -refresh-firefox ()
+(defun ~refresh-firefox ()
   "Refresh current tab of Firefox browser."
   (interactive)
   ;; This function can be used when editing HTML/CSS/Web resources, so the
   ;; timeout is there for the file to properly saved.
-  (-send-to-mozrepl "setTimeout(BrowserReload, 300)"))
+  (~send-to-mozrepl "setTimeout(BrowserReload, 300)"))
 
-(defun -start-mozrepl ()
+(defun ~start-mozrepl ()
   "Start MozRepl."
   (interactive)
   (inferior-moz-start-process))
 
-(defun -send-to-mozrepl (string)
+(defun ~send-to-mozrepl (string)
   "Send a string to MozRepl."
   (interactive "MCommand: ")
-  (-start-mozrepl)                      ; Make sure MozRepl is up and running
+  (~start-mozrepl)                      ; Make sure MozRepl is up and running
   (comint-send-string (inferior-moz-process)
                       string))
 
-(defun -auto-reload-firefox-after-save-hook ()
+(defun ~auto-reload-firefox-after-save-hook ()
   "Auto reload Firefox when saving."
   (add-hook 'after-save-hook
             '(lambda ()
