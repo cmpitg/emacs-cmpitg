@@ -116,3 +116,9 @@ installed and loaded.")
       *el-get-package-dir*     "~/.emacs.d/el-get/"
 
       *me*                     "Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))")
+
+(defvar *electrify-return-match*
+  "[\]\)]"
+  ;; "[\]}\)\"]"
+  "If this regexp matches the text after the cursor, do an
+\"electric\" return.")
