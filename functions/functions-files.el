@@ -51,6 +51,11 @@ followed."
    (message
     (concat "Saved as script: " buffer-file-name))))
 
+(defun ~list-dir (path)
+  "List a directory content."
+  (directory-files path))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
+(defalias 'list-dir '~list-dir)
