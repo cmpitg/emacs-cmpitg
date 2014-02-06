@@ -85,6 +85,22 @@
   "Return the current line-comment syntax for current buffer mode."
   comment-start)
 
+(defun* ~popup-message (content &key (buffer-name "*Temporary*"))
+  "Display a popup window with CONTENT as its content and an
+optional BUFFER-NAME name.  Require popwin extension.  Press ESC
+or C-g to close the window.
+
+E.g.
+
+;; Display \"Hello World\" in a popup window.
+\($popup-message \"Hello World\"\)
+
+;; Display \"Hola Mundo\" in a popup window, naming that window buffer \"*mundo*\"
+\($popup-message \"Hello World\" :buffer-name \"*mundo*\"\)
+"
+  (with-output-to-temp-buffer buffer-name
+    (princ content)))
+
 (defalias 'next-file-buffer '~next-file-buffer)
 (defalias 'move-to-compilation-buffer '~move-to-compilation-buffer)
 (defalias 'current-buffer-name '~current-buffer-name)
@@ -93,3 +109,4 @@
 (defalias 'last-sexp '~last-sexp)
 (defalias 'geiser-repl-process '~geiser-repl-process)
 (defalias 'geiser-send-string '~geiser-send-string)
+(defalias 'popup-message '~popup-message)
