@@ -18,5 +18,4 @@
 (setq *disabled-packages* '("50-tabbar"
                             "50-sunrise-commander"
                             "50-pabbrev"
-                            "50-python"
-                            ))
+                            "50-python"))
