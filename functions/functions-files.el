@@ -103,6 +103,18 @@ file as string."
           (t
            mode-name))))
 
+(defun ~is-directory? (&optional text)
+  "Determine if a portion of text is a directory on the
+filesystem."
+  (interactive)
+  (let ((text (cond ((stringp text)
+                     text)
+                    ((~is-selecting? text)
+                     (~current-selection))
+                    (t
+                     (read-string "Path: ")))))
+    (f-dir? text)))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
@@ -111,3 +123,4 @@ file as string."
 (defalias 'download-file '~download-file)
 (defalias 'scm-status '~scm-status)
 (defalias 'get-scm '~get-scm)
+(defalias 'is-directory? '~is-directory?)
