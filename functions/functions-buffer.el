@@ -101,6 +101,11 @@ E.g.
   (with-output-to-temp-buffer buffer-name
     (princ content)))
 
+(defun ~goto-str (str)
+  "Go to the next appearance of a string."
+  (interactive "MString: ")
+  (search-forward str nil t))
+
 (defalias 'next-file-buffer '~next-file-buffer)
 (defalias 'move-to-compilation-buffer '~move-to-compilation-buffer)
 (defalias 'current-buffer-name '~current-buffer-name)
@@ -110,3 +115,4 @@ E.g.
 (defalias 'geiser-repl-process '~geiser-repl-process)
 (defalias 'geiser-send-string '~geiser-send-string)
 (defalias 'popup-message '~popup-message)
+(defalias 'goto-str '~goto-str)
