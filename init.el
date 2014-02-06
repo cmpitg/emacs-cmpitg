@@ -56,7 +56,8 @@ does nothing more than concat-ing `*config-dir' with `feature'."
 
 (-load-files-if-exists- (-get-local-config-dir- "init-package-manager.el")
                         (-get-local-config-dir- "init-essential-packages.el")
-                        (-get-local-config-dir- "init-packages.el"))
+                        (-get-local-config-dir- "init-packages.el")
+                        (-get-local-config-dir- "init-environment.el"))
 
 ;; (-load-files-if-exists- "~/emacs-config/package-list.el"
 ;;                         "~/emacs-custom-foremost.el" ; User-defined
