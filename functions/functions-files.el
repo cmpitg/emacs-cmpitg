@@ -22,14 +22,14 @@ followed."
   (if (require 'fiplr nil nil)
     (let ((path (cond ((not (null dir-path))
                        dir-path)
-                      ((is-selecting?)
-                       (get-selection))
+                      ((~is-selecting?)
+                       (~get-selection))
                       (t
                        (read-directory-name "Directory path: ")))))
       (fiplr-find-file-in-directory (file-chase-links path) fiplr-ignored-globs))
     (message "You need `fiplr' package to use this function.")))
 
-(defun write-to-file (filename content)
+(defun ~write-to-file (filename content)
   "Write string to file."
   (with-temp-buffer
     (insert content)
@@ -50,3 +50,7 @@ followed."
    (revert-buffer)
    (message
     (concat "Saved as script: " buffer-file-name))))
+
+(defalias 'find-file-extended '~find-file-extended)
+(defalias 'write-to-file '~write-to-file)
+(defalias 'make-executable '~make-executable)
