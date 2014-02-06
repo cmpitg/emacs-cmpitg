@@ -61,8 +61,25 @@ followed."
     (insert-file-contents path)
     (buffer-string)))
 
+(defun* ~download-file (url filepath &key (overwrite nil))
+  "Download a file.
+
+E.g.
+
+;; Download, raise an error if the file exists
+\($download-file \"https://raw.github.com/defunkt/gist.el/master/gist.el\"
+		\"/tmp/gist.el\"\)
+c
+;; Download and overwrite if already exists
+\($download-file \"https://raw.github.com/defunkt/gist.el/master/gist.el\"
+		\"/tmp/gist.el\"
+		:overwrite t\)"
+  (interactive "MURL: \nFSave to: ")
+  (url-copy-file url filepath overwrite))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
 (defalias 'list-dir '~list-dir)
 (defalias 'read-file '~read-file)
+(defalias 'download-file '~download-file)
