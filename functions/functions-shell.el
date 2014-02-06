@@ -28,5 +28,10 @@ display result."
          (output (~exec command-str)))
     (~popup-message output)))
 
+(defun ~man-current-word ()
+  "`man` this word."
+  (interactive)
+  (manual-entry (current-word)))
 
 (defalias 'popup-shell-command  '~popup-shell-command)
+(defalias 'man-current-word '~man-current-word)
