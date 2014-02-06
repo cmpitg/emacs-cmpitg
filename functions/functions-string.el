@@ -15,9 +15,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(require 'cl)
-(require 's)
-
 (defun* ~string-start-with? (string substring &key (ignore-case nil))
   "Determine if a string starts with a substring.
 
