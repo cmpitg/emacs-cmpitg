@@ -15,11 +15,14 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;;; Uncategorized functions
+;;
 
-(defun start-emacs-server (&rest dir)
+(defun ~start-emacs-server (&rest dir)
   "Start an Emacs server in a specific socket directory.  If no
 directory is specified, the default dir /tmp/emacs1000/ is used.
 Do nothing if server is already started."
   (if dir (setq server-socket-dir dir))
   (unless (file-exists-p server-socket-dir)
     (server-start)))
+
+(defalias 'start-emacs-server '~start-emacs-server)
