@@ -19,4 +19,34 @@
   "Setting JavaScript mode with MozRepl."
   (moz-minor-mode 1))
 
+(defun ~sunrise ()
+  "Open Sunrise Commander, remove the nonpane buffer."
+  (interactive)
+  (unless sr-running
+    (sunrise)
+    (sr-reset-view-remove-nonpane-buffer)))
+
+(defun ~sunrise-cd ()
+  "Open Sunrise Commander with current directory, remove the
+nonpage buffer."
+  (interactive)
+  (unless sr-running
+    (sunrise-cd)
+    (sr-reset-view-remove-nonpane-buffer)))
+
+(defun sr-reset-view ()
+  "Reset Sunrise Commander pane view."
+  (interactive)
+  (when sr-running
+    (sr-setup-windows)))
+
+(defun sr-reset-view-remove-nonpane-buffer ()
+  "Reset Sunrise Commander pane view, removing the nonpane
+buffer."
+  (interactive)
+  (when sr-running
+    (sr-setup-windows)
+    (windmove-down)
+    (delete-window)))
+
 (defalias 'setup-moz-javascript '~setup-moz-javascript)
