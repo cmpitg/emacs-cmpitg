@@ -55,7 +55,14 @@ followed."
   "List a directory content."
   (directory-files path))
 
+(defun ~read-file (path)
+  "Read file and return file content as string."
+  (with-temp-buffer
+    (insert-file-contents path)
+    (buffer-string)))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
 (defalias 'list-dir '~list-dir)
+(defalias 'read-file '~read-file)
