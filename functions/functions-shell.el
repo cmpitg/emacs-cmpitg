@@ -33,5 +33,37 @@ display result."
   (interactive)
   (manual-entry (current-word)))
 
+(defun ~exec (command)
+  "Execute a shell command then return its value as string."
+  (interactive "MCommand: ")
+  (shell-command-to-string command))
+
+(defun ~exec-in-other-window (command)
+  "Execute in other window."
+  (interactive "MCommand: ")
+  (shell-command command))
+
+(defun ~exec-then-pipe (command)
+  "Execute and pipe output to the current buffer."
+  (interactive "MCommand: ")
+  (shell-command command t))
+
+(defun ~exec-then-pipe-selection ()
+  "Execute selection and pipe output to the current buffer."
+  (interactive)
+  (~exec-then-pipe (~current-selection)))
+
+(defun ~pipe-then-exec (command)
+  "Pipe current region to a command, exec it, and pipe the output back."
+  (interactive "MCommand: ")
+  (shell-command-on-region (if mark-active (region-beginning) 1)
+                           (if mark-active (region-end) 1)
+                           command t))
+
 (defalias 'popup-shell-command  '~popup-shell-command)
 (defalias 'man-current-word '~man-current-word)
+(defalias 'exec '~exec)
+(defalias 'exec-in-other-window '~exec-in-other-window)
+(defalias 'exec-then-pipe '~exec-then-pipe)
+(defalias 'exec-then-pipe-selection '~exec-then-pipe-selection)
+(defalias 'pipe-then-exec '~pipe-then-exec)
