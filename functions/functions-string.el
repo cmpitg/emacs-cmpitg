@@ -50,3 +50,8 @@ string."
   (not (null (string-match substring str))))
 
 (defalias 'string-empty? '~string-empty?)
+(defalias 'string-start-with? '~string-start-with?)
+(defalias 'string-end-with? '~string-end-with?)
+(defalias 'string-empty? '~string-empty?)
+(defalias 'string-but-last '~string-but-last)
+(defalias 'string-contains? '~string-contains?)
