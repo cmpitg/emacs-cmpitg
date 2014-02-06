@@ -49,4 +49,17 @@ buffer."
     (windmove-down)
     (delete-window)))
 
+(defun ~auto-load-mode (filetypes mode)
+  "Autoload mode for filetype regex or a list of filetypes.
+
+Example:
+
+    \($auto-load-mode \"\\\\.rake$\" 'ruby-mode\)
+    \($auto-load-mode '(\"\\\\.md$\" \"\\\\.markdown$\") 'markdown-mode\)"
+  (if (stringp filetypes)
+    (add-to-list 'auto-mode-alist (cons filetypes mode))
+    (dolist (filetype filetypes)
+      (add-to-list 'auto-mode-alist (cons filetype mode)))))
+
 (defalias 'setup-moz-javascript '~setup-moz-javascript)
+(defalias 'auto-load-mode '~auto-load-mode)
