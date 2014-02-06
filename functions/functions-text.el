@@ -36,20 +36,20 @@ cursor in-between them."
     (insert (concat begin-string end-string))
     (backward-char (length end-string)))))
 
-(defun markdown-italicize ()
+(defun ~markdown-italicize ()
   "Italicize selection or adding italic format."
   (interactive)
-  (surround "*" "*"))
+  (~surround "*" "*"))
 
-(defun markdown-embolden ()
+(defun ~markdown-embolden ()
   "Embolden selection or adding bold format."
   (interactive)
-  (surround "**" "**"))
+  (~surround "**" "**"))
 
-(defun markdown-rawify ()
+(defun ~markdown-rawify ()
   "Rawify selection or adding raw format."
   (interactive)
-  (surround "`" "`"))
+  (~surround "`" "`"))
 
 (defun ~move-to-beginning-of-line ()
   "Move point back to indentation of beginning of line.
@@ -182,21 +182,21 @@ cursor position."
   "Peek next character, return the string representing it.."
   (~get-text (+ 1 (point)) (+ 2 (point))))
 
-(defun join-with-next-line ()
+(defun ~join-with-next-line ()
   "Join next line with the current line.  This is just a
 convenient wrapper of `join-line'."
   (interactive)
   (join-line -1))
 
-(defun selection-start ()
+(defun ~selection-start ()
   "Return the position of the start of the current selection."
   (region-beginning))
 
-(defun selection-end ()
+(defun ~selection-end ()
   "Return the position of the end of the current selection."
   (region-end))
 
-(defun is-selecting? ()
+(defun ~is-selecting? ()
   "Determine if a selection is being held."
   (region-active-p))
 
@@ -207,16 +207,16 @@ convenient wrapper of `join-line'."
                       (selection-end))
     ""))
 
-(defun get-selection ()
+(defun ~get-selection ()
   "Return the current selected text."
   (~current-selection))
 
 (defun ~delete-selected-text ()
   "Delete the selected text, do nothing if none text is selected."
-  (if (is-selecting?)
+  (if (~is-selecting?)
     (delete-region (selection-start) (selection-end))))
 
-(defun replace-selection (&optional text)
+(defun ~replace-selection (&optional text)
   "Replace selection with text."
   (interactive)
   (let ((text (if (stringp text)
@@ -225,19 +225,19 @@ convenient wrapper of `join-line'."
     (call-interactively 'delete-region)
     (insert-string text)))
 
-(defun goto-selection-start ()
+(defun ~goto-selection-start ()
   "Go to the start of current selection.  If selection is not active,
 do nothing."
-  (if (is-selecting?)
+  (if (~is-selecting?)
     (goto-point (selection-start))))
 
-(defun goto-selection-end ()
+(defun ~goto-selection-end ()
   "Go to the end of current selection.  If selection is not active,
 do nothing."
-  (if (is-selecting?)
+  (if (~is-selecting?)
     (goto-point (selection-end))))
 
-(defun electrify-return-if-match (arg)
+(defun ~electrify-return-if-match (arg)
   "If the text after the cursor matches `electrify-return-match'
 then open and indent an empty line between the cursor and the
 text.  Move the cursor to the new line."
@@ -248,4 +248,51 @@ text.  Move the cursor to the new line."
     (newline arg)
     (indent-according-to-mode)))
 
+(defun ~is-selecting? ()
+  "Determine if a selection is being held."
+  (region-active-p))
+
+(defun ~emacs-lisp-make-alias ()
+  "Add \(defalias 'symbol-1 'symbol-2\) to the end of file.
+Useful when defining custom Emacs Lisp alias.  I use it when I
+want to define a function with `~` prefix to prevent naming
+clash, then add \(an\) alias\(es\) without `~`.
+
+By default both `symbol-1` and `symbol-2` are the current
+selection."
+  (interactive)
+  (when (~is-selecting?)
+    (save-excursion
+      (let* ((new-symbol (read-string "New symbol: " (~current-selection)))
+             (old-symbol (read-string "Old symbol: " (~current-selection))))
+        (call-interactively 'end-of-buffer)
+        (insert-string (format "(defalias '%s '%s)\n"
+                               new-symbol old-symbol))))))
+
+(defalias 'emacs-lisp-make-alias '~emacs-lisp-make-alias)
+(defalias 'electrify-return-if-match '~electrify-return-if-match)
+(defalias 'goto-selection-end '~goto-selection-end)
+(defalias 'goto-selection-start '~goto-selection-start)
+(defalias 'replace-selection '~replace-selection)
+(defalias 'delete-selected-text '~delete-selected-text)
+(defalias 'get-selection '~get-selection)
+(defalias 'current-selection '~current-selection)
+(defalias 'is-selecting? '~is-selecting?)
+(defalias 'selection-end '~selection-end)
+(defalias 'selection-start '~selection-start)
+(defalias 'join-with-next-line '~join-with-next-line)
+(defalias 'peek-char '~peek-char)
+(defalias 'current-char '~current-char)
+(defalias 'get-text '~get-text)
+(defalias 'insert-me '~insert-me)
+(defalias 'mark-line '~mark-line)
+(defalias 'mark-word '~mark-word)
+(defalias 'fix-hard-wrapped-region '~fix-hard-wrapped-region)
+(defalias 'toggle-letter-case '~toggle-letter-case)
+(defalias 'open-line-before '~open-line-before)
+(defalias 'duplicate-line '~duplicate-line)
+(defalias 'move-to-beginning-of-line '~move-to-beginning-of-line)
+(defalias 'markdown-italicize '~markdown-italicize)
+(defalias 'markdown-embolden '~markdown-embolden)
+(defalias 'markdown-rawify '~markdown-rawify)
 (defalias 'surround '~surround)
