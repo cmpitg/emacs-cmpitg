@@ -15,4 +15,8 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(setq *disabled-packages* '())
+(setq *disabled-packages* '("50-tabbar"
+                            "50-sunrise-commander"
+                            "50-pabbrev"
+                            "50-python"
+                            ))
