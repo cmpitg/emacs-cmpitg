@@ -18,7 +18,7 @@
 (use-package picolisp
   :init (progn
           (setq picolisp-program-name "~/opt/picolisp/bin/plmod")
-          ($auto-load-mode "\\.l$" 'picolisp-mode)
+          (~auto-load-mode "\\.l$" 'picolisp-mode)
           (add-hook 'picolisp-mode-hook
                     (lambda ()
                       (paredit-mode +1)

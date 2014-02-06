@@ -25,7 +25,7 @@
           (autoload 'turn-on-ruby-dev "ruby-dev" nil t)
 
           (add-hook 'ruby-mode-hook 'turn-on-ruby-dev)
-          ($auto-load-mode '("\\Rakefile$" "\\.mab$") 'ruby-mode)))
+          (~auto-load-mode '("\\Rakefile$" "\\.mab$") 'ruby-mode)))
 
 ;; (use-package rsense
 ;;   :init (progn

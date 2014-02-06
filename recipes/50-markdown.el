@@ -18,4 +18,4 @@
 (use-package markdown-mode
   :init (progn
           (require 'markdown-mode+)
-          ($auto-load-mode '("\\.md$" "\\.markdown$") 'markdown-mode)))
+          (~auto-load-mode '("\\.md$" "\\.markdown$") 'markdown-mode)))
