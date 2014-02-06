@@ -77,9 +77,37 @@ c
   (interactive "MURL: \nFSave to: ")
   (url-copy-file url filepath overwrite))
 
+(defun ~scm-status ()
+  "Call for the corresponding SCM `status` command."
+  (interactive)
+  (let ((current-scm (~get-scm)))
+    (cond
+     ((string= "git" current-scm)
+      (magit-status nil))
+
+     ((string= "hg" current-scm)
+      (monky-status))
+
+     (t nil))))
+
+(defun ~get-scm ()
+  "Return the current source control management (SCM) of current
+file as string."
+  (interactive)
+  (let ((mode-name (downcase
+                    (replace-regexp-in-string " \\|[[:digit:]]\\|:.*\\|-.*" ""
+                                              (or vc-mode "")))))
+    (cond ((and (~string-empty? mode-name)
+                (magit-get-top-dir))
+           "git")
+          (t
+           mode-name))))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
 (defalias 'list-dir '~list-dir)
 (defalias 'read-file '~read-file)
 (defalias 'download-file '~download-file)
+(defalias 'scm-status '~scm-status)
+(defalias 'get-scm '~get-scm)
