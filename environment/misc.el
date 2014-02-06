@@ -17,4 +17,4 @@
 
 ;; Make shebang-ed files executable
 
-(add-hook 'after-save-hook '-make-executable)
+(add-hook 'after-save-hook '~make-executable)
