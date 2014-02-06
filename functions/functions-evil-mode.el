@@ -34,6 +34,16 @@
   "(Helper) Prevent evil from disabling a default Emacs kepmap."
   (~evil-define-key key 'evil-undefine))
 
+(defun ~toggle-evil-local ()
+  "Toggle evil-mode for current buffer."
+  (interactive)
+  (if evil-local-mode
+    (progn
+      (evil-local-mode -1)
+      (setq cursor-type 'bar))
+    (evil-local-mode)))
+
 (defalias 'evil-define-key '~evil-define-key)
 (defalias 'evil-undefine-helper '~evil-undefine-helper)
 (defalias 'evil-undefine-key '~evil-undefine-key)
+(defalias 'toggle-evil-local '~toggle-evil-local)
