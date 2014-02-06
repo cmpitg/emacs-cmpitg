@@ -115,6 +115,20 @@ filesystem."
                      (read-string "Path: ")))))
     (f-dir? text)))
 
+(defun ~open-file-gui ()
+  "Open a file using Zenity."
+  (interactive)
+  (let ((filename (~string-but-last (~exec (~build-open-file-cmd-string)))))
+    (unless (~string-empty? filename)
+      (~open-file filename))))
+
+(defun ~open-file-gui-other-window ()
+  "Open a file using Zenity."
+  (interactive)
+  (let ((filename (~string-but-last (~exec (~build-open-file-cmd-string)))))
+    (unless (~string-empty? filename)
+      (~open-file-other-window filename))))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
@@ -124,3 +138,5 @@ filesystem."
 (defalias 'scm-status '~scm-status)
 (defalias 'get-scm '~get-scm)
 (defalias 'is-directory? '~is-directory?)
+(defalias 'open-file-gui '~open-file-gui)
+(defalias 'open-file-gui-other-window '~open-file-gui-other-window)
