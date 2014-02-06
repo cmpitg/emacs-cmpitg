@@ -32,7 +32,7 @@
 ;; (set-background-color "#f2f2f2")
 (set-background-color "#efefef")
 
-;;(load "~/emacs-config/themes/color-theme-textmate-modified.el")
+;;(load-file "~/emacs-config/themes/color-theme-textmate-modified.el")
 ;;(require 'color-theme-textmate-modified)
 ;;(color-theme-textmate-modified)
 
