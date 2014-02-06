@@ -29,5 +29,4 @@ display result."
     (~popup-message output)))
 
 
-(defalias '$popup-shell-command '~popup-shell-command)
 (defalias 'popup-shell-command  '~popup-shell-command)
