@@ -57,6 +57,17 @@ string."
   "Convert a string into an uninterned symbol."
   (make-symbol string))
 
+(defun ~join-strings (separator a-seq)
+  "Join strings.  Works with any type of sequence and any data type as its element.
+
+E.g.
+
+\($join-strings \"|\" '\(\"a\" \"b\" \"c\"\)\) ; => \"a|b|c\"
+\($join-strings \"|\" [1 \"b\" c]\) ; => \"1|b|c\""
+  (-reduce (lambda (result element)
+             (format "%s%s%s" result separator element))
+           (-map (lambda (x) x) a-seq)))
+
 (defalias 'string-empty? '~string-empty?)
 (defalias 'string-start-with? '~string-start-with?)
 (defalias 'string-end-with? '~string-end-with?)
@@ -65,3 +76,4 @@ string."
 (defalias 'string-contains? '~string-contains?)
 (defalias 'symbol->string '~symbol->string)
 (defalias 'string->symbol '~string->symbol)
+(defalias 'join-strings '~join-strings)
