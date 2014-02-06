@@ -15,18 +15,33 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;;
 ;; Install all essential packages
+;;
 
 (dolist (package *essential-packages*)
   ;; They're all available with Elpa or Melpa
   (unless (package-installed-p package)
     (package-install package)))
 
+;; openwith is an exception, it's installed with el-get
+
+(unless (el-get-package-is-installed 'openwith)
+  (el-get-install 'openwith))
+
+;;
+;; Now, load them
+;;
+
+;; Dash
+
 ;; Docs:
 ;;   https://github.com/magnars/dash.el
 (use-package dash
   :init (progn
           (dash-enable-font-lock)))
+
+;; Helm
 
 (use-package helm-config)
 
