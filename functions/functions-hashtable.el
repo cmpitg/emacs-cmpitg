@@ -15,8 +15,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(require 'ht)
-
 (defun ht-to-alist* (table)
   "Deeply convert hashtable to alist.
 
