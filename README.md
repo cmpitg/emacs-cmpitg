@@ -48,6 +48,8 @@ emacs-cmpitg/
 * Are automatically loaded, unless `package-name` is in
   [`./recipes/disabled-packages.el`](./recipes/disabled-packages.el).
 
+* Are loaded in alphabetical order.
+
 ## Screenshot ##
 
 ## Requirements ##
