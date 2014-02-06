@@ -68,6 +68,18 @@ E.g.
              (format "%s%s%s" result separator element))
            (-map (lambda (x) x) a-seq)))
 
+(defun ~trim-spaces (text)
+  "Trim spaces at the beginning and the end of a portion of
+text."
+  (while (and (not (~string-empty? text))
+              (string= " " (~first-char-as-string text)))
+    (setf text (substring text 1)))
+
+  (while (and (not (~string-empty? text))
+              (string= " " (~last-char-as-string text)))
+    (setf text (substring text 0 (- (length text) 1))))
+  text)
+
 (defalias 'string-empty? '~string-empty?)
 (defalias 'string-start-with? '~string-start-with?)
 (defalias 'string-end-with? '~string-end-with?)
@@ -77,3 +89,4 @@ E.g.
 (defalias 'symbol->string '~symbol->string)
 (defalias 'string->symbol '~string->symbol)
 (defalias 'join-strings '~join-strings)
+(defalias 'trim-spaces '~trim-spaces)
