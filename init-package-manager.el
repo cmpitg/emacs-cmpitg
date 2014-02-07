@@ -66,8 +66,9 @@
        (goto-char (point-max))
        (eval-print-last-sexp))))))
 
-(add-to-list 'el-get-recipe-path (-get-local-config-dir- "el-get-user/recipes"))
-(el-get 'sync)
+(add-to-list 'el-get-recipe-path (~get-local-config-dir "el-get-user/recipes"))
+;; (el-get 'sync)
+(el-get nil)                            ; Call concurrently
 
 ;;
 ;; Add all el-get packages to load-path
