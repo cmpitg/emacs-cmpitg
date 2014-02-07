@@ -31,7 +31,8 @@
 (defun ~load-files (&rest paths)
   "Load files when they exists."
   (dolist (file-path paths)
-    (when (file-exists-p file-path)
+    (when (and (file-exists-p file-path)
+               (file-regular-p file-path))
       (load-file file-path))))
 
 (defun ~load-config-files (&rest paths)
