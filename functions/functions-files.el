@@ -55,6 +55,11 @@ followed."
   "List a directory content."
   (directory-files path))
 
+(defun ~list-dir-full-path (path)
+  "List a directory content with full path."
+  (-map (lambda (file)
+          (s-concat path "/" file)) (directory-files path)))
+
 (defun ~read-file (path)
   "Read file and return file content as string."
   (with-temp-buffer
@@ -129,6 +134,11 @@ filesystem."
     (unless (~string-empty? filename)
       (~open-file-other-window filename))))
 
+(defun ~current-dir ()
+  "Current directory."
+  (or (file-name-directory (or load-file-name buffer-file-name ""))
+      "~"))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
@@ -140,3 +150,5 @@ filesystem."
 (defalias 'is-directory? '~is-directory?)
 (defalias 'open-file-gui '~open-file-gui)
 (defalias 'open-file-gui-other-window '~open-file-gui-other-window)
+(defalias 'current-dir '~current-dir)
+(defalias 'list-dir-full-path '~list-dir-full-path)
