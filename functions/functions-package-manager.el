@@ -15,8 +15,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(require 'el-get)
-
 (defun ~el-get-package-list ()
   "Get the list of packages cached in el-get repositories.  This
 function doesn't update el-get database.  Returns a plist of format
