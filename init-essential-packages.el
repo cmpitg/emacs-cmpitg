@@ -171,3 +171,38 @@
 ;; Themes
 
 (use-package color-theme)
+
+;; Save cursor position each time you open a file
+;;   http://ergoemacs.org/emacs/emacs_save_cursor_position.html
+
+(use-package saveplace
+  :init (progn
+          (setq save-place-file "~/emacs-save-places")
+          (setq-default save-place t)))
+
+;; Recent files
+
+(use-package recentf
+  :init (progn
+          ;; Enable recent files
+          (recentf-mode 1)))
+
+;; Desktop mode, keeping workspace
+
+(use-package desktop)
+
+;; Working with tarballs
+
+(use-package tar-mode)
+
+;;; Custom unique naming method
+
+(use-package uniquify
+  :init (progn
+          (setq uniquify-buffer-name-style 'forward)))
+
+;;; Custom dired
+
+(use-package dired+
+  :init (progn
+          (setq dired-listing-switches "-lahF")))

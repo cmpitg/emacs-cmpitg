@@ -34,6 +34,10 @@
     eldoc                               ; Echo area function signature
     popwin                              ; Better popwin window management,
                                         ; dispose with Esc or C-g
+    dired+
+    desktop                             ; Keeping workspace
+    tar-mode
+    saveplace
     color-theme
     smooth-scrolling
     smartscan                           ; Jump between occurrences of a symbol
