@@ -21,8 +21,11 @@
   "Start an Emacs server in a specific socket directory.  If no
 directory is specified, the default dir /tmp/emacs1000/ is used.
 Do nothing if server is already started."
-  (if dir (setq server-socket-dir dir))
-  (unless (file-exists-p server-socket-dir)
+  (setq server-socket-dir (if dir
+                            dir
+                            "/tmp/emacs1000/"))
+  (unless (and (~is-var-defined? 'server-socket-dir)
+               (file-exists-p server-socket-dir))
     (server-start)))
 
 (defun ~clipboard<-region (begin end)
