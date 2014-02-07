@@ -55,6 +55,12 @@ emacs-cmpitg/
 
 * Are loaded in alphabetical order.
 
+### Themes ###
+
+* Custom themes are defined in [`./themes/`](./themes/).
+
+* Each theme has a function which is used to activate the theme when called.
+
 ## Screenshot ##
 
 ## Requirements ##
