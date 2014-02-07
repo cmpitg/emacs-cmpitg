@@ -15,7 +15,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(load (-get-local-config-dir- "local-packages/ack-and-a-half/ack-and-a-half.el"))
+(~load-config-files "local-packages/ack-and-a-half/ack-and-a-half.el")
 
 (use-package ack-and-a-half
   :init (progn
