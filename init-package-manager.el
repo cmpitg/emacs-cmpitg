@@ -39,7 +39,7 @@
 ;;
 ;; Activate use-package
 ;;
-;; This must happen before el-get is initialized
+;; Important note: This must happen before el-get is initialized
 ;;
 
 (unless (package-installed-p 'use-package)
