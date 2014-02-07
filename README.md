@@ -6,6 +6,10 @@ My specialized Emacs configuration, started as
 [a clone of my config](https://github.com/cmpitg/emacs-config) as of February
 2014.
 
+## TODOs ##
+
+* Try combining all `.el`s in `./recipes/` into one file to speed up the load.
+
 ## Ideas ##
 
 * Package configurations are managed with *recipes*.
