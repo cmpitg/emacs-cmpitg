@@ -37,6 +37,16 @@
   (package-refresh-contents))
 
 ;;
+;; Activate use-package
+;;
+;; This must happen before el-get is initialized
+;;
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+
+;;
 ;; el-get - yet another sophisticated package manager
 ;;
 ;; https://github.com/dimitri/el-get
@@ -71,14 +81,7 @@
 ;; Add all local packages to load-path
 ;;
 
-(let ((local-package-dir (-get-local-config-dir- "local-packages/")))
+(let ((local-package-dir (~get-local-config-dir "local-packages/")))
   (dolist (dirname (directory-files local-package-dir))
     (add-to-list 'load-path
                  (concat local-package-dir dirname))))
-;;
-;; Activate use-package
-;;
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
