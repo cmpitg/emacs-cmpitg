@@ -15,6 +15,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(dolist (env-file (~list-dir-full-path
-                   (~get-local-config-dir "environment/")))
+(dolist (env-file (sort (~list-dir-full-path
+                         (~get-local-config-dir "environment/"))
+                        #'string<))
   (~load-files env-file))
