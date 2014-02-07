@@ -52,7 +52,9 @@
 
 ;; Helm
 
-(use-package helm-config)
+(use-package helm
+  :init (progn
+          (require 'helm-config)))
 
 (eval-after-load "helm-regexp"
   '(helm-attrset 'follow 1 helm-source-moccur))
@@ -149,3 +151,23 @@
 (use-package openwith
   :init (progn
           (openwith-mode t)))
+
+;; Thing at point
+
+(use-package thingatpt)
+
+;; Multiple cursors
+
+(use-package multiple-cursors)
+
+;; Expand region
+
+(use-package expand-region)
+
+;; Find file with fuzzy matching
+
+(use-package fiplr)
+
+;; Themes
+
+(use-package color-theme)
