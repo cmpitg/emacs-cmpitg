@@ -125,6 +125,21 @@ E.g.
          (t
           ,@body)))
 
+(defun* ~read-string (prompt &key
+                             (initial-input         nil)
+                             (history               nil)
+                             (default-value         nil)
+                             (inherit-input-method  nil))
+  "An alias of read-string, with keyword arguments.  See
+`read-string' documentation for more details.
+
+  Read a string from the minibuffer."
+  (read-string prompt
+               initial-input
+               history
+               default-value
+               inherit-input-method))
+
 (defalias 'eval-string '~eval-string)
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
@@ -133,3 +148,4 @@ E.g.
 (defalias 'is-var-defined? '~is-var-defined?)
 (defalias 'is-function-defined? '~is-function-defined?)
 (defalias 'nonnil-or-get-selection-or '~nonnil-or-get-selection-or)
+(defalias ' read-string ' ~read-string)
