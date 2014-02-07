@@ -19,19 +19,28 @@
 ;; Global variables
 ;;
 
-(load "./init-global-vars.el")
+(setq _current-dir (file-name-directory (or load-file-name
+                                            (buffer-file-name))))
+
+(load-file (concat _current-dir "init-global-vars.el"))
 
 ;;
 ;; Essential functions, used to load other things
 ;;
 
-(defun -load-files-if-exists- (&rest paths)
+(defun ~load-files (&rest paths)
   "Load files when they exists."
   (dolist (file-path paths)
-   (when (file-exists-p file-path)
-     (load file-path))))
+    (when (file-exists-p file-path)
+      (load-file file-path))))
 
-(defun -get-local-config-dir- (feature)
+(defun ~load-config-files (&rest paths)
+  "Load files when they exists."
+  (apply #'~load-files (mapcar (lambda (path)
+                                 (~get-local-config-dir path))
+                               paths)))
+
+(defun ~get-local-config-dir (feature)
   "Return local config directory for a feature.  This function
 does nothing more than concat-ing `*config-dir' with `feature'."
   (format "%s/%s" *config-dir* feature))
@@ -40,12 +49,8 @@ does nothing more than concat-ing `*config-dir' with `feature'."
 ;; Main code
 ;;
 
-(add-to-list 'load-path *config-dir*)
-(add-to-list 'load-path (-get-local-config-dir- "functions"))
-
-(require 'cmpitg-functions)
-
-(-load-all-custom-functions)
+(~load-config-files "functions/cmpitg-functions.el")
+(~load-all-custom-functions)
 
 ;; TODO: Document me
 (put 'use-package 'lisp-indent-function 1)
@@ -54,16 +59,8 @@ does nothing more than concat-ing `*config-dir' with `feature'."
 
 (start-emacs-server)
 
-(-load-files-if-exists- (-get-local-config-dir- "init-package-manager.el")
-                        (-get-local-config-dir- "init-essential-packages.el")
-                        (-get-local-config-dir- "init-packages.el")
-                        (-get-local-config-dir- "init-environment.el"))
-
-;; (-load-files-if-exists- "~/emacs-config/package-list.el"
-;;                         "~/emacs-custom-foremost.el" ; User-defined
-;;                         "~/emacs-config/global-vars.el"
-;;                         "~/emacs-config/init-package-manager.el"
-;;                         "~/emacs-config/main.el"
-;;                         "~/emacs-config/config-default/environment.el"
-;;                         "~/emacs-custom.el"          ; User-defined
-;;                         )
+(~load-config-files "init-package-manager.el"
+                    "init-essential-packages.el"
+                    "init-packages.el"
+                    "init-environment.el"
+                    "init-menu.el")
