@@ -15,6 +15,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(-load-setting-environment "keymap.el"
-                           "misc.el"
-                           )
+(dolist (env-file (~list-dir-full-path
+                   (~get-local-config-dir "environment/")))
+  (~load-files env-file))
