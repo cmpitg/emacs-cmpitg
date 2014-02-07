@@ -25,9 +25,11 @@
 ;;; Load all recipes from `./recipes/` except for disabled recipes from
 ;;; `./recipes/disabled-packages.el`
 
-(load "./recipes/disabled-packages.el")
+(~load-config-files "recipes/disabled-packages.el")
 
-(dolist (file-path (sort (directory-files "./recipes/") #'string<))
+(dolist (file-path (sort (~list-dir-full-path (~get-local-config-dir "recipes/"))
+                         #'string<))
   (when (and (string-match "\\.el$" file-path)
-             (not (memq (file-name-base file-path) *disabled-packages*)))
-    (load (concat "./recipes/" file-path))))
+             (not (string-match "disabled-packages.el" file-path))
+             (not (member (file-name-base file-path) *disabled-packages*)))
+    (~load-files file-path)))
