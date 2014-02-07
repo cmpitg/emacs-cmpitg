@@ -50,7 +50,7 @@ does nothing more than concat-ing `*config-dir' with `feature'."
 ;; Main code
 ;;
 
-(~load-config-files "functions/cmpitg-functions.el")
+(~load-config-files "functions/base.el")
 (~load-all-custom-functions)
 
 ;; TODO: Document me
