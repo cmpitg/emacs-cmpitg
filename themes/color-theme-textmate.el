@@ -37,5 +37,3 @@
      (toolbar ((t (nil))))
      (underline ((nil (:underline nil))))
      (zmacs-region ((t (:background "snow" :foreground "ble")))))))
-
-(provide 'color-theme-textmate)

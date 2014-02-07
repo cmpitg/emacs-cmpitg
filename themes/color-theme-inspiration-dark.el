@@ -70,7 +70,4 @@
      (font-lock-keyword-face ((t (:foreground "#7A2A97"))))
      (font-lock-string-face ((t (:foreground "#490032"))))
      (font-lock-doc-string-face ((t (:foreground "#490032"))))
-     (font-lock-type-face ((t (:foreground "#000029"))))
-     )))
-
-(provide 'inspiration)
+     (font-lock-type-face ((t (:foreground "#000029")))))))

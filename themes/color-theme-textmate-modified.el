@@ -38,6 +38,3 @@
      (underline ((nil (:underline nil))))
      (zmacs-region ((t (:background "snow" :foreground "ble")))))))
 
-(provide 'color-theme-textmate-modified)
-
-(color-theme-textmate-modified)
