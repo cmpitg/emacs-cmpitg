@@ -8,6 +8,7 @@ My specialized Emacs configuration, started as
 
 ## TODOs ##
 
+* Use `use-package`'s `autoload`
 * Try combining all `.el`s in `./recipes/` into one file to speed up the load.
 
 ## Ideas ##
