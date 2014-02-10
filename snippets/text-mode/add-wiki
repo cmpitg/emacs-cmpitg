@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Add Wikipedia URL
+# key: -add-wiki
+# group: text-mode
+# --
+http://en.wikipedia.org/wiki/

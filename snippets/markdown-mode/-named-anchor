@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Add named anchor to Markdown
+# key: -na
+# group: markdown-mode
+# --
+<a name="${1:name}"></a>
