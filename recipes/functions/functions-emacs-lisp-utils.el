@@ -172,6 +172,18 @@ E.g.
 ")))
         (~insert-text-at-the-end (format *defun-template* function-name))))))
 
+(defun* ~byte-compile-dir (&optional dir &key (force t))
+  "Byte compile all Emacs Lisp files is `dir'."
+  (interactive)
+  (let* ((dir (cond (dir
+                     dir)
+                    (t
+                     (read-directory-name "Directory: ")))))
+    (cond (force 
+           (byte-recompile-directory (expand-file-name dir) 0 t))
+          (t
+           (byte-recompile-directory (expand-file-name dir) 0 nil)))))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
@@ -185,3 +197,4 @@ E.g.
 (defalias '~eval-selection 'eval-region)
 (defalias 'eval-selection '~eval-selection)
 (defalias 'emacs-lisp-make-function '~emacs-lisp-make-function)
+(defalias 'byte-compile-dir '~byte-compile-dir)
