@@ -166,7 +166,9 @@
 
 ;; Find file with fuzzy matching
 
-(use-package fiplr)
+(use-package fiplr
+  :config (progn
+            (add-to-list 'fiplr-root-markers "README.md")))
 
 ;; Themes
 
@@ -206,3 +208,30 @@
 (use-package dired+
   :init (progn
           (setq dired-listing-switches "-lahF")))
+
+;; Icicles for better minibuffer completion
+;;
+;; http://www.emacswiki.org/emacs/Icicles
+
+(use-package icicles
+  :diminish icicle-mode
+  :init (progn
+          (icy-mode 1)))
+
+;; Undo tree
+
+(use-package undo-tree
+  :config (progn
+            (global-undo-tree-mode 1)))
+
+;; Acme mouse
+
+(use-package acme-mouse)
+
+;; Better ido
+
+(use-package flx-ido)
+
+;; Edittable ack
+
+(use-package wgrep-ack)

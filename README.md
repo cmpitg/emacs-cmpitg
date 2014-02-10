@@ -8,8 +8,8 @@ My specialized Emacs configuration, started as
 
 ## TODOs ##
 
-* Use `use-package`'s `autoload`
-* Try combining all `.el`s in `./recipes/` into one file to speed up the load.
+* [x] Use `use-package`'s `autoload`
+* [x] Try combining all `.el`s in `./recipes/` into one file to speed up the load.
 
 ## Ideas ##
 
@@ -48,12 +48,12 @@ emacs-cmpitg/
 
 * Reside in `./recipes/`.
 
-* Follow the filenaming convention: `./recipes/package-name.el`.
-
-* Are automatically loaded, unless `package-name` is in
-  [`./recipes/disabled-packages.el`](./recipes/disabled-packages.el).
+* Follow the filenaming convention: `./recipes/functionality/`.
 
 * Are loaded in alphabetical order.
+
+* Are generated into one file `./load-functionaly.el` using
+  [`./build-config.el`](./build-config.el).
 
 ### Themes ###
 

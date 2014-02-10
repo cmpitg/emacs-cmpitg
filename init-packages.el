@@ -19,17 +19,20 @@
 ;; Install all packages
 ;;
 
-(apply #'elpa-install-packages   *elpa-packages*)
+;; (apply #'elpa-install-packages   *elpa-packages*)
 (apply #'el-get-install-packages *el-get-packages*)
 
-;;; Load all recipes from `./recipes/` except for disabled recipes from
-;;; `./recipes/disabled-packages.el`
+;;
+;; And load them
+;;
 
-(~load-config-files "recipes/disabled-packages.el")
+;; (~load-config-files "recipes-packages.el")
 
-(dolist (file-path (sort (~list-dir-full-path (~get-local-config-dir "recipes/"))
-                         #'string<))
-  (when (and (string-match "\\.el$" file-path)
-             (not (string-match "disabled-packages.el" file-path))
-             (not (member (file-name-base file-path) *disabled-packages*)))
-    (~load-files file-path)))
+;; (~load-config-files "recipes/disabled-packages.el")
+
+;; (dolist (file-path (sort (~list-dir-full-path (~get-local-config-dir "recipes/"))
+;;                          #'string<))
+;;   (when (and (string-match "\\.el$" file-path)
+;;              (not (string-match "disabled-packages.el" file-path))
+;;              (not (member (file-name-base file-path) *disabled-packages*)))
+;;     (~load-files file-path)))

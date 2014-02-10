@@ -1,7 +1,7 @@
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
 ;;
-;; This project is free software: you can redistribute it and/or modify it
+;; This project is free softwsare: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
 ;; Software Foundation, either version 3 of the License, or (at your option)
 ;; any later version.
@@ -34,16 +34,20 @@
     eldoc                               ; Echo area function signature
     popwin                              ; Better popwin window management,
                                         ; dispose with Esc or C-g
+    icicles
     dired+
     desktop                             ; Keeping workspace
     tar-mode
     saveplace
     color-theme
     smooth-scrolling
+    flx-ido                             ; Better ido
     smartscan                           ; Jump between occurrences of a symbol
     smex                                ; Better M-x
     fiplr                               ; Find file with fuzzy matching
     use-package                         ; Great way to load packages
+    ;; ack-and-a-half ; -> Failed to require when installed with Elpa
+    wgrep-ack                           ; Edittable Ack
     )
   "List of packages that are vital to this config and must be
 installed and loaded.")
@@ -58,32 +62,52 @@ installed and loaded.")
     haskell-mode
     markdown-mode
     markdown-mode+
-    sr-speedbar                         ; Speedbar in the same frame
+    ;; sr-speedbar                         ; Speedbar in the same frame
     paredit                             ; Parentheses manipulation in Lisp
                                         ; modes
     smartparens                         ; Auto-pairing parentheses
     auto-complete
     slime                               ; Best Common Lisp development tool
-    openwith                            ; Open file with external program, in
-                                        ; any file-browsing modes like Sunrise
-                                        ; Commander or Dired
     yasnippet                           ; Textmate-like snippet and better
     gist                                ; Interface to Github's gist
     json                                ; JSON lib for Emacs
     js2-mode                            ; JavaScript
     pabbrev                             ; Better abbrev
-    dired-details+                      ; Better Dired information control
     magit                               ; Best Git interface for Emacs
     monky                               ; Magit-like mode for Mercurial
     zlc                                 ; Zsh completion
     hexrgb                              ; Color manipulation
-    flx-ido                             ; Better ido
     projectile                          ; Better project management
     helm-projectile                     ; Projectile-Helm integration
     grizzl                              ; Grizzl fuzzy matching method
 
-    ;; ack-and-a-half ; -> Failed to require when installed with Elpa
-    wgrep-ack                           ; Edittable Ack
+    highlight-parentheses
+    scratch-ext                         ; Better way to manage scratch buffer
+
+    ;; For Clojure development
+    clojure-mode
+    clojure-cheatsheet
+    clojure-test-mode
+    cider
+    clojurescript-mode
+    ;; clojure-lint-mode
+    ac-nrepl
+
+    ;; sunrise-commander                   ; File manager
+    ;; sunrise-x-tabs
+    ;; sunrise-x-loop                      ; Execute commands async in SR
+    ;; sunrise-x-checkpoints
+    ;; sunrise-x-tree                      ; Tree browsing feature for SR
+    ;; sunrise-x-modeline                  ; Nicer modeline in SR
+
+    geiser                              ; Scheme development
+    quack                               ; Another mode for Scheme development,
+                                        ; load *after* Geiser
+
+    diminish                            ; Hide some minor mode
+
+    menu-bar+
+    exec-path-from-shell
     )
   "List of packages using in this Emacs configuration.")
 
@@ -95,6 +119,10 @@ installed and loaded.")
     multi-scratch                       ; Multiple scratch buffers
     moz-repl                            ; MozRepl
     whitespace                          ; Display trailing whitespace
+    openwith                            ; Open file with external program, in
+                                        ; any file-browsing modes like Sunrise
+                                        ; Commander or Dired
+    hs-lint                             ; Haskell linter
     )
   "List of packages not available in ELPA but available to install with el-get.")
 
@@ -121,7 +149,7 @@ installed and loaded.")
       *license-dir*            (concat *config-dir* "/license-list")
       *saved-macro-path*       (concat *config-dir* "/functions/saved-macros.el")
 
-      *ctags-path*             "/usr/bin/ctags"
+      *ctags-path*             "/usr/bin/ctags-exuberant"
       *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
       *elpa-package-dir*       "~/.emacs.d/elpa/"
       *el-get-package-dir*     "~/.emacs.d/el-get/"

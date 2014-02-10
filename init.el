@@ -19,49 +19,23 @@
 ;; Global variables
 ;;
 
-(setq _current-dir (file-name-directory (or load-file-name
+(setq _config-dir (file-name-directory (or load-file-name
                                             (buffer-file-name))))
 
-(load-file (concat _current-dir "init-global-vars.el"))
+(load-file (concat _config-dir "init-global-vars.el"))
+(load-file (concat _config-dir "init-essential-functions.el"))
 
-;;
-;; Essential functions, used to load other things
-;;
-
-(defun ~load-files (&rest paths)
-  "Load files when they exists."
-  (dolist (file-path paths)
-    (when (and (file-exists-p file-path)
-               (file-regular-p file-path))
-      (load-file file-path))))
-
-(defun ~load-config-files (&rest paths)
-  "Load files when they exists."
-  (apply #'~load-files (mapcar (lambda (path)
-                                 (~get-local-config-dir path))
-                               paths)))
-
-(defun ~get-local-config-dir (feature)
-  "Return local config directory for a feature.  This function
-does nothing more than concat-ing `*config-dir' with `feature'."
-  (format "%s/%s" *config-dir* feature))
+(~start-emacs-server)
 
 ;;
 ;; Main code
 ;;
 
-(~load-config-files "functions/base.el")
-(~load-all-custom-functions)
-
-;; TODO: Document me
-(put 'use-package 'lisp-indent-function 1)
-(font-lock-add-keywords 'emacs-lisp-mode
-  '(("use-package" . font-lock-keyword-face)))
-
-(start-emacs-server)
-
-(~load-config-files "init-package-manager.el"
+(~load-config-files "load-functions.el"
+                    "init-package-manager.el"
                     "init-essential-packages.el"
-                    "init-packages.el"
-                    "init-environment.el"
-                    "init-menu.el")
+                    "load-keymaps.el"
+                    "load-packages.el"
+                    "load-environment.el"
+                    "load-menu.el"
+                    "load-personal-stuff.el")
