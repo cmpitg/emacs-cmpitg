@@ -419,6 +419,18 @@ E.g.
 ")))
         (~insert-text-at-the-end (format *defun-template* function-name))))))
 
+(defun* ~byte-compile-dir (&optional dir &key (force t))
+  "Byte compile all Emacs Lisp files is `dir'."
+  (interactive)
+  (let* ((dir (cond (dir
+                     dir)
+                    (t
+                     (read-directory-name "Directory: ")))))
+    (cond (force 
+           (byte-recompile-directory (expand-file-name dir) 0 t))
+          (t
+           (byte-recompile-directory (expand-file-name dir) 0 nil)))))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
@@ -432,6 +444,7 @@ E.g.
 (defalias '~eval-selection 'eval-region)
 (defalias 'eval-selection '~eval-selection)
 (defalias 'emacs-lisp-make-function '~emacs-lisp-make-function)
+(defalias 'byte-compile-dir '~byte-compile-dir)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
@@ -1006,11 +1019,11 @@ ${gplv3-header-text}")
 
 (defun ~start-emacs-server (&rest dir)
   "Start an Emacs server in a specific socket directory.  If no
-directory is specified, the default dir /tmp/emacs1000/ is used.
-Do nothing if server is already started."
+directory is specified, the default dir /tmp/emacs1000/server is
+used.  Do nothing if server is already started."
   (setq server-socket-dir (if dir
                             dir
-                            "/tmp/emacs1000/"))
+                            "/tmp/emacs1000/server"))
   (unless (and (~is-var-defined? 'server-socket-dir)
                (file-exists-p server-socket-dir))
     (server-start)))
