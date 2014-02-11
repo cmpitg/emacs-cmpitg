@@ -1348,17 +1348,6 @@ using feature name, not directory name."
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
 ;;
-;; This file is my personal asset.
-;;
-
-(defun ssh-greencloud ()
-  "SSH to cmpitg@ref-greencloud#2123."
-  (interactive)
-  (find-file "/ssh:cmpitg@ref-greencloud#2123:/home/cmpitg"))
-
-;;
-;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
-;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
 ;; Software Foundation, either version 3 of the License, or (at your option)
