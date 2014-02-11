@@ -320,6 +320,8 @@
             ))
 
 (use-package eshell
+  :init (progn
+          (use-package exec-path-from-shell))
   :config (progn
             (setq eshell-prefer-lisp-functions t)
 
@@ -524,8 +526,6 @@
                  (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
                  (add-hook 'cider-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
                  (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)))))
-
-(use-package exec-path-from-shell)
 
 (use-package scratch-ext)
 
