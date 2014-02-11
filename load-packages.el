@@ -532,7 +532,13 @@
 
 (use-package scratch-ext)
 
+(use-package w3m
+  :commands w3m-browse-url
+  :init (progn
+          (setq browse-url-browser-function 'w3m-browse-url)))
+
 (use-package later-do
   :defer t)
 
-(use-package whitespace)
+(use-package whitespace
+  :defer t)
