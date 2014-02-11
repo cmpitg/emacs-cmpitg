@@ -94,5 +94,5 @@
 
 (use-package helm
   :config (progn
-            (define-key helm-map (kbd "s-t") 'helm-next-line)
-            (define-key helm-map (kbd "s-c") 'helm-previous-line)))
+            (bind-key "s-t" 'helm-next-line helm-map)
+            (bind-key "s-c" 'helm-previous-line helm-map)))
