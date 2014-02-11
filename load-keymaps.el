@@ -47,11 +47,12 @@
                     (~smart-forward-exp))))
 (bind-key "s-R" 'forward-sexp)
 
+;;; Deleting
+
 (bind-key "s-u" 'delete-char)
 (bind-key "s-e" 'backward-delete-char)
 (bind-key "s-p" 'kill-word)
 (bind-key "s-." 'backward-kill-word)
-;; (bind-key "s-." '~mark-word-backward)
 
 (bind-key "s-x" (lambda ()
                   (interactive)
@@ -59,9 +60,13 @@
                   (delete-horizontal-space)))
 (bind-key "s-X" '~delete-line)
 
+;;; Selection
+
 (bind-key "s-_" '~mark-line)
 (bind-key "s-)" '~mark-word)
 (bind-key "s-S-SPC" '~mark-defun)
+
+;;; Other
 
 (bind-key "s--" 'comment-or-uncomment-region)
 (bind-key "s-/" 'create-tags)
@@ -80,14 +85,17 @@
 (bind-key "s-s" 'helm-occur)
 ;; (bind-key "s-S" 'isearch-backward-regexp)
 
+;;; With other libraries
+
 (use-package paredit
   :config (progn
-            (bind-key "s-." 'paredit-backward-kill-word paredit-mode-map)))
+            (bind-key "s-." 'paredit-backward-kill-word paredit-mode-map)
+            (bind-key "s-p" 'paredit-forward-kill-word paredit-mode-map)))
 
 (use-package helm
   :config (progn
-            (define-key helm-map (kbd "s-t") 'helm-next-line)
-            (define-key helm-map (kbd "s-c") 'helm-previous-line)))
+            (bind-key "s-t" 'helm-next-line helm-map)
+            (bind-key "s-c" 'helm-previous-line helm-map)))
 
 ;;
 ;; Copyright (C) 2012-2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
@@ -203,10 +211,6 @@
 (bind-key "s-A" '~exec-then-pipe)
 (bind-key "M-s-a" '~pipe-then-exec)
 (bind-key "M-s-A" '~pipe-then-exec-in-other-window)
-;; (bind-key e-3 '(lambda ()
-;;                              "Execute or eval"
-;;                              (interactive)
-;;                              (~eval-or-exec-print (~current-selection))))
 (bind-key "<S-down-mouse-1>" nil)
 (bind-key "<S-mouse-1>" '~exec-then-pipe-selection)
 
@@ -253,12 +257,10 @@
 ;;                                         'alpha 78)))
 
 ;;
-;; Navigation
+;; File navigation
 ;;
 
-;; Open sunrise without nonpane panel
-(bind-key "s-SPC SPC" '~sunrise)
-(bind-key "s-SPC c" '~sunrise-cd)
+(bind-key "s-; f n" '~goto-my-notes)
 
 ;;
 ;; Mode
@@ -338,10 +340,10 @@
                       (interactive)
                       (~find-file-extended "~/emacs-config")))
 
-(eval-after-load 'grizzl
-  '(progn
-     (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
-     (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
+(use-package grizzl-read
+  :config (progn
+            (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
+            (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
 
 ;;
 ;; Bookmark jumping
