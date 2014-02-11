@@ -27,6 +27,11 @@
 (bind-key "s-h" 'backward-char)
 (bind-key "s-n" 'forward-char)
 
+(use-package grizzl-read
+  :config (progn
+            (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
+            (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
+
 ;; (bind-key "s-d" 'move-beginning-of-line)
 (bind-key "s-d" '~move-to-beginning-of-line)
 (bind-key "C-a" '~move-to-beginning-of-line)
