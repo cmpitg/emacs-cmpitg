@@ -175,6 +175,9 @@ TODO: Making nice table with: Keybinding - Description - Function - Provided by
 * Emacs Lisp: support
   [modern ways to process lists](https://github.com/magnars/dash.el).
 
+* Indent region: `C-M-\\`, might be used with `C-u` to indent in the opposite
+  direction.
+
 * Scratch/temporary buffer:
   - Switch default scratch buffer: `C-f1`
   - New scratch buffer: `C-x C-n`
