@@ -241,10 +241,10 @@
                       (interactive)
                       (~find-file-extended "~/emacs-config")))
 
-(eval-after-load 'grizzl
-  '(progn
-     (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
-     (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
+(use-package grizzl-read
+  :config (progn
+            (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
+            (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
 
 ;;
 ;; Bookmark jumping
