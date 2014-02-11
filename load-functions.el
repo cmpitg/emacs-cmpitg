@@ -433,8 +433,7 @@ E.g.
 (defun ~rebuild-my-config ()
   "Rebuild my config by loading `*config-dir*/build-config.el`."
   (interactive)
-  (save-excursion
-    (~load-config-files "build-config.el")))
+  (~load-config-files "build-config.el"))
 
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)

@@ -253,13 +253,7 @@
 ;;
 
 (bind-key "C-M-_" 'redo)
-;; (bind-key "<f1>" '~man-this)
-;; (bind-key "<mouse-2>" '~eval-selection)
-
-;; (bind-key "<menu> M-t t" '(lambda ()
-;;                                        (interactive)
-;;                                        (set-frame-parameter nil
-;;                                         'alpha 78)))
+(bind-key "s-; r m c" '~rebuild-my-config)
 
 ;;
 ;; File navigation

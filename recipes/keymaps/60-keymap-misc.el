@@ -149,13 +149,7 @@
 ;;
 
 (bind-key "C-M-_" 'redo)
-;; (bind-key "<f1>" '~man-this)
-;; (bind-key "<mouse-2>" '~eval-selection)
-
-;; (bind-key "<menu> M-t t" '(lambda ()
-;;                                        (interactive)
-;;                                        (set-frame-parameter nil
-;;                                         'alpha 78)))
+(bind-key "s-; r m c" '~rebuild-my-config)
 
 ;;
 ;; File navigation
@@ -169,8 +163,8 @@
 
 (bind-key "C-<menu> C-f" 'auto-fill-mode)
 (bind-key "C-<menu> C-<menu> C-<menu>" (lambda ()
-                                                     (interactive)
-                                                     (set-fill-column 78)))
+                                         (interactive)
+                                         (set-fill-column 78)))
 (bind-key "C-<menu> C-(" 'autopair-mode)
 (bind-key "C-<menu> C-p" 'paredit-mode)
 (bind-key "C-<menu> C-e" 'evil-mode)
