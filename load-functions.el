@@ -262,8 +262,7 @@ E.g.
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(setq *defun-template*
-      )
+;; (setq *defun-template*)
 
 (defun ~eval-string (str)
   "Eval a string."
@@ -431,6 +430,12 @@ E.g.
           (t
            (byte-recompile-directory (expand-file-name dir) 0 nil)))))
 
+(defun ~rebuild-my-config ()
+  "Rebuild my config by loading `*config-dir*/build-config.el`."
+  (interactive)
+  (save-excursion
+    (~load-config-files "build-config.el")))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
@@ -445,6 +450,7 @@ E.g.
 (defalias 'eval-selection '~eval-selection)
 (defalias 'emacs-lisp-make-function '~emacs-lisp-make-function)
 (defalias 'byte-compile-dir '~byte-compile-dir)
+(defalias 'rebuild-my-config '~rebuild-my-config)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
