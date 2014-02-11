@@ -47,11 +47,12 @@
                     (~smart-forward-exp))))
 (bind-key "s-R" 'forward-sexp)
 
+;;; Deleting
+
 (bind-key "s-u" 'delete-char)
 (bind-key "s-e" 'backward-delete-char)
 (bind-key "s-p" 'kill-word)
 (bind-key "s-." 'backward-kill-word)
-;; (bind-key "s-." '~mark-word-backward)
 
 (bind-key "s-x" (lambda ()
                   (interactive)
@@ -59,9 +60,13 @@
                   (delete-horizontal-space)))
 (bind-key "s-X" '~delete-line)
 
+;;; Selection
+
 (bind-key "s-_" '~mark-line)
 (bind-key "s-)" '~mark-word)
 (bind-key "s-S-SPC" '~mark-defun)
+
+;;; Other
 
 (bind-key "s--" 'comment-or-uncomment-region)
 (bind-key "s-/" 'create-tags)
@@ -80,9 +85,12 @@
 (bind-key "s-s" 'helm-occur)
 ;; (bind-key "s-S" 'isearch-backward-regexp)
 
+;;; With other libraries
+
 (use-package paredit
   :config (progn
-            (bind-key "s-." 'paredit-backward-kill-word paredit-mode-map)))
+            (bind-key "s-." 'paredit-backward-kill-word paredit-mode-map)
+            (bind-key "s-p" 'paredit-forward-kill-word paredit-mode-map)))
 
 (use-package helm
   :config (progn
