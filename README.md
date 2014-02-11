@@ -251,6 +251,23 @@ TODO: Making nice table with: Keybinding - Description - Function - Provided by
     * To discard changes: `C-x C-k`
     * To commit changes to files: `C-c C-e` or `wgrep-save-all-buffers`
 
+* With Lisp family - thanks to the great
+  [Paredit](http://www.emacswiki.org/emacs/ParEdit):
+  
+  - Split expression: `M-S`
+  - Join expressions: `M-J`
+  - Go up/outside current expression: `C-M-u`
+  - Go down/inside current expression: `C-M-d`
+  - Go up/outside, then to the end of current expression: `C-M-n`
+  - Go backward/inside previous list: `C-M-p`
+  - Go forward by expression: `C-M-f`
+  - Go backward by expression: `C-M-b`
+  
+  Please refer to 2 paredit
+  [cheat](http://www.emacswiki.org/emacs/PareditCheatsheet)
+  [sheets](https://github.com/joelittlejohn/paredit-cheatsheet) for further
+  information.
+
 ### With Any Interactive mode ###
 
 The following keybindings are applied to when you want to interative with a
