@@ -158,7 +158,7 @@
 ;;                                         'alpha 78)))
 
 ;;
-;; Navigation
+;; File navigation
 ;;
 
 (bind-key "s-; f n" '~goto-my-notes)
