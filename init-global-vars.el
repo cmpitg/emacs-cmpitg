@@ -108,6 +108,7 @@ installed and loaded.")
 
     menu-bar+
     exec-path-from-shell
+    w3m
     )
   "List of packages using in this Emacs configuration.")
 
