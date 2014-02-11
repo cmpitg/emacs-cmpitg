@@ -112,10 +112,6 @@
 (bind-key "s-A" '~exec-then-pipe)
 (bind-key "M-s-a" '~pipe-then-exec)
 (bind-key "M-s-A" '~pipe-then-exec-in-other-window)
-;; (bind-key e-3 '(lambda ()
-;;                              "Execute or eval"
-;;                              (interactive)
-;;                              (~eval-or-exec-print (~current-selection))))
 (bind-key "<S-down-mouse-1>" nil)
 (bind-key "<S-mouse-1>" '~exec-then-pipe-selection)
 
@@ -165,9 +161,7 @@
 ;; Navigation
 ;;
 
-;; Open sunrise without nonpane panel
-(bind-key "s-SPC SPC" '~sunrise)
-(bind-key "s-SPC c" '~sunrise-cd)
+(bind-key "s-; f n" '~goto-my-notes)
 
 ;;
 ;; Mode
