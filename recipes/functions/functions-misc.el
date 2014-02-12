@@ -76,6 +76,18 @@ increase the opacity."
   "Put the mode-line to the top of the window."
   (setq header-line-format mode-line-format mode-line-format nil))
 
+(defun ~init-hyde (&optional path)
+  "Place a sample Hyde's .hyde.el to your Jekyll blog."
+  (interactive)
+  (let ((path (cond (path
+                     path)
+                    (t
+                     (read-directory-name "Path to your Jekyll: ")))))
+    (ignore-errors
+        (f-copy (~get-local-config-dir "samples/dot-hyde.el")
+                (concat path ".hyde.el")))
+    (~open-file (concat path ".hyde.el"))))
+
 (defalias 'start-emacs-server '~start-emacs-server)
 (defalias 'clipboard<-region '~clipboard<-region)
 (defalias 'kill-ring<- '~kill-ring<-)
