@@ -530,6 +530,18 @@
                  (add-hook 'cider-mode-hook
                            'set-auto-complete-as-completion-at-point-function)))))
 
+;; Hyde.el to manage Jekyll blog
+;;   https://github.com/nibrahim/Hyde
+;; Workaround for bad package management
+(let ((local-elpa-path (expand-file-name "~/.emacs.d/elpa/")))
+  (-> (directory-files local-elpa-path nil "hyde-.*")
+    first
+    (s-concat "/hyde-md.el")
+    (s-append local-elpa-path)
+    ~load-files)
+  (use-package hyde
+    :commands hyde))
+
 (use-package scratch-ext)
 
 (use-package w3m
