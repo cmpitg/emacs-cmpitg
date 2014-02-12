@@ -549,6 +549,9 @@
   :init (progn
           (setq browse-url-browser-function 'w3m-browse-url)))
 
+(use-package multi-scratch
+  :commands multi-scratch-new)
+
 (use-package later-do
   :defer t)
 
