@@ -1456,23 +1456,23 @@ are self-explanatory.  The snippet directory is created if it
 doesn't exist yet."
   (interactive)
   (let* ((mode (if (string-empty? mode)
-                 ($read-string "Mode: "
-                               :initial-input (format "%s" major-mode))
+                   (~read-string "Mode: "
+                                 :initial-input (format "%s" major-mode))
                  mode))
          (snippet-mode-dir (f-expand (format "~/emacs-config/snippets/%s" mode)))
 
          (abbrev (if (string-empty? abbrev)
-                   (read-string "Abbrev: ")
+                     (read-string "Abbrev: ")
                    abbrev))
 
          (snippet-file (if (string-empty? filename)
-                         (read-file-name "File name: "
-                                         snippet-mode-dir
-                                         abbrev)
+                           (read-file-name "File name: "
+                                           snippet-mode-dir
+                                           abbrev)
                          filename))
 
          (short-description (if (string-empty? short-description)
-                              (read-string "Short description: ")
+                                (read-string "Short description: ")
                               short-description)))
     ;; Make sure snippet directory exists
     (unless (f-exists? snippet-mode-dir)
