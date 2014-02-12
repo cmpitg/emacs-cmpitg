@@ -254,6 +254,7 @@
 
 (bind-key "C-M-_" 'redo)
 (bind-key "s-; r m c" '~rebuild-my-config)
+(bind-key "s-SPC <return>" '~open-url-in-firefox)
 
 ;;
 ;; File navigation
@@ -267,8 +268,8 @@
 
 (bind-key "C-<menu> C-f" 'auto-fill-mode)
 (bind-key "C-<menu> C-<menu> C-<menu>" (lambda ()
-                                                     (interactive)
-                                                     (set-fill-column 78)))
+                                         (interactive)
+                                         (set-fill-column 78)))
 (bind-key "C-<menu> C-(" 'autopair-mode)
 (bind-key "C-<menu> C-p" 'paredit-mode)
 (bind-key "C-<menu> C-e" 'evil-mode)
@@ -353,7 +354,6 @@
                             (interactive)
                             (~open-file "~/emacs-config/README.md")))
 
-(bind-key "s-SPC <return>"  '~open-url-in-firefox)
 (bind-key "<s-return>"      'switch-to-eshell-back-and-forth)
 (bind-key "<s-S-return>"    'cd-current-buffer-dir-and-switch-to-eshell)
 (bind-key "<C-menu> C-("    'smartparens-mode)
@@ -372,7 +372,7 @@
 
 (eval-after-load 'yasnippet
   '(progn
-     (bind-key "C-c & C-n"       'create-snippet yas-minor-mode-map)))
+     (bind-key "C-c & C-n" 'create-snippet yas-minor-mode-map)))
 
 ;;
 ;; Inserting special symbols
