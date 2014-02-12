@@ -149,8 +149,10 @@
 ;;
 
 (bind-key "C-M-_" 'redo)
-(bind-key "s-; r m c" '~rebuild-my-config)
+(bind-key "s-; r c" '~rebuild-my-config)
 (bind-key "s-; <f5>" '~refresh-firefox)
+
+(bind-key "s-; g g" '~google)
 (bind-key "s-SPC <return>" '~open-url-in-firefox)
 
 ;;
