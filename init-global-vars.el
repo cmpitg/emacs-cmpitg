@@ -101,6 +101,7 @@ installed and loaded.")
     ;; sunrise-x-modeline                  ; Nicer modeline in SR
 
     geiser                              ; Scheme development
+    ac-geiser                           ; Auto complete backend for Geiser
     quack                               ; Another mode for Scheme development,
                                         ; load *after* Geiser
 

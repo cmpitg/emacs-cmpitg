@@ -97,16 +97,16 @@
           (setq wand:*rules*
                 (list (wand:create-rule :match "\\$ "
                                         :capture :after
-                                        :action $popup-shell-command)
+                                        :action ~popup-shell-command)
                       (wand:create-rule :match "https?://"
                                         :capture :whole
-                                        :action $open-url-in-firefox)
+                                        :action ~open-url-in-firefox)
                       (wand:create-rule :match "file:"
                                         :capture :after
                                         :action toolbox:open-file)
                       (wand:create-rule :match "#> "
                                         :capture :after
-                                        :action $add-bracket-and-eval)))))
+                                        :action ~add-bracket-and-eval)))))
 
 (use-package simple-menu)
 
@@ -428,7 +428,15 @@
 (use-package geiser
   :commands geiser-mode
   :config (progn
-            (add-hook 'geiser-repl-mode-hook      '~load-paredit-mode)
+            (add-hook 'geiser-repl-mode-hook   '~load-paredit-mode)
+
+            ;; Auto-complete backend
+            (use-package ac-geiser
+              :init (progn
+                      (add-hook 'geiser-mode-hook        'ac-geiser-setup)
+                      (add-hook 'geiser-repl-mode-hook   'ac-geiser-setup)
+                      (eval-after-load 'auto-complete
+                        '(add-to-list 'ac-modes 'geiser-repl-mode))))
 
             (eval-after-load 'geiser-mode
               '(progn
