@@ -271,6 +271,11 @@ TODO: Making nice table with: Keybinding - Description - Function - Provided by
   [sheets](https://github.com/joelittlejohn/paredit-cheatsheet) for further
   information.
 
+* Highlighting text in buffer (thanks to `hi-lock`):
+  - Highlight phrase: `C-x w p`
+  - Highlight regexp: `C-x w r`
+  - Unhighlight regexp: `C-x w u`
+
 ### With Any Interactive mode ###
 
 The following keybindings are applied to when you want to interative with a
