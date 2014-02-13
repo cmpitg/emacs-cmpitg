@@ -259,6 +259,10 @@
 (bind-key "s-; g g" '~google)
 (bind-key "s-SPC <return>" '~open-url-in-firefox)
 
+(bind-key "C-x w u" 'unhighlight-regexp)
+(bind-key "C-x w p" 'highlight-phrase)
+(bind-key "C-x w r" 'highlight-regexp)
+
 ;;
 ;; File navigation
 ;;

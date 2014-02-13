@@ -23,6 +23,10 @@
           (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
           (yas-global-mode 1)))
 
+;; Highlighting
+(use-package hi-lock
+  :commands (highlight-phrase highlight-regexp))
+
 (use-package projectile
   :diminish projectile-mode
   :config (progn
