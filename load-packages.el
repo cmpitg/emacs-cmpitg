@@ -188,6 +188,9 @@
           (recentf-mode 1)
           (setq recentf-max-menu-items 50)))
 
+(use-package python
+  :mode "\\.py$")
+
 (use-package jedi
   :disabled t
   :config (progn
