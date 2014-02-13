@@ -31,11 +31,11 @@
 ;; Main code
 ;;
 
-(~load-config-files "load-functions.el"
-                    "init-package-manager.el"
-                    "init-essential-packages.el"
-                    "load-keymaps.el"
-                    "load-packages.el"
-                    "load-environment.el"
-                    "load-menu.el"
-                    "load-personal-stuff.el")
+(~load-config-files "load-functions.el")
+(~load-config-files "init-package-manager.el")
+(~load-config-files "init-essential-packages.el")
+(~load-config-files "load-keymaps.el")
+(~load-config-files "load-packages.el")
+(~load-config-files "load-environment.el")
+(~load-config-files "load-menu.el")
+(~load-config-files "load-personal-stuff.el")
