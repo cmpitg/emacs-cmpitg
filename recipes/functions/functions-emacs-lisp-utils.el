@@ -188,6 +188,10 @@ E.g.
   (interactive)
   (~load-config-files "build-config.el"))
 
+(defun ~alist-get (alist key)
+  "Return just the value associated with the key in an alist."
+  (cdr (assoc key alist)))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
