@@ -316,7 +316,7 @@ E.g.
 ;; => ¡Hola mundo!
 "
   (interactive)
-  (let* ((preprocessed-sexp (cond ((not (-string-empty? string))
+  (let* ((preprocessed-sexp (cond ((not (~string-empty? string))
                                    string)
                                   ((is-selecting?)
                                    (get-selection))
