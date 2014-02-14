@@ -43,7 +43,7 @@ directory is specified, the default dir /tmp/emacs1000/server is
 used.  Do nothing if server is already started."
   (setq server-socket-dir (if dir
                             dir
-                            "/tmp/emacs1000/server"))
+                            "/tmp/emacs1000"))
   (unless (and (boundp 'server-socket-dir)
-               (file-exists-p server-socket-dir))
+               (file-exists-p (format "%s/server" server-socket-dir)))
     (server-start)))
