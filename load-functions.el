@@ -748,9 +748,16 @@ Delete the current buffer too."
 This command works on `sudo` *nixes only."
   (interactive)
   (when buffer-file-name
-    (find-alternate-file
-     (concat "/sudo:root@localhost:"
-             buffer-file-name))))
+    (let* ((parsed-data (~parse-tramp-argument buffer-file-name))
+           (host (~alist-get parsed-data 'host))
+           (path (~alist-get parsed-data 'path)))
+     (find-alternate-file (format "/sudo:root@%s:%s"
+                                  host
+                                  path)))))
+
+(defun ~alist-get (alist key)
+  "Return just the value associated with the key in an alist."
+  (cdr (assoc key alist)))
 
 (defun ~build-open-file-cmd-string ()
   "Build a string used to execute an open-file dialog."
@@ -1295,39 +1302,61 @@ E.g.
 ;;  \(host . \"192.168.1.4\"\)
 ;;  \(port . \"3355\"\)
 ;;  \(path . \"/etc/network/interfaces\"\)\)
+
+\(~parse-tramp-argument \"/home/cmpitg/tmp/tmp.txt\"\)
+;; =>
+;; \(\(protocol . \"\"\)
+;;  \(username . \"cmpitg\"\)
+;;  \(host . \"localhost\"\)
+;;  \(port . \"\"\)
+;;  \(path . \"/home/cmpitg/tmp/tmp.txt\"\)\)
 "
-  (flet ((get-path (host-and-path)
-                   (if (string-match (rx (group "/" (1+ anything))) host-and-path)
-                       (match-string 1 host-and-path)
-                     "/tmp/"))
-         (get-port (host-and-path)
-                   (if (string-match (rx (1+ (not (any "\\")))
-                                         "#"
-                                         (group (1+ digit)))
-                                     host-and-path)
-                       (match-string 1 host-and-path)
-                     "22"))
-         (get-host (host-and-path)
-                   (if (string-match (rx bol
-                                         (group (1+ (not (any "#" ":")))))
-                                     host-and-path)
-                       (match-string 1 host-and-path)
-                     "localhost")))
+  (if (s-starts-with? "/" connection-string)
+      `((protocol . "")
+        (username . ,user-login-name)
+        (host     . "localhost")
+        (port     . "")
+        (path     . ,connection-string))
+    (flet ((get-path (host-and-path)
+                     (if (string-match (rx (group "/" (1+ anything))) host-and-path)
+                         (match-string 1 host-and-path)
+                       "/tmp/"))
+           (get-port (host-and-path)
+                     (if (string-match (rx (1+ (not (any "\\")))
+                                           "#"
+                                           (group (1+ digit)))
+                                       host-and-path)
+                         (match-string 1 host-and-path)
+                       "22"))
+           (get-host (host-and-path)
+                     (if (string-match (rx bol
+                                           (group (1+ (not (any "#" ":")))))
+                                       host-and-path)
+                         (match-string 1 host-and-path)
+                       "localhost")))
 
-    (string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" connection-string)
+      (string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" connection-string)
 
-    (let* ((protocol      (match-string 1 connection-string))
-           (username      (match-string 2 connection-string))
-           (host-and-path (match-string 3 connection-string))
+      (let* ((protocol      (match-string 1 connection-string))
+             (username      (match-string 2 connection-string))
+             (host-and-path (match-string 3 connection-string))
            
-           (host          (get-host host-and-path))
-           (port          (get-port host-and-path))
-           (path          (get-path host-and-path)))
-      `((protocol . ,protocol)
-        (username . ,username)
-        (host     . ,host)
-        (port     . ,port)
-        (path     . ,path)))))
+             (host          (get-host host-and-path))
+             (port          (get-port host-and-path))
+             (path          (get-path host-and-path)))
+        `((protocol . ,protocol)
+          (username . ,username)
+          (host     . ,host)
+          (port     . ,port)
+          (path     . ,path))))))
+
+((protocol . "")
+ (username . "cmpitg")
+ (host . "localhost")
+ (port . "")
+ (path . "/home/cmpitg/tmp/tmp.txt"))
+
+(string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" "/home/cmpitg/tmp/fuck.el")
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
