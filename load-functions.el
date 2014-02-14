@@ -754,10 +754,17 @@ This command works on `sudo` *nixes only."
   (when buffer-file-name
     (let* ((parsed-data (~parse-tramp-argument buffer-file-name))
            (host (~alist-get parsed-data 'host))
-           (path (~alist-get parsed-data 'path)))
-     (find-alternate-file (format "/sudo:root@%s:%s"
-                                  host
-                                  path)))))
+           (path (~alist-get parsed-data 'path))
+           (port (~alist-get parsed-data 'port)))
+      (find-alternate-file
+       (if (~string-empty? port)
+           (format "/sudo:root@%s:%s"
+                   host
+                   path)
+         (format "/sudo:root@%s#%s::s"
+                 host
+                 port
+                 path))))))
 
 (defun ~build-open-file-cmd-string ()
   "Build a string used to execute an open-file dialog."

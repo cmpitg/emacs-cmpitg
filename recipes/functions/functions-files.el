@@ -166,9 +166,19 @@ Delete the current buffer too."
 This command works on `sudo` *nixes only."
   (interactive)
   (when buffer-file-name
-    (find-alternate-file
-     (concat "/sudo:root@localhost:"
-             buffer-file-name))))
+    (let* ((parsed-data (~parse-tramp-argument buffer-file-name))
+           (host (~alist-get parsed-data 'host))
+           (path (~alist-get parsed-data 'path))
+           (port (~alist-get parsed-data 'port)))
+      (find-alternate-file
+       (if (~string-empty? port)
+           (format "/sudo:root@%s:%s"
+                   host
+                   path)
+         (format "/sudo:root@%s#%s::s"
+                 host
+                 port
+                 path))))))
 
 (defun ~build-open-file-cmd-string ()
   "Build a string used to execute an open-file dialog."
