@@ -1318,7 +1318,7 @@ E.g.
 ;;  \(port . \"\"\)
 ;;  \(path . \"/home/cmpitg/tmp/tmp.txt\"\)\)
 "
-  (if (s-starts-with? "/" connection-string)
+  (if (not (string-match "@" connection-string))
       `((protocol . "")
         (username . ,user-login-name)
         (host     . "localhost")
