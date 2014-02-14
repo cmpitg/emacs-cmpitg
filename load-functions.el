@@ -1370,14 +1370,6 @@ E.g.
           (port     . ,port)
           (path     . ,path))))))
 
-((protocol . "")
- (username . "cmpitg")
- (host . "localhost")
- (port . "")
- (path . "/home/cmpitg/tmp/tmp.txt"))
-
-(string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" "/home/cmpitg/tmp/fuck.el")
-
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
 ;;

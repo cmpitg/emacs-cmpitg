@@ -82,11 +82,3 @@ E.g.
           (host     . ,host)
           (port     . ,port)
           (path     . ,path))))))
-
-((protocol . "")
- (username . "cmpitg")
- (host . "localhost")
- (port . "")
- (path . "/home/cmpitg/tmp/tmp.txt"))
-
-(string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" "/home/cmpitg/tmp/fuck.el")
