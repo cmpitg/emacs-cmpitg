@@ -228,10 +228,6 @@
 
 (use-package acme-mouse)
 
-;; Better ido
-
-(use-package flx-ido)
-
 ;; Edittable ack
 
 (use-package wgrep-ack)
