@@ -259,7 +259,7 @@
 
 ;; Default scratch-buffer mode
 (setq initial-major-mode 'emacs-lisp-mode)
-(setq default-major-mode 'emacs-lisp-mode)
+(setq major-mode 'markdown-mode)
 
 ;; Don't let the cursor go into minibuffer prompt
 ;;   http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
