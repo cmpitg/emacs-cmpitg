@@ -74,7 +74,8 @@ installed and loaded.")
     js2-mode                            ; JavaScript
     pabbrev                             ; Better abbrev
     magit                               ; Best Git interface for Emacs
-    monky                               ; Magit-like mode for Mercurial
+    ;; monky                               ; Magit-like mode for Mercurial
+    ahg                                 ; Better mode for Mercurial
     zlc                                 ; Zsh completion
     hexrgb                              ; Color manipulation
     projectile                          ; Better project management

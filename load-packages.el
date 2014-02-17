@@ -39,6 +39,10 @@
 (use-package undo-tree
   :diminish undo-tree-mode)
 
+;; For Mercurial version control system
+(use-package ahg
+  :commands ahg-status)
+
 (use-package wand
   :init (progn
           ;; TODO
@@ -554,7 +558,7 @@
 (use-package cider
   :config (progn
             (use-package clojure-mode)
-            (use-package clojure-cheasheet)
+            (use-package clojure-cheatsheet)
             (use-package clojure-test-mode)
             (use-package clojurescript-mode)
             (use-package ac-nrepl)
