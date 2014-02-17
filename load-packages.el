@@ -43,6 +43,10 @@
 (use-package ahg
   :commands ahg-status)
 
+;; HTTP request library
+(use-package request
+  :commands request)
+
 (use-package wand
   :init (progn
           ;; TODO

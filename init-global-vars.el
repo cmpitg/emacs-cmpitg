@@ -82,6 +82,8 @@ installed and loaded.")
     helm-projectile                     ; Projectile-Helm integration
     grizzl                              ; Grizzl fuzzy matching method
 
+    request                             ; HTTP request library
+
     highlight-parentheses
     scratch-ext                         ; Better way to manage scratch buffer
 
