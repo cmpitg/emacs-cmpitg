@@ -785,6 +785,26 @@ This command works on `sudo` *nixes only."
           (~current-dir)
           " 2>/dev/null"))
 
+(defun ~rename-current-file (&optional new-name)
+  "Renames both current buffer and file it's visiting to
+NEW-NAME."
+  (interactive)
+  (let* ((new-name (expand-file-name (cond ((not (~string-empty? new-name))
+                                            new-name)
+                                           (t
+                                            (read-file-name "New name: ")))))
+         (name (buffer-name))
+         (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file name new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+
 (defalias 'find-file-extended '~find-file-extended)
 (defalias 'write-to-file '~write-to-file)
 (defalias 'make-executable '~make-executable)
@@ -813,6 +833,8 @@ This command works on `sudo` *nixes only."
 
 (defalias '~file-exists? 'file-exists-p
   "Determine if a file exists")
+
+(defalias 'rename-current-file '~rename-current-file)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
