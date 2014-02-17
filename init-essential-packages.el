@@ -137,14 +137,16 @@
 
 ;; Better ido for minibuffer completion
 
-(use-package flx-ido
-  :init (progn
-          (ido-mode 1)
-          (ido-everywhere 1)
-          (flx-ido-mode 1)
+(use-package ido
+  :config (progn
+            (use-package flx-ido
+              :init (progn
+                      (ido-mode 1)
+                      (ido-everywhere 1)
+                      (flx-ido-mode 1)
 
-          ;; disable ido faces to see flx highlights.
-          (setq ido-use-faces nil)))
+                      ;; disable ido faces to see flx highlights.
+                      (setq ido-use-faces nil)))))
 
 ;; Open with external programs
 
@@ -215,8 +217,8 @@
 
 (use-package icicles
   :diminish icicle-mode
-  :init (progn
-          (icy-mode 1)))
+  :config (progn
+            (icy-mode 1)))
 
 ;; Undo tree
 
