@@ -201,7 +201,16 @@
           (setq recentf-max-menu-items 50)))
 
 (use-package python
-  :mode "\\.py$")
+  :config (progn
+            ;; Workaround: virtualenvwrapper.el needs to be loaded explicitly
+            (progn
+              (~load-files (buffer-file-name (find-library "virtualenvwrapper")))
+              (kill-buffer "virtualenvwrapper.el"))
+            (use-package virtualenvwrapper
+              :config (progn 
+                        (venv-initialize-interactive-shells)
+                        (venv-initialize-eshell)
+                        (setq venv-location "/m/virtenvs/")))))
 
 (use-package jedi
   :disabled t

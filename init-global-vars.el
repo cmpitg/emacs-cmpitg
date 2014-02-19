@@ -55,6 +55,8 @@ installed and loaded.")
 (defvar *elpa-packages*
   '(jedi                                ; Autocomplete and cool stuff for
                                         ; Python development
+    virtualenvwrapper                   ; Virtualenvwrapper interface for
+                                        ; Emacs
     ruby-mode
     ruby-dev                            ; Ruby and Pry
     yaml-mode
