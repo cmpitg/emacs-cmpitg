@@ -197,8 +197,8 @@
 (use-package recentf
   :defer t
   :config (progn
-          (recentf-mode 1)
-          (setq recentf-max-menu-items 50)))
+            (recentf-mode 1)
+            (setq recentf-max-menu-items 128)))
 
 (use-package python
   :config (progn
