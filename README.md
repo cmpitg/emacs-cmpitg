@@ -153,6 +153,9 @@ Features:
   expression in the second text box (called *filterbar*).  Shortcut to go
   directly to the *filterbar*: `Ctrl-F`.
 
+* Automagically encrypt files with `.gpg` extension using EPA package bundled
+  with Emacs.  Requires GPG installed in your system.
+
 ## Use Cases with Keybindings ##
 
 TODO: Making nice table with: Keybinding - Description - Function - Provided by
