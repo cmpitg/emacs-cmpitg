@@ -233,3 +233,9 @@
 ;; Edittable ack
 
 (use-package wgrep-ack)
+
+;; GPG interface
+
+(use-package epa-file
+  :config (progn
+            (epa-file-enable)))
