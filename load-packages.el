@@ -182,13 +182,14 @@
 
 (use-package ruby-mode
   :commands ruby-mode
+  :init (progn
+          (~auto-load-mode '("\\Rakefile$" "\\.mab$") 'ruby-mode))
   :config (progn
             (use-package ruby-dev
               :init (progn
                       (autoload 'turn-on-ruby-dev "ruby-dev" nil t)
 
-                      (add-hook 'ruby-mode-hook 'turn-on-ruby-dev)
-                      (~auto-load-mode '("\\Rakefile$" "\\.mab$") 'ruby-mode)))))
+                      (add-hook 'ruby-mode-hook 'turn-on-ruby-dev)))))
 
 ;; (use-package rsense
 ;;   :init (progn
