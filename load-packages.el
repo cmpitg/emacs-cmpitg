@@ -522,7 +522,9 @@
 
             (eval-after-load 'geiser-mode
               '(progn
-                 (dolist (sym '(λ 
+                 (dolist (sym '(λ
+                                ~>
+                                ~>>
                                 define-values
                                 get
                                 post
