@@ -18,9 +18,10 @@
 (defun ~jekyll-add-last-updated ()
   "Add last_update timestamp with `date -R` format."
   (interactive)
-  (goto-point (point-min))
-  (if (re-search-forward "^last_updated:.*$")
-    (replace-match (format "last_updated: %s"
-                           (~string-but-last (~exec "date -R"))))))
+  (save-excursion
+    (goto-point (point-min))
+    (if (re-search-forward "^last_updated:.*$")
+        (replace-match (format "last_updated: %s"
+                               (~string-but-last (~exec "date -R")))))))
 
 (defalias 'jekyll-add-last-updated '~jekyll-add-last-updated)
