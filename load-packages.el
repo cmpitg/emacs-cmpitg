@@ -509,6 +509,8 @@
 
 (use-package geiser
   :commands geiser-mode
+  :init (progn
+          (setq geiser-default-implementation "racket"))
   :config (progn
             (add-hook 'geiser-repl-mode-hook   '~load-paredit-mode)
 

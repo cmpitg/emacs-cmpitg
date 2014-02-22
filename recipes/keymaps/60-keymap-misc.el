@@ -217,8 +217,7 @@
             (define-key emacs-lisp-mode-map (kbd "<f1>") '(lambda ()
                                                             (interactive)
                                                             (apropos (current-word))))
-            (define-key emacs-lisp-mode-map (kbd "<S-f1>") 'find-function)
-            ))
+            (define-key emacs-lisp-mode-map (kbd "<S-f1>") 'find-function)))
 ;; Markdown
 
 (add-hook 'markdown-mode-hook
