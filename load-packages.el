@@ -319,7 +319,6 @@
             (add-hook 'html-mode-hook '~auto-reload-firefox-after-save-hook)
             (add-hook 'css-mode-hook '~auto-reload-firefox-after-save-hook)))
 
-
 (use-package ibus
   :config (progn
             ;; Use C-SPC for Set Mark command
@@ -328,7 +327,7 @@
             (ibus-define-common-key ?\C-/ nil)
             ;; Change cursor color depending on IBus status
             (setq ibus-cursor-color '("red" "blue" "limegreen"))
-            (setq ibus-agent-file-name "~/emacs-config/emacs-local-packages/ibus.el/ibus-el-agent")))
+            (setq ibus-agent-file-name (~get-local-config-dir "local-packages/ibus.el/ibus-el-agent"))))
 
 (use-package haskell-mode
   :disabled t
