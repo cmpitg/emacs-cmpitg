@@ -91,6 +91,8 @@
   :config (progn
             (bind-key "s-." 'paredit-backward-kill-word paredit-mode-map)
             (bind-key "s-p" 'paredit-forward-kill-word  paredit-mode-map)
+            (bind-key "s-r" 'forward-word               paredit-mode-map)
+            (bind-key "s-g" 'backward-word              paredit-mode-map)
             (bind-key "s-R" 'paredit-forward            paredit-mode-map)
             (bind-key "s-G" 'paredit-backward           paredit-mode-map)))
 
