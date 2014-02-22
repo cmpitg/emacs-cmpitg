@@ -299,6 +299,8 @@
 (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
 ;; (setq helm-command-prefix-key "<f5>")
 
+(bind-key "s-; h t t p" 'httprepl)
+
 ;;
 ;; Mode specific
 ;;
