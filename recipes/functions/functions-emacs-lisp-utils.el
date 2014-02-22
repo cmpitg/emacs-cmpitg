@@ -192,6 +192,14 @@ E.g.
   "Return just the value associated with the key in an alist."
   (cdr (assoc key alist)))
 
+(defun ~get-library-full-path (library-name)
+  "Return the full path to a library."
+  (save-excursion
+    (find-library library-name)
+    (let ((file-path (~current-file-full-path)))
+      (kill-buffer)
+      file-path)))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
@@ -207,3 +215,4 @@ E.g.
 (defalias 'emacs-lisp-make-function '~emacs-lisp-make-function)
 (defalias 'byte-compile-dir '~byte-compile-dir)
 (defalias 'rebuild-my-config '~rebuild-my-config)
+(defalias 'get-library-full-path '~get-library-full-path)
