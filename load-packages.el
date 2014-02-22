@@ -636,6 +636,11 @@
 
 (use-package scratch-ext)
 
+;; HTTP REPL FTW
+;; Again, bad packaging needs workaround
+(~load-files (~get-library-full-path "httprepl"))
+(use-package httprepl)
+
 (use-package w3m
   :commands w3m-browse-url
   :init (progn

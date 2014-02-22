@@ -85,6 +85,7 @@ installed and loaded.")
     grizzl                              ; Grizzl fuzzy matching method
 
     request                             ; HTTP request library
+    httprepl                            ; HTTP REPL
 
     highlight-parentheses
     scratch-ext                         ; Better way to manage scratch buffer
