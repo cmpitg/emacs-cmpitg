@@ -223,7 +223,6 @@ E.g.
   (unless (string-equal "scratch.el" (~current-buffer-name))
     (unless (get-buffer "scratch.el")
       (find-file (s-concat *scratch-dir* "scratch.el")))
-    (~switch-to-last-buffer)
     (switch-to-buffer-other-window "scratch.el")))
 
 (defun ~helm-multi-occur-all ()
