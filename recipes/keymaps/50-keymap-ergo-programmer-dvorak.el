@@ -42,18 +42,9 @@
 (bind-key "s-H" 'beginning-of-buffer)
 (bind-key "s-N" 'end-of-buffer)
 
-(bind-key "s-g" '(lambda ()
-                  (interactive)
-                  (if (~string-contains? (->string major-mode) "lisp")
-                      (call-interactively 'backward-to-word)
-                    (backward-sexp))))
+(bind-key "s-g" 'backward-to-word)
 (bind-key "s-G" 'backward-sexp)
-;; (bind-key "s-r" 'forward-word)
-(bind-key "s-r" (lambda ()
-                  (interactive)
-                  (if (~string-contains? (->string major-mode) "lisp")
-                      (call-interactively 'forward-to-word)
-                    (~smart-forward-exp))))
+(bind-key "s-r" 'forward-to-word)
 (bind-key "s-R" 'forward-sexp)
 
 ;;; Deleting
@@ -99,9 +90,11 @@
 (use-package paredit
   :config (progn
             (bind-key "s-." 'paredit-backward-kill-word paredit-mode-map)
-            (bind-key "s-p" 'paredit-forward-kill-word paredit-mode-map)))
+            (bind-key "s-p" 'paredit-forward-kill-word  paredit-mode-map)
+            (bind-key "s-R" 'paredit-forward            paredit-mode-map)
+            (bind-key "s-G" 'paredit-backward           paredit-mode-map)))
 
 (use-package helm
   :config (progn
-            (bind-key "s-t" 'helm-next-line helm-map)
-            (bind-key "s-c" 'helm-previous-line helm-map)))
+            (bind-key "s-t" 'helm-next-line      helm-map)
+            (bind-key "s-c" 'helm-previous-line  helm-map)))
