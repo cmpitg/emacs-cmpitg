@@ -156,6 +156,7 @@ installed and loaded.")
       *snippet-dir*            (concat *config-dir* "/snippets")
       *license-dir*            (concat *config-dir* "/license-list")
       *saved-macro-path*       (concat *config-dir* "/functions/saved-macros.el")
+      *scratch-dir*            "/m/scratch/"
 
       *ctags-path*             "/usr/bin/ctags-exuberant"
       *default-lisp-repl-path* (expand-file-name "~/bin/sbcl")
