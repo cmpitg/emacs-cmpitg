@@ -135,6 +135,8 @@
   :init (progn
           (global-smartscan-mode 1)))
 
+(use-package misc)
+
 ;; Better ido for minibuffer completion
 
 (use-package ido
