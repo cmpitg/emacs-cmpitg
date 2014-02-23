@@ -2255,7 +2255,7 @@ buffer.")
   (~open-url-in-firefox
    (format "https://encrypted.google.com/search?q=%s" keyword)))
 
-(defun ~open-url-in-firefox (url)
+(defun ~firefox (url)
   "Open a URL in Firefox."
   (interactive
    (list (read-string "URL: " (cond
@@ -2297,7 +2297,9 @@ buffer.")
             'append 'local))
 
 (defalias 'google '~google)
-(defalias 'open-url-in-firefox '~open-url-in-firefox)
+(defalias 'firefox '~firefox)
+(defalias '~open-url-in-firefox '~firefox)
+(defalias 'open-url-in-firefox '~firefox)
 (defalias 'refresh-firefox '~refresh-firefox)
 (defalias 'start-mozrepl '~start-mozrepl)
 (defalias 'send-to-mozrepl '~send-to-mozrepl)
