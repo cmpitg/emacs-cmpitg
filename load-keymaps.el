@@ -42,9 +42,11 @@
 (bind-key "s-H" 'beginning-of-buffer)
 (bind-key "s-N" 'end-of-buffer)
 
-(bind-key "s-g" 'backward-to-word)
+(bind-key "s-g" 'backward-word)t
+;; (bind-key "s-g" 'backward-to-word)
 (bind-key "s-G" 'backward-sexp)
-(bind-key "s-r" 'forward-to-word)
+(bind-key "s-r" 'forward-word)
+;; (bind-key "s-r" 'forward-to-word)
 (bind-key "s-R" 'forward-sexp)
 
 ;;; Deleting
