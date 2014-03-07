@@ -210,7 +210,9 @@
 
 (use-package dired+
   :init (progn
-          (setq dired-listing-switches "-lahF")))
+          (setq dired-listing-switches "-lahF")
+          ;; Reuse current buffer when opening file/dir
+          (toggle-diredp-find-file-reuse-dir 1)))
 
 ;; Icicles for better minibuffer completion
 ;;
