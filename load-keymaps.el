@@ -66,7 +66,7 @@
 
 (bind-key "s-_" '~mark-line)
 (bind-key "s-)" '~mark-word)
-(bind-key "s-S-SPC" '~mark-defun)
+(bind-key "s-S-SPC" 'mark-defun)
 
 ;;; Other
 

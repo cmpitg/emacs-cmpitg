@@ -26,7 +26,8 @@
 (defun toolbox:open-file (path)
   "Open path and open with external program if necessary."
   (condition-case description
-      (find-file path)))
+      (progn
+        (find-file path))))
 
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
@@ -234,6 +235,8 @@ E.g.
                    (when (buffer-file-name b) (buffer-name b)))
                  (buffer-list)))))
 
+(defalias '~popup-buffer 'popwin:popup-buffer)
+(defalias 'popup-buffer '~popup-buffer)
 (defalias 'next-file-buffer '~next-file-buffer)
 (defalias 'move-to-compilation-buffer '~move-to-compilation-buffer)
 (defalias 'current-buffer-name '~current-buffer-name)
@@ -1540,9 +1543,12 @@ display result."
                             ((is-selecting?)
                              (get-selection))
                             (t
-                             (~read-string "Shell command: "))))
-         (output (~exec command-str)))
-    (~popup-message output)))
+                             (~read-string "Shell command: ")))))
+    (ignore-errors
+      (with-current-buffer "*Shell Output*"
+        (erase-buffer)))
+    (start-process-shell-command "Shell-Command" "*Shell Output*" "ls")
+    (~popup-buffer "*Shell Output*")))
 
 (defun ~man-current-word ()
   "`man` this word."
