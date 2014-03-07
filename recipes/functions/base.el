@@ -26,7 +26,8 @@
 (defun toolbox:open-file (path)
   "Open path and open with external program if necessary."
   (condition-case description
-      (find-file path)))
+      (progn
+        (find-file path))))
 
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
