@@ -440,9 +440,11 @@
 
 ;; Default: -lahF
 
-(use-package dired-details+ 
+(use-package dired-details+
   :init (progn
-          (setq dired-listing-switches "-lhFgG --group-directories-first")))
+          (use-package dired-single))
+  :config (progn
+            (setq dired-listing-switches "-lhFgG --group-directories-first")))
 
 (use-package auto-complete
   :diminish auto-complete-mode
