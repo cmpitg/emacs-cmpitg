@@ -563,8 +563,17 @@
   :disabled t
   :config (progn
             ;; TODO: Document about indent changing and keywording
-            (put 'λ 'racket-indent-function 1)
-            (add-to-list 'racket-keywords "λ")
+            (dolist (sym '(λ
+                           local
+                           ~>
+                           ~>>
+                           else))
+              (put sym 'racket-indent-function 1)
+              (add-to-list 'racket-keywords (~symbol->string sym))
+              (add-to-list 'racket-builtins (~symbol->string sym)))
+
+            (add-hook 'racket-mode-hook   '~load-paredit-mode)
+
             (bind-key "C-c C-b" 'racket-run racket-mode-map)
             (bind-key "C-c C-z" 'other-window racket-repl-mode-map)
             (bind-key "C-c C-z" (lambda ()
