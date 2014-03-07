@@ -53,7 +53,8 @@
 installed and loaded.")
 
 (defvar *elpa-packages*
-  '(jedi                                ; Autocomplete and cool stuff for
+  '(dired-single                        ; Reuse dired buffer when opening
+    jedi                                ; Autocomplete and cool stuff for
                                         ; Python development
     virtualenvwrapper                   ; Virtualenvwrapper interface for
                                         ; Emacs
