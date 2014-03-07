@@ -24,9 +24,12 @@ display result."
                             ((is-selecting?)
                              (get-selection))
                             (t
-                             (~read-string "Shell command: "))))
-         (output (~exec command-str)))
-    (~popup-message output)))
+                             (~read-string "Shell command: ")))))
+    (ignore-errors
+      (with-current-buffer "*Shell Output*"
+        (erase-buffer)))
+    (start-process-shell-command "Shell-Command" "*Shell Output*" "ls")
+    (~popup-buffer "*Shell Output*")))
 
 (defun ~man-current-word ()
   "`man` this word."
