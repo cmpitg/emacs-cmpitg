@@ -154,6 +154,8 @@ E.g.
                    (when (buffer-file-name b) (buffer-name b)))
                  (buffer-list)))))
 
+(defalias '~popup-buffer 'popwin:popup-buffer)
+(defalias 'popup-buffer '~popup-buffer)
 (defalias 'next-file-buffer '~next-file-buffer)
 (defalias 'move-to-compilation-buffer '~move-to-compilation-buffer)
 (defalias 'current-buffer-name '~current-buffer-name)
