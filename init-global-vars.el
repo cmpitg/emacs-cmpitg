@@ -128,7 +128,7 @@ installed and loaded.")
     multi-scratch                       ; Multiple scratch buffers
     moz-repl                            ; MozRepl
     whitespace                          ; Display trailing whitespace
-    openwith                            ; Open file with external program, in
+    ;; openwith                            ; Open file with external program, in
                                         ; any file-browsing modes like Sunrise
                                         ; Commander or Dired
     hs-lint                             ; Haskell linter
