@@ -24,11 +24,6 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-;; openwith is an exception, it's installed with el-get
-
-(unless (el-get-package-is-installed 'openwith)
-  (el-get-install 'openwith))
-
 ;;
 ;; Now, load them
 ;;
@@ -151,6 +146,10 @@
                       (setq ido-use-faces nil)))))
 
 ;; Open with external programs
+;; openwith is an exception, the jpkotta's fork is the best with `nohup`
+
+;; (unless (el-get-package-is-installed 'openwith)
+;;   (el-get-install 'openwith))
 
 (use-package openwith
   :init (progn
