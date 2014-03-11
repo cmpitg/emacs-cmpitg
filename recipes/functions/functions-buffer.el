@@ -192,6 +192,4 @@ nth-killed buffer."
 (defalias 'goto-prev-DEBUG '~goto-prev-DEBUG)
 (defalias 'goto-next-FIXME '~goto-next-FIXME)
 (defalias 'goto-prev-FIXME '~goto-prev-FIXME)
-
-(defalias '~save-file 'save-buffer
-  "Save current buffer")
+(defalias 'undo-kill-buffer '~undo-kill-buffer)
