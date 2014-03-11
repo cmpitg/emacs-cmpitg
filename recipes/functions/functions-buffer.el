@@ -154,6 +154,27 @@ E.g.
                    (when (buffer-file-name b) (buffer-name b)))
                  (buffer-list)))))
 
+(defun ~undo-kill-buffer (arg)
+  "Re-open the last buffer killed.  With ARG, re-open the
+nth-killed buffer."
+  (interactive "p")
+  (let ((recently-killed-list (copy-sequence recentf-list))
+        (buffer-files-list
+         (delq nil (mapcar (lambda (buf)
+                             (when (buffer-file-name buf)
+                               (expand-file-name (buffer-file-name buf)))) (buffer-list)))))
+    (mapc
+     (lambda (buf-file)
+       (setq recently-killed-list
+             (delq buf-file recently-killed-list)))
+     buffer-files-list)
+    (find-file
+     (if arg (nth arg recently-killed-list)
+         (car recently-killed-list)))))
+
+(defalias '~save-file 'save-buffer
+  "Save current buffer")
+
 (defalias '~popup-buffer 'popwin:popup-buffer)
 (defalias 'popup-buffer '~popup-buffer)
 (defalias 'next-file-buffer '~next-file-buffer)
