@@ -81,22 +81,22 @@
             (global-set-key (kbd "<C-mouse-1>") 'wand:execute)
             (dolist (rule (list (wand:create-rule :match "\\$ "
                                                   :capture :after
-                                                  :action $popup-shell-command)
+                                                  :action ~popup-shell-command)
                                 (wand:create-rule :match "https?://"
                                                   :capture :whole
-                                                  :action $open-url-in-firefox)
+                                                  :action ~open-url-in-firefox)
                                 (wand:create-rule :match "file:"
                                                   :capture :after
                                                   :action toolbox:open-file)
                                 (wand:create-rule :match "#> "
                                                   :capture :after
-                                                  :action $add-bracket-and-eval)
+                                                  :action ~add-bracket-and-eval)
                                 (wand:create-rule :match "window:"
                                                   :capture :after
-                                                  :action $switch-to-window)
+                                                  :action ~switch-to-window)
                                 (wand:create-rule :match "eshell-cd:"
                                                   :capture :after
-                                                  :action $change-dir-in-eshell)
+                                                  :action ~change-dir-in-eshell)
                                 ))
               (wand:add-rule rule))
             (wand:create-rule :match "window:"
@@ -112,7 +112,7 @@
                                         :action ~popup-shell-command)
                       (wand:create-rule :match "https?://"
                                         :capture :whole
-                                        :action ~open-url-in-firefox)
+                                        :action ~firefox)
                       (wand:create-rule :match "file:"
                                         :capture :after
                                         :action toolbox:open-file)
