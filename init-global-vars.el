@@ -118,7 +118,8 @@ installed and loaded.")
     exec-path-from-shell
     w3m
     hyde                                ; Jekyll blogging management
-    )
+    url-shortener
+    json-mode)
   "List of packages using in this Emacs configuration.")
 
 (defvar *el-get-packages*

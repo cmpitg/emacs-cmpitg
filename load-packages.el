@@ -666,3 +666,8 @@
 
 (use-package whitespace
   :defer t)
+
+;; URL shortener
+(use-package url-shortener
+  :init (progn
+          (use-package json-mode)))
