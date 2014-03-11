@@ -47,3 +47,5 @@ used.  Do nothing if server is already started."
   (unless (and (boundp 'server-socket-dir)
                (file-exists-p (format "%s/server" server-socket-dir)))
     (server-start)))
+
+(defalias '~get-local-config-path '~get-local-config-dir)
