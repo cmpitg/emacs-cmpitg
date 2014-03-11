@@ -19,7 +19,7 @@
   "Google a keyword in Firefox."
   (interactive (list (~read-string "Keyword: "
                                    :initial-input (get-selection))))
-  (~open-url-in-firefox
+  (~firefox
    (format "https://encrypted.google.com/search?q=%s" keyword)))
 
 (defun ~firefox (url)
