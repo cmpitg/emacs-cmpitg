@@ -35,8 +35,10 @@
 
 (bind-key "<f2>" 'save-buffer)
 (bind-key "C-<f2>" 'buffer-menu)
-(bind-key "<f3>" 'fiplr-find-file)
-(bind-key "<S-f3>" '~find-file-extended)
+;; (bind-key "<f3>" 'fiplr-find-file)
+;; (bind-key "<S-f3>" '~find-file-extended)
+(bind-key "<S-f3>" 'fiplr-find-file)
+(bind-key "<f3>" '~find-file-extended)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
 (bind-key "C-<f4>" '~kill-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
