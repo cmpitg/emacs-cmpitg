@@ -223,7 +223,10 @@ TODO: Making nice table with: Keybinding - Description - Function - Provided by
 * Movement:
   - Set a mark (to jump): `C-SPC C-SPC`
   - Come back to the last mark or point where you just editted: `C-u C-SPC`
-  - List all occurrences of an expression in current buffer: `s-s` (`helm-occur`)
+  - List all occurrences of an expression in current buffer: `s-s`
+    ([`swoop`](https://github.com/ShingoFukuyama/emacs-swoop))
+    * Synchronously toggle editing while `swoop`ing: `C-c C-e`
+    * `swoop` last query: `C-u s-s`
 
 * Basic text processing:
   - Upcase word, lowcase word, and capitalize word: `M-u`, `M-l`, and `M-c`
