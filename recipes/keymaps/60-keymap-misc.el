@@ -35,10 +35,9 @@
 
 (bind-key "<f2>" 'save-buffer)
 (bind-key "C-<f2>" 'buffer-menu)
-;; (bind-key "<f3>" 'fiplr-find-file)
-;; (bind-key "<S-f3>" '~find-file-extended)
-(bind-key "<S-f3>" 'fiplr-find-file)
-(bind-key "<f3>" '~find-file-extended)
+(bind-key "<S-f3>" '~find-file-extended)
+(bind-key "<M-f3>" 'fiplr-find-file)
+(bind-key "<f3>" 'helm-find-files)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
 (bind-key "C-<f4>" '~kill-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
@@ -188,7 +187,6 @@
 ;; (bind-key "M-x" 'execute-extended-command)
 ;; (bind-key "M-/" 'dabbrev-expand)
 
-(bind-key "<M-f3>" 'helm-find-files)
 (bind-key "<f10>" '~helm-grep)
 (bind-key "<C-f10>" 'ack)
 (bind-key "s-@" '~duplicate-line)
