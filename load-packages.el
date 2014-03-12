@@ -671,3 +671,7 @@
 (use-package url-shortener
   :init (progn
           (use-package json-mode)))
+
+;; Buffer navigation with pattern searching and replacing
+;;   https://github.com/ShingoFukuyama/emacs-swoop
+(use-package swoop)

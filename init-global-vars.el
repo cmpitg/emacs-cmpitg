@@ -88,6 +88,9 @@ installed and loaded.")
     request                             ; HTTP request library
     httprepl                            ; HTTP REPL
 
+    swoop                               ; Great buffer navigation with
+                                        ; pattern searching
+
     highlight-parentheses
     scratch-ext                         ; Better way to manage scratch buffer
 
