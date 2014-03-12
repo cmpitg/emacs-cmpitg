@@ -103,3 +103,8 @@
   :config (progn
             (bind-key "s-t" 'helm-next-line      helm-map)
             (bind-key "s-c" 'helm-previous-line  helm-map)))
+
+(use-package swoop
+  :config (progn
+            (bind-key "s-t" 'swoop-action-goto-line-next swoop-map)
+            (bind-key "s-c" 'swoop-action-goto-line-prev swoop-map)))
