@@ -218,10 +218,11 @@
 ;;
 ;; http://www.emacswiki.org/emacs/Icicles
 
-(use-package icicles
-  :diminish icicle-mode
-  :config (progn
-            (icy-mode 1)))
+;; (use-package icicles
+;;   :disabled t
+;;   :diminish icicle-mode
+;;   :config (progn
+;;             (icy-mode 1)))
 
 ;; Undo tree
 
