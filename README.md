@@ -239,6 +239,8 @@ TODO: Making nice table with: Keybinding - Description - Function - Provided by
   - Surround text: `s-SPC s`
   - In Markdown mode: Use `s-SPC i`, `s-SPC b`, and `s-SPC r` to italicize,
     embolden, or rawify text selection.
+  - Quick jumping based-on character: `C-c SPC` (thanks to
+    [`ace-jump-mode`](https://github.com/winterTTr/ace-jump-mode))
 
 * Completion:
   - Using `pabbrev` only: `<s-return>`
