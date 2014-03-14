@@ -673,5 +673,9 @@
 
 ;; Quick jumping
 (use-package ace-jump-mode
+  :commands ace-jump-mode
   :init (progn
-          (bind-key "C-c SPC" 'ace-jump-mode)))
+          (bind-key "C-c SPC" 'ace-jump-mode)
+          (bind-key "C-x SPC" 'ace-jump-mode-pop-mark))
+  :config (progn
+            (ace-jump-mode-enable-mark-sync)))
