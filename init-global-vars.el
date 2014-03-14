@@ -48,6 +48,7 @@
     use-package                         ; Great way to load packages
     ;; ack-and-a-half ; -> Failed to require when installed with Elpa
     wgrep-ack                           ; Edittable Ack
+    browse-kill-ring
     )
   "List of packages that are vital to this config and must be
 installed and loaded.")

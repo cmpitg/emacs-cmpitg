@@ -242,3 +242,7 @@
 (use-package epa-file
   :config (progn
             (epa-file-enable)))
+
+(use-package browse-kill-ring
+  :config (progn
+            (browse-kill-ring-default-keybindings)))
