@@ -670,3 +670,8 @@
 ;; Buffer navigation with pattern searching and replacing
 ;;   https://github.com/ShingoFukuyama/emacs-swoop
 (use-package swoop)
+
+;; Quick jumping
+(use-package ace-jump-mode
+  :init (progn
+          (bind-key "C-c SPC" 'ace-jump-mode)))

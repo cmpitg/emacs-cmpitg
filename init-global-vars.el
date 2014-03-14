@@ -34,7 +34,7 @@
     eldoc                               ; Echo area function signature
     popwin                              ; Better popwin window management,
                                         ; dispose with Esc or C-g
-    icicles
+    ;; icicles
     dired+
     desktop                             ; Keeping workspace
     tar-mode
@@ -65,6 +65,7 @@ installed and loaded.")
     haskell-mode
     markdown-mode
     markdown-mode+
+    ace-jump-mode                       ; Quick jumping
     ;; sr-speedbar                         ; Speedbar in the same frame
     paredit                             ; Parentheses manipulation in Lisp
                                         ; modes
