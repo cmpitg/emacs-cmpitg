@@ -33,6 +33,11 @@
 
 (~load-config-files "load-functions.el")
 (~load-config-files "init-package-manager.el")
+
+;; Eval the next sexp if you're running this config set for the first time.
+;; TODO: automate this by makeing a script to install
+;;   (~load-config-files "init-packages.el")
+
 (~load-config-files "init-essential-packages.el")
 (~load-config-files "load-keymaps.el")
 (~load-config-files "load-packages.el")
