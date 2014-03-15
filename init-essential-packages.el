@@ -147,10 +147,7 @@
 
 ;; Open with external programs
 ;; openwith is an exception, the jpkotta's fork is the best with `nohup`
-
-;; (unless (el-get-package-is-installed 'openwith)
-;;   (el-get-install 'openwith))
-
+;; This package is stored in local-packages/
 (use-package openwith
   :init (progn
           (openwith-mode t)))
@@ -248,6 +245,9 @@
 (use-package browse-kill-ring
   :config (progn
             (browse-kill-ring-default-keybindings)))
+
+;; Jonathan Chu's version of Vim-inspired beautiful mode line
+;;   https://github.com/jonathanchu/emacs-powerline                                        ;
 
 (~load-files (~get-local-config-path "local-packages/powerline/powerline.el"))
 (use-package powerline)
