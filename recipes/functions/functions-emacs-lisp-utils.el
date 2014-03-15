@@ -200,6 +200,33 @@ E.g.
       (kill-buffer)
       file-path)))
 
+(defun ~quick-bindkey-local (&optional key expr)
+  "Quickly create keybindings for local buffer.  This command
+should only be called interactively."
+  (interactive)
+  (let ((key (if key
+                 key
+                 (read-key-sequence "Key: ")))
+        (expr  (if expr
+                   expr
+                   (read-from-minibuffer "Eval: "
+                                         nil read-expression-map t
+                                         'read-expression-history))))
+    (local-set-key key '(lambda ()
+                         (interactive)
+                         (save-excursion
+                           (with-temp-buffer
+                             (insert expr)
+                             (eval-buffer)))))))
+
+(defun ~add-personal-keybinding (key-binding symbol)
+  "Add a key binding to `bind-key' library's
+`personal-keybindings'."
+  (when (featurep 'bind-key)
+    (let ((key-binding (list key-binding))
+          (symbol      symbol))
+      (add-to-list 'personal-keybindings (list key-binding symbol nil)))))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
