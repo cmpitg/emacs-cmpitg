@@ -320,6 +320,7 @@
             (add-hook 'html-mode-hook '~auto-reload-firefox-after-save-hook)
             (add-hook 'css-mode-hook '~auto-reload-firefox-after-save-hook)))
 
+(~load-files (~get-local-config-dir "local-packages/ibus.el/ibus-dev.el"))
 (use-package ibus
   :config (progn
             ;; Use C-SPC for Set Mark command
