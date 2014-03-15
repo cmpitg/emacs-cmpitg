@@ -36,9 +36,6 @@
             (setq projectile-require-project-root nil)
             (use-package helm-projectile)))
 
-(use-package undo-tree
-  :diminish undo-tree-mode)
-
 ;; For Mercurial version control system
 (use-package ahg
   :commands ahg-status)
