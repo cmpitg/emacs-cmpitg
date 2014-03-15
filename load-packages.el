@@ -330,9 +330,6 @@
 
 (use-package haskell-mode
   :disabled t
-  :init (progn
-          
-          )
   :config (progn
             (use-package inf-haskell)
             (use-package hs-lint)
