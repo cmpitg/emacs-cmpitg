@@ -633,9 +633,9 @@
 ;; Hyde.el to manage Jekyll blog
 ;;   https://github.com/nibrahim/Hyde
 ;; Workaround for bad package management
-(~load-files (~get-library-full-path "hyde"))
-(use-package hyde
-  :commands hyde)
+;;(~load-files (~get-library-full-path "hyde"))
+;;(use-package hyde
+;;  :commands hyde)
 
 (use-package scratch-ext)
 
