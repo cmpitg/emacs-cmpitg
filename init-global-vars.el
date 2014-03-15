@@ -49,12 +49,14 @@
     ;; ack-and-a-half ; -> Failed to require when installed with Elpa
     wgrep-ack                           ; Edittable Ack
     browse-kill-ring
+    tabbar-ruler
     )
   "List of packages that are vital to this config and must be
 installed and loaded.")
 
 (defvar *elpa-packages*
   '(dired-single                        ; Reuse dired buffer when opening
+    dired-details+
     jedi                                ; Autocomplete and cool stuff for
                                         ; Python development
     virtualenvwrapper                   ; Virtualenvwrapper interface for
@@ -79,7 +81,8 @@ installed and loaded.")
     js2-mode                            ; JavaScript
     pabbrev                             ; Better abbrev
     magit                               ; Best Git interface for Emacs
-    ;; monky                               ; Magit-like mode for Mercurial
+    git-gutter-fringe                   ; Sublime Text-inspired in-buffer Git
+                                        ; diff
     ahg                                 ; Better mode for Mercurial
     zlc                                 ; Zsh completion
     hexrgb                              ; Color manipulation
@@ -129,16 +132,11 @@ installed and loaded.")
 
 (defvar *el-get-packages*
   '(later-do                            ; Async eval
-    powerline                           ; @johnathanchu version, beautiful
-                                        ; modeline
-                                        ; https://github.com/jonathanchu/emacs-powerline
     multi-scratch                       ; Multiple scratch buffers
     moz-repl                            ; MozRepl
     whitespace                          ; Display trailing whitespace
-    ;; openwith                            ; Open file with external program, in
-                                        ; any file-browsing modes like Sunrise
-                                        ; Commander or Dired
     hs-lint                             ; Haskell linter
+    json-mode                           ; For en/decoding JSON
     )
   "List of packages not available in ELPA but available to install with el-get.")
 
