@@ -243,3 +243,4 @@ should only be called interactively."
 (defalias 'byte-compile-dir '~byte-compile-dir)
 (defalias 'rebuild-my-config '~rebuild-my-config)
 (defalias 'get-library-full-path '~get-library-full-path)
+(defalias 'add-personal-keybinding '~add-personal-keybinding)
