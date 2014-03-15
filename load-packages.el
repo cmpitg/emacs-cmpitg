@@ -675,3 +675,9 @@
           (bind-key "C-x SPC" 'ace-jump-mode-pop-mark))
   :config (progn
             (ace-jump-mode-enable-mark-sync)))
+
+;; Sublime Text-inspired direct Git diff
+(use-package git-gutter-fringe
+  :diminish git-gutter-mode
+  :config (progn
+            (global-git-gutter-mode +1)))
