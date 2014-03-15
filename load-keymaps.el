@@ -84,7 +84,8 @@
 ;; (bind-key "s-s" 'isearch-forward-regexp)
 (bind-key "C-s" 'isearch-forward-regexp)
 (bind-key "C-r" 'isearch-backward-regexp)
-(bind-key "s-s" 'helm-occur)
+(bind-key "s-s" 'swoop)
+;; (bind-key "s-s" 'helm-occur)
 ;; (bind-key "s-S" 'isearch-backward-regexp)
 
 ;;; With other libraries
@@ -102,6 +103,11 @@
   :config (progn
             (bind-key "s-t" 'helm-next-line      helm-map)
             (bind-key "s-c" 'helm-previous-line  helm-map)))
+
+(use-package swoop
+  :config (progn
+            (bind-key "s-t" 'swoop-action-goto-line-next swoop-map)
+            (bind-key "s-c" 'swoop-action-goto-line-prev swoop-map)))
 
 ;;
 ;; Copyright (C) 2012-2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
@@ -140,8 +146,9 @@
 
 (bind-key "<f2>" 'save-buffer)
 (bind-key "C-<f2>" 'buffer-menu)
-(bind-key "<f3>" 'fiplr-find-file)
 (bind-key "<S-f3>" '~find-file-extended)
+(bind-key "<M-f3>" 'fiplr-find-file)
+(bind-key "<f3>" 'helm-find-files)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
 (bind-key "C-<f4>" '~kill-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
@@ -291,7 +298,6 @@
 ;; (bind-key "M-x" 'execute-extended-command)
 ;; (bind-key "M-/" 'dabbrev-expand)
 
-(bind-key "<M-f3>" 'helm-find-files)
 (bind-key "<f10>" '~helm-grep)
 (bind-key "<C-f10>" 'ack)
 (bind-key "s-@" '~duplicate-line)

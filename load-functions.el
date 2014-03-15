@@ -235,6 +235,27 @@ E.g.
                    (when (buffer-file-name b) (buffer-name b)))
                  (buffer-list)))))
 
+(defun ~undo-kill-buffer (arg)
+  "Re-open the last buffer killed.  With ARG, re-open the
+nth-killed buffer."
+  (interactive "p")
+  (let ((recently-killed-list (copy-sequence recentf-list))
+        (buffer-files-list
+         (delq nil (mapcar (lambda (buf)
+                             (when (buffer-file-name buf)
+                               (expand-file-name (buffer-file-name buf)))) (buffer-list)))))
+    (mapc
+     (lambda (buf-file)
+       (setq recently-killed-list
+             (delq buf-file recently-killed-list)))
+     buffer-files-list)
+    (find-file
+     (if arg (nth arg recently-killed-list)
+         (car recently-killed-list)))))
+
+(defalias '~save-file 'save-buffer
+  "Save current buffer")
+
 (defalias '~popup-buffer 'popwin:popup-buffer)
 (defalias 'popup-buffer '~popup-buffer)
 (defalias 'next-file-buffer '~next-file-buffer)
@@ -252,9 +273,7 @@ E.g.
 (defalias 'goto-prev-DEBUG '~goto-prev-DEBUG)
 (defalias 'goto-next-FIXME '~goto-next-FIXME)
 (defalias 'goto-prev-FIXME '~goto-prev-FIXME)
-
-(defalias '~save-file 'save-buffer
-  "Save current buffer")
+(defalias 'undo-kill-buffer '~undo-kill-buffer)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
@@ -458,6 +477,33 @@ E.g.
       (kill-buffer)
       file-path)))
 
+(defun ~quick-bindkey-local (&optional key expr)
+  "Quickly create keybindings for local buffer.  This command
+should only be called interactively."
+  (interactive)
+  (let ((key (if key
+                 key
+                 (read-key-sequence "Key: ")))
+        (expr  (if expr
+                   expr
+                   (read-from-minibuffer "Eval: "
+                                         nil read-expression-map t
+                                         'read-expression-history))))
+    (local-set-key key '(lambda ()
+                         (interactive)
+                         (save-excursion
+                           (with-temp-buffer
+                             (insert expr)
+                             (eval-buffer)))))))
+
+(defun ~add-personal-keybinding (key-binding symbol)
+  "Add a key binding to `bind-key' library's
+`personal-keybindings'."
+  (when (featurep 'bind-key)
+    (let ((key-binding (list key-binding))
+          (symbol      symbol))
+      (add-to-list 'personal-keybindings (list key-binding symbol nil)))))
+
 (defalias 'insert-into-emacs-lisp-docstring '~insert-into-emacs-lisp-docstring)
 (defalias 'add-bracket-and-eval '~add-bracket-and-eval)
 (defalias 'add-load-path '~add-load-path)
@@ -474,6 +520,7 @@ E.g.
 (defalias 'byte-compile-dir '~byte-compile-dir)
 (defalias 'rebuild-my-config '~rebuild-my-config)
 (defalias 'get-library-full-path '~get-library-full-path)
+(defalias 'add-personal-keybinding '~add-personal-keybinding)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
@@ -2258,7 +2305,7 @@ buffer.")
   "Google a keyword in Firefox."
   (interactive (list (~read-string "Keyword: "
                                    :initial-input (get-selection))))
-  (~open-url-in-firefox
+  (~firefox
    (format "https://encrypted.google.com/search?q=%s" keyword)))
 
 (defun ~firefox (url)
