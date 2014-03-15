@@ -293,6 +293,7 @@
             (add-hook 'js3-mode-hook        '-setup-moz-javascript)))
 
 (use-package monky
+  :disabled t
   :config (progn
             (setq monky-process-type 'cmdserver)))
 
