@@ -19,7 +19,8 @@
 ;; Install all packages
 ;;
 
-;; (apply #'elpa-install-packages   *elpa-packages*)
+(apply #'elpa-install-packages   *essential-packages*)
+(apply #'elpa-install-packages   *elpa-packages*)
 (apply #'el-get-install-packages *el-get-packages*)
 
 ;;
