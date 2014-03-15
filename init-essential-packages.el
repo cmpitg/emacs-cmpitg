@@ -247,3 +247,6 @@
 (use-package browse-kill-ring
   :config (progn
             (browse-kill-ring-default-keybindings)))
+
+(~load-files (~get-local-config-path "local-packages/powerline/powerline.el"))
+(use-package powerline)
