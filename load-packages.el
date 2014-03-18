@@ -15,6 +15,10 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; Better menu bar representation
+
+(use-package menu-bar+)
+
 ;; Load before auto-complete
 
 (use-package yasnippet
