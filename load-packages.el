@@ -510,10 +510,8 @@
 ;; Geiser doc: http://www.nongnu.org/geiser
 
 (use-package geiser
-  :commands geiser-mode
-  :init (progn
-          (setq geiser-default-implementation "racket"))
   :config (progn
+            (setq geiser-default-implementation "racket")
             (add-hook 'geiser-repl-mode-hook   '~load-paredit-mode)
 
             ;; Auto-complete backend
@@ -526,36 +524,36 @@
 
             (eval-after-load 'geiser-mode
               '(progn
-                 (dolist (sym '(λ
-                                ~>
-                                ~>>
-                                define-values
-                                get
-                                post
-                                put
-                                patch
-                                delete
-                                call-with-parameterization
-                                module+))
-                   (put sym 'scheme-indent-function 1)
-                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+                (dolist (sym '(λ
+                               ~>
+                               ~>>
+                               define-values
+                               get
+                               post
+                               put
+                               patch
+                               delete
+                               call-with-parameterization
+                               module+))
+                  (put sym 'scheme-indent-function 1)
+                  (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
 
-                 (dolist (sym '(module
-                                module*))
-                   (put sym 'scheme-indent-function 2)
-                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+                (dolist (sym '(module
+                               module*))
+                  (put sym 'scheme-indent-function 2)
+                  (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
 
-                 (put '{ 'scheme-indent-function 0)
-                 (put (~string->symbol "[") 'scheme-indent-function 0)
+                (put '{ 'scheme-indent-function 0)
+                (put (~string->symbol "[") 'scheme-indent-function 0)
 
-                 (defadvice geiser-eval-region (after send-region-to (&rest arg))
-                   ;; ad-do-it
-                   (let ((start (ad-get-arg 0))
-                         (end   (ad-get-arg 1)))
-                     (~geiser-send-string (~get-text start end))))
+                (defadvice geiser-eval-region (after send-region-to (&rest arg))
+                 ;; ad-do-it
+                 (let ((start (ad-get-arg 0))
+                       (end   (ad-get-arg 1)))
+                   (~geiser-send-string (~get-text start end))))
 
-                 ;; (ad-deactivate 'geiser-eval-region)
-                 (ad-activate 'geiser-eval-region)))))
+                ;; (ad-deactivate 'geiser-eval-region)
+                (ad-activate 'geiser-eval-region)))))
 
 ;; Load after Geiser
 (use-package quack)
