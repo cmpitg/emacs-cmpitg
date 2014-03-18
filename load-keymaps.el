@@ -15,7 +15,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(bind-key "s-k" 'clipboard-yank)
+(bind-key "s-k" 'ace-jump-mode)
 (bind-key "s-j" 'clipboard-kill-ring-save)
 (bind-key "s-q" 'clipboard-kill-region)
 

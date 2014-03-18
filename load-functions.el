@@ -1347,7 +1347,7 @@ Example:
   (interactive)
   (let ((helm-multi-occur-buffer-list (list (buffer-name (current-buffer)))))
     (helm-occur-init-source)
-    (helm :input "\\#"
+    (helm :input "^\\#"
           :sources 'helm-source-occur
           :buffer "*helm occur*"
           :history 'helm-grep-history
