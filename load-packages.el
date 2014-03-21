@@ -410,8 +410,8 @@
               '((candidates . ac-pcomplete)))
 
             (eval-after-load 'auto-complete
-	      '(progn
-		 (add-to-list 'ac-modes 'eshell-mode)))
+              '(progn
+                (add-to-list 'ac-modes 'eshell-mode)))
 
             (add-hook 'eshell-mode-hook
                       (lambda ()
