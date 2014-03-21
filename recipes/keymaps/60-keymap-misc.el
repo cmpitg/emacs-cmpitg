@@ -97,6 +97,7 @@
 (bind-key "C-c C-." 'mc/mark-all-like-this)
 
 (bind-key "s-=" 'er/expand-region)
+(bind-key "M-z" 'zap-up-to-char)
 
 (bind-key "<M-f7>" '(lambda () "Next DEBUG" (interactive) (search-forward "DEBUG")))
 (bind-key "<S-M-f7>" '(lambda () "Previous DEBUG" (interactive) (search-backward "DEBUG")))
