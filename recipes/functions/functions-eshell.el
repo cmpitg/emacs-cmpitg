@@ -53,6 +53,14 @@ active buffer if current buffer is eshell."
   (~execute-command-in-eshell command)
   (switch-to-buffer "*eshell*"))
 
+(defun ~execute-command-and-popup-eshell (&optional command)
+  "Execute a command and then popup the \*eshell\* buffer."
+  (interactive)
+  (~execute-command-in-eshell command)
+  (with-current-buffer "*eshell*"
+    (end-of-buffer))
+  (~popup-buffer "*eshell*"))
+
 (defun ~cd-and-switch-to-eshell (&optional path)
   "Change dir to `path' in eshell and jump to eshell buffer."
   (interactive)
@@ -76,3 +84,4 @@ If current buffer is not backed by file, switch to eshell."
 (defalias 'execute-command-and-switch-to-eshell '~execute-command-and-switch-to-eshell)
 (defalias 'cd-and-switch-to-eshell '~cd-and-switch-to-eshell)
 (defalias 'cd-current-buffer-dir-and-switch-to-eshell '~cd-current-buffer-dir-and-switch-to-eshell)
+(defalias 'execute-command-and-popup-eshell '~execute-command-and-popup-eshell)
