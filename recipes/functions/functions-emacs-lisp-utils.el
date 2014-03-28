@@ -22,7 +22,11 @@
 need its top-level brackets.  This function returns a string."
   (interactive)
   (let ((minibuffer-completing-symbol t))
-   (read-from-minibuffer prompt)))
+    (read-from-minibuffer prompt
+                          nil
+                          read-expression-map
+                          nil
+                          'read-expression-history)))
 
 (defun ~eval-string (str)
   "Eval a string."
