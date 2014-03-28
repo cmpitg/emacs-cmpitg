@@ -17,6 +17,13 @@
 
 ;; (setq *defun-template*)
 
+(defun ~read-simplified-sexp-as-string (prompt)
+  "Read a sexp from minibuffer with completion.  The sexp doesn't
+need its top-level brackets.  This function returns a string."
+  (interactive)
+  (let ((minibuffer-completing-symbol t))
+   (read-from-minibuffer prompt)))
+
 (defun ~eval-string (str)
   "Eval a string."
   (interactive)
@@ -244,3 +251,4 @@ should only be called interactively."
 (defalias 'rebuild-my-config '~rebuild-my-config)
 (defalias 'get-library-full-path '~get-library-full-path)
 (defalias 'add-personal-keybinding '~add-personal-keybinding)
+(defalias 'read-simplified-sexp-as-string '~read-simplified-sexp-as-string)
