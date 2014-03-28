@@ -16,9 +16,11 @@
 ;;
 
 ;; TODO: Document me
-(put 'use-package 'lisp-indent-function 1)
-(font-lock-add-keywords 'emacs-lisp-mode
-  '(("use-package" . font-lock-keyword-face)))
+(dolist (symb '(use-package))
+  (put symb 'lisp-indent-function 1)
+  (put symb 'common-lisp-indent-function 1)
+  (font-lock-add-keywords 'emacs-lisp-mode
+                          `((,(~symbol->string symb) . font-lock-keyword-face))))
 
 ;;
 ;; Better Lisp indentation
