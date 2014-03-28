@@ -294,6 +294,17 @@ nth-killed buffer."
 
 ;; (setq *defun-template*)
 
+(defun ~read-simplified-sexp-as-string (prompt)
+  "Read a sexp from minibuffer with completion.  The sexp doesn't
+need its top-level brackets.  This function returns a string."
+  (interactive)
+  (let ((minibuffer-completing-symbol t))
+    (read-from-minibuffer prompt
+                          nil
+                          read-expression-map
+                          nil
+                          'read-expression-history)))
+
 (defun ~eval-string (str)
   "Eval a string."
   (interactive)
@@ -521,6 +532,7 @@ should only be called interactively."
 (defalias 'rebuild-my-config '~rebuild-my-config)
 (defalias 'get-library-full-path '~get-library-full-path)
 (defalias 'add-personal-keybinding '~add-personal-keybinding)
+(defalias 'read-simplified-sexp-as-string '~read-simplified-sexp-as-string)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
@@ -577,6 +589,14 @@ active buffer if current buffer is eshell."
   (~execute-command-in-eshell command)
   (switch-to-buffer "*eshell*"))
 
+(defun ~execute-command-and-popup-eshell (&optional command)
+  "Execute a command and then popup the \*eshell\* buffer."
+  (interactive)
+  (~execute-command-in-eshell command)
+  (with-current-buffer "*eshell*"
+    (end-of-buffer))
+  (~popup-buffer "*eshell*"))
+
 (defun ~cd-and-switch-to-eshell (&optional path)
   "Change dir to `path' in eshell and jump to eshell buffer."
   (interactive)
@@ -600,6 +620,7 @@ If current buffer is not backed by file, switch to eshell."
 (defalias 'execute-command-and-switch-to-eshell '~execute-command-and-switch-to-eshell)
 (defalias 'cd-and-switch-to-eshell '~cd-and-switch-to-eshell)
 (defalias 'cd-current-buffer-dir-and-switch-to-eshell '~cd-current-buffer-dir-and-switch-to-eshell)
+(defalias 'execute-command-and-popup-eshell '~execute-command-and-popup-eshell)
 
 ;;
 ;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))

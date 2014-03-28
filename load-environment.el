@@ -31,7 +31,8 @@
 (setq font-use-system-font t)
 
 ;; (set-face-foreground 'font-lock-comment-face "#3a345f")
-(set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
+;;; Use this if you don't use any theme
+;; (set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
 
 ;; (set-cursor-color "cyan")
 ;; (set-cursor-color "gray")
@@ -263,9 +264,11 @@ about what flexible matching means in this context."
 ;;
 
 ;; TODO: Document me
-(put 'use-package 'lisp-indent-function 1)
-(font-lock-add-keywords 'emacs-lisp-mode
-  '(("use-package" . font-lock-keyword-face)))
+(dolist (symb '(use-package))
+  (put symb 'lisp-indent-function 1)
+  (put symb 'common-lisp-indent-function 1)
+  (font-lock-add-keywords 'emacs-lisp-mode
+                          `((,(~symbol->string symb) . font-lock-keyword-face))))
 
 ;;
 ;; Better Lisp indentation
