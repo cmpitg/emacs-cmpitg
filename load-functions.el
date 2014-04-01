@@ -137,7 +137,11 @@ selection with command output."
 (defun ~switch-to-last-buffer ()
   "Switch to last buffer."
   (interactive)
-  (switch-to-buffer (other-buffer)))
+  (let ((old-name (~current-buffer-name)))
+    (switch-to-buffer (other-buffer))
+    (while (or (s-starts-with? "*" (~current-buffer-name))
+               (s-equals? old-name (~current-buffer-name)))
+      (previous-buffer))))
 
 (defun ~last-sexp ()
   "Return the sexp right before the current cursor."

@@ -16,8 +16,8 @@
 ;;
 
 (bind-key "s-k" 'ace-jump-mode)
-(bind-key "s-j" 'clipboard-kill-ring-save)
-(bind-key "s-q" 'clipboard-kill-region)
+;; (bind-key "s-j" 'clipboard-kill-ring-save)
+;; (bind-key "s-q" 'clipboard-kill-region)
 
 (bind-key "s-K" '~delete-line)
 (bind-key "s-l" 'goto-line)
@@ -84,8 +84,8 @@
 ;; (bind-key "s-s" 'isearch-forward-regexp)
 (bind-key "C-s" 'isearch-forward-regexp)
 (bind-key "C-r" 'isearch-backward-regexp)
-(bind-key "s-s" 'swoop)
-;; (bind-key "s-s" 'helm-occur)
+;; (bind-key "s-s" 'swoop)
+(bind-key "s-s" 'helm-occur)
 ;; (bind-key "s-S" 'isearch-backward-regexp)
 
 ;;; With other libraries
@@ -208,6 +208,7 @@
 (bind-key "C-c C-." 'mc/mark-all-like-this)
 
 (bind-key "s-=" 'er/expand-region)
+(bind-key "M-z" 'zap-up-to-char)
 
 (bind-key "<M-f7>" '(lambda () "Next DEBUG" (interactive) (search-forward "DEBUG")))
 (bind-key "<S-M-f7>" '(lambda () "Previous DEBUG" (interactive) (search-backward "DEBUG")))

@@ -222,6 +222,7 @@
             (setq jedi:complete-on-dot t)))
 
 (use-package picolisp
+  :disabled t
   :mode ("\\.l$" . picolisp-mode)
   :config (progn
             (setq picolisp-program-name "~/opt/picolisp/bin/plmod")
@@ -591,9 +592,10 @@
             (use-package ac-nrepl)
 
             (add-hook 'clojure-mode-hook 'cider-mode)
+            (add-hook 'clojure-mode-hook '~load-paredit-mode)
      
             (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-            (add-hook 'cider-repl-mode-hook 'paredit-mode)
+            (add-hook 'cider-repl-mode-hook '~load-paredit-mode)
 
             ;; ;; Moving inside subword
             (add-hook 'cider-repl-mode-hook 'subword-mode)
