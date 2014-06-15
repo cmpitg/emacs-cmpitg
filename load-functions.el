@@ -360,7 +360,7 @@ E.g.
                                   ((is-selecting?)
                                    (get-selection))
                                   (t
-                                   (read-string "Command: "))))
+                                   (~read-simplified-sexp-as-string "Command: "))))
          (sexp (if (not (and (s-starts-with? "(" preprocessed-sexp)
                              (s-ends-with?   ")" preprocessed-sexp)))
                  (format "(%s)" preprocessed-sexp)
