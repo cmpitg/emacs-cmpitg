@@ -32,11 +32,11 @@
 
 ;; (set-face-foreground 'font-lock-comment-face "#3a345f")
 ;;; Use this if you don't use any theme
-;; (set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
+(set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
 
 ;; (set-cursor-color "cyan")
 ;; (set-cursor-color "gray")
-(set-cursor-color "black")
+;; (set-cursor-color "black")
 
 ;; (set-background-color "#f2f2f2")
 (set-background-color "#efefef")
@@ -45,7 +45,9 @@
 ;; Themes
 ;;
 
+;; Current
 ;; (color-theme-textmate-modified)
+
 ;; (color-theme-molokai)
 ;; (color-theme-zenburn)
 ;; (color-theme-textmate)
@@ -404,6 +406,9 @@ about what flexible matching means in this context."
 
 ;; Make shebang-ed files executable
 (add-hook 'after-save-hook '~make-executable)
+
+;; Clean up all Tramp remote connection before killing Emacs
+(add-hook 'kill-emacs-hook '~clean-up-tramp)
 
 ;;;
 ;;; TODO!!!

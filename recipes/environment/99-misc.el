@@ -124,6 +124,9 @@
 ;; Make shebang-ed files executable
 (add-hook 'after-save-hook '~make-executable)
 
+;; Clean up all Tramp remote connection before killing Emacs
+(add-hook 'kill-emacs-hook '~clean-up-tramp)
+
 ;;;
 ;;; TODO!!!
 ;;;

@@ -29,6 +29,12 @@ followed."
       (fiplr-find-file-in-directory (file-chase-links path) fiplr-ignored-globs))
     (message "You need `fiplr' package to use this function.")))
 
+(defun ~clean-up-tramp ()
+  "Close all tramp connections and buffers."
+  (interactive)
+  (tramp-cleanup-all-connections)
+  (tramp-cleanup-all-buffers))
+
 (defun ~write-to-file (filename content)
   "Write string to file."
   (with-temp-buffer
