@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: For loop
+# key: %for
+# group: django-html-mode
+# --
+{% for $1 %}$2{% endfor %}

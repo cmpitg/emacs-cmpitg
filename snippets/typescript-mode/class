@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: class
+# key: cl
+# group: typescript-mode
+# --
+class $1 {
+	$2
+}

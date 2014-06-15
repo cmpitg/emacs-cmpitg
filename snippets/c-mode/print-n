@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: print + end-of-line
+# key: prn
+# group: c-mode
+# --
+print("${1:Some text here}");

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Import ThreadPoolExecutor
+# key: import_tthread
+# group: python-mode
+# --
+from concurrent.futures import ThreadPoolExecutor
