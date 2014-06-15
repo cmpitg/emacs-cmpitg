@@ -216,19 +216,13 @@ E.g.
   (interactive)
   (search-backward "FIXME"))
 
-;; (defun ~switch-to-scratch ()
-;;   "Switch to the *scratch* buffer."
-;;   (interactive)
-;;   (unless (string-equal "*scratch*" (~current-buffer-name))
-;;     (switch-to-buffer-other-window "*scratch*")))
-
 (defun ~switch-to-scratch ()
   "Switch to the scratch.el in `*scratch-dir*' directory."
   (interactive)
   (unless (string-equal "scratch.el" (~current-buffer-name))
-    (unless (get-buffer "scratch.el")
-      (find-file (s-concat *scratch-dir* "scratch.el")))
-    (switch-to-buffer-other-window "scratch.el")))
+    (if (get-buffer "scratch.el")
+        (switch-to-buffer-other-window "scratch.el")
+      (find-file-other-window (s-concat *scratch-dir* "scratch.el")))))
 
 (defun ~helm-multi-occur-all ()
   "multi-occur in all buffers backed by files."
