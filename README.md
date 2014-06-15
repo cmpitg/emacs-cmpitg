@@ -6,11 +6,6 @@ My specialized Emacs configuration, started as
 [a clone of my config](https://github.com/cmpitg/emacs-config) as of February
 2014.
 
-## TODOs ##
-
-* [x] Use `use-package`'s `autoload`
-* [x] Try combining all `.el`s in `./recipes/` into one file to speed up the load.
-
 ## Ideas ##
 
 * Package configurations are managed with *recipes*.
@@ -429,3 +424,15 @@ Refactor this document into simple use cases/tasks.
 
 * Toggle whitespace visibility `C-<menu> C-w`:
   - Delete redundant whitespaces `s-w`
+
+* Write some notes about:
+
+  - Convert human-readable key sequence to its internal represenatation: `kbd`
+
+    Convert it back to its human-readable key sequence: `format-kbd-macro`
+
+  - Hippie expand with `s-t`
+
+  - `erun` and `srun`
+
+  - Workflow with Eshell
