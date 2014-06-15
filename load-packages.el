@@ -97,8 +97,7 @@
                                                   :action ~switch-to-window)
                                 (wand:create-rule :match "eshell-cd:"
                                                   :capture :after
-                                                  :action ~change-dir-in-eshell)
-                                ))
+                                                  :action ~change-dir-in-eshell)))
               (wand:add-rule rule))
             (wand:create-rule :match "window:"
                               :capture :after
@@ -189,12 +188,19 @@
             (use-package ruby-dev
               :init (progn
                       (autoload 'turn-on-ruby-dev "ruby-dev" nil t)
-
                       (add-hook 'ruby-mode-hook 'turn-on-ruby-dev)))))
 
 ;; (use-package rsense
 ;;   :init (progn
 ;;           (setq rsense-home (getenv "$RSENSE_HOME"))))
+
+;;
+;; Pascal and Delphi mode
+;;
+
+(use-package delphi
+  :config (progn
+            (~auto-load-mode '("\\.pas$" "\\.pp$") 'delphi-mode)))
 
 (use-package recentf
   :defer t
