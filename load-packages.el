@@ -545,6 +545,10 @@
                   (put sym 'scheme-indent-function 1)
                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
 
+                (dolist (sym '(with-shell-commands))
+                  (put sym 'scheme-indent-function 0)
+                  (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+
                 (dolist (sym '(module
                                module*))
                   (put sym 'scheme-indent-function 2)
@@ -598,6 +602,7 @@
             (use-package ac-nrepl)
 
             (add-hook 'clojure-mode-hook 'cider-mode)
+            (add-hook 'clojure-mode-hook 'clojure-test-mode)
             (add-hook 'clojure-mode-hook '~load-paredit-mode)
      
             (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
