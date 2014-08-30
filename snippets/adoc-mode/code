@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Code block without title
+# key: cb
+# group: adoc-mode
+# --
+[source${1:,racket},linenums]
+----
+$2
+----

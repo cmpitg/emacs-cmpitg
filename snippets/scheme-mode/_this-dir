@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Add this directory
+# key: _this-dir
+# group: scheme-mode
+# --
+(require racket/runtime-path)
+(define-runtime-path +this-directory+ ".")

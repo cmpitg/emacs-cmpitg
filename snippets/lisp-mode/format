@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: format
+# key: fmt
+# group: lisp-mode
+# --
+(format ${1:t} $2)
