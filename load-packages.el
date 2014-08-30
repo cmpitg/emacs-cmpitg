@@ -31,14 +31,14 @@
 (use-package hi-lock
   :commands (highlight-phrase highlight-regexp))
 
-(use-package projectile
-  :diminish projectile-mode
-  :config (progn
-            (projectile-global-mode)
-            (setq projectile-completion-system 'grizzl)
-            ;; (setq projectile-require-project-root nil)
-            (setq projectile-require-project-root nil)
-            (use-package helm-projectile)))
+;; (use-package projectile
+;;   :diminish projectile-mode
+;;   :config (progn
+;;             (projectile-global-mode)
+;;             (setq projectile-completion-system 'grizzl)
+;;             ;; (setq projectile-require-project-root nil)
+;;             (setq projectile-require-project-root nil)
+;;             (use-package helm-projectile)))
 
 ;; For Mercurial version control system
 (use-package ahg
@@ -147,20 +147,50 @@
             ;;                                        ; mouse is moving.
             ))
 
-(use-package sunrise-commander
-  :disabled t
-  :init (progn
-          (setq sr-listing-switches
-                " --time-style=locale --group-directories-first -alDhgG")
+(use-package scala-mode2
+  :init
+  (progn
+    (use-package sbt-mode
+      :config
+      (progn
+        (add-hook 'sbt-mode-hook
+                  '(lambda ()
+                     ;; compilation-skip-threshold tells the compilation minor-mode
+                     ;; which type of compiler output can be skipped. 1 = skip info
+                     ;; 2 = skip info and warnings.
+                     (setq compilation-skip-threshold 1)
 
-          ;; Display modeline using UTF8 characters
-          (setq sr-modeline-use-utf8-marks t)
+                     ;; Bind C-a to 'comint-bol when in sbt-mode. This will move the
+                     ;; cursor to just after prompt.
+                     (local-set-key (kbd "C-a") 'comint-bol)
 
-          ;; Prefer Sunrise over Dired
-          ;; (setq find-directory-functions (cons cvs-dired-noselect dired-noselect))
-          ;; (setq-default find-directory-functions (cons 'sr-dired find-directory-functions))
-          ;; (setq find-directory-functions (cons 'sr-dired find-directory-functions))
-          ))
+                     ;; Bind M-RET to 'comint-accumulate. This will allow you to add
+                     ;; more than one line to scala console prompt before sending it
+                     ;; for interpretation. It will keep your command history cleaner.
+                     (local-set-key (kbd "M-RET") 'comint-accumulate)))
+        (add-hook 'scala-mode-hook
+                  '(lambda ()
+                     ;; sbt-find-definitions is a command that tries to find (with grep)
+                     ;; the definition of the thing at point.
+                     (local-set-key (kbd "M-.") 'sbt-find-definitions)
+
+                     ;; use sbt-run-previous-command to re-compile your code after changes
+                     (local-set-key (kbd "C-x '") 'sbt-run-previous-command)))))))
+
+;; (use-package sunrise-commander
+;;   :disabled t
+;;   :init (progn
+;;           (setq sr-listing-switches
+;;                 " --time-style=locale --group-directories-first -alDhgG")
+
+;;           ;; Display modeline using UTF8 characters
+;;           (setq sr-modeline-use-utf8-marks t)
+
+;;           ;; Prefer Sunrise over Dired
+;;           ;; (setq find-directory-functions (cons cvs-dired-noselect dired-noselect))
+;;           ;; (setq-default find-directory-functions (cons 'sr-dired find-directory-functions))
+;;           ;; (setq find-directory-functions (cons 'sr-dired find-directory-functions))
+;;           ))
 
 ;;
 ;; Slime for Common Lisp development
@@ -169,11 +199,36 @@
 (use-package slime
   :commands common-lisp-mode
   :config (progn
-            (add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
-            (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
-            (setenv "SBCL_HOME" "/home/cmpitg/opt/sbcl")
-            (setq inferior-lisp-program *default-lisp-repl-path*)
-            (slime-setup)))
+            (add-hook 'lisp-mode-hook 
+                      (lambda ()
+                        (slime-mode t)
+                        (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
+
+            (add-hook 'inferior-lisp-mode-hook
+                      (lambda ()
+                        (inferior-slime-mode t)
+                        (~load-paredit-mode)
+                        (eldoc-mode 1)))
+
+            ;; (setenv "SBCL_HOME" "/m/opt/sbcl")
+            (setenv "SBCL_HOME" "/usr/local/lib/sbcl/")
+            (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
+
+            (setq inferior-lisp-program "/usr/local/bin/sbcl")
+
+            (setq slime-lisp-implementations
+                  '((sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
+                    (clisp ("/usr/bin/clisp" "-q -I"))))
+            
+            (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
+
+            (load (expand-file-name "/mnt/home/cmpitg/opt/quicklisp-sbcl/slime-helper.el"))
+
+            (font-lock-add-keywords 'emacs-lisp-mode
+                                    '(("defroute" . font-lock-keyword-face)))
+            
+            (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
+
 
 ;;
 ;; Ruby with Pry and Rsense
@@ -220,24 +275,24 @@
                         (venv-initialize-eshell)
                         (setq venv-location "/m/virtenvs/")))))
 
-(use-package jedi
-  :disabled t
-  :config (progn
-            (add-hook 'python-mode-hook 'jedi:setup)
-            (setq jedi:setup-keys t)
-            (setq jedi:complete-on-dot t)))
+;; (use-package jedi
+;;   :disabled t
+;;   :config (progn
+;;             (add-hook 'python-mode-hook 'jedi:setup)
+;;             (setq jedi:setup-keys t)
+;;             (setq jedi:complete-on-dot t)))
 
-(use-package picolisp
-  :disabled t
-  :mode ("\\.l$" . picolisp-mode)
-  :config (progn
-            (setq picolisp-program-name "~/opt/picolisp/bin/plmod")
-            (add-hook 'picolisp-mode-hook
-                      (lambda ()
-                        (paredit-mode +1)
-                        (tsm-mode)
-                        (define-key picolisp-mode-map (kbd "RET") 'newline-and-indent)
-                        (define-key picolisp-mode-map (kbd "C-h") 'paredit-backward-delete)))))
+;; (use-package picolisp
+;;   :disabled t
+;;   :mode ("\\.l$" . picolisp-mode)
+;;   :config (progn
+;;             (setq picolisp-program-name "~/opt/picolisp/bin/plmod")
+;;             (add-hook 'picolisp-mode-hook
+;;                       (lambda ()
+;;                         (paredit-mode +1)
+;;                         (tsm-mode)
+;;                         (define-key picolisp-mode-map (kbd "RET") 'newline-and-indent)
+;;                         (define-key picolisp-mode-map (kbd "C-h") 'paredit-backward-delete)))))
 
 ;;
 ;; Auto pairing brackets
@@ -300,10 +355,10 @@
             (add-hook 'javascript-mode-hook '-setup-moz-javascript)
             (add-hook 'js3-mode-hook        '-setup-moz-javascript)))
 
-(use-package monky
-  :disabled t
-  :config (progn
-            (setq monky-process-type 'cmdserver)))
+;; (use-package monky
+;;   :disabled t
+;;   :config (progn
+;;             (setq monky-process-type 'cmdserver)))
 
 (use-package markdown-mode
   :init (progn
@@ -341,7 +396,6 @@
             (setq ibus-agent-file-name (~get-local-config-dir "local-packages/ibus.el/ibus-el-agent"))))
 
 (use-package haskell-mode
-  :disabled t
   :config (progn
             (use-package inf-haskell)
             (use-package hs-lint)
@@ -364,6 +418,16 @@
             (setq eshell-smart-space-goes-to-end t)
 
             (setq eshell-aliases-file (~get-local-config-dir "misc/eshell-aliases.el"))
+
+            ;; Beginning of command line, not line
+            (defun eshell-beginning-of-command-line ()
+              "Move to beginning of command line, not line."
+              (interactive)
+              (let ((p (point)))
+                (beginning-of-line)
+                (loop do (forward-char)
+                      until (equal (current-char) " "))
+                (forward-char)))
 
             ;; Auto complete support
             (defun ac-pcomplete ()
@@ -418,7 +482,7 @@
 
             (eval-after-load 'auto-complete
               '(progn
-                (add-to-list 'ac-modes 'eshell-mode)))
+                 (add-to-list 'ac-modes 'eshell-mode)))
 
             (add-hook 'eshell-mode-hook
                       (lambda ()
@@ -427,7 +491,8 @@
                         (add-to-list 'eshell-visual-commands "mc")
                         (add-to-list 'eshell-visual-commands "ranger")
                         (add-to-list 'eshell-visual-commands "git log")
-                        (bind-key "s-d" 'eshell-bol            eshell-mode-map)
+                        ;; (bind-key "s-d" 'eshell-beginning-of-command-line eshell-mode-map)
+                        (bind-key "s-d" 'eshell-bol            eshell-mode-map)x
                         (bind-key "s-C" 'eshell-previous-input eshell-mode-map)
                         (bind-key "s-T" 'eshell-next-input     eshell-mode-map)
                         (bind-key "<S-mouse-1>" '~insert-text-at-the-end
@@ -436,6 +501,10 @@
             ;; Read $PATH variable
             (when (memq window-system '(mac ns x))
               (exec-path-from-shell-initialize))))
+
+(use-package hy-mode
+  :config (progn
+            (add-hook 'hy-mode-hook '~load-paredit-mode)))
 
 (use-package eldoc
   :config (progn
@@ -516,81 +585,105 @@
 ;; Quack doc: http://www.neilvandyke.org/quack/quack.el
 ;; Geiser doc: http://www.nongnu.org/geiser
 
-(use-package geiser
-  :config (progn
-            (setq geiser-default-implementation "racket")
-            (add-hook 'geiser-repl-mode-hook   '~load-paredit-mode)
+;; (use-package geiser
+;;   :disabled t
+;;   :config (progn
+;;             (setq geiser-default-implementation "racket")
+;;             (add-hook 'geiser-repl-mode-hook   '~load-paredit-mode)
 
-            ;; Auto-complete backend
-            (use-package ac-geiser
-              :init (progn
-                      (add-hook 'geiser-mode-hook        'ac-geiser-setup)
-                      (add-hook 'geiser-repl-mode-hook   'ac-geiser-setup)
-                      (eval-after-load 'auto-complete
-                        '(add-to-list 'ac-modes 'geiser-repl-mode))))
+;;             ;; Auto-complete backend
+;;             (use-package ac-geiser
+;;               :init (progn
+;;                       (add-hook 'geiser-mode-hook        'ac-geiser-setup)
+;;                       (add-hook 'geiser-repl-mode-hook   'ac-geiser-setup)
+;;                       (eval-after-load 'auto-complete
+;;                         '(add-to-list 'ac-modes 'geiser-repl-mode))))
 
-            (eval-after-load 'geiser-mode
-              '(progn
-                (dolist (sym '(λ
-                               ~>
-                               ~>>
-                               define-values
-                               get
-                               post
-                               put
-                               patch
-                               delete
-                               call-with-parameterization
-                               module+))
-                  (put sym 'scheme-indent-function 1)
-                  (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+;;             (eval-after-load 'geiser-mode
+;;               '(progn
+;;                 (dolist (sym '(λ
+;;                                ~>
+;;                                ~>>
+;;                                define-values
+;;                                get
+;;                                post
+;;                                put
+;;                                patch
+;;                                delete
+;;                                call-with-parameterization
+;;                                module+))
+;;                   (put sym 'scheme-indent-function 1)
+;;                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
 
-                (dolist (sym '(with-shell-commands))
-                  (put sym 'scheme-indent-function 0)
-                  (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+;;                 (dolist (sym '(with-shell-commands))
+;;                   (put sym 'scheme-indent-function 0)
+;;                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
 
-                (dolist (sym '(module
-                               module*))
-                  (put sym 'scheme-indent-function 2)
-                  (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+;;                 (dolist (sym '(module
+;;                                module*))
+;;                   (put sym 'scheme-indent-function 2)
+;;                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
 
-                (put '{ 'scheme-indent-function 0)
-                (put (~string->symbol "[") 'scheme-indent-function 0)
+;;                 (put '{ 'scheme-indent-function 0)
+;;                 (put (~string->symbol "[") 'scheme-indent-function 0)
 
-                (defadvice geiser-eval-region (after send-region-to (&rest arg))
-                 ;; ad-do-it
-                 (let ((start (ad-get-arg 0))
-                       (end   (ad-get-arg 1)))
-                   (~geiser-send-string (~get-text start end))))
+;;                 (defadvice geiser-eval-region (after send-region-to (&rest arg))
+;;                  ;; ad-do-it
+;;                  (let ((start (ad-get-arg 0))
+;;                        (end   (ad-get-arg 1)))
+;;                    (~geiser-send-string (~get-text start end))))
 
-                ;; (ad-deactivate 'geiser-eval-region)
-                (ad-activate 'geiser-eval-region)))))
+;;                 ;; (ad-deactivate 'geiser-eval-region)
+;;                 (ad-activate 'geiser-eval-region)))))
 
 ;; Load after Geiser
-(use-package quack)
+;; (use-package quack)
 
 (use-package racket-mode
-  :disabled t
+  :load-path "/m/src/racket-mode/"
   :config (progn
             ;; TODO: Document about indent changing and keywording
             (dolist (sym '(λ
-                           local
                            ~>
                            ~>>
-                           else))
+                           define-values
+                           get
+                           post
+                           put
+                           patch
+                           delete
+                           call-with-parameterization
+                           module+))
               (put sym 'racket-indent-function 1)
               (add-to-list 'racket-keywords (~symbol->string sym))
               (add-to-list 'racket-builtins (~symbol->string sym)))
 
-            (add-hook 'racket-mode-hook   '~load-paredit-mode)
+            (dolist (sym '(module
+                           module*))
+              (put sym 'racket-indent-function 2)
+              (add-to-list 'racket-keywords (~symbol->string sym))
+              (add-to-list 'racket-builtins (~symbol->string sym)))
+
+            (add-hook 'racket-mode-hook       '~load-paredit-mode)
+            (add-hook 'racket-repl-mode-hook  '~load-paredit-mode)
+            (add-hook 'racket-mode-hook       'auto-complete-mode)
+            (add-hook 'racket-repl-mode-hook  'auto-complete-mode)
+
+            (bind-key "C-c C-\\" '(lambda (prefix)
+                                    (interactive "P")
+                                    (if prefix
+                                        (progn (insert "(λ () )")
+                                               (backward-char))
+                                      (insert "λ")))
+                      racket-mode-map)
 
             (bind-key "C-c C-b" 'racket-run racket-mode-map)
             (bind-key "C-c C-z" 'other-window racket-repl-mode-map)
-            (bind-key "C-c C-z" (lambda ()
-                                  (interactive)
-                                  (call-interactively 'racket-repl)
-                                  (call-interactively 'other-window))
-                      racket-mode-map)
+            ;; (bind-key "C-c C-z" (lambda ()
+            ;;                       (interactive)
+            ;;                       (call-interactively 'racket-repl)
+            ;;                       (call-interactively 'other-window))
+            ;;           racket-mode-map)
             (bind-key "C-M-x" 'racket-send-definition racket-mode-map)))
 
 (use-package cider
@@ -676,12 +769,14 @@
 
 ;; URL shortener
 (use-package url-shortener
+  :defer t
   :init (progn
           (use-package json-mode)))
 
 ;; Buffer navigation with pattern searching and replacing
 ;;   https://github.com/ShingoFukuyama/emacs-swoop
-(use-package swoop)
+(use-package swoop
+  :load-path "/m/src/emacs-cmpitg/local-packages/emacs-swoop/")
 
 ;; Quick jumping
 (use-package ace-jump-mode
@@ -693,7 +788,7 @@
             (ace-jump-mode-enable-mark-sync)))
 
 ;; Sublime Text-inspired direct Git diff
-(use-package git-gutter-fringe
-  :diminish git-gutter-mode
-  :config (progn
-            (global-git-gutter-mode +1)))
+;; (use-package git-gutter-fringe
+;;   :diminish git-gutter-mode
+;;   :config (progn
+;;             (global-git-gutter-mode +1)))

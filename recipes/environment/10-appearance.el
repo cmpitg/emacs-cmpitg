@@ -31,11 +31,12 @@
 (setq font-use-system-font t)
 
 ;; (set-face-foreground 'font-lock-comment-face "#3a345f")
+;;; Use this if you don't use any theme
 (set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
 
 ;; (set-cursor-color "cyan")
 ;; (set-cursor-color "gray")
-(set-cursor-color "black")
+;; (set-cursor-color "black")
 
 ;; (set-background-color "#f2f2f2")
 (set-background-color "#efefef")
@@ -44,7 +45,9 @@
 ;; Themes
 ;;
 
+;; Current
 ;; (color-theme-textmate-modified)
+
 ;; (color-theme-molokai)
 ;; (color-theme-zenburn)
 ;; (color-theme-textmate)

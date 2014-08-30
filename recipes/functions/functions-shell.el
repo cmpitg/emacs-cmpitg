@@ -27,9 +27,10 @@ display result."
                              (~read-string "Shell command: ")))))
     (ignore-errors
       (with-current-buffer "*Shell Output*"
-        (erase-buffer)))
-    (start-process-shell-command "Shell-Command" "*Shell Output*" "ls")
-    (~popup-buffer "*Shell Output*")))
+        (erase-buffer)
+        (insert "$ " command-str "\n"))
+      (start-process-shell-command "Shell-Command" "*Shell Output*" command-str)
+      (~popup-buffer "*Shell Output*"))))
 
 (defun ~man-current-word ()
   "`man` this word."
