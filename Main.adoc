@@ -46,6 +46,8 @@ and only +init.el+ file needed for Emacs to load.
 ;; include::package/init-el-get
 
 ;; include::package/init-local
+
+;; include::package/use-package
 ----
 
 === Adding useful repository
@@ -115,6 +117,34 @@ need to be added to +load-path+ as well:
 
 ----
 
+=== Load +use-package+
+
+https://github.com/jwiegley/use-package[+use-package+] is an extremely
+convenient and efficient way to load package.  It's a package itself, which
+means we need to load it before everything else:
+
+.code::package/use-package
+[source,lisp,linenums]
+----
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+
+----
+
+
+== Loading essential packages
+
+Essential packages are minimal necessary packages to make Emacs as useful as
+possible.
+
+.code::load-essential-packages
+[source,lisp,linenums]
+----
+;; Modern list processing library
+(use-package )
+----
+
 == Config helpers
 
 .code::config-helpers
@@ -135,8 +165,6 @@ need to be added to +load-path+ as well:
 
 ----
 
-
-
 == Putting all together
 
 Here is our +init.el+ after putting all things together:
@@ -149,4 +177,6 @@ Here is our +init.el+ after putting all things together:
 ;; include::config-helpers
 
 ;; include::config-package-manager
+
+;; include::load-essential-packages
 ----
