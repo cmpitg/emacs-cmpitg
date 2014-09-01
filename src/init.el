@@ -44,3 +44,44 @@
 (let ((local-package-dir (~get-config "local-packages/")))
   (dolist (package-dir (directory-files local-package-dir))
     (add-to-list 'load-path (~get-config local-package-dir package-dir))))
+
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+
+
+(defvar *essential-elpa-packages*
+  '(dash                                ; "Modern" list processing
+    ht                                  ; The missing hashtable library
+    s                                   ; "Modern" string processing
+    f                                   ; "Modern" file APIs
+    cl                                  ; Common Lisp subset in Emacs Lisp
+    cl-lib                              ; Common Lisp library
+    helm                                ; Smart completion framework
+    thingatpt                           ; Getting thing at current pointg
+    multiple-cursors                    ; Sublime-like multiple cursors
+    expand-region                       ; Expand selection based-on semantic
+                                        ; units
+    eldoc                               ; Echo area function signature
+    popwin                              ; Better popwin window management,
+                                        ; dispose with Esc or C-g
+    ;; icicles
+    dired+
+    tar-mode
+    saveplace
+    color-theme
+    smooth-scrolling
+    flx-ido                             ; Better ido
+    smartscan                           ; Jump between occurrences of a symbol
+    smex                                ; Better M-x
+    fiplr                               ; Find file with fuzzy matching
+    wgrep-ack                           ; Edittable Ack
+    browse-kill-ring                    ; Browsable kill ring
+    tabbar-ruler                        ; Tabbar
+    )
+  "Essential ELPA packages that are vital to this config.")
+
+(dolist (pkg *essential-elpa-packages*)
+  (eval `(use-package ,pkg
+           :ensure ,pkg)))
