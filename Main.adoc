@@ -190,6 +190,9 @@ possible.
   (el-get-install pkg)
   (eval `(use-package ,pkg)))
 
+(dolist (pkg (directory-files (~get-config "local-packages/")))
+  (add-to-list 'load-path (~get-config "local-packages/" pkg)))
+
 ----
 
 == Config helpers
