@@ -66,12 +66,12 @@
     eldoc                               ; Echo area function signature
     popwin                              ; Better popwin window management,
                                         ; dispose with Esc or C-g
-    ;; icicles
-    dired+
-    tar-mode
-    saveplace
+    dired+                              ; Enhanced Dired
+    tar-mode                            ; Supports for tar
+    saveplace                           ; Save and restore current editing
+                                        ; point
     color-theme
-    smooth-scrolling
+    smooth-scrolling                    ; Smoother scrolling
     flx-ido                             ; Better ido
     smartscan                           ; Jump between occurrences of a symbol
     smex                                ; Better M-x
@@ -82,6 +82,20 @@
     )
   "Essential ELPA packages that are vital to this config.")
 
+(defvar *essential-el-get-packages*
+  '(later-do                            ; Async eval
+    multi-scratch                       ; Multiple scratch buffers
+    moz-repl                            ; MozRepl
+    whitespace                          ; Display trailing whitespace
+    json-mode                           ; For en/decoding JSON
+    )
+  "Essential packages that cannot be installed with ELPA but
+  el-get.")
+
 (dolist (pkg *essential-elpa-packages*)
   (eval `(use-package ,pkg
            :ensure ,pkg)))
+
+(dolist (pkg *essential-el-get-packages*)
+  (el-get-install pkg)
+  (eval `(use-package ,pkg)))
