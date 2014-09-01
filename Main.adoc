@@ -195,6 +195,19 @@ possible.
 
 ----
 
+== Tweaking
+
+.code::tweak
+[source,lisp,linenums]
+----
+(defvar *electrify-return-match*
+  "[\]\)]"
+  ;; "[\]}\)\"]"
+  "If this regexp matches the text after the cursor, do an
+\"electric\" return.")
+----
+
+
 == Config helpers
 
 .code::config-helpers
@@ -229,4 +242,6 @@ Here is our +init.el+ after putting all things together:
 ;; include::config-package-manager
 
 ;; include::load-essential-packages
+
+;; include::tweak
 ----
