@@ -1,0 +1,152 @@
+= cmpitg's personal Emacs config
+:Author: Nguyễn Hà Dương (cmpitg)
+:Email: <cmpitg@gmail.com>
+:toc: left
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: pygments
+:pygments-css: class
+:imagesdirs: assets/images
+
+// $ ulqui generate-html --from . --to docs
+
+Let's start with a minimal standard config that
+
+* has the package manager set up
+* has necessary packages loaded
+* has all convenient functions loaded
+* has the environment set up
+
+Since this configuration is written in literate programming style, there is
+actually no need to modularize configuration into files.  Thus we have the one
+and only +init.el+ file needed for Emacs to load.
+
+== Customizable constants
+
+* +*config-dir*+ is the directory where this set of configuration resides
+
+.code::constants
+[source,lisp,linenums]
+----
+(defvar *config-dir* (file-name-directory (or load-file-name
+                                              (buffer-file-name))))
+
+----
+
+== Configuring package manager
+
+.code::config-package-manager
+[source,lisp,linenums]
+----
+;; include::package/add-repos
+
+;; include::package/init
+
+;; include::package/init-el-get
+
+;; include::package/init-local
+----
+
+=== Adding useful repository
+
+.code::package/add-repos
+[source,lisp,linenums]
+----
+(require 'package)
+
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
+
+----
+
+=== Initializing package manager
+
+Initialize and fetch the list of available packages:
+
+.code::package/init
+[source,lisp,linenums]
+----
+(package-initialize)
+
+;; Fetch the list of available packages
+(when (not package-archive-contents)
+  (package-refresh-contents))
+----
+
+Beside the default package manager, https://github.com/dimitri/el-get[el-get]
+is comes in hand at times:
+
+.code::package/init-el-get
+[source,lisp,linenums]
+----
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil 'noerror)
+  (cond
+   ((fboundp 'el-get-self-update)
+    (el-get-self-update))
+
+   (t
+    (url-retrieve
+     "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
+     (lambda (s)
+       (goto-char (point-max))
+       (eval-print-last-sexp))))))
+
+;; el-get runs in sync mode
+(el-get 'sync)
+
+----
+
+Besides packages managed by package manager, there are local packages that
+need to be added to +load-path+ as well:
+
+.code::package/init-local
+[source,lisp,linenums]
+----
+(let ((local-package-dir (~get-config "local-packages/")))
+  (dolist (package-dir (directory-files local-package-dir))
+    (add-to-list 'load-path (~get-config local-package-dir package-dir))))
+
+----
+
+== Config helpers
+
+.code::config-helpers
+[source,lisp,linenums]
+----
+;; include::config-helpers/get-path
+----
+
+
+=== Getting path to a file/directory in the configuration directory
+
+.code::config-helpers/get-path
+[source,lisp,linenums]
+----
+(defun ~get-config (&rest paths)
+  "Returns path to a config file or directory."
+  (apply 'concat *config-dir* paths))
+
+----
+
+
+
+== Putting all together
+
+Here is our +init.el+ after putting all things together:
+
+.file::src/init.el
+[source,lisp,linenums]
+----
+;; include::constants
+
+;; include::config-helpers
+
+;; include::config-package-manager
+----
