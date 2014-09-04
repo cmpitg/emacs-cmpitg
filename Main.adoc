@@ -159,6 +159,19 @@ possible.
 [source,lisp,linenums]
 ----
 ;;
+;; Common Lisp library
+;;
+
+(use-package cl)
+(use-package cl-lib)
+
+;;
+;; Some non-standard utilities
+;;
+
+(use-package misc)
+
+;;
 ;; Modern list processing library
 ;;
 
@@ -193,7 +206,10 @@ possible.
 
 (use-package helm-config
   :ensure helm
-  :config (use-package helm))
+  :config (use-package helm
+            :config (progn
+                      ;; Don't auto change-dir when find-file
+                      (setq-default helm-ff-auto-update-initial-value nil))))
 
 ;;
 ;; Various actions with 'thing' at current cursor
@@ -225,18 +241,56 @@ possible.
   :ensure eldoc)
 
 ;;
-;; Better popup window management
+;; Jonathan Chu's version of powerline
+;;
+;; Install from local
+;;
+;; https://github.com/jonathanchu/emacs-powerline
 ;;
 
+(load-file (~get-config "local-packages/powerline/powerline.el"))
+(use-package powerline)
+
+;;
+;; Better popup window management
+;;
+;; https://github.com/m2ym/popwin-el
+
 (use-package popwin
-  :ensure popwin)
+  :ensure popwin
+  :config (progn
+            (popwin-mode 1)
+            (setq anything-samewindow nil)
+            
+            (dolist (el '(("\*anything*" :regexp t :height 25)
+                          ("*anything*" :height 20)
+                          (dired-mode :position top)
+                          "*Backtrace*"
+                          "*Shell Command Output*"
+                          (compilation-mode :noselect t)
+                          "*slime-apropos*"
+                          "*slime-macroexpansion*"
+                          "*slime-description*"
+                          ("*slime-compilation*" :noselect t)
+                          "*slime-xref*"
+                          (sldb-mode :stick t)
+                          slime-repl-mode
+                          slime-connection-list-mode
+                          "*vc-diff*"
+                          "*vc-change-log*"
+                          (" *undo-tree*" :width 0.3 :position right)))
+              (push el popwin:special-display-config))))
 
 ;;
 ;; Enhanced file management with Dired
 ;;
 
 (use-package dired+
-  :ensure dired+)
+  :ensure dired+
+  :init (progn
+          (setq dired-listing-switches "-lahF")
+          ;; Reuse current buffer when opening file/dir
+          (toggle-diredp-find-file-reuse-dir 1)))
 
 ;;
 ;; Support for tar
@@ -250,7 +304,9 @@ possible.
 ;;
 
 (use-package saveplace
-  :ensure saveplace)
+  :ensure saveplace
+  :init (progn
+          (setq-default save-place t)))
 
 ;;
 ;; Color theme
@@ -258,6 +314,18 @@ possible.
 
 (use-package color-theme
   :ensure color-theme)
+
+;;
+;; Recent files
+;;
+
+(use-package recentf
+  :ensure recentf
+  :commands recentf-open-files
+  :idle (recentf-mode)
+  :idle-priority 3
+  :init (progn
+          (recentf-mode 1)))
 
 ;;
 ;; Smoother scrolling
@@ -270,29 +338,66 @@ possible.
 ;; Better ido
 ;;
 
-(use-package flx-ido
-  :ensure flx-ido)
+(use-package ido
+  :ensure ido
+  :config (use-package flx-ido
+            :config (progn
+                      (ido-mode 1)
+                      (ido-everywhere 1)
+                      (flx-ido-mode 1)
+
+                      ;; disable ido faces to see flx highlights.
+                      (setq ido-use-faces nil))))
+
+;;
+;; Custom unique naming method
+;;
+
+(use-package uniquify
+  :init (progn
+          (setq uniquify-buffer-name-style 'forward)))
 
 ;;
 ;; Jump between occurrences of a symbol
 ;;
+;; `smartscan-symbol-go-forward'   M-n
+;; `smartscan-symbol-go-backward'  M-p
 
 (use-package smartscan
-  :ensure smartscan)
+  :ensure smartscan
+  :config (progn
+            (global-smartscan-mode 1)))
+
+;;
+;; Open with external program
+;;
+;; Load from local
+;;
+
+(use-package openwith
+  :init (progn
+          (openwith-mode t)))
 
 ;;
 ;; Better M-x
 ;;
 
 (use-package smex
-  :ensure smex)
+  :ensure smex
+  :init (progn
+          (smex-initialize)))
 
 ;;
 ;; Find file with fuzzy matching
 ;;
 
 (use-package fiplr
-  :ensure fiplr)
+  :ensure fiplr
+  :config (progn
+            (add-to-list 'fiplr-root-markers "README.md")
+            (add-to-list 'fiplr-root-markers "README.adoc")
+            (add-to-list 'fiplr-root-markers "README.txt")
+            (add-to-list 'fiplr-root-markers "README")))
 
 ;;
 ;; Editable Ack
@@ -306,7 +411,9 @@ possible.
 ;;
 
 (use-package browse-kill-ring
-  :ensure browse-kill-ring)
+  :ensure browse-kill-ring
+  :config (progn
+            (browse-kill-ring-default-keybindings)))
 
 ;;
 ;; Simple tabbar
@@ -367,6 +474,22 @@ possible.
 \"electric\" return.")
 ----
 
+== My own taste
+
+.code::cmpitg-packages
+[source,lisp,linenums]
+----
+;;
+;; GPG interface
+;;
+
+(use-package epa-file
+  :ensure epa
+  :config (progn
+            (epa-file-enable)))
+
+----
+
 
 == Config helpers
 
@@ -407,5 +530,6 @@ Here is our +init.el+ after putting all things together:
 
 ;; include::tweak
 
-;; (load "/m/src/emacs-cmpitg-rewrite/old/init-essential-packages.el")
+;; include::cmpitg-packages
+
 ----
