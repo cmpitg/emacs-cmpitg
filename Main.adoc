@@ -135,65 +135,225 @@ means we need to load it before everything else:
 
 == Loading essential packages
 
+First of all, local packages need to be taken care.  Packages that are not
+available through package manager or their features are most appropriate at
+some specific commit will be added as local packages.
+
+.code::load-path-local-packages
+[source,lisp,linenums]
+----
+;;
+;; Add local packages to load-path
+;;
+
+(dolist (pkg (directory-files (~get-config "local-packages/")))
+  (add-to-list 'load-path (~get-config "local-packages/" pkg)))
+
+----
+
+
 Essential packages are minimal necessary packages to make Emacs as useful as
 possible.
 
 .code::load-essential-packages
 [source,lisp,linenums]
 ----
-(defvar *essential-elpa-packages*
-  '(dash                                ; "Modern" list processing
-    ht                                  ; The missing hashtable library
-    s                                   ; "Modern" string processing
-    f                                   ; "Modern" file APIs
-    cl                                  ; Common Lisp subset in Emacs Lisp
-    cl-lib                              ; Common Lisp library
-    helm                                ; Smart completion framework
-    thingatpt                           ; Getting thing at current pointg
-    multiple-cursors                    ; Sublime-like multiple cursors
-    expand-region                       ; Expand selection based-on semantic
-                                        ; units
-    eldoc                               ; Echo area function signature
-    popwin                              ; Better popwin window management,
-                                        ; dispose with Esc or C-g
-    dired+                              ; Enhanced Dired
-    tar-mode                            ; Supports for tar
-    saveplace                           ; Save and restore current editing
-                                        ; point
-    color-theme
-    smooth-scrolling                    ; Smoother scrolling
-    flx-ido                             ; Better ido
-    smartscan                           ; Jump between occurrences of a symbol
-    smex                                ; Better M-x
-    fiplr                               ; Find file with fuzzy matching
-    wgrep-ack                           ; Edittable Ack
-    browse-kill-ring                    ; Browsable kill ring
-    tabbar-ruler                        ; Tabbar
-    )
-  "Essential ELPA packages that are vital to this config.")
+;;
+;; Modern list processing library
+;;
 
-(defvar *essential-el-get-packages*
-  '(later-do                            ; Async eval
-    multi-scratch                       ; Multiple scratch buffers
-    moz-repl                            ; MozRepl
-    whitespace                          ; Display trailing whitespace
-    json-mode                           ; For en/decoding JSON
-    )
-  "Essential packages that cannot be installed with ELPA but
-  el-get.")
+(use-package dash
+  :ensure dash
+  :config (dash-enable-font-lock))
 
-(dolist (pkg *essential-elpa-packages*)
-  (eval `(use-package ,pkg
-           :ensure ,pkg)))
+;;
+;; Hashtable
+;;
 
-(dolist (pkg *essential-el-get-packages*)
-  (el-get-install pkg)
-  (eval `(use-package ,pkg)))
+(use-package ht
+  :ensure ht)
 
-(dolist (pkg (directory-files (~get-config "local-packages/")))
-  (add-to-list 'load-path (~get-config "local-packages/" pkg)))
+;;
+;; String processing
+;;
+
+(use-package s
+  :ensure s)
+
+;;
+;; File/filesystem library
+;;
+
+(use-package f
+  :ensure f)
+
+;;
+;; Smart completion framework
+;;
+
+(use-package helm-config
+  :ensure helm
+  :config (use-package helm))
+
+;;
+;; Various actions with 'thing' at current cursor
+;;
+
+(use-package thingatpt
+  :ensure thingatpt)
+
+;;
+;; Multiple cursors
+;;
+
+(use-package multiple-cursors
+  :ensure multiple-cursors)
+
+;;
+;; Expand region
+;;
+
+(use-package expand-region
+  :ensure expand-region
+  :commands er/expand-region)
+
+;;
+;; Live function signature at echo area
+;;
+
+(use-package eldoc
+  :ensure eldoc)
+
+;;
+;; Better popup window management
+;;
+
+(use-package popwin
+  :ensure popwin)
+
+;;
+;; Enhanced file management with Dired
+;;
+
+(use-package dired+
+  :ensure dired+)
+
+;;
+;; Support for tar
+;;
+
+(use-package tar-mode
+  :ensure tar-mode)
+
+;;
+;; Save and restore current editing point
+;;
+
+(use-package saveplace
+  :ensure saveplace)
+
+;;
+;; Color theme
+;;
+
+(use-package color-theme
+  :ensure color-theme)
+
+;;
+;; Smoother scrolling
+;;
+
+(use-package smooth-scrolling
+  :ensure smooth-scrolling)
+
+;;
+;; Better ido
+;;
+
+(use-package flx-ido
+  :ensure flx-ido)
+
+;;
+;; Jump between occurrences of a symbol
+;;
+
+(use-package smartscan
+  :ensure smartscan)
+
+;;
+;; Better M-x
+;;
+
+(use-package smex
+  :ensure smex)
+
+;;
+;; Find file with fuzzy matching
+;;
+
+(use-package fiplr
+  :ensure fiplr)
+
+;;
+;; Editable Ack
+;;
+
+(use-package wgrep-ack
+  :ensure wgrep-ack)
+
+;;
+;; Browsable kill ring
+;;
+
+(use-package browse-kill-ring
+  :ensure browse-kill-ring)
+
+;;
+;; Simple tabbar
+;;
+
+(use-package tabbar-ruler
+  :ensure tabbar-ruler)
+
+;;
+;; Async eval
+;;
+
+(el-get-install 'later-do)
+(use-package later-do)
+
+;;
+;; Multiple scratch buffers
+;;
+
+(el-get-install 'multi-scratch)
+(use-package multi-scratch)
+
+;;
+;; Manipulating Firefox/Thunderbird
+;;
+
+(el-get-install 'moz-repl)
+(use-package moz)
+
+;;
+;; Display trailing whitespace
+;;
+
+(el-get-install 'whitespace)
+(use-package whitespace
+  :commands whitespace-mode)
+
+;;
+;; En/decoding JSON
+;;
+
+(el-get-install 'json-mode)
+(use-package json-mode)
 
 ----
+
+
 
 == Tweaking
 
@@ -241,7 +401,11 @@ Here is our +init.el+ after putting all things together:
 
 ;; include::config-package-manager
 
+;; include::load-path-local-packages
+
 ;; include::load-essential-packages
 
 ;; include::tweak
+
+;; (load "/m/src/emacs-cmpitg-rewrite/old/init-essential-packages.el")
 ----
