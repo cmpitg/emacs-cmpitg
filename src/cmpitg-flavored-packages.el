@@ -19,6 +19,13 @@
 ;; GPG interface
 ;;
 
+;; Visit anything.gpg and it will encrypt it when you save the buffer.
+;;
+;; To prevent EPG from prompting for a key every time you save a file, put the
+;; following at the top of your file:
+;;
+;;    -*- epa-file-encrypt-to: ("your@email.address") -*-
+
 (use-package epa-file
   :ensure epa
   :config (progn
@@ -239,7 +246,7 @@
   :ensure slime
   :commands common-lisp-mode
   :config (progn
-            (add-hook 'lisp-mode-hook 
+            (add-hook 'lisp-mode-hook
                       (lambda ()
                         (slime-mode t)
                         (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
@@ -259,15 +266,22 @@
             (setq slime-lisp-implementations
                   '((sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
                     (clisp ("/usr/bin/clisp" "-q -I"))))
-            
+
             (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
 
             (load (expand-file-name "/mnt/home/cmpitg/opt/quicklisp-sbcl/slime-helper.el"))
 
             (font-lock-add-keywords 'emacs-lisp-mode
                                     '(("defroute" . font-lock-keyword-face)))
-            
+
             (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
+
+;;
+;; Julia development
+;;
+
+(use-package julia-mode
+  :ensure julia-mode)
 
 ;;
 ;; Clojure development
@@ -284,17 +298,16 @@
       :config (progn
                 (use-package clojure-cheatsheet
                   :ensure clojure-cheatsheet)
-                (use-package clojure-test-mode
-                  :ensure clojure-test-mode)
+
                 (use-package clojurescript-mode
                   :ensure clojurescript-mode)
+
                 (use-package ac-cider
                   :ensure ac-cider)
 
                 (add-hook 'clojure-mode-hook 'cider-mode)
-                (add-hook 'clojure-mode-hook 'clojure-test-mode)
                 (add-hook 'clojure-mode-hook '~load-paredit-mode)
-     
+
                 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
                 (add-hook 'cider-repl-mode-hook '~load-paredit-mode)
 
@@ -320,8 +333,6 @@
 
                 (setq cider-repl-history-size 4096)
 
-                ;; Autocomplete nREPL
-                (require 'ac-nrepl)
                 (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
                 (add-hook 'cider-mode-hook 'ac-nrepl-setup)
                 (eval-after-load 'auto-complete
@@ -335,7 +346,16 @@
                      'set-auto-complete-as-completion-at-point-function)
                     (add-hook 'cider-mode-hook
                      'set-auto-complete-as-completion-at-point-function)))
-                
+
+                ;; Clojure latest library
+                ;;   https://github.com/AdamClements/latest-clojure-libraries
+
+                (use-package latest-clojure-libraries
+                  :ensure latest-clojure-libraries
+                  :init (progn
+                          (defalias '~clojure-insert-latest-dependency
+                            'latest-clojure-libraries-insert-dependency)))
+
                 (define-clojure-indent
                   (defroutes 'defun)
                   (GET 2)
@@ -345,6 +365,14 @@
                   (HEAD 2)
                   (ANY 2)
                   (context 2))))))
+
+;;
+;; WispJS development
+;;
+
+(use-package wispjs-mode
+  :ensure wispjs-mode
+  :commands wispjs-mode)
 
 ;;
 ;; Ruby development
@@ -386,6 +414,8 @@
 ;; Built-in
 
 (use-package python
+  :commands python-mode
+  :mode "\\.py\\'"
   :config (progn
             ;; Workaround: virtualenvwrapper.el needs to be loaded explicitly
             (progn
@@ -394,17 +424,26 @@
               ;; (kill-buffer "virtualenvwrapper.el")
               )
             (use-package virtualenvwrapper
-              :config (progn 
+              :config (progn
                         (venv-initialize-interactive-shells)
                         (venv-initialize-eshell)
                         (setq venv-location "/m/virtenvs/")))))
+
+(use-package django-mode
+  :ensure django-mode
+  :commands python-mode
+  :config (progn
+            (use-package python-django
+              :ensure python-django)
+            (use-package django-html-mode
+              :mode "\\\\.djhtml$")))
 
 ;;
 ;; JavaScript development
 ;;
 
 (use-package js2-mode
-  :mode "\\.js" 
+  :mode "\\.js"
   :interpreter "node"
   :config (progn
             (add-hook 'js-mode-hook 'js2-minor-mode)
@@ -432,6 +471,45 @@
             ))
 
 ;;
+;; TOML
+;;
+
+(use-package toml-mode
+  :ensure toml-mode)
+
+;;
+;; Asciidoc
+;;
+
+(use-package adoc-mode
+  :ensure adoc-mode
+  :defer t
+  :init (progn
+          (~auto-load-mode '("\\.ascii" "\\.txt" "\\.adoc") 'adoc-mode)
+          (add-hook 'adoc-mode-hook 'auto-fill-mode)))
+
+;;
+;; Better beffer switching, C-x b
+;;
+
+(defun iswitchb-local-keys ()
+  (mapc (lambda (K) 
+	      (let* ((key (car K)) (fun (cdr K)))
+            (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+	    '(("s-n"     . iswitchb-next-match)
+	      ("s-h"     . iswitchb-prev-match)
+          ("<right>" . iswitchb-next-match)
+	      ("<left>"  . iswitchb-prev-match)
+	      ("<up>"    . ignore             )
+	      ("<down>"  . ignore             ))))
+
+(use-package iswitchb
+  :ensure iswitchb
+  :config (progn
+            (add-to-list 'iswitchb-buffer-ignore "^[[:alpha:]]")
+            (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)))
+
+;;
 ;; ibus bridge
 ;;
 
@@ -448,14 +526,37 @@
             (setq ibus-agent-file-name (~get-config "local-packages/ibus.el/ibus-el-agent"))))
 
 ;;
+;; Open last session
+;;
+
+(use-package save-visited-files
+  :ensure save-visited-files
+  :config (progn
+            (turn-on-save-visited-files-mode)))
+
+;;
 ;; Eshell
 ;;
 
 (use-package eshell
   :commands eshell
   :init (progn
-          (use-package exec-path-from-shell))
+          (use-package exec-path-from-shell
+            :ensure exec-path-from-shell)
+
+          ;; ElDoc in Eshell
+          (defadvice eldoc-current-symbol (around eldoc-current-symbol activate)
+            ad-do-it
+            (if (and (not ad-return-value)
+                     (eq major-mode 'eshell-mode))
+                (save-excursion
+                  (goto-char eshell-last-output-end)
+                  (let ((esym (eshell-find-alias-function (current-word)))
+                        (sym (intern-soft (current-word))))
+                    (setq ad-return-value (or esym sym)))))))
   :config (progn
+            (add-hook 'eshell-mode-hook 'eldoc-mode)
+
             (setq eshell-prefer-lisp-functions t)
 
             ;; Eshell smart mode
@@ -544,7 +645,19 @@
                         (bind-key "s-T" 'eshell-next-input     eshell-mode-map)
                         (bind-key "<S-mouse-1>" '~insert-text-at-the-end
                                   eshell-mode-map)))
-               
+
+            (setq eshell-prompt-function
+                  (lambda ()
+                    (let* ((username (getenv "USER"))
+                           (hostname (getenv "HOST"))
+                           (time     (format-time-string "%Y/%m/%d %H:%M"))
+                           (pwd      (eshell/pwd)))
+                      (concat "--- " time " " username "@" hostname " " pwd " ---"
+                              "\n"
+                              "$ "))))
+            
+            (setq eshell-prompt-regexp "^[#$] ")
+
             ;; Read $PATH variable
             (when (memq window-system '(mac ns x))
               (exec-path-from-shell-initialize))))

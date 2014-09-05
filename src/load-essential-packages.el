@@ -63,6 +63,7 @@
 
 (use-package helm-config
   :ensure helm
+  :commands (helm-find-files helm-buffers-list helm-bookmarks)
   :config (use-package helm
             :config (progn
                       ;; Don't auto change-dir when find-file
@@ -455,11 +456,20 @@
 
 (use-package markdown-mode
   :ensure markdown-mode
+  :commands markdown-mode
   :init (progn
           (~auto-load-mode '("\\.md$" "\\.markdown$") 'markdown-mode))
   :config (progn
-            (use-package markdown-mode+)
-            (add-hook 'markdown-mode-hook 'auto-fill-mode)))
+            (use-package markdown-mode+
+              :ensure markdown-mode+)
+
+            (add-hook 'markdown-mode-hook 'auto-fill-mode)
+            (custom-set-faces
+             ;; Your init file should contain only one such instance.
+             ;; If there is more than one, they won't work right.
+             '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.7 :background "#ABCDEF"))))
+             '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
+             '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.3)))))))
 
 ;;
 ;; Auto-pairing brackets
@@ -548,8 +558,16 @@
 ;;
 
 (el-get-install 'json-mode)
+
 (use-package json-mode
-  :defer t)
+  :defer t
+  :mode "\\.json\\'"
+  :init (progn
+          (eval-after-load "json-mode"
+            '(progn
+              (setq c-basic-offset 2)
+              (setq tab-width 2)))))
+
 (use-package json
   :ensure json
   :defer t)

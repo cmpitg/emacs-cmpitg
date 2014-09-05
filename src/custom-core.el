@@ -21,12 +21,28 @@
   "If this regexp matches the text after the cursor, do an
 \"electric\" return.")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Smooth scrolling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; scroll one line at a time (less "jumpy" than defaults)
+;; 3 lines at a time normally, 5 lines at a time with shift
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 5)))
+;; don't accelerate scrolling
+(setq mouse-wheel-progressive-speed nil)
+;; scroll window under mouse
+(setq mouse-wheel-follow-mouse 't)
+;; keyboard scroll one line at a time
+(setq scroll-step 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Disable Tramp autosave
 (setq tramp-auto-save-directory "/tmp/")
 
 ;; Default scratch-buffer mode
-(setq initial-major-mode 'emacs-lisp-mode)
-(setq major-mode 'markdown-mode)
+(setq-default initial-major-mode 'emacs-lisp-mode)
+(setq-default major-mode 'markdown-mode)
 
 ;; Don't let the cursor go into minibuffer prompt
 ;;   http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html

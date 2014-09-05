@@ -132,6 +132,11 @@ selection with command output."
                                (~read-string "String: ")))))
     (comint-send-string (~geiser-repl-process) string)))
 
+(defun ~current-line-number ()
+  "Return current line number in the buffer."
+  (interactive)
+  (count-lines 1 (point)))
+
 (defun ~current-line-comment-syntax ()
   "Return the current line-comment syntax for current buffer mode."
   comment-start)
@@ -435,24 +440,15 @@ E.g.
       (kill-buffer)
       file-path)))
 
-(defun ~quick-bindkey-local (&optional key expr)
-  "Quickly create keybindings for local buffer.  This command
-should only be called interactively."
+(defun ~bind-key-temporary ()
+  "Interactive command for `bind-key'."
   (interactive)
-  (let ((key (if key
-                 key
-                 (read-key-sequence "Key: ")))
-        (expr  (if expr
-                   expr
-                   (read-from-minibuffer "Eval: "
-                                         nil read-expression-map t
-                                         'read-expression-history))))
-    (local-set-key key '(lambda ()
+  (let* ((key-binding (read-key-sequence "Key sequence: "))
+         (symbol      (~read-simplified-sexp-as-string "Eval: "))
+         (fn          `(lambda ()
                          (interactive)
-                         (save-excursion
-                           (with-temp-buffer
-                             (insert expr)
-                             (eval-buffer)))))))
+                         (~add-bracket-and-eval ,symbol))))
+    (bind-key (format-kbd-macro key-binding) fn)))
 
 (defun ~add-personal-keybinding (key-binding symbol)
   "Add a key binding to `bind-key' library's
@@ -726,6 +722,10 @@ filesystem."
     (concat (file-name-base buffer-file-name) "."
             (file-name-extension buffer-file-name))
     ""))
+
+(defun ~current-file-name-without-extension ()
+  "Return current file name without extension."
+  (file-name-sans-extension (~current-file-name)))
 
 (defun ~delete-current-file ()
   "Delete the file associated with the current buffer.
@@ -1293,6 +1293,23 @@ function doesn't update local el-get database."
         (memq package-symbol (-map (lambda (package)
                                      (plist-get package :name))
                                    (~el-get-package-list))))))
+
+(defun ~remove-elpa-package (&optional package-name)
+  "Remove an ELPA package from local directory.  You need to
+`unload-feature' or restart Emacs for the changes to take effect.
+`PACKAGE-NAME' does not need to contain version.  It's
+automatically searched in your ~/.emacs.d/elpa/ directory.  This
+function may be called as a command; user is prompted to input
+full package name and its version."
+  (interactive)
+  (let ((path (cond ((not (~string-empty? package-name))
+                     (-> (format "~/.emacs.d/elpa/%s*" package-name)
+                       file-expand-wildcards
+                       first))
+                    (t
+                     (read-directory-name "Package: "
+                                          "~/.emacs.d/elpa/")))))
+    (f-delete path t)))
 
 (defun ~elpa-package-exists? (package-symbol)
   "Determine if a package exists in ELPA.  This function doesn't
