@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: check-equal?
-# key: ch
-# group: scheme-mode
-# --
-(check-equal? ${1:expr} ${2:expected})

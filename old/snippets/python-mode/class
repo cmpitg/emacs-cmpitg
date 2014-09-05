@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: Add class without docstring
-# key: cl
-# group: python-mode
-# --
-class ${1:ClassName}:
-	$2

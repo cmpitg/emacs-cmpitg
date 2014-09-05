@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: procedure
-# key: proc
-# group: delphi-mode
-# --
-procedure $1;
-begin
-        $2
-end;

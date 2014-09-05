@@ -1,101 +1,72 @@
-(defvar *config-dir* (file-name-directory (or load-file-name
-                                              (buffer-file-name))))
+;;
+;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;;
+;; This project is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation, either version 3 of the License, or (at your option)
+;; any later version.
+;;
+;; This project is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;; more details.
+;;
+;; You should have received a copy of the GNU General Public License along
+;; with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Global constants
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar *config-dir* (file-name-directory (or (buffer-file-name)
+                                              load-file-name))
+  ;; "/m/src/emacs-cmpitg-rewrite/src/"
+  "Default configuration directory.")
+
+(defvar *snippet-dir*
+  (format "%s/snippets" *config-dir*)
+  "Default snippet directory.")
+
+(add-to-list 'load-path *config-dir*)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Config helpers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~get-config (&rest paths)
   "Returns path to a config file or directory."
   (apply 'concat *config-dir* paths))
 
+(defun ~get-library-full-path (library-name)
+  "Return the full path to a library."
+  (save-excursion
+    (find-library library-name)
+    (let ((file-path (or (expand-file-name buffer-file-name)
+                         "")))
+      (kill-buffer)
+      file-path)))
 
-(require 'package)
+(defun ~elpa-install (&rest packages)
+  "Install a list of packages with ELPA if not installed yet."
+  (dolist (pkg packages)
+    (unless (package-installed-p pkg)
+      (package-install pkg))))
 
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Minimal config
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'ee:functions                (~get-config "functions.el"))
+(require 'ee:load-package-manager     (~get-config "load-package-manager.el"))
+(require 'ee:load-essential-packages  (~get-config "load-essential-packages.el"))
+(require 'ee:custom-core              (~get-config "custom-core.el"))
+(require 'ee:config-environment       (~get-config "environment.el"))
+(require 'ee:keybindings              (~get-config "keybindings.el"))
 
-(package-initialize)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; My config
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Fetch the list of available packages
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-(unless (require 'el-get nil 'noerror)
-  (cond
-   ((fboundp 'el-get-self-update)
-    (el-get-self-update))
-
-   (t
-    (url-retrieve
-     "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
-     (lambda (s)
-       (goto-char (point-max))
-       (eval-print-last-sexp))))))
-
-;; el-get runs in sync mode
-(el-get 'sync)
-
-
-(let ((local-package-dir (~get-config "local-packages/")))
-  (dolist (package-dir (directory-files local-package-dir))
-    (add-to-list 'load-path (~get-config local-package-dir package-dir))))
-
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-
-
-(defvar *essential-elpa-packages*
-  '(dash                                ; "Modern" list processing
-    ht                                  ; The missing hashtable library
-    s                                   ; "Modern" string processing
-    f                                   ; "Modern" file APIs
-    cl                                  ; Common Lisp subset in Emacs Lisp
-    cl-lib                              ; Common Lisp library
-    helm                                ; Smart completion framework
-    thingatpt                           ; Getting thing at current pointg
-    multiple-cursors                    ; Sublime-like multiple cursors
-    expand-region                       ; Expand selection based-on semantic
-                                        ; units
-    eldoc                               ; Echo area function signature
-    popwin                              ; Better popwin window management,
-                                        ; dispose with Esc or C-g
-    dired+                              ; Enhanced Dired
-    tar-mode                            ; Supports for tar
-    saveplace                           ; Save and restore current editing
-                                        ; point
-    color-theme
-    smooth-scrolling                    ; Smoother scrolling
-    flx-ido                             ; Better ido
-    smartscan                           ; Jump between occurrences of a symbol
-    smex                                ; Better M-x
-    fiplr                               ; Find file with fuzzy matching
-    wgrep-ack                           ; Edittable Ack
-    browse-kill-ring                    ; Browsable kill ring
-    tabbar-ruler                        ; Tabbar
-    )
-  "Essential ELPA packages that are vital to this config.")
-
-(defvar *essential-el-get-packages*
-  '(later-do                            ; Async eval
-    multi-scratch                       ; Multiple scratch buffers
-    moz-repl                            ; MozRepl
-    whitespace                          ; Display trailing whitespace
-    json-mode                           ; For en/decoding JSON
-    )
-  "Essential packages that cannot be installed with ELPA but
-  el-get.")
-
-(dolist (pkg *essential-elpa-packages*)
-  (eval `(use-package ,pkg
-           :ensure ,pkg)))
-
-(dolist (pkg *essential-el-get-packages*)
-  (el-get-install pkg)
-  (eval `(use-package ,pkg)))
+(require 'ee:cmpitg-flavored-packages (~get-config "cmpitg-flavored-packages.el"))
+(require 'ee:personal                 (~get-config "personal.el"))

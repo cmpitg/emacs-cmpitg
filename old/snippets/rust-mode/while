@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: while
-# key: wh
-# group: rust-mode
-# --
-while $1 {
-	$2
-}

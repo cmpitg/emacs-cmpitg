@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: bind-key
-# key: bk
-# group: emacs-lisp-mode
-# --
-(bind-key "${1:key-sequence}" ${2:'symbol})

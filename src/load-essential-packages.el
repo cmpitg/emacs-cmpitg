@@ -1,0 +1,557 @@
+;;
+;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;;
+;; This project is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation, either version 3 of the License, or (at your option)
+;; any later version.
+;;
+;; This project is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;; more details.
+;;
+;; You should have received a copy of the GNU General Public License along
+;; with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;
+
+;;
+;; Common Lisp library
+;;
+
+(use-package cl)
+(use-package cl-lib)
+
+;;
+;; Some non-standard utilities
+;;
+
+(use-package misc)
+
+;;
+;; Modern list processing library
+;;
+
+(use-package dash
+  :ensure dash
+  :config (dash-enable-font-lock))
+
+;;
+;; Hashtable
+;;
+
+(use-package ht
+  :ensure ht)
+
+;;
+;; String processing
+;;
+
+(use-package s
+  :ensure s)
+
+;;
+;; File/filesystem library
+;;
+
+(use-package f
+  :ensure f)
+
+;;
+;; Smart completion framework
+;;
+
+(use-package helm-config
+  :ensure helm
+  :config (use-package helm
+            :config (progn
+                      ;; Don't auto change-dir when find-file
+                      (setq-default helm-ff-auto-update-initial-value nil))))
+
+;;
+;; Remote file processing with Tramp
+;;
+
+(use-package tramp)
+
+;;
+;; Various actions with 'thing' at current cursor
+;;
+
+(use-package thingatpt
+  :ensure thingatpt)
+
+;;
+;; Multiple cursors
+;;
+
+(use-package multiple-cursors
+  :ensure multiple-cursors)
+
+;;
+;; Expand region
+;;
+
+(use-package expand-region
+  :ensure expand-region
+  :commands er/expand-region)
+
+;;
+;; Live function signature at echo area
+;;
+
+(use-package eldoc
+  :ensure eldoc
+  :diminish eldoc-mode
+  :config (progn
+            (eldoc-add-command 'paredit-backward-delete
+                               'paredit-close-round)
+
+            (add-hook 'emacs-lisp-mode-hook        'turn-on-eldoc-mode)
+            (add-hook 'lisp-interaction-mode-hook  'turn-on-eldoc-mode)
+            (add-hook 'ielm-mode-hook              'turn-on-eldoc-mode)))
+
+;;
+;; Jonathan Chu's version of powerline
+;;
+;; Install from local
+;;
+;; https://github.com/jonathanchu/emacs-powerline
+;;
+
+(load-file (~get-config "local-packages/powerline/powerline.el"))
+(use-package powerline)
+
+;;
+;; Better popup window management
+;;
+;; https://github.com/m2ym/popwin-el
+
+(use-package popwin
+  :ensure popwin
+  :config (progn
+            (popwin-mode 1)
+            (setq anything-samewindow nil)
+            
+            (dolist (el '(("\*anything*" :regexp t :height 25)
+                          ("*anything*" :height 20)
+                          (dired-mode :position top)
+                          "*Backtrace*"
+                          "*Shell Command Output*"
+                          (compilation-mode :noselect t)
+                          "*slime-apropos*"
+                          "*slime-macroexpansion*"
+                          "*slime-description*"
+                          ("*slime-compilation*" :noselect t)
+                          "*slime-xref*"
+                          (sldb-mode :stick t)
+                          slime-repl-mode
+                          slime-connection-list-mode
+                          "*vc-diff*"
+                          "*vc-change-log*"
+                          (" *undo-tree*" :width 0.3 :position right)))
+              (push el popwin:special-display-config))))
+
+;;
+;; Enhanced file management with Dired
+;;
+
+(use-package dired+
+  :ensure dired+
+  :init (progn
+          (setq dired-listing-switches "-lahF")
+          ;; Reuse current buffer when opening file/dir
+          (toggle-diredp-find-file-reuse-dir 1)))
+
+(use-package dired-details+
+  :ensure dired-details+
+  :init (progn
+          (use-package dired-single
+            :ensure dired-single))
+  :config (progn
+            (setq dired-listing-switches "-lhFgG --group-directories-first")))
+
+;;
+;; Support for tar
+;;
+
+(use-package tar-mode
+  :ensure tar-mode)
+
+;;
+;; Save and restore current editing point
+;;
+
+(use-package saveplace
+  :ensure saveplace
+  :init (progn
+          (setq-default save-place t)))
+
+;;
+;; Color theme
+;;
+
+(use-package color-theme
+  :ensure color-theme)
+
+;;
+;; Recent files
+;;
+
+(use-package recentf
+  :ensure recentf
+  :commands recentf-open-files
+  :idle (recentf-mode)
+  :idle-priority 3
+  :init (progn
+          (recentf-mode 1)
+          (setq recentf-max-menu-items 128)))
+
+;;
+;; Smoother scrolling
+;;
+
+(use-package smooth-scrolling
+  :ensure smooth-scrolling)
+
+;;
+;; Better ido
+;;
+
+(use-package ido
+  :ensure ido
+  :config (use-package flx-ido
+            :config (progn
+                      (ido-mode 1)
+                      (ido-everywhere 1)
+                      (flx-ido-mode 1)
+
+                      ;; disable ido faces to see flx highlights.
+                      (setq ido-use-faces nil))))
+
+;;
+;; Custom unique naming method
+;;
+
+(use-package uniquify
+  :init (progn
+          (setq uniquify-buffer-name-style 'forward)))
+
+;;
+;; Jump between occurrences of a symbol
+;;
+;; `smartscan-symbol-go-forward'   M-n
+;; `smartscan-symbol-go-backward'  M-p
+
+(use-package smartscan
+  :ensure smartscan
+  :config (progn
+            (global-smartscan-mode 1)))
+
+;;
+;; Open with external program
+;;
+;; Load from local
+;;
+
+(use-package openwith
+  :init (progn
+          (openwith-mode t)))
+
+;;
+;; Better M-x
+;;
+
+(use-package smex
+  :ensure smex
+  :init (progn
+          (smex-initialize)))
+
+;;
+;; Find file with fuzzy matching
+;;
+
+(use-package fiplr
+  :ensure fiplr
+  :config (progn
+            (add-to-list 'fiplr-root-markers "README.md")
+            (add-to-list 'fiplr-root-markers "README.adoc")
+            (add-to-list 'fiplr-root-markers "README.txt")
+            (add-to-list 'fiplr-root-markers "README")))
+
+;;
+;; Editable Ack
+;;
+
+(use-package wgrep-ack
+  :ensure wgrep-ack)
+
+;;
+;; Browsable kill ring
+;;
+
+(use-package browse-kill-ring
+  :ensure browse-kill-ring
+  :config (progn
+            (browse-kill-ring-default-keybindings)))
+
+;;
+;; Quick jumping
+;;
+
+(use-package ace-jump-mode
+  :ensure ace-jump-mode
+  :commands ace-jump-mode
+  :init (progn
+          (bind-key "C-c SPC" 'ace-jump-mode)
+          (bind-key "C-x SPC" 'ace-jump-mode-pop-mark))
+  :config (progn
+            (ace-jump-mode-enable-mark-sync)))
+
+;;
+;; Buffer navigation with pattern matching and replacing
+;;
+
+(use-package swoop
+  :ensure swoop)
+
+;;
+;; URL shortener
+;;
+
+(use-package url-shortener
+  :ensure url-shortener
+  :defer t)
+
+;;
+;; Simple tabbar
+;;
+
+(use-package tabbar-ruler
+  :ensure tabbar-ruler
+  :config (progn
+            (setq tabbar-ruler-global-tabbar t) ; If you want tabbar
+            ;; (setq tabbar-ruler-global-ruler t)     ; if you want a global ruler
+            ;; (setq tabbar-ruler-popup-menu t)       ; If you want a popup menu.
+            ;; (setq tabbar-ruler-popup-toolbar t)    ; If you want a popup toolbar
+            ;; (setq tabbar-ruler-popup-scrollbar t)) ; If you want to only show
+            ;;                                        ; the scroll bar when your
+            ;;                                        ; mouse is moving.
+            ))
+
+;;
+;; Better ack interface
+;;
+
+(load-file (~get-config "local-packages/ack-and-a-half/ack-and-a-half.el"))
+(use-package ack-and-a-half
+  :init (progn
+          ;; Fix Debian-based distros' executable file
+          (setq ack-and-a-half-executable (or (executable-find "ack-grep")
+                                              (executable-find "ack")))
+          (defalias 'ack 'ack-and-a-half)
+          (defalias 'ack-same 'ack-and-a-half-same)
+          (defalias 'ack-find-file 'ack-and-a-half-find-file)
+          (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
+
+;;
+;; w3m web browser
+;;
+
+(use-package w3m
+  :ensure w3m
+  :commands w3m-browse-url
+  :init (progn
+          (setq browse-url-browser-function 'w3m-browse-url)))
+
+;;
+;; Better menu bar
+;;
+
+(use-package menu-bar+
+  :ensure menu-bar+)
+
+;;
+;; Simple menu building
+;;
+;; Local package
+
+(use-package simple-menu)
+
+;;
+;; Snippet mode
+;;
+;; Load before auto complete
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :defer t
+  :config (progn
+            (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
+            (yas-global-mode 1)))
+
+(use-package dired-details+
+  :init (progn
+          (use-package dired-single))
+  :config (progn
+            (setq dired-listing-switches "-lhFgG --group-directories-first")));;
+
+;;
+;; Auto completion framework
+;;
+
+(use-package auto-complete
+  :diminish auto-complete-mode
+  :ensure auto-complete
+  :init (progn
+          (require 'auto-complete-config)
+          (ac-config-default)
+          (setq ac-sources
+                '(ac-source-filename
+                  ac-source-functions
+                  ;; ac-source-yasnippet
+                  ac-source-variables
+                  ac-source-symbols
+                  ac-source-features
+                  ac-source-abbrev
+                  ac-source-words-in-same-mode-buffers
+                  ac-source-dictionary))
+
+          (auto-complete-mode 1)
+          (setq ac-fuzzy-enable t)
+
+          (add-hook 'ruby-mode-hook
+                    (lambda ()
+                      (add-to-list 'ac-sources 'ac-source-rsense-method)
+                      (add-to-list 'ac-sources 'ac-source-rsense-constant)))))
+
+;;
+;; Highlighting phrase and expression when needed
+;;
+
+(use-package hi-lock
+  :ensure hi-lock
+  :commands (highlight-phrase highlight-regexp))
+
+;;
+;; Gist integration
+;;
+
+(use-package gist
+  :ensure gist
+  :defer t)
+
+;;
+;; YAML
+;;
+
+(use-package yaml-mode
+  :ensure yaml-mode
+  :commands yaml-mode)
+
+;;
+;; Markdown
+;;
+
+(use-package markdown-mode
+  :ensure markdown-mode
+  :init (progn
+          (~auto-load-mode '("\\.md$" "\\.markdown$") 'markdown-mode))
+  :config (progn
+            (use-package markdown-mode+)
+            (add-hook 'markdown-mode-hook 'auto-fill-mode)))
+
+;;
+;; Auto-pairing brackets
+;;
+
+(use-package smartparens-config
+  :ensure smartparens
+  :config (progn
+            (eval-after-load 'smartparens
+              '(progn
+                 ;; (defadvice smartparens-mode (around disable-autopairs-around (arg))
+                 ;;   "Disable autopairs mode if smartparens-mode is turned on."
+                 ;;   ad-do-it
+                 ;;   (autopair-mode 0))
+
+                 ;; (ad-activate 'smartparens-mode)
+
+                 (smartparens-global-mode)))))
+
+(use-package paredit
+  :ensure paredit
+  :config (progn
+            (defadvice paredit-mode (around disable-otherparenslib-around (arg))
+              "Disable autopairs mode if paredit-mode is turned on."
+              ad-do-it
+              (cond ((null ad-return-value)
+                     (smartparens-mode 1))
+                    (t
+                     (smartparens-mode 0))))
+
+            (ad-activate 'paredit-mode)
+
+            ;; Use with SLIME REPL
+            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+
+            ;; Stop SLIME's REPL from grabbing DEL,
+            ;; which is annoying when backspacing over a '('
+            (defun override-slime-repl-bindings-with-paredit ()
+              (define-key slime-repl-mode-map
+                (read-kbd-macro paredit-backward-delete-key) nil))
+
+            (add-hook 'slime-repl-mode-hook
+                      'override-slime-repl-bindings-with-paredit)
+
+            (add-hook 'emacs-lisp-mode-hook       '~load-paredit-mode)
+            (add-hook 'lisp-mode-hook             '~load-paredit-mode)
+            (add-hook 'lisp-interaction-mode-hook '~load-paredit-mode)
+            (add-hook 'scheme-mode-hook           '~load-paredit-mode)))
+
+;;
+;; Async eval
+;;
+
+(el-get-install 'later-do)
+(use-package later-do
+  :defer t)
+
+;;
+;; Multiple scratch buffers
+;;
+
+(el-get-install 'multi-scratch)
+(use-package multi-scratch
+  :commands multi-scratch-new)
+
+;;
+;; Manipulating Firefox/Thunderbird
+;;
+
+(el-get-install 'moz-repl)
+(use-package moz
+  :config (progn
+            (add-hook 'javascript-mode-hook '-setup-moz-javascript)
+            (add-hook 'js3-mode-hook        '-setup-moz-javascript)))
+
+;;
+;; Display trailing whitespace
+;;
+
+(el-get-install 'whitespace)
+(use-package whitespace
+  :commands whitespace-mode)
+
+;;
+;; En/decoding JSON
+;;
+
+(el-get-install 'json-mode)
+(use-package json-mode
+  :defer t)
+(use-package json
+  :ensure json
+  :defer t)
+
+(provide 'ee:load-essential-packages)

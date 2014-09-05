@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: require and standardize
-# key: req
-# group: js2-mode
-# --
-var ${1:$(~jsify-var yas-text)} = require("$1");

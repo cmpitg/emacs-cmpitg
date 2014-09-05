@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Install package with ELPA
-# key: pi
-# group: emacs-lisp-mode
-# --
-(package-install '$1)

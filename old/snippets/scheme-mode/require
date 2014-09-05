@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: require
-# key: req
-# group: scheme-mode
-# --
-(require $1)

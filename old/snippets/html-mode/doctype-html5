@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Doctype for HTML5
-# key: doctype
-# group: html-mode
-# --
-<!DOCTYPE html>

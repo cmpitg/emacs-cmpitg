@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: displayln with ~a
-# key: lna
-# group: scheme-mode
-# --
-(displayln (~a $1))

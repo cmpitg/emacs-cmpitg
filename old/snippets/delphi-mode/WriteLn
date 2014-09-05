@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: 
-# key: wl
-# group: delphi-mode
-# --
-WriteLn($1);

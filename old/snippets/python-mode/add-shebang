@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Add shebang to Python 3 script
-# key: #!
-# group: python-mode
-# --
-#!/usr/bin/env python3
