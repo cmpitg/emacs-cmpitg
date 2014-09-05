@@ -96,4 +96,6 @@
 ;; Expand tabs to spaces
 (setq-default indent-tabs-mode nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (provide 'ee:custom-core)

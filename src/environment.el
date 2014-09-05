@@ -15,17 +15,17 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load all themes
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (dolist (theme-file (directory-files (~get-config "themes/")))
   (when (s-ends-with? ".el" theme-file)
     (load-file (~get-config "themes/" theme-file))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Theming and stuff
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Using system font
 
@@ -42,9 +42,9 @@
 ;; (set-background-color "#f2f2f2")
 (set-background-color "#efefef")
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Themes
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Current
 ;; (color-theme-textmate-modified)
@@ -59,9 +59,9 @@
 ;; (color-theme-charcoal-black)
 ;; (color-theme-calm-forest)
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Hide the toolbar
 (tool-bar-mode -1)
@@ -169,22 +169,7 @@
 ;; (setq show-paren-delay 0)
 ;; (setq show-paren-style 'expression)
 
-;;
-;; Copyright (C) 2012-2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
-;;
-;; This project is free software: you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the Free
-;; Software Foundation, either version 3 of the License, or (at your option)
-;; any later version.
-;;
-;; This project is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;; more details.
-;;
-;; You should have received a copy of the GNU General Public License along
-;; with this program.  If not, see <http://www.gnu.org/licenses/>.
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defadvice he-substitute-string (after he-paredit-fix)
   "Remove extra paren when expanding line in Paredit"
@@ -249,22 +234,7 @@ about what flexible matching means in this context."
 
 (add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
 
-;;
-;; Copyright (C) 2012-2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
-;;
-;; This project is free software: you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the Free
-;; Software Foundation, either version 3 of the License, or (at your option)
-;; any later version.
-;;
-;; This project is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;; more details.
-;;
-;; You should have received a copy of the GNU General Public License along
-;; with this program.  If not, see <http://www.gnu.org/licenses/>.
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: Document me
 (dolist (symb '(use-package))
@@ -272,32 +242,6 @@ about what flexible matching means in this context."
   (put symb 'common-lisp-indent-function 1)
   (font-lock-add-keywords 'emacs-lisp-mode
                           `((,(~symbol->string symb) . font-lock-keyword-face))))
-
-;;
-;; Better Lisp indentation
-;;
-;; http://www.emacswiki.org/emacs/IndentingLisp
-;;
-
-;; (put 'if 'common-lisp-indent-function 1)
-;; (put 'if 'common-lisp-indent-function 2)
-
-;;
-;; Copyright (C) 2012-2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
-;;
-;; This project is free software: you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the Free
-;; Software Foundation, either version 3 of the License, or (at your option)
-;; any later version.
-;;
-;; This project is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;; more details.
-;;
-;; You should have received a copy of the GNU General Public License along
-;; with this program.  If not, see <http://www.gnu.org/licenses/>.
-;;
 
 ;; Set ispell-dictionary
 (ispell-change-dictionary "en_US")

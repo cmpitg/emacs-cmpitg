@@ -15,9 +15,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GPG interface
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Visit anything.gpg and it will encrypt it when you save the buffer.
 ;;
@@ -31,9 +31,9 @@
   :config (progn
             (epa-file-enable)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Version control systems: Mercurial and Git
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ahg
   :ensure ahg
@@ -41,7 +41,7 @@
 
 (use-package magit
   :ensure magit
-  :commands magit-status
+  :commands (magit-status ~get-scm)
   :config (progn
             (set-face-foreground 'magit-diff-add "black")
             (set-face-background 'magit-diff-add "yellow2")
@@ -51,11 +51,11 @@
             (when (not window-system)
               (set-face-background 'magit-item-highlight "black"))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP request library
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/tkf/emacs-request
-
+;;
 ;; Examples
 ;;
 ;; (request
@@ -79,9 +79,9 @@
   :ensure request
   :commands request)
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP REPL
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Workaround for bad packaging
 (~elpa-install 'httprepl)
@@ -90,9 +90,9 @@
   :ensure httprepl
   :commands httprepl)
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Racket development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package racket-mode
   :load-path "/m/src/racket-mode/"
@@ -143,9 +143,9 @@
             ;;           racket-mode-map)
             (bind-key "C-M-x" 'racket-send-definition racket-mode-map)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scheme development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Quack doc: http://www.neilvandyke.org/quack/quack.el
 ;; Geiser doc: http://www.nongnu.org/geiser
@@ -204,19 +204,13 @@
 ;; Load after Geiser
 ;; (use-package quack)
 
-;;
-;; Extended scratch buffer
-;;
-
-(use-package scratch-ext
-  :ensure scratch-ext)
-
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scala development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package scala-mode2
   :ensure scala-mode2
+  :commands scala-mode2
   :init
   (progn
     (use-package sbt-mode
@@ -238,9 +232,9 @@
                     (bind-key "M-." 'sbt-find-definitions scala-mode-map)
                     (bind-key "C-x '" 'sbt-run-previous-command scala-mode-map)))))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Common Lisp development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package slime
   :ensure slime
@@ -276,16 +270,17 @@
 
             (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Julia development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package julia-mode
-  :ensure julia-mode)
+  :ensure julia-mode
+  :commands julia-mode)
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package clojure-mode
   :ensure clojure-mode
@@ -366,17 +361,17 @@
                   (ANY 2)
                   (context 2))))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; WispJS development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package wispjs-mode
   :ensure wispjs-mode
   :commands wispjs-mode)
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/Mon-Ouie/ruby-dev.el
 
 (use-package ruby-mode
@@ -395,22 +390,18 @@
 ;;   :init (progn
 ;;           (setq rsense-home (getenv "$RSENSE_HOME"))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Delphi and Pascal development
-;;
-
-;;
-;; Pascal and Delphi mode
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package delphi
   :commands delphi-mode
   :config (progn
             (~auto-load-mode '("\\.pas$" "\\.pp$") 'delphi-mode)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Built-in
 
 (use-package python
@@ -438,12 +429,12 @@
             (use-package django-html-mode
               :mode "\\\\.djhtml$")))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JavaScript development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package js2-mode
-  :mode "\\.js"
+  :mode "\\.js\\'"
   :interpreter "node"
   :config (progn
             (add-hook 'js-mode-hook 'js2-minor-mode)
@@ -453,9 +444,9 @@
             (add-hook 'html-mode-hook '~auto-reload-firefox-after-save-hook)
             (add-hook 'css-mode-hook '~auto-reload-firefox-after-save-hook)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell development
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-mode
   :ensure haskell-mode
@@ -470,27 +461,30 @@
             ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
             ))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TOML
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package toml-mode
-  :ensure toml-mode)
+  :ensure toml-mode
+  :commands toml-mode
+  :mode "\\.toml\\'")
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Asciidoc
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package adoc-mode
   :ensure adoc-mode
   :defer t
+  :commands adoc-mode
   :init (progn
           (~auto-load-mode '("\\.ascii" "\\.txt" "\\.adoc") 'adoc-mode)
           (add-hook 'adoc-mode-hook 'auto-fill-mode)))
 
-;;
-;; Better beffer switching, C-x b
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Better buffer switching, C-x b
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun iswitchb-local-keys ()
   (mapc (lambda (K) 
@@ -505,13 +499,14 @@
 
 (use-package iswitchb
   :ensure iswitchb
+  :commands iswitchb-buffer
   :config (progn
             (add-to-list 'iswitchb-buffer-ignore "^[[:alpha:]]")
             (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ibus bridge
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (load-file (~get-config "local-packages/ibus.el/ibus-dev.el"))
 (use-package ibus
@@ -525,18 +520,18 @@
             (setq ibus-cursor-color '("red" "blue" "limegreen"))
             (setq ibus-agent-file-name (~get-config "local-packages/ibus.el/ibus-el-agent"))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Open last session
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package save-visited-files
   :ensure save-visited-files
   :config (progn
             (turn-on-save-visited-files-mode)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package eshell
   :commands eshell
@@ -545,7 +540,8 @@
             :ensure exec-path-from-shell)
 
           ;; ElDoc in Eshell
-          (defadvice eldoc-current-symbol (around eldoc-current-symbol activate)
+          (defadvice eldoc-current-symbol
+            (around eldoc-current-symbol activate)
             ad-do-it
             (if (and (not ad-return-value)
                      (eq major-mode 'eshell-mode))
@@ -661,5 +657,7 @@
             ;; Read $PATH variable
             (when (memq window-system '(mac ns x))
               (exec-path-from-shell-initialize))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'ee:cmpitg-flavored-packages)
