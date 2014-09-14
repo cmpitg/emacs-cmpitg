@@ -243,7 +243,7 @@
      (global-set-key [remap icicle-kmacro] 'delete-window)))
 
 ;; (bind-key "<f4>" 'find-file-other-window)
-(bind-key "<f4>" '~helm-multi-all)
+(bind-key "<f4>" '~helm-multi-occur-all)
 (bind-key "C-7" 'split-window-vertically)
 (bind-key "C-5" 'split-window-horizontally)
 (bind-key "C-%" 'delete-other-windows)
