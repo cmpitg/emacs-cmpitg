@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -z "$EMACS_INIT" ]; then
+    EMACS_INIT="~/emacs-config/src/init-basic.el"
+fi
+
+emacs -Q -l $EMACS_INIT $*
