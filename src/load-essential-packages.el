@@ -66,6 +66,30 @@
   :commands (helm-find-files helm-buffers-list helm-bookmarks)
   :config (use-package helm
             :config (progn
+                      ;; Follow mode
+
+                      (eval-after-load "helm-multi-occur-1"
+                        '(progn
+                           (helm-attrset 'follow 1 helm-source-moccur)))
+
+                      (eval-after-load "helm-occur-from-isearch"
+                        '(progn
+                           (helm-attrset 'follow 1 helm-source-occur)))
+
+                      (eval-after-load "helm-occur"
+                        '(progn
+                           (helm-attrset 'follow 1 helm-source-occur)))
+
+                      (eval-after-load "helm-buffers"
+                        '(progn
+                           (helm-attrset 'follow 1 helm-source-buffers-list)))
+
+                      (eval-after-load "helm-bookmark"
+                        '(progn
+                           (helm-attrset 'follow 1 helm-source-bookmarks)))
+
+                      ;; (helm-attrset 'follow 0 helm-source-find-files)
+
                       ;; Don't auto change-dir when find-file
                       (setq-default helm-ff-auto-update-initial-value nil))))
 
