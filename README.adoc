@@ -1,1 +1,3 @@
 = cmpitg's Emacs config
+
+* Emacs server with Emnode -- better interaction: cleaner, wider tools, ...
