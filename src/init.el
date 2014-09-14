@@ -28,6 +28,10 @@
   (format "%s/snippets" *config-dir*)
   "Default snippet directory.")
 
+(defvar *scratch-dir*
+  "/m/scratch/"
+  "Default path to Scratch directory.")
+
 (add-to-list 'load-path *config-dir*)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
