@@ -41,7 +41,7 @@
 
 (use-package magit
   :ensure magit
-  :commands (magit-status ~get-scm)
+  :commands (magit-status ~get-scm magit-get-top-dir)
   :config (progn
             (set-face-foreground 'magit-diff-add "black")
             (set-face-background 'magit-diff-add "yellow2")
