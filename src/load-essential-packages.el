@@ -411,7 +411,13 @@
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :defer t
+  ;; :commands (yas-minor-mode
+  ;;            markdown-mode
+  ;;            adoc-mode
+  ;;            python-mode
+  ;;            racket-mode
+  ;;            lisp-mode)
+  :commands yas-minor-mode
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
             (yas-global-mode 1)))
