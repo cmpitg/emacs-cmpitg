@@ -240,6 +240,14 @@
   :ensure slime
   :commands common-lisp-mode
   :config (progn
+            ;; Use CL21 - https://github.com/cl21/cl21
+            (add-hook 'slime-connected-hook
+                      (lambda ()
+                        (when (slime-eval `(cl:if (cl:find-package :cl21-user) t))
+                          (slime-repl-set-package :cl21-user)
+                          (slime-repl-eval-string "(cl21:enable-cl21-syntax)")))
+                      t)
+
             (add-hook 'lisp-mode-hook
                       (lambda ()
                         (slime-mode t)
