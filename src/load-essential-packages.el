@@ -417,7 +417,7 @@
   ;;            python-mode
   ;;            racket-mode
   ;;            lisp-mode)
-  :commands yas-minor-mode
+  :commands (yas-minor-mode adoc-mode markdown-mode lisp-mode emacs-lisp-mode)
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
             (yas-global-mode 1)))
