@@ -316,6 +316,10 @@
 
 (bind-key "s-SPC g" '~scm-status)
 
+;; Common Lisp SLIME
+
+(bind-key "C-\\" 'slime-selector)
+
 ;; Emacs Lisp
 
 (add-hook 'emacs-lisp-mode-hook
