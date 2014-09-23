@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ -z "$EMACS_INIT" ]]; then
     EMACS_INIT="~/emacs-config/src/init.el"
