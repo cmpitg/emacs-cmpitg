@@ -80,7 +80,7 @@
 ;; (bind-key "s-s" 'isearch-forward-regexp)
 (bind-key "C-s" 'isearch-forward-regexp)
 (bind-key "C-r" 'isearch-backward-regexp)
-(bind-key "s-s" 'swoop)
+(bind-key "s-s" '~swoop-bare)
 ;; (bind-key "s-s" 'helm-occur)
 ;; (bind-key "s-S" 'isearch-backward-regexp)
 

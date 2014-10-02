@@ -341,6 +341,14 @@
   :ensure swoop
   :commands swoop)
 
+(defun ~swoop-bare (&optional $query)
+  "Search through words within the current buffer.  Don't take
+current word at point as initial string."
+  (interactive)
+  (if current-prefix-arg
+      (swoop-core :$resume t :$query swoop-last-query-plain)
+    (swoop-core :$query "")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; URL shortener
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
