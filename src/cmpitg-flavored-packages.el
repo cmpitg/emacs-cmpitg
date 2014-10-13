@@ -413,9 +413,8 @@
 ;; Built-in
 
 (use-package python
-  :commands python-mode
-  :mode "\\.py\\'"
   :config (progn
+            (~auto-load-mode '("\\.py$") 'python-mode)
             ;; Workaround: virtualenvwrapper.el needs to be loaded explicitly
             (progn
               (~elpa-install 'virtualenvwrapper)
