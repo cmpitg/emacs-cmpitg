@@ -1383,6 +1383,8 @@ using feature name, not directory name."
 (defalias 'local-package-is-installed? '~local-package-is-installed?)
 (defalias 'install-or-update-el-get '~install-or-update-el-get)
 
+(defvar *shell-command-hist* '())
+
 (defun ~popup-shell-command (&optional command)
   "Run a non-interactive shell command and popup a window to
 display result."
@@ -1392,7 +1394,8 @@ display result."
                             ((is-selecting?)
                              (get-selection))
                             (t
-                             (~read-string "Shell command: ")))))
+                             (~read-string "Shell command: "
+                                           :history '*shell-command-hist*)))))
     (ignore-errors
       (get-buffer-create "*Shell Output*")
       (with-current-buffer "*Shell Output*"
