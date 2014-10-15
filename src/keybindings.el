@@ -76,7 +76,6 @@
 (bind-key "s-?" 'visit-tags-table)
 (bind-key "s-f" 'query-replace-regexp)
 (bind-key "s-F" 'query-replace)
-(bind-key "s-j" 'clipboard-kill-ring-save)
 ;; (bind-key "<menu> m" 'toggle-menu-bar-mode-from-frame)
 
 (bind-key "s-'" 'undo)
