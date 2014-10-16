@@ -260,13 +260,16 @@
                         (eldoc-mode 1)))
 
             ;; (setenv "SBCL_HOME" "/m/opt/sbcl")
+            ;; (setenv "SBCL_HOME" "~/.cim/src/sbcl-1.2.2/")
             (setenv "SBCL_HOME" "/usr/local/lib/sbcl/")
             (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
+            ;; (setq inferior-lisp-program "~/.cim/bin/sbcl")
             (setq inferior-lisp-program "/usr/local/bin/sbcl")
 
             (setq slime-lisp-implementations
-                  '((sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
+                  '(;; (sbcl  ("~/.cim/bin/sbcl") :coding-system utf-8-unix)
+                    (sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
                     (clisp ("/usr/bin/clisp" "-q -I"))))
 
             (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
