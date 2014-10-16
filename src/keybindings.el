@@ -188,10 +188,10 @@
 (bind-key "s-=" 'er/expand-region)
 (bind-key "M-z" 'zap-up-to-char)
 
-(bind-key "<M-f7>" '(lambda () "Next DEBUG" (interactive) (search-forward "DEBUG")))
-(bind-key "<S-M-f7>" '(lambda () "Previous DEBUG" (interactive) (search-backward "DEBUG")))
-(bind-key "<M-f5>" '(lambda () "Next FIXME" (interactive) (search-forward "FIXME")))
-(bind-key "<S-M-f5>" '(lambda () "Previous FIXME" (interactive) (search-backward "FIXME")))
+;; (bind-key "<M-f7>" '(lambda () "Next DEBUG" (interactive) (search-forward "DEBUG")))
+;; (bind-key "<S-M-f7>" '(lambda () "Previous DEBUG" (interactive) (search-backward "DEBUG")))
+;; (bind-key "<M-f5>" '(lambda () "Next FIXME" (interactive) (search-forward "FIXME")))
+;; (bind-key "<S-M-f5>" '(lambda () "Previous FIXME" (interactive) (search-backward "FIXME")))
 
 ;;
 ;; Executing
