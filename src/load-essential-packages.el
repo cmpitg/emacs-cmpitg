@@ -329,7 +329,6 @@
   :commands ace-jump-mode
   :init (progn
           (bind-key "s-k" 'ace-jump-mode)
-          (bind-key "s-j" 'ace-jump-buffer)
           (bind-key "C-x SPC" 'ace-jump-mode-pop-mark))
   :config (progn
             (ace-jump-mode-enable-mark-sync)))
