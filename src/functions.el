@@ -257,10 +257,13 @@ need its top-level brackets.  This function returns a string."
 
 (defun ~eval-string (str)
   "Eval a string."
-  (interactive)
+  (interactive "sString: ")
   (with-temp-buffer
+    (insert "(progn \n")
     (insert str)
-    (eval-buffer)))
+    (insert ")")
+    (end-of-buffer)
+    (call-interactively 'eval-last-sexp)))
 
 (defun ~eval-then-replace-last-exp ()
   "Eval region then replace last expression with result."
