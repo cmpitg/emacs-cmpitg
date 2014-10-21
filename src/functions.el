@@ -1469,7 +1469,7 @@ doesn't exist yet."
                    (~read-string "Mode: "
                                  :initial-input (format "%s" major-mode))
                  mode))
-         (snippet-mode-dir (f-expand (format "~/emacs-config/snippets/%s" mode)))
+         (snippet-mode-dir (f-expand (format "~/emacs-config/src/snippets/%s" mode)))
 
          (abbrev (if (string-empty? abbrev)
                      (read-string "Abbrev: ")
