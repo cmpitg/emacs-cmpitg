@@ -1600,7 +1600,7 @@ text."
   (interactive "DDirectory: ")
   (shell-command
    (format "%s -e -R %s"
-           *ctags-path*
+           (executable-find "ctags")
            (directory-file-name dir-name))))
 
 (defadvice find-tag (around refresh-etags activate)
