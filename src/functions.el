@@ -39,6 +39,16 @@ selection with command output."
     (call-interactively 'kill-region)
     (insert output)))
 
+(defun ~toggle-split-method ()
+  "Toggle default split method between vertical split and
+horizontal split."
+  (interactive)
+  (cond (split-width-threshold
+         (setq *split-width-threshold-old* split-width-threshold)
+         (setq split-width-threshold nil))
+        (t
+         (setq split-width-threshold *split-width-threshold-old*))))
+
 ;;;
 ;;; TODO: Document me
 ;;;
