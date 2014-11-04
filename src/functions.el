@@ -205,6 +205,14 @@ E.g.
         (switch-to-buffer-other-window "scratch.el")
       (find-file-other-window (s-concat *scratch-dir* "scratch.el")))))
 
+(defun ~switch-to-scratch-common-lisp ()
+  "Switch to the scratch.lisp in `*scratch-dir*' directory."
+  (interactive)
+  (unless (string-equal "scratch.lisp" (~current-buffer-name))
+    (if (get-buffer "scratch.lisp")
+        (switch-to-buffer-other-window "scratch.lisp")
+      (find-file-other-window (s-concat *scratch-dir* "scratch.lisp")))))
+
 (defun ~helm-multi-occur-all ()
   "multi-occur in all buffers backed by files."
   (interactive)
