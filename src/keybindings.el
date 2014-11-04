@@ -131,6 +131,7 @@
 (bind-key "C-<f4>" '~kill-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
 (bind-key "C-<f1>" '~switch-to-scratch)
+(bind-key "<S-f2>" '~switch-to-scratch-common-lisp)
 (bind-key "<menu> <menu>" 'other-window)
 
 (bind-key "C-M-v" '(lambda ()
