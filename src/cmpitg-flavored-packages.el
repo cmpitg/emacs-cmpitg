@@ -240,14 +240,6 @@
   :ensure slime
   :commands common-lisp-mode
   :config (progn
-            ;; Use CL21 - https://github.com/cl21/cl21
-            (add-hook 'slime-connected-hook
-                      (lambda ()
-                        (when (slime-eval `(cl:if (cl:find-package :cl21-user) t))
-                          (slime-repl-set-package :cl21-user)
-                          (slime-repl-eval-string "(cl21:enable-cl21-syntax)")))
-                      t)
-
             (add-hook 'lisp-mode-hook
                       (lambda ()
                         (slime-mode t)
@@ -259,27 +251,19 @@
                         (~load-paredit-mode)
                         (eldoc-mode 1)))
 
-            ;; (setenv "SBCL_HOME" "/m/opt/sbcl")
-            ;; (setenv "SBCL_HOME" "~/.cim/src/sbcl-1.2.2/")
             (setenv "SBCL_HOME" "/usr/local/lib/sbcl/")
             (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
-            ;; (setq inferior-lisp-program "~/.cim/bin/sbcl")
             (setq inferior-lisp-program "/usr/local/bin/sbcl")
 
             (setq slime-lisp-implementations
-                  '(;; (sbcl  ("~/.cim/bin/sbcl") :coding-system utf-8-unix)
-                    (sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
+                  '((sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
                     (clisp ("/usr/bin/clisp" "-q -I"))))
 
             (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
 
-            (load (expand-file-name "/mnt/home/cmpitg/opt/quicklisp-sbcl/slime-helper.el"))
-
             (font-lock-add-keywords 'emacs-lisp-mode
-                                    '(("defroute" . font-lock-keyword-face)))
-
-            (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
+                                    '(("defroute" . font-lock-keyword-face)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Julia development
