@@ -1199,6 +1199,13 @@ Example:
   (when (~is-function-defined? 'smartparens-mode)
     (smartparens-mode 0)))
 
+(defun ~activate-evil-local-mode ()
+  "Activate evil local mode."
+  (interactive)
+  (toggle-evil-local)
+  (setq-default cursor-type 'hbar)
+  (setq-default cursor-type 'bar))
+
 (defun ~markdown-outline-headings ()
   "Outline headings for current Markdown document using Helm."
   (interactive)
