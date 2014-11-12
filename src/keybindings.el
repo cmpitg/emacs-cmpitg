@@ -19,6 +19,7 @@
 ;; use
 
 (bind-key "<menu>" 'nil)
+(bind-key "<escape>" 'keyboard-quit)
 
 (bind-key "s-K" '~delete-line)
 (bind-key "s-l" 'goto-line)
@@ -267,7 +268,9 @@
                                          (set-fill-column 78)))
 (bind-key "C-<menu> C-(" 'autopair-mode)
 (bind-key "C-<menu> C-p" 'paredit-mode)
-(bind-key "C-<menu> C-e" 'evil-mode)
+(bind-key "C-<menu> C-e" '~activate-evil-local-mode)
+(bind-key "s-; s-," '~activate-evil-local-mode)
+
 (bind-key "C-<menu> C-w" 'whitespace-mode)
 (bind-key "C-M-S-SPC" '~toggle-ibus)
 (bind-key "<C-menu> C-a" 'auto-complete-mode)
