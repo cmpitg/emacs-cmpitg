@@ -1432,6 +1432,15 @@ display result."
       (start-process-shell-command "Shell-Command" "*Shell Output*" command-str)
       (~popup-buffer "*Shell Output*"))))
 
+(defun ~send-keys-to-tmux (&optional str)
+  "Send key to tmux with Eshell."
+  (interactive)
+  (let ((keys (cond ((not (~string-empty? str))
+                     str)
+                    (t
+                     (read-shell-command "Tmux: " nil '*shell-command-hist*)))))
+    (~exec (format "tmux send-keys \"%s\" Enter" keys))))
+
 (defun ~man-current-word ()
   "`man` this word."
   (interactive)
