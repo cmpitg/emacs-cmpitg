@@ -244,7 +244,7 @@ about what flexible matching means in this context."
                           `((,(~symbol->string symb) . font-lock-keyword-face))))
 
 ;; Set ispell-dictionary
-(ispell-change-dictionary "en_US")
+(ispell-change-dictionary "american")
 
 ;; grep command
 (setq grep-command "grep -i -nH -e ")
