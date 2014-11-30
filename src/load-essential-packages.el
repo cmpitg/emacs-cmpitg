@@ -245,14 +245,18 @@
 
 (use-package ido
   :ensure ido
-  :config (use-package flx-ido
-            :config (progn
-                      (ido-mode 1)
-                      (ido-everywhere 1)
-                      (flx-ido-mode 1)
+  :config (progn
+            (use-package flx-ido
+              :config (progn
+                        (ido-mode 1)
+                        (ido-everywhere 1)
+                        (flx-ido-mode 1)
 
-                      ;; disable ido faces to see flx highlights.
-                      (setq ido-use-faces nil))))
+                        ;; disable ido faces to see flx highlights.
+                        (setq ido-use-faces nil)))
+            (use-package ido-vertical-mode
+              :ensure ido-vertical-mode
+              :config (ido-vertical-mode 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom unique naming method
