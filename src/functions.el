@@ -222,6 +222,7 @@ E.g.
                    (when (buffer-file-name b) (buffer-name b)))
                  (buffer-list)))))
 
+;;; TODO
 (defun ~undo-kill-buffer (arg)
   "Re-open the last buffer killed.  With ARG, re-open the
 nth-killed buffer."
