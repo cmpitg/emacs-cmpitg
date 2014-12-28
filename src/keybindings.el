@@ -152,7 +152,8 @@
 
 (bind-key "C-z" 'popwin:keymap)
 
-(bind-key "C-x C-n" 'multi-scratch-new)
+;; (bind-key "C-x C-n" 'multi-scratch-new)
+(bind-key "C-x C-n" '~new-buffer)
 
 (bind-key "<C-next>" 'tabbar-ruler-forward)
 (bind-key "<C-prior>" 'tabbar-ruler-backward)
