@@ -1055,6 +1055,21 @@ used.  Do nothing if server is already started."
   (interactive)
   (~clipboard<- (~current-dir)))
 
+;; (defun ~copy-to-clipboard (text)
+;;   "Copy a string to clipboard."
+;;   (interactive "MString: ")
+;;   (let ((tempfile (make-temp-file "emacs-clipboard")))
+;;     (write-to-file tempfile text)
+;;     ()
+;;     )
+
+;;   )
+
+;; (defun ~copy-directory ()
+;;   "Copy current directory to clipboard."
+;;   (interactive)
+;;   (~clipboard<- (~current-dir)))
+
 (defun ~keyboard-quit ()
   "Escape the minibuffer or cancel region consistently using 'Control-g'.
 Normally if the minibuffer is active but we lost focus (say, we
