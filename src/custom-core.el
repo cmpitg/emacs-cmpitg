@@ -41,7 +41,8 @@
 (setq tramp-auto-save-directory "/tmp/")
 
 ;; Default scratch-buffer mode
-(setq-default initial-major-mode 'emacs-lisp-mode)
+;; (setq-default initial-major-mode 'emacs-lisp-mode)
+(setq-default initial-major-mode 'adoc-mode)
 (setq-default major-mode 'adoc-mode)
 
 ;; Don't let the cursor go into minibuffer prompt
