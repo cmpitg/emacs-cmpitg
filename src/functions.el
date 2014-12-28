@@ -241,6 +241,16 @@ nth-killed buffer."
      (if arg (nth arg recently-killed-list)
          (car recently-killed-list)))))
 
+(defun ~new-buffer ()
+  "Open a new empty buffer.  Thanks Xah Lee for this function.
+Reference:
+http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
+  (interactive)
+  (let ((buf (generate-new-buffer "untitled")))
+    (switch-to-buffer buf)
+    (funcall (and initial-major-mode))
+    (setq buffer-offer-save t)))
+
 (defalias '~save-file 'save-buffer
   "Save current buffer")
 
