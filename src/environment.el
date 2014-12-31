@@ -244,7 +244,7 @@ about what flexible matching means in this context."
                           `((,(~symbol->string symb) . font-lock-keyword-face))))
 
 ;; Set ispell-dictionary
-(ispell-change-dictionary "american")
+;; (ispell-change-dictionary "american")
 
 ;; grep command
 (setq grep-command "grep -i -nH -e ")
@@ -254,9 +254,6 @@ about what flexible matching means in this context."
 
 ;; Disable backup file
 (setq make-backup-files nil)
-
-;;; Auto complete switching buffer mode
-(iswitchb-mode t)
 
 ;; Show column number
 (column-number-mode 1)
