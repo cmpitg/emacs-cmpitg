@@ -477,28 +477,6 @@
           (add-hook 'adoc-mode-hook 'auto-fill-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Better buffer switching, C-x b
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun iswitchb-local-keys ()
-  (mapc (lambda (K) 
-	      (let* ((key (car K)) (fun (cdr K)))
-            (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
-	    '(("s-n"     . iswitchb-next-match)
-	      ("s-h"     . iswitchb-prev-match)
-          ("<right>" . iswitchb-next-match)
-	      ("<left>"  . iswitchb-prev-match)
-	      ("<up>"    . ignore             )
-	      ("<down>"  . ignore             ))))
-
-(use-package iswitchb
-  :ensure iswitchb
-  :commands iswitchb-buffer
-  :config (progn
-            (add-to-list 'iswitchb-buffer-ignore "^[[:alpha:]]")
-            (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ibus bridge
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
