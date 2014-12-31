@@ -53,9 +53,6 @@
 ;;; Use the same clipboard with X
 (setq x-select-enable-clipboard t)
 
-;;; Auto complete switching buffer mode
-(iswitchb-mode t)
-
 ;; Disable shift selection
 (setq shift-select-mode nil)
 
