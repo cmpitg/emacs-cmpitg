@@ -2143,7 +2143,19 @@ buffer.")
 (defalias 'send-to-mozrepl '~send-to-mozrepl)
 (defalias 'auto-reload-firefox-after-save-hook '~auto-reload-firefox-after-save-hook)
 
-(provide 'ee:functions)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~get-active-modes ()
+  "Return the list of minor modes are enabled in the current
+buffer."
+  (interactive)
+  (let ((active-modes))
+    (mapc (lambda (mode) (ignore-errors
+                           (if (and (symbolp mode) (symbol-value mode))
+                               (add-to-list 'active-modes mode))))
+          minor-mode-list)
+    active-modes))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Xah Lee's open last buffer
@@ -2245,3 +2257,7 @@ user buffer."
     (switch-to-buffer buf)
     (mapc (lambda (f) (insert (cdr f) "\n"))
           xah-recently-closed-buffers)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(provide 'ee:functions)
