@@ -2156,6 +2156,9 @@ buffer."
           minor-mode-list)
     active-modes))
 
+(defun ~is-minor-mode-active? (minor)
+  "Determine if a minor mode is active in current buffer."
+  (memq minor (~get-active-modes)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Xah Lee's open last buffer
