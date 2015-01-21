@@ -1065,10 +1065,10 @@ used.  Do nothing if server is already started."
 
 ;;   )
 
-;; (defun ~copy-directory ()
-;;   "Copy current directory to clipboard."
-;;   (interactive)
-;;   (~clipboard<- (~current-dir)))
+(defun ~copy-directory ()
+  "Copy current directory to clipboard."
+  (interactive)
+  (~clipboard<- (~current-dir)))
 
 (defun ~keyboard-quit ()
   "Escape the minibuffer or cancel region consistently using 'Control-g'.
