@@ -80,9 +80,12 @@
                         '(progn
                            (helm-attrset 'follow 1 helm-source-occur)))
 
-                      (eval-after-load "helm-buffers"
+                      ;; Stupid bug makes me comment this line, why????
+                      (eval-after-load "helm-buffers-list"
                         '(progn
-                           (helm-attrset 'follow 1 helm-source-buffers-list)))
+                           (eval-after-load "helm-buffers"
+                             '(progn
+                                (helm-attrset 'follow 1 helm-source-buffers-list)))))
 
                       (eval-after-load "helm-bookmark"
                         '(progn
