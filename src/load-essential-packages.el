@@ -519,6 +519,7 @@ current word at point as initial string."
 ;; Load before auto complete
 
 (use-package yasnippet
+  :ensure yasnippet
   :diminish yas-minor-mode
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
@@ -528,7 +529,7 @@ current word at point as initial string."
   :init (progn
           (use-package dired-single))
   :config (progn
-            (setq dired-listing-switches "-lhFgG --group-directories-first")));;
+            (setq dired-listing-switches "-lhFgG --group-directories-first")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto completion framework
