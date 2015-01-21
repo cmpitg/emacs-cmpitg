@@ -249,10 +249,10 @@
 (use-package ido
   :ensure ido
   :config (progn
+            (ido-mode 1)
+            (ido-everywhere 1)
             (use-package flx-ido
               :config (progn
-                        (ido-mode 1)
-                        (ido-everywhere 1)
                         (flx-ido-mode 1)
 
                         ;; disable ido faces to see flx highlights.
