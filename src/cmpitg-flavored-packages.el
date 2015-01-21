@@ -505,10 +505,12 @@
 ;; File browsing with neotree
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package neotree
-  :ensure neotree
-  :init (progn
-          (bind-key "<M-f12>" 'neotree-toggle)))
+;; Neotree breaks tab completion in minibuffer
+
+;; (use-package neotree
+;;   :ensure neotree
+;;   :init (progn
+;;           (bind-key "<M-f12>" 'neotree-toggle)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
