@@ -87,9 +87,9 @@
                              '(progn
                                 (helm-attrset 'follow 1 helm-source-buffers-list)))))
 
-                      (eval-after-load "helm-bookmark"
-                        '(progn
-                           (helm-attrset 'follow 1 helm-source-bookmarks)))
+                      ;; (eval-after-load "helm-bookmark"
+                      ;;   '(progn
+                      ;;      (helm-attrset 'follow 1 helm-source-bookmarks)))
 
                       ;; (helm-attrset 'follow 0 helm-source-find-files)
 
