@@ -151,6 +151,42 @@ horizontal split."
   "Return the current line-comment syntax for current buffer mode."
   comment-start)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sticky window
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~one-window ()
+  "Delete all other non-dedicated windows."
+  (interactive)
+  (mapcar '(lambda (window)
+             (unless (window-dedicated-p window)
+               (delete-window window)))
+          (cdr (window-list))))
+
+(defun ~delete-window ()
+  "Delete current window if it's not sticky/dedicated.  Use
+prefix arg (`C-u') to force deletion if it is."
+  (interactive)
+  (or (and (not current-prefix-arg)
+           (window-dedicated-p (selected-window))
+           (message "Window '%s' is sticky/dedicated, should you want to delete, re-invoke the command with C-u prefix."
+                    (current-buffer)))
+      (delete-window (selected-window))))
+
+(defun ~toggle-sticky-window ()
+  "Toggle stickiness of the currently active window."
+  (interactive)
+
+  (let* ((window  (get-buffer-window (current-buffer)))
+         (sticky? (window-dedicated-p window)))
+    (set-window-dedicated-p window (not sticky?))
+    (message (if (not sticky?)
+                 "Window '%s' is now sticky"
+               "Window '%s' is now normal")
+             (current-buffer))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun* ~popup-message (content &key (buffer-name "*Temporary*"))
   "Display a popup window with CONTENT as its content and an
 optional BUFFER-NAME name.  Require popwin extension.  Press ESC
