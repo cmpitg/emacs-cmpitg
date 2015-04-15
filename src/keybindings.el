@@ -220,6 +220,7 @@
 ;; Window
 ;;
 
+(bind-key "<pause>" '~toggle-sticky-window)
 (bind-key "S-<f4>" '~delete-window)
 (eval-after-load 'icicles-cmd1
   '(progn
