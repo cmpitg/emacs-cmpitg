@@ -2177,7 +2177,8 @@ variable `xah-recently-closed-buffers-max'.")
   "The maximum length for `xah-recently-closed-buffers'.")
 
 (defun xah-close-current-buffer ()
-  "Close the current buffer.
+  "Close the current buffer if it's not sticky/dedicated.  Use
+prefix arg (`C-u') to force closing if it is.
 
 Similar to `kill-buffer', with the following addition:
 
@@ -2197,48 +2198,54 @@ Similar to `kill-buffer', with the following addition:
 A emacs buffer is one who's name starts with *.  Else it is a
 user buffer."
   (interactive)
-  (let (ξemacs-buff-p
-        (ξorg-p (string-match "^*Org Src" (buffer-name))))
 
-    (setq ξemacs-buff-p (if (string-match "^*" (buffer-name)) t nil))
+  (or (and (not current-prefix-arg)
+           (window-dedicated-p (selected-window))
+           (message "Buffer '%s' is sticky/dedicated, should you want to delete, re-invoke the command with C-u prefix."
+                    (current-buffer)))
 
-    (if (string= major-mode "minibuffer-inactive-mode")
-        (minibuffer-keyboard-quit)      ; if the buffer is minibuffer
-      (progn
-        ;; offer to save buffers that are non-empty and modified, even for
-        ;; non-file visiting buffer. (because kill-buffer does not offer to
-        ;; save buffers that are not associated with files)
-        (when (and (buffer-modified-p)
-                   (not ξemacs-buff-p)
-                   (not (string-equal major-mode "dired-mode"))
-                   (if (equal (buffer-file-name) nil)
-                       (if (string-equal "" (save-restriction (widen) (buffer-string))) nil t)
-                     t))
-          (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
-              (save-buffer)
-            (set-buffer-modified-p nil)))
-        (when (and (buffer-modified-p)
-                   ξorg-p)
-          (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
-              (org-edit-src-save)
-            (set-buffer-modified-p nil)))
+      (let (ξemacs-buff-p
+            (ξorg-p (string-match "^*Org Src" (buffer-name))))
 
-        ;; save to a list of closed buffer
-        (when (not (equal buffer-file-name nil))
-          (setq xah-recently-closed-buffers
-                (cons (cons (buffer-name) (buffer-file-name)) xah-recently-closed-buffers))
-          (when (> (length xah-recently-closed-buffers) xah-recently-closed-buffers-max)
-            (setq xah-recently-closed-buffers (butlast xah-recently-closed-buffers 1))))
+        (setq ξemacs-buff-p (if (string-match "^*" (buffer-name)) t nil))
 
-        ;; close
-        (kill-buffer (current-buffer))
+        (if (string= major-mode "minibuffer-inactive-mode")
+            (minibuffer-keyboard-quit)  ; if the buffer is minibuffer
+          (progn
+            ;; offer to save buffers that are non-empty and modified, even for
+            ;; non-file visiting buffer. (because kill-buffer does not offer to
+            ;; save buffers that are not associated with files)
+            (when (and (buffer-modified-p)
+                       (not ξemacs-buff-p)
+                       (not (string-equal major-mode "dired-mode"))
+                       (if (equal (buffer-file-name) nil)
+                           (if (string-equal "" (save-restriction (widen) (buffer-string))) nil t)
+                         t))
+              (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
+                  (save-buffer)
+                (set-buffer-modified-p nil)))
+            (when (and (buffer-modified-p)
+                       ξorg-p)
+              (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
+                  (org-edit-src-save)
+                (set-buffer-modified-p nil)))
 
-        ;; if emacs buffer, switch to a user buffer
-        (when (string-match "^*" (buffer-name))
-          (next-buffer)
-          (let ((i 0))
-            (while (and (string-equal "*" (substring (buffer-name) 0 1)) (< i 20))
-              (setq i (1+ i)) (next-buffer))))))))
+            ;; save to a list of closed buffer
+            (when (not (equal buffer-file-name nil))
+              (setq xah-recently-closed-buffers
+                    (cons (cons (buffer-name) (buffer-file-name)) xah-recently-closed-buffers))
+              (when (> (length xah-recently-closed-buffers) xah-recently-closed-buffers-max)
+                (setq xah-recently-closed-buffers (butlast xah-recently-closed-buffers 1))))
+
+            ;; close
+            (kill-buffer (current-buffer))
+
+            ;; if emacs buffer, switch to a user buffer
+            (when (string-match "^*" (buffer-name))
+              (next-buffer)
+              (let ((i 0))
+                (while (and (string-equal "*" (substring (buffer-name) 0 1)) (< i 20))
+                  (setq i (1+ i)) (next-buffer)))))))))
 
 (defun xah-open-last-closed ()
   "Open the last closed file."
