@@ -179,8 +179,6 @@
 
 (bind-key "s-&" 'join-with-next-line)
 
-(bind-key "s-SPC s" 'surround)
-
 ;; Multiple cursors
 (bind-key "s-+" 'mc/edit-lines)
 (bind-key "C-#" 'mc/mark-next-like-this)
