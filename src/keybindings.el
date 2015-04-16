@@ -297,10 +297,6 @@
 ;; Mode specific
 ;;
 
-;; Git
-
-(bind-key "s-SPC g" '~scm-status)
-
 ;; Common Lisp SLIME
 
 (bind-key "C-\\" 'slime-selector)
