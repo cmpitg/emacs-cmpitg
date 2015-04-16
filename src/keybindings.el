@@ -332,24 +332,9 @@
 
 (bind-key "s-#"               '~add-bracket-and-eval)
 
-(bind-key "s-SPC e" (lambda ()
-                      "Find file in my emacs-config."
-                      (interactive)
-                      (~find-file-extended "~/emacs-config")))
-
 ;;
 ;; Bookmark jumping
 ;;
-
-(bind-key "C-h DEL" '(lambda ()
-                       "Jump to keymap config"
-                       (interactive)
-                       (~open-file "~/emacs-config/config-default/keymap-common.el")))
-
-(bind-key "C-h <return>" '(lambda ()
-                            "Jump to ~/emacs-config/README.md"
-                            (interactive)
-                            (~open-file "~/emacs-config/README.md")))
 
 (bind-key "<s-return>"      'switch-to-eshell-back-and-forth)
 (bind-key "<s-S-return>"    'cd-current-buffer-dir-and-switch-to-eshell)
@@ -358,14 +343,6 @@
 (bind-key "<C-f3>"          'projectile-switch-project)
 (bind-key "<f11>"           'helm-projectile)
 (bind-key "<S-f9>"          'projectile-commander)
-
-(eval-after-load 'markdown-mode
-  '(progn
-     (bind-key "s-SPC &" 'markdown-outline-headings markdown-mode-map)))
-
-(eval-after-load 'emacs-lisp-mode
-  '(progn
-     (bind-key "s-SPC l d" 'emacs-lisp-make-function emacs-lisp-mode-map)))
 
 (eval-after-load 'yasnippet
   '(progn
