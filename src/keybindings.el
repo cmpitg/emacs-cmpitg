@@ -220,17 +220,18 @@
 ;; Window
 ;;
 
-(bind-key "S-<f4>" 'delete-window)
+(bind-key "<pause>" '~toggle-sticky-window)
+(bind-key "S-<f4>" '~delete-window)
 (eval-after-load 'icicles-cmd1
   '(progn
      ;; S-f4 is always mapped to delete-window
-     (global-set-key [remap icicle-kmacro] 'delete-window)))
+     (global-set-key [remap icicle-kmacro] '~delete-window)))
 
 ;; (bind-key "<f4>" 'find-file-other-window)
 (bind-key "<f4>" '~helm-multi-occur-all)
 (bind-key "C-7" 'split-window-vertically)
 (bind-key "C-5" 'split-window-horizontally)
-(bind-key "C-%" 'delete-other-windows)
+(bind-key "C-%" '~one-window)
 
 (bind-key "<M-S-left>" 'windmove-left)
 (bind-key "<M-S-right>" 'windmove-right)
