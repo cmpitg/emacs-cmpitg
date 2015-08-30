@@ -229,8 +229,8 @@
 (use-package recentf
   :ensure recentf
   :commands recentf-open-files
-  :idle (recentf-mode)
-  :idle-priority 3
+  ; :idle (recentf-mode)
+  ; :idle-priority 3
   :init (progn
           (recentf-mode 1)
           (setq recentf-max-menu-items 128)))
