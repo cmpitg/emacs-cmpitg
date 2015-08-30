@@ -42,14 +42,15 @@
 (use-package magit
   :ensure magit
   :commands (magit-status ~get-scm magit-get-top-dir)
-  :config (progn
-            (set-face-foreground 'magit-diff-add "black")
-            (set-face-background 'magit-diff-add "yellow2")
-            (set-face-foreground 'magit-diff-none "brown")
-            (set-face-background 'magit-diff-none "gray")
-            (set-face-foreground 'magit-diff-del "red3")
-            (when (not window-system)
-              (set-face-background 'magit-item-highlight "black"))))
+  ;; :config (progn
+  ;;           (set-face-foreground 'magit-diff-add "black")
+  ;;           (set-face-background 'magit-diff-add "yellow2")
+  ;;           (set-face-foreground 'magit-diff-none "brown")
+  ;;           (set-face-background 'magit-diff-none "gray")
+  ;;           (set-face-foreground 'magit-diff-del "red3")
+  ;;           (when (not window-system)
+  ;;             (set-face-background 'magit-item-highlight "black")))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP request library
