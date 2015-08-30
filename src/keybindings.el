@@ -319,17 +319,6 @@
             (define-key markdown-mode-map (kbd "s-SPC b") '~markdown-embolden)
             (define-key markdown-mode-map (kbd "s-SPC r") '~markdown-rawify)))
 
-
-(bind-key "<C-return>"        'wand:execute)
-(bind-key "<C-S-return>"      'wand:execute-current-line)
-(bind-key "<M-S-return>"      'toolbox:execute-and-replace)
-
-(bind-key "<C-mouse-1>"       'wand:execute)
-(bind-key "<C-down-mouse-1>"  nil)
-
-(bind-key "<M-mouse-1>"       'toolbox:execute-and-replace)
-(bind-key "<M-down-mouse-1>"  nil)
-
 (bind-key "s-#"               '~add-bracket-and-eval)
 
 ;;
