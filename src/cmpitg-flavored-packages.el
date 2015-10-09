@@ -223,39 +223,6 @@
                     (bind-key "C-x '" 'sbt-run-previous-command scala-mode-map)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Common Lisp development
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package slime
-  :ensure slime
-  :commands common-lisp-mode
-  :config (progn
-            (add-hook 'lisp-mode-hook
-                      (lambda ()
-                        (slime-mode t)
-                        (bind-key "<f1>" 'slime-hyperspec-lookup lisp-mode-map)))
-
-            (add-hook 'inferior-lisp-mode-hook
-                      (lambda ()
-                        (inferior-slime-mode t)
-                        (~load-paredit-mode)
-                        (eldoc-mode 1)))
-
-            (setenv "SBCL_HOME" "/usr/local/lib/sbcl/")
-            (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
-
-            (setq inferior-lisp-program "/usr/local/bin/sbcl")
-
-            (setq slime-lisp-implementations
-                  '((sbcl  ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
-                    (clisp ("/usr/bin/clisp" "-q -I"))))
-
-            (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
-
-            (font-lock-add-keywords 'emacs-lisp-mode
-                                    '(("defroute" . font-lock-keyword-face)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Julia development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
