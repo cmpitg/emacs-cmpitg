@@ -2197,6 +2197,19 @@ buffer."
   (memq minor (~get-active-modes)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun* ~inc-string (str &optional (amount 1))
+  "Converts a string into number, increases it and converts back
+to string.  If `STR' is not a valid number, returns the amount to
+add."
+  (number-to-string (+ amount (typecase str
+                                (string (string-to-number str))
+                                (number str)
+                                (otherwise 0)))))
+
+(defalias 'incs '~inc-string)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Xah Lee's open last buffer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; http://ergoemacs.org/emacs/elisp_close_buffer_open_last_closed.html
