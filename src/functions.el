@@ -1689,6 +1689,12 @@ text."
 (defalias 'first-char-as-string '~first-char-as-string)
 (defalias 'last-char-as-string '~last-char-as-string)
 
+(defun* ~send-mail (&key to subject)
+  "Sends email with Thunderbird."
+  (~exec (format "thunderbird-bin -compose \"to='%s',subject='%s'\""
+                 to
+                 subject)))
+
 ;; then helm-etags-select
 
 (defun ~create-tags (dir-name)
