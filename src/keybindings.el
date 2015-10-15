@@ -128,7 +128,6 @@
 (bind-key "<M-f3>" 'fiplr-find-file)
 (bind-key "<f3>" 'helm-find-files)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
-(bind-key "<C-delete>" 'xah-close-current-buffer)
 (bind-key "<C-f4>" 'xah-close-current-buffer)
 (bind-key "<C-delete>" 'xah-close-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
