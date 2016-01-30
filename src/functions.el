@@ -20,8 +20,9 @@
 (defun ~helm-grep ()
   "C-u helm-do-grep"
   (interactive)
-  (let ((current-prefix-arg 1))
-    (call-interactively 'helm-do-grep)))
+  ;; (let ((current-prefix-arg 1))
+  ;;   (call-interactively 'helm-do-grep))
+  (helm-projectile-grep))
 
 (defun toolbox:open-file (path)
   "Open path and open with external program if necessary."
