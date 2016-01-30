@@ -300,6 +300,7 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
   (let ((buf (generate-new-buffer "untitled")))
     (switch-to-buffer buf)
     (funcall (and initial-major-mode))
+    (setq default-directory "/m/scratch")
     (setq buffer-offer-save t)))
 
 (defalias '~save-file 'save-buffer
