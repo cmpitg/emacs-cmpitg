@@ -39,6 +39,10 @@
           (otherwise  (message-box (format "Invalid program %s" action))))
         (return)))))
 
+(defun toolbox:open-with (file cmd)
+;;   "Opens file with a command line.  File name is quoted
+;; automatically quoted."
+  (~exec (format cmd file)))
 
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
