@@ -1117,6 +1117,16 @@ used.  Do nothing if server is already started."
 
 ;;   )
 
+(defun ~copy-file-path ()
+  "Copies file path to clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to clipboard." filename))))
+
 (defun ~copy-directory ()
   "Copy current directory to clipboard."
   (interactive)
