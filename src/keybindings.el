@@ -147,13 +147,10 @@
 ;; (bind-key "<f8>" 'sr-speedbar-toggle)
 (bind-key "<S-f8>" 'helm-bookmarks)
 
-(bind-key "C-z" 'popwin:keymap)
-
-;; (bind-key "C-x C-n" 'multi-scratch-new)
 (bind-key "C-x C-n" '~new-buffer)
 
-(bind-key "<C-next>" 'tabbar-ruler-forward)
-(bind-key "<C-prior>" 'tabbar-ruler-backward)
+;; (bind-key "<C-next>" 'tabbar-ruler-forward)
+;; (bind-key "<C-prior>" 'tabbar-ruler-backward)
 
 ;;
 ;; Text
@@ -166,10 +163,8 @@
 (bind-key "C-=" 'align-regexp)
 (bind-key "C-<home>" '~jekyll-add-last-updated)
 
-(bind-key "<C-backspace>" '~mark-word-backward)
-
 ;; (bind-key "<menu> C-<return>" 'complete-symbol)
-(bind-key "s-<return>" 'pabbrev-expand-maybe)
+;; (bind-key "s-<return>" 'pabbrev-expand-maybe)
 
 ;; (bind-key "<C-return>" 'complete-tag)
 (bind-key "<M-return>" 'ac-fuzzy-complete)
