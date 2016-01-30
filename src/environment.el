@@ -33,14 +33,15 @@
 
 ;; (set-face-foreground 'font-lock-comment-face "#3a345f")
 ;;; Use this if you don't use any theme
-(set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
+;; (set-face-attribute 'font-lock-comment-face nil :foreground "#3a345f")
 
 ;; (set-cursor-color "cyan")
 ;; (set-cursor-color "gray")
 ;; (set-cursor-color "black")
 
 ;; (set-background-color "#f2f2f2")
-(set-background-color "#efefef")
+;;; And this too
+;; (set-background-color "#efefef")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Themes
