@@ -308,7 +308,7 @@
   :defer t
   :commands adoc-mode
   :init (progn
-          (~auto-load-mode '("\\.ascii" "\\.txt" "\\.adoc") 'adoc-mode)
+          (~auto-load-mode '("\\.ascii" "\\.adoc") 'adoc-mode)
           (add-hook 'adoc-mode-hook 'auto-fill-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
