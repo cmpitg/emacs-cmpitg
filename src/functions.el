@@ -1566,7 +1566,7 @@ display result."
 (defun ~exec (command)
   "Execute a shell command then return its value as string."
   (interactive "MCommand: ")
-  (shell-command-to-string command))
+  (shell-command command))
 
 (defun ~exec-in-other-window (command)
   "Execute in other window."
@@ -1744,11 +1744,12 @@ text."
 (defalias 'first-char-as-string '~first-char-as-string)
 (defalias 'last-char-as-string '~last-char-as-string)
 
-(defun* ~send-mail (&key to subject)
+(defun* ~send-mail (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
-  (~exec (format "thunderbird-bin -compose \"to='%s',subject='%s'\""
+  (~exec (format "thunderbird-bin -compose \"to='%s',subject='%s'\",body=\"'%s'\""
                  to
-                 subject)))
+                 subject
+                 body)))
 
 ;; then helm-etags-select
 
