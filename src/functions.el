@@ -594,9 +594,10 @@ E.g.
 added to the current eshell buffer."
   (interactive)
   (insert
-   (ido-completing-read "Eshell history: "
-                        (delete-dups
-                         (ring-elements eshell-history-ring)))))
+   (helm :sources (helm-build-sync-source "eshell-history"
+                    :candidates (delete-dups
+                                 (ring-elements eshell-history-ring)))
+         :buffer "*helm eshell history*")))
 
 (defun ~switch-to-eshell-back-and-forth ()
   "Switch to eshell if current is not eshell, and switch to last
