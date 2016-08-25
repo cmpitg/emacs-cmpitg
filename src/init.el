@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,20 +16,21 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Global constants
+;; Important global values
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *config-dir* (file-name-directory (or (buffer-file-name)
-                                              load-file-name))
-  ;; "/m/src/emacs-cmpitg-rewrite/src/"
+(defconst *config-dir* (file-name-directory (or (buffer-file-name)
+                                                load-file-name))
   "Default configuration directory.")
 
 (defvar *snippet-dir*
-  (format "%s/snippets" *config-dir*)
+  (file-name-as-directory
+   (concat (file-name-as-directory *config-dir*) "snippets"))
   "Default snippet directory.")
 
 (defvar *scratch-dir*
-  "/m/scratch/"
+  (file-name-as-directory
+   (concat (file-name-as-directory *config-dir*) "scratch"))
   "Default path to Scratch directory.")
 
 (add-to-list 'load-path *config-dir*)
@@ -50,12 +51,6 @@
                          "")))
       (kill-buffer)
       file-path)))
-
-(defun ~elpa-install (&rest packages)
-  "Install a list of packages with ELPA if not installed yet."
-  (dolist (pkg packages)
-    (unless (package-installed-p pkg)
-      (package-install pkg))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minimal config
