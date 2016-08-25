@@ -341,7 +341,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Built-in
 
 (use-package python
   :config (progn
@@ -357,7 +356,8 @@
               :config (progn
                         (venv-initialize-interactive-shells)
                         (venv-initialize-eshell)
-                        (setq venv-location "/m/virtenvs/")))))
+                        (setq venv-location (or (getenv "WORKON_HOME")
+                                                "/m/virtual-envs/"))))))
 
 (use-package django-mode
   :ensure t
