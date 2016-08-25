@@ -38,10 +38,24 @@ root."
     (call-interactively 'helm-projectile-find-file)))
 
 (defun toolbox:open-file (path)
-  "Open path and open with external program if necessary."
-  (condition-case description
-      (progn
-        (find-file path))))
+  "Opens path and open with external program if necessary."
+  (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
+                                     *open-with-regexps*
+                                   (list))
+                                 (list '(".*" . find-file))))
+    (let ((regexp (car regexp&action))
+          (action (cdr regexp&action)))
+      (when (s-matches-p regexp path)
+        (typecase action
+          (function   (funcall action path))
+          (string     (toolbox:open-with path action))
+          (otherwise  (message-box (format "Invalid program %s" action))))
+        (return)))))
+
+(defun toolbox:open-with (file cmd)
+;;   "Opens file with a command line.  File name is quoted
+;; automatically quoted."
+  (~exec (format cmd file)))
 
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
@@ -78,7 +92,6 @@ horizontal split."
 (defalias 'sr 'search-forward-regexp)
 (defalias 'vtt 'visit-tags-table)
 (defalias 'cr 'create-tags)
-(defalias 'ib 'ibus-mode)
 (defalias 'rb 'revert-buffer)
 (defalias 'sbke 'save-buffers-kill-emacs)
 (defalias 'tw 'twit)
@@ -102,7 +115,7 @@ horizontal split."
   (interactive)
   (if (find "*compilation*" (mapcar #'buffer-name (buffer-list))
             :test #'equal)
-    (switch-to-buffer "*compilation*")))
+      (switch-to-buffer "*compilation*")))
 
 (defun ~previous-buffer ()
   "Move to the previous non-special buffer, unless it's *scratch*."
