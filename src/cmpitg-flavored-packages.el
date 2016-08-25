@@ -440,17 +440,6 @@
             (turn-on-save-visited-files-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; File browsing with neotree
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Neotree breaks tab completion in minibuffer
-
-;; (use-package neotree
-;;   :ensure neotree
-;;   :init (progn
-;;           (bind-key "<M-f12>" 'neotree-toggle)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -462,7 +451,7 @@
 
           ;; ElDoc in Eshell
           (defadvice eldoc-current-symbol
-            (around eldoc-current-symbol activate)
+              (around eldoc-current-symbol activate)
             ad-do-it
             (if (and (not ad-return-value)
                      (eq major-mode 'eshell-mode))
@@ -572,7 +561,7 @@
                       (concat "--- " time " " username "@" hostname " " pwd " ---"
                               "\n"
                               "$ "))))
-            
+
             (setq eshell-prompt-regexp "^[#$] ")
 
             ;; Read $PATH variable
