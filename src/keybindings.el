@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -15,11 +15,17 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;;;
+;;; For programmer Drovak layout
+;;;
+
 ;; <menu> key is really convenient, so first we get rid of its default
-;; use
 
 (bind-key "<menu>" 'nil)
-(bind-key "<escape>" 'keyboard-quit)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ErgoErmacs-inspired
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (bind-key "s-K" '~delete-line)
 (bind-key "s-l" 'goto-line)
@@ -29,14 +35,14 @@
 (bind-key "s-h" 'backward-char)
 (bind-key "s-n" 'forward-char)
 
-(use-package grizzl-read
-  :config (progn
-            (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
-            (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
+;; No longer used
+;; (use-package grizzl-read
+;;   :config (progn
+;;             (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
+;;             (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
 
 ;; (bind-key "s-d" 'move-beginning-of-line)
 (bind-key "s-d" '~move-to-beginning-of-line)
-(bind-key "C-a" '~move-to-beginning-of-line)
 (bind-key "s-D" 'move-end-of-line)
 
 (bind-key "M-s-c" '(lambda nil (interactive) (previous-line 5)))
@@ -56,10 +62,10 @@
 (bind-key "s-p" 'kill-word)
 (bind-key "s-." 'backward-kill-word)
 
-(bind-key "s-x" (lambda ()
-                  (interactive)
-                  (kill-line)
-                  (delete-horizontal-space)))
+(bind-key "s-x" '(lambda ()
+                   (interactive)
+                   (kill-line)
+                   (delete-horizontal-space)))
 (bind-key "s-X" '~delete-line)
 
 ;;; Selection
@@ -83,10 +89,8 @@
 ;; (bind-key "s-s" 'isearch-forward-regexp)
 (bind-key "C-s" 'isearch-forward-regexp)
 (bind-key "C-r" 'isearch-backward-regexp)
-(bind-key "s-s" '~helm-swoop-bare)
+(bind-key "s-s" 'helm-occur)
 ;; (bind-key "s-s" '~swoop-bare)
-;; (bind-key "s-s" 'helm-occur)
-;; (bind-key "s-S" 'isearch-backward-regexp)
 
 ;;; With other libraries
 
@@ -96,6 +100,8 @@
             (bind-key "s-p" 'paredit-forward-kill-word  paredit-mode-map)
             (bind-key "s-r" 'forward-word               paredit-mode-map)
             (bind-key "s-g" 'backward-word              paredit-mode-map)
+            (bind-key "s-C" 'paredit-backward-up        paredit-mode-map)
+            (bind-key "s-T" 'paredit-forward-up         paredit-mode-map)
             (bind-key "s-R" 'paredit-forward            paredit-mode-map)
             (bind-key "s-G" 'paredit-backward           paredit-mode-map)))
 
@@ -111,22 +117,25 @@
 
 ;;; This file should be load after custom functions are all loaded
 
-;;
-;; ErgoEmacs bindings
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Other useful bindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(bind-key "M-x" 'smex)
+(bind-key "M-x" 'helm-M-x)
+(bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-x M-x" 'execute-extended-command)
+
+(bind-key "<f11>"  'helm-show-kill-ring)
+(bind-key "<C-f12>" 'projectile-commander)
 
 ;;
 ;; Buffer
 ;;
 
 (bind-key "<f2>" 'save-buffer)
-(bind-key "C-<f2>" 'buffer-menu)
-(bind-key "<S-f3>" '~find-file-extended)
-(bind-key "<M-f3>" 'fiplr-find-file)
 (bind-key "<f3>" 'helm-find-files)
+(bind-key "<S-f3>" 'helm-projectile-find-file)
+(bind-key "<C-f3>" '~helm-find-files-current-dir)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
 (bind-key "<C-f4>" 'xah-close-current-buffer)
 (bind-key "<C-delete>" 'xah-close-current-buffer)
@@ -140,20 +149,17 @@
                      (scroll-other-window 5)))
 (bind-key "C-M-S-v" '(lambda ()
                        (interactive)
-                       (scroll-other-window -6)))
+                       (scroll-other-window -5)))
 
 (bind-key "C-x C-b" 'bs-show)
 (bind-key "s-B" '~switch-to-last-buffer)
 ;; (bind-key "<f8>" 'sr-speedbar-toggle)
 (bind-key "<S-f8>" 'helm-bookmarks)
 
-(bind-key "C-z" 'popwin:keymap)
-
-;; (bind-key "C-x C-n" 'multi-scratch-new)
 (bind-key "C-x C-n" '~new-buffer)
 
-(bind-key "<C-next>" 'tabbar-ruler-forward)
-(bind-key "<C-prior>" 'tabbar-ruler-backward)
+;; (bind-key "<C-next>" 'tabbar-ruler-forward)
+;; (bind-key "<C-prior>" 'tabbar-ruler-backward)
 
 ;;
 ;; Text
@@ -164,15 +170,6 @@
 (bind-key "C-o" '~open-line)
 (bind-key "C-S-O" '~open-line-before)
 (bind-key "C-=" 'align-regexp)
-(bind-key "C-<home>" '~jekyll-add-last-updated)
-
-(bind-key "<C-backspace>" '~mark-word-backward)
-
-;; (bind-key "<menu> C-<return>" 'complete-symbol)
-(bind-key "s-<return>" 'pabbrev-expand-maybe)
-
-;; (bind-key "<C-return>" 'complete-tag)
-(bind-key "<M-return>" 'ac-fuzzy-complete)
 
 (bind-key "s-w" 'whitespace-cleanup)
 
@@ -197,18 +194,10 @@
 ;;
 
 (bind-key "<f9>" 'compile)
-(bind-key "C-<f12>" '~open-shell)
 (bind-key "s-a" '~popup-shell-command)
 (bind-key "s-A" '~exec-then-pipe)
 (bind-key "M-s-a" '~pipe-then-exec)
 (bind-key "M-s-A" '~pipe-then-exec-in-other-window)
-(bind-key "<S-down-mouse-1>" nil)
-(bind-key "<S-mouse-1>" '~exec-then-pipe-selection)
-
-(bind-key "<s-menu> <s-menu>" '~exec-in-other-window)
-(bind-key "<s-menu> s-!" '~exec-then-pipe)
-(bind-key "<s-menu> s-@" '~pipe-then-exec)
-(bind-key "<s-menu> s-\\" '~pipe-then-exec-in-other-window)
 
 (bind-key "s-m" '~eval-then-replace-last-exp)
 (bind-key "s-b" '~eval-then-replace)
@@ -219,13 +208,13 @@
 
 (bind-key "<pause>" '~toggle-sticky-window)
 (bind-key "S-<f4>" '~delete-window)
+
 (eval-after-load 'icicles-cmd1
   '(progn
      ;; S-f4 is always mapped to delete-window
      (global-set-key [remap icicle-kmacro] '~delete-window)))
 
-;; (bind-key "<f4>" 'find-file-other-window)
-(bind-key "<f4>" '~helm-multi-occur-all)
+(bind-key "<f4>" 'helm-multi-swoop-all)
 (bind-key "C-7" 'split-window-vertically)
 (bind-key "C-5" 'split-window-horizontally)
 (bind-key "C-%" '~one-window)
@@ -240,21 +229,6 @@
 ;;
 
 (bind-key "C-M-_" 'redo)
-(bind-key "s-; r c" '~rebuild-my-config)
-(bind-key "s-; <f5>" '~refresh-firefox)
-
-(bind-key "s-; g g" '~google)
-(bind-key "s-SPC <return>" '~open-url-in-firefox)
-
-(bind-key "C-x w u" 'unhighlight-regexp)
-(bind-key "C-x w p" 'highlight-phrase)
-(bind-key "C-x w r" 'highlight-regexp)
-
-;;
-;; File navigation
-;;
-
-(bind-key "s-; f n" '~goto-my-notes)
 
 ;;
 ;; Mode
@@ -264,33 +238,37 @@
 (bind-key "C-<menu> C-<menu> C-<menu>" (lambda ()
                                          (interactive)
                                          (set-fill-column 78)))
-(bind-key "C-<menu> C-(" 'autopair-mode)
+;; (bind-key "C-<menu> C-(" 'autopair-mode)
+(bind-key "<C-menu> C-(" 'smartparens-mode)
 (bind-key "C-<menu> C-p" 'paredit-mode)
 (bind-key "C-<menu> C-e" '~activate-evil-local-mode)
 (bind-key "s-; s-," '~activate-evil-local-mode)
 
 (bind-key "C-<menu> C-w" 'whitespace-mode)
-(bind-key "C-M-S-SPC" '~toggle-ibus)
 (bind-key "<C-menu> C-a" 'auto-complete-mode)
 (bind-key "<C-menu> <C-return>" 'markdown-mode)
+
 (bind-key "s-z" '~open-current-file-as-admin)
 (bind-key "s-v" 'package-list-packages)
-(bind-key "s-\\" 'ibus-mode)
+
+;; iBus mode
+;; (bind-key "C-M-S-SPC" '~toggle-ibus)
+;; (bind-key "s-\\" 'ibus-mode)
+
 ;; (bind-key "M-x" 'execute-extended-command)
 ;; (bind-key "M-/" 'dabbrev-expand)
 
-(bind-key "<f10>" '~helm-grep)
+;; (bind-key "<f10>" 'helm-do-grep-ag)
+(bind-key "<f10>" 'helm-ag)
 (bind-key "<C-f10>" 'ack)
-(bind-key "s-@" '~duplicate-line)
-(bind-key "<f8>" 'helm-buffers-list)
-(bind-key "M-/" 'hippie-expand)
-;; (bind-key "M-/" 'helm-dabbrev)
-(bind-key "<f12>" 'helm-M-x)
-;; (add-to-list 'helm-boring-buffer-regexp-list "\\*.+\\*")
-(setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
-;; (setq helm-command-prefix-key "<f5>")
 
-(bind-key "s-; h t t p" 'httprepl)
+(bind-key "s-@" '~duplicate-line-or-region)
+
+(bind-key "<f8>" 'helm-mini)
+(bind-key "M-/" 'hippie-expand)
+(bind-key "C-/" 'helm-dabbrev)
+
+(bind-key "<f12>" 'helm-M-x)
 
 ;;
 ;; Mode specific
@@ -310,6 +288,9 @@
                                                             (interactive)
                                                             (apropos (current-word))))
             (define-key emacs-lisp-mode-map (kbd "<S-f1>") 'find-function)))
+
+(bind-key "s-#"               '~add-bracket-and-eval)
+
 ;; Markdown
 
 (add-hook 'markdown-mode-hook
@@ -318,31 +299,9 @@
             (define-key markdown-mode-map (kbd "s-SPC b") '~markdown-embolden)
             (define-key markdown-mode-map (kbd "s-SPC r") '~markdown-rawify)))
 
-(bind-key "s-#"               '~add-bracket-and-eval)
-
-;;
-;; Bookmark jumping
-;;
-
-(bind-key "<s-return>"      'switch-to-eshell-back-and-forth)
-(bind-key "<s-S-return>"    'cd-current-buffer-dir-and-switch-to-eshell)
-(bind-key "<C-menu> C-("    'smartparens-mode)
-
-(bind-key "<C-f3>"          'projectile-switch-project)
-(bind-key "<f11>"           'helm-projectile)
-(bind-key "<S-f9>"          'projectile-commander)
-
 (eval-after-load 'yasnippet
   '(progn
      (bind-key "C-c & C-n" 'create-snippet yas-minor-mode-map)))
-
-;;
-;; Inserting special symbols
-;;
-
-(bind-key "s-SPC s-SPC \\" (lambda () (interactive) (insert "λ")))
-(bind-key "s-SPC s-SPC !"  (lambda () (interactive) (insert "¡")))
-(bind-key "s-SPC s-SPC c"  (lambda () (interactive) (insert "©")))
 
 ;; Fix open-file command in Xiki
 
@@ -358,11 +317,5 @@
 ;;
 
 (bind-key "RET" 'electrify-return-if-match)
-
-;;
-;; (Emacs) Lisp mode
-;;
-
-(bind-key "C-c l m a" '~emacs-lisp-make-alias emacs-lisp-mode-map)
 
 (provide 'ee:keybindings)
