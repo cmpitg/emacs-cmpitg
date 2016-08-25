@@ -758,12 +758,12 @@ E.g.
 
 ;; Download, raise an error if the file exists
 \($download-file \"https://raw.github.com/defunkt/gist.el/master/gist.el\"
-		\"/tmp/gist.el\"\)
+        \"/tmp/gist.el\"\)
 c
 ;; Download and overwrite if already exists
 \($download-file \"https://raw.github.com/defunkt/gist.el/master/gist.el\"
-		\"/tmp/gist.el\"
-		:overwrite t\)"
+        \"/tmp/gist.el\"
+        :overwrite t\)"
   (interactive "MURL: \nFSave to: ")
   (url-copy-file url filepath overwrite))
 
@@ -1146,6 +1146,16 @@ used.  Do nothing if server is already started."
 
 ;;   )
 
+(defun ~copy-file-path ()
+  "Copies file path to clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to clipboard." filename))))
+
 (defun ~copy-directory ()
   "Copy current directory to clipboard."
   (interactive)
@@ -1163,7 +1173,7 @@ we might have in the frame."
   (interactive)
   (if (not(window-minibuffer-p (selected-window)))
     (if (or mark-active (active-minibuffer-window))
-	  (keyboard-escape-quit))
+      (keyboard-escape-quit))
     (keyboard-quit)))
 
 (defun ~modify-opacity (&optional dec)
@@ -1272,31 +1282,31 @@ Example:
   (and (string-match ".*\.ls$" (~current-file-full-path))
        (compile (concat "livescript -c -d " (~current-file-full-path)))))
 
-(defun ~toggle-ibus ()
-  "Toggle ibus."
-  (interactive)
+;; (defun ~toggle-ibus ()
+;;   "Toggle ibus."
+;;   (interactive)
 
-  (unless (~is-var-defined? '*is-ibus-on?*)
-    (defvar *is-ibus-on?* nil))
+;;   (unless (~is-var-defined? '*is-ibus-on?*)
+;;     (defvar *is-ibus-on?* nil))
 
-  (if (null *is-ibus-on?*)
-    (progn (ibus-enable)
-           (setf *is-ibus-on?* t))
-    (progn (ibus-disable)
-           (setf *is-ibus-on?* nil))))
+;;   (if (null *is-ibus-on?*)
+;;     (progn (ibus-enable)
+;;            (setf *is-ibus-on?* t))
+;;     (progn (ibus-disable)
+;;            (setf *is-ibus-on?* nil))))
 
-(defun ~toggle-ecb ()
-  "Toggle ECB."
-  (interactive)
+;; (defun ~toggle-ecb ()
+;;   "Toggle ECB."
+;;   (interactive)
 
-  (unless (~is-var-defined? '*is-ecb-running?*)
-    (defvar *is-ecb-running?* nil))
+;;   (unless (~is-var-defined? '*is-ecb-running?*)
+;;     (defvar *is-ecb-running?* nil))
 
-  (if (null *is-ecb-running?*)
-    (progn (ecb-activate)
-           (setf *is-ecb-running?* t))
-    (progn (ecb-deactivate)
-           (setf *is-ecb-running?* nil))))
+;;   (if (null *is-ecb-running?*)
+;;     (progn (ecb-activate)
+;;            (setf *is-ecb-running?* t))
+;;     (progn (ecb-deactivate)
+;;            (setf *is-ecb-running?* nil))))
 
 (defun ~load-paredit-mode ()
   "Load paredit mode and disable autopair."
@@ -2121,7 +2131,7 @@ with the Unicode symbol SYMBOL looked up with UNICODE-SYMBOL."
   "Call SUBSTITUTE-PATTERN-WITH-UNICODE repeatedly."
   (mapcar #'(lambda (x)
               (~substitute-pattern-with-unicode (car x)
-                                               (cdr x)))
+                                                (cdr x)))
           patterns))
 
 (defalias 'insert-text-at-the-end '~insert-text-at-the-end)
