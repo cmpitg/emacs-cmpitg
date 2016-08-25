@@ -360,7 +360,7 @@
                         (setq venv-location "/m/virtenvs/")))))
 
 (use-package django-mode
-  :ensure django-mode
+  :ensure t
   :commands python-mode
   :config (progn
             (use-package python-django
@@ -380,15 +380,16 @@
             ;; (~auto-load-mode '("\\.js\\'") 'js2-mode)
             ;; (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
-            (add-hook 'html-mode-hook '~auto-reload-firefox-after-save-hook)
-            (add-hook 'css-mode-hook '~auto-reload-firefox-after-save-hook)))
+            ;; (add-hook 'html-mode-hook '~auto-reload-firefox-after-save-hook)
+            ;; (add-hook 'css-mode-hook '~auto-reload-firefox-after-save-hook)
+            ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package haskell-mode
-  :ensure haskell-mode
+  :ensure t
   :commands haskell-mode
   :mode "\\.hs\\'"
   :config (progn
@@ -405,32 +406,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package toml-mode
-  :ensure toml-mode
+  :ensure t
   :commands toml-mode
   :mode "\\.toml\\'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ibus bridge
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Deprecated.  The new iBus 1.5 is totally broken, rendering this useless
+;;
 
-(load-file (~get-config "local-packages/ibus.el/ibus-dev.el"))
-(use-package ibus
-  :commands ibus-mode
-  :config (progn
-            ;; Use C-SPC for Set Mark command
-            (ibus-define-common-key ?\C-\s nil)
-            ;; Use C-/ for Undo command
-            (ibus-define-common-key ?\C-/ nil)
-            ;; Change cursor color depending on IBus status
-            (setq ibus-cursor-color '("red" "blue" "limegreen"))
-            (setq ibus-agent-file-name (~get-config "local-packages/ibus.el/ibus-el-agent"))))
+;; (load-file (~get-config "local-packages/ibus.el/ibus-dev.el"))
+;; (use-package ibus
+;;   :commands ibus-mode
+;;   :config (progn
+;;             ;; Use C-SPC for Set Mark command
+;;             (ibus-define-common-key ?\C-\s nil)
+;;             ;; Use C-/ for Undo command
+;;             (ibus-define-common-key ?\C-/ nil)
+;;             ;; Change cursor color depending on IBus status
+;;             (setq ibus-cursor-color '("red" "blue" "limegreen"))
+;;             (setq ibus-agent-file-name
+;;                   (~get-config "local-packages/ibus.el/ibus-el-agent"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package save-visited-files
-  :ensure save-visited-files
+  :ensure t
   :config (progn
             (turn-on-save-visited-files-mode)))
 
