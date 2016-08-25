@@ -512,8 +512,15 @@
 ;;             ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Better ack interface
+;; Better grep'ing with ag
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; AckFull, wgrep, ack-and-a-half are all abandonware.
+;;
+
+;;
+;; Use interactively
+;;
 
 (load-file (~get-config "local-packages/ack-and-a-half/ack-and-a-half.el"))
 (use-package ack-and-a-half
@@ -555,7 +562,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package menu-bar+
-  :ensure menu-bar+)
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Snippet mode
@@ -563,7 +570,7 @@
 ;; Load before auto complete
 
 (use-package yasnippet
-  :ensure yasnippet
+  :ensure t
   :diminish yas-minor-mode
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
@@ -578,10 +585,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto completion framework
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Needs evaluation, tryout company
+;;
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :ensure auto-complete
+  :ensure t
   :init (progn
           (require 'auto-complete-config)
           (ac-config-default)
@@ -609,7 +619,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package hi-lock
-  :ensure hi-lock
+  :ensure t
   :commands (highlight-phrase highlight-regexp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -617,7 +627,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package gist
-  :ensure gist
+  :ensure t
   :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -625,7 +635,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package yaml-mode
-  :ensure yaml-mode
+  :ensure t
   :commands yaml-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -633,13 +643,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
-  :ensure markdown-mode
-  :commands markdown-mode
-  :init (progn
-          (~auto-load-mode '("\\.md$" "\\.markdown$") 'markdown-mode))
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
   :config (progn
-            (use-package markdown-mode+
-              :ensure markdown-mode+)
+            ;; (use-package markdown-mode+
+            ;;   :ensure markdown-mode+)
 
             (add-hook 'markdown-mode-hook 'auto-fill-mode)
             (custom-set-faces
@@ -668,7 +679,7 @@
                  (smartparens-global-mode)))))
 
 (use-package paredit
-  :ensure paredit
+  :ensure t
   :config (progn
             (defadvice paredit-mode (around disable-otherparenslib-around (arg))
               "Disable autopairs mode if paredit-mode is turned on."
@@ -747,7 +758,7 @@
               (setq tab-width 2)))))
 
 (use-package json
-  :ensure json
+  :ensure t
   :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
