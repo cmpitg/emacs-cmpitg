@@ -2384,10 +2384,11 @@ user buffer."
 (defun xah-open-recently-closed ()
   "Open recently closed file."
   (interactive)
-  (find-file (ido-completing-read "Open: "
-                                  (mapcar (lambda
-                                            (f) (cdr f))
-                                          xah-recently-closed-buffers))))
+  (find-file
+   (helm :sources (helm-build-sync-source "recently-closed-files"
+                    :candidates (mapcar 'cdr
+                                          xah-recently-closed-buffers))
+         :buffer "*helm recently close files*")))
 
 (defun xah-list-recently-closed ()
   "List recently closed file."
