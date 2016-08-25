@@ -314,13 +314,13 @@
 ;; https://github.com/Mon-Ouie/ruby-dev.el
 
 (use-package ruby-mode
-  :ensure ruby-mode
+  :ensure t
   :commands ruby-mode
-  :init (progn
-          (~auto-load-mode '("\\Rakefile$" "\\.mab$") 'ruby-mode))
+  :mode (("\\Rakefile$" . ruby-mode)
+         ("\\.mab$"     . ruby-mode))
   :config (progn
             (use-package ruby-dev
-              :ensure ruby-dev
+              :ensure t
               :init (progn
                       (autoload 'turn-on-ruby-dev "ruby-dev" nil t)
                       (add-hook 'ruby-mode-hook 'turn-on-ruby-dev)))))
@@ -346,12 +346,13 @@
 (use-package python
   :config (progn
             (~auto-load-mode '("\\.py$") 'python-mode)
+
             ;; Workaround: virtualenvwrapper.el needs to be loaded explicitly
             (progn
-              (~elpa-install 'virtualenvwrapper)
-              (load-file (~get-library-full-path "virtualenvwrapper"))
-              ;; (kill-buffer "virtualenvwrapper.el")
-              )
+              (unless (package-installed-p 'virtualenvwrapper)
+                (package-install 'virtualenvwrapper))
+              (load-file (~get-library-full-path "virtualenvwrapper")))
+
             (use-package virtualenvwrapper
               :config (progn
                         (venv-initialize-interactive-shells)
