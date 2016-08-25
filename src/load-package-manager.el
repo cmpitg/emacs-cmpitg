@@ -31,34 +31,41 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; el-get
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (unless (require 'el-get nil 'noerror)
-  (cond
-   ((fboundp 'el-get-self-update)
-    (el-get-self-update))
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
 
-   (t
-    (url-retrieve
-     "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
-     (lambda (s)
-       (goto-char (point-max))
-       (eval-print-last-sexp))))))
-
-;; el-get runs in sync mode
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 (el-get 'sync)
 
 (let ((local-package-dir (~get-config "local-packages/")))
   (dolist (package-dir (directory-files local-package-dir))
     (add-to-list 'load-path (~get-config local-package-dir package-dir))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; use-package
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-(require 'use-package)
 
-;;
-;; Add local packages to load-path
-;;
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)                ;; if you use any :bind variant
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Local packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (dolist (pkg (directory-files (~get-config "local-packages/")))
   (add-to-list 'load-path (~get-config "local-packages/" pkg)))
