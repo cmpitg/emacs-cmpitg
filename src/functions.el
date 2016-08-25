@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -20,8 +20,22 @@
 (defun ~helm-grep ()
   "C-u helm-do-grep"
   (interactive)
-  (let ((current-prefix-arg 1))
-    (call-interactively 'helm-do-grep)))
+  (helm-projectile-grep))
+
+(defun ~helm-find-files-current-dir ()
+  "Activate `helm-projectile-find-files', taking current directory as project
+root."
+  (interactive)
+  ;; Ignore the obsolete, we do need the powerful dynamic binding capability
+  ;; of flet that neither cl-flet nor cl-letf provides
+  (flet ((projectile-project-root () default-directory)
+         (projectile-current-project-files
+          ()
+          (let (files)
+            (setq files (-mapcat #'projectile-dir-files
+                                 (projectile-get-project-directories)))
+            (projectile-sort-files files))))
+    (call-interactively 'helm-projectile-find-file)))
 
 (defun toolbox:open-file (path)
   "Open path and open with external program if necessary."
