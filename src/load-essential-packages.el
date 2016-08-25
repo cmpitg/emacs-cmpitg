@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -33,7 +33,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package dash
-  :ensure dash
+  :ensure t
   :config (dash-enable-font-lock))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41,21 +41,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ht
-  :ensure ht)
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; String processing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package s
-  :ensure s)
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; File/filesystem library
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package f
-  :ensure f)
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Smart completion framework
@@ -66,8 +66,22 @@
   :commands (helm-find-files helm-buffers-list helm-bookmarks)
   :config (use-package helm
             :config (progn
-                      ;; Follow mode
+                      (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
 
+                      ;; The following call to helm-follow-mode is local and
+                      ;; has no effect.  Read its documentation for the possible effect.
+                      ;; (helm-follow-mode 1)
+
+                      ;;
+                      ;; helm-follow currently comes with a cost that it opens
+                      ;; every file user is selecting in the Helm buffer. Add
+                      ;; this when you're absolutely sure you would open all
+                      ;; files when visiting them.
+                      ;;
+                      ;; (add-hook 'helm-after-update-hook #'(lambda ()
+                      ;;                                       (helm-follow-mode 1)))
+
+                      ;; Follow mode
                       (eval-after-load "helm-multi-occur-1"
                         '(progn
                            (helm-attrset 'follow 1 helm-source-moccur)))
@@ -87,14 +101,16 @@
                              '(progn
                                 (helm-attrset 'follow 1 helm-source-buffers-list)))))
 
-                      ;; (eval-after-load "helm-bookmark"
-                      ;;   '(progn
-                      ;;      (helm-attrset 'follow 1 helm-source-bookmarks)))
-
-                      ;; (helm-attrset 'follow 0 helm-source-find-files)
+                      (eval-after-load "helm-bookmark"
+                        '(progn
+                           (helm-attrset 'follow 1 helm-source-bookmarks)))
 
                       ;; Don't auto change-dir when find-file
-                      (setq-default helm-ff-auto-update-initial-value nil))))
+                      (setq-default helm-ff-auto-update-initial-value nil)
+
+                      ;; Fully enable fuzzy matching
+                      (setq helm-mode-fuzzy-match t
+                            helm-completion-in-region-fuzzy-match t))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Remote file processing with Tramp
