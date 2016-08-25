@@ -521,17 +521,31 @@
           ;; Fix Debian-based distros' executable file
           (setq ack-and-a-half-executable (or (executable-find "ack-grep")
                                               (executable-find "ack")))
+          ;; (setq ack-and-a-half-prompt-for-directory 'unless-guessed)
+          (setq ack-and-a-half-prompt-for-directory t)
           (defalias 'ack 'ack-and-a-half)
           (defalias 'ack-same 'ack-and-a-half-same)
           (defalias 'ack-find-file 'ack-and-a-half-find-file)
           (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
+
+;; (use-package ag
+;;   :ensure t)
+
+;; (use-package wgrep-ag
+;;   :ensure t)
+
+;;
+;; Use for one-off searches (as the Helm buffer is not persistent
+;;
+(use-package helm-ag
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; w3m web browser
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package w3m
-  :ensure w3m
+  :ensure t
   :commands w3m-browse-url
   :init (progn
           (setq browse-url-browser-function 'w3m-browse-url)))
