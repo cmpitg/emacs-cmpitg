@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014 Duong Nguyen ([@cmpitg](https://github.com/cmpitg/))
+;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -18,13 +18,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GPG interface
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;
 ;; Visit anything.gpg and it will encrypt it when you save the buffer.
 ;;
 ;; To prevent EPG from prompting for a key every time you save a file, put the
 ;; following at the top of your file:
 ;;
 ;;    -*- epa-file-encrypt-to: ("your@email.address") -*-
+;;
 
 (use-package epa-file
   :ensure epa
@@ -36,21 +37,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ahg
-  :ensure ahg
+  :ensure t
   :commands ahg-status)
 
 (use-package magit
-  :ensure magit
-  :commands (magit-status ~get-scm magit-get-top-dir)
-  ;; :config (progn
-  ;;           (set-face-foreground 'magit-diff-add "black")
-  ;;           (set-face-background 'magit-diff-add "yellow2")
-  ;;           (set-face-foreground 'magit-diff-none "brown")
-  ;;           (set-face-background 'magit-diff-none "gray")
-  ;;           (set-face-foreground 'magit-diff-del "red3")
-  ;;           (when (not window-system)
-  ;;             (set-face-background 'magit-item-highlight "black")))
-  )
+  :ensure t
+  :commands (magit-status ~get-scm magit-get-top-dir))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP request library
@@ -77,7 +69,7 @@
 ;;              (message "I sent: %S" (assoc-default 'form data)))))
 
 (use-package request
-  :ensure request
+  :ensure t
   :commands request)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -86,6 +78,7 @@
 
 (use-package racket-mode
   :load-path "/m/src/racket-mode/"
+  :ensure t
   :commands racket-mode
   :mode "\\.rkt\\'"
   :config (progn
@@ -103,13 +96,15 @@
                            module+))
               (put sym 'racket-indent-function 1)
               (add-to-list 'racket-keywords (~symbol->string sym))
-              (add-to-list 'racket-builtins (~symbol->string sym)))
+              ;; (add-to-list 'racket-builtins (~symbol->string sym))
+              )
 
             (dolist (sym '(module
                            module*))
               (put sym 'racket-indent-function 2)
               (add-to-list 'racket-keywords (~symbol->string sym))
-              (add-to-list 'racket-builtins (~symbol->string sym)))
+              ;; (add-to-list 'racket-builtins (~symbol->string sym))
+              )
 
             (add-hook 'racket-mode-hook       '~load-paredit-mode)
             (add-hook 'racket-repl-mode-hook  '~load-paredit-mode)
@@ -199,7 +194,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package scala-mode2
-  :ensure scala-mode2
+  :ensure t
   :commands scala-mode2
   :init
   (progn
@@ -227,7 +222,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package julia-mode
-  :ensure julia-mode
+  :ensure t
   :commands julia-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -235,7 +230,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package clojure-mode
-  :ensure clojure-mode
+  :ensure t
   :commands clojure-mode
   :mode "\\.clj\\'"
   :config
