@@ -132,6 +132,11 @@ horizontal split."
   "Retrieve the name of the current buffer."
   (buffer-name (current-buffer)))
 
+(defun ~get-buffer-major-mode (buffer-or-name)
+  "Retrieve the buffer's major mode."
+  (with-current-buffer buffer-or-name
+    major-mode))
+
 (defun ~kill-current-buffer ()
   "Kill the current buffer."
   (interactive)
