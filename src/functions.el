@@ -190,9 +190,9 @@ horizontal split."
 (defun ~one-window ()
   "Delete all other non-dedicated windows."
   (interactive)
-  (mapcar '(lambda (window)
-             (unless (window-dedicated-p window)
-               (delete-window window)))
+  (mapcar #'(lambda (window)
+              (unless (window-dedicated-p window)
+                (delete-window window)))
           (cdr (window-list))))
 
 (defun ~delete-window ()
@@ -518,7 +518,7 @@ E.g.
                      dir)
                     (t
                      (read-directory-name "Directory: ")))))
-    (cond (force 
+    (cond (force
            (byte-recompile-directory (expand-file-name dir) 0 t))
           (t
            (byte-recompile-directory (expand-file-name dir) 0 nil)))))
@@ -540,15 +540,27 @@ E.g.
       (kill-buffer)
       file-path)))
 
+;; (defun ~bind-key-temporary ()
+;;   "Interactive command for `bind-key'."
+;;   (interactive)
+;;   (let* ((key-binding (read-key-sequence "Key sequence: "))
+;;          (symbol      (~read-simplified-sexp-as-string "Eval: "))
+;;          (fn          `(lambda ()
+;;                          (interactive)
+;;                          (~add-bracket-and-eval ,symbol))))
+;;     (bind-key (format-kbd-macro key-binding) fn)))
+
 (defun ~bind-key-temporary ()
   "Interactive command for `bind-key'."
   (interactive)
-  (let* ((key-binding (read-key-sequence "Key sequence: "))
-         (symbol      (~read-simplified-sexp-as-string "Eval: "))
-         (fn          `(lambda ()
-                         (interactive)
-                         (~add-bracket-and-eval ,symbol))))
+  (lexical-let* ((key-binding (read-key-sequence "Key sequence: "))
+                 (symbol      (~read-simplified-sexp-as-string "Eval: "))
+                 (fn          (lambda ()
+                                (interactive)
+                                (~add-bracket-and-eval symbol))))
+
     (bind-key (format-kbd-macro key-binding) fn)))
+
 
 (defun ~add-personal-keybinding (key-binding symbol)
   "Add a key binding to `bind-key' library's
