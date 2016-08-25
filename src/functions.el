@@ -1391,30 +1391,30 @@ E.g.
         (host     . "localhost")
         (port     . "")
         (path     . ,connection-string))
-    (flet ((get-path (host-and-path)
-                     (if (string-match (rx (group "/" (1+ anything))) host-and-path)
-                         (match-string 1 host-and-path)
-                       "/tmp/"))
-           (get-port (host-and-path)
-                     (if (string-match (rx (1+ (not (any "\\")))
-                                           "#"
-                                           (group (1+ digit)))
-                                       host-and-path)
-                         (match-string 1 host-and-path)
-                       "22"))
-           (get-host (host-and-path)
-                     (if (string-match (rx bol
-                                           (group (1+ (not (any "#" ":")))))
-                                       host-and-path)
-                         (match-string 1 host-and-path)
-                       "localhost")))
+    (cl-flet ((get-path (host-and-path)
+                        (if (string-match (rx (group "/" (1+ anything))) host-and-path)
+                            (match-string 1 host-and-path)
+                          "/tmp/"))
+              (get-port (host-and-path)
+                        (if (string-match (rx (1+ (not (any "\\")))
+                                              "#"
+                                              (group (1+ digit)))
+                                          host-and-path)
+                            (match-string 1 host-and-path)
+                          "22"))
+              (get-host (host-and-path)
+                        (if (string-match (rx bol
+                                              (group (1+ (not (any "#" ":")))))
+                                          host-and-path)
+                            (match-string 1 host-and-path)
+                          "localhost")))
 
       (string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" connection-string)
 
       (let* ((protocol      (match-string 1 connection-string))
              (username      (match-string 2 connection-string))
              (host-and-path (match-string 3 connection-string))
-           
+
              (host          (get-host host-and-path))
              (port          (get-port host-and-path))
              (path          (get-path host-and-path)))
