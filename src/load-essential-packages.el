@@ -66,6 +66,7 @@
   :commands (helm-find-files helm-buffers-list helm-bookmarks)
   :config (use-package helm
             :config (progn
+                      (helm-mode 1)
                       (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
 
                       ;; The following call to helm-follow-mode is local and
