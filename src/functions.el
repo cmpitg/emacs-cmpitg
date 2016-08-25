@@ -317,6 +317,9 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
   (let ((buf (generate-new-buffer "untitled")))
     (switch-to-buffer buf)
     (funcall (and initial-major-mode))
+    (setq default-directory (if (boundp '*scratch-dir*)
+                                   *scratch-dir*
+                                 "/m/scratch/"))
     (setq buffer-offer-save t)))
 
 (defalias '~save-file 'save-buffer
