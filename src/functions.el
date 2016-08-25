@@ -1783,7 +1783,7 @@ silently."
                          *ctags-path*
                          (or extension "*")
                          ))
-  (let ((tags-revert-without-query t)) ; don't query, revert silently          
+  (let ((tags-revert-without-query t)) ; don't query, revert silently
     (visit-tags-table default-directory nil)))
 
 (defun ~goto-tag-other-window (tagname &optional next-p regexp-p)
@@ -1804,7 +1804,7 @@ beginning and `end-string` at the end.  If selection is not
 active, insert `begin-string` and `end-string` and place the
 cursor in-between them."
   (interactive "sStart string: \nsEnd string: ")
-  (cond 
+  (cond
    ((is-selecting?)
     (save-excursion
       (let ((start-point (selection-start))
@@ -1846,16 +1846,34 @@ If point is already there, move to the beginning of the line."
     (when (= orig-point (point))
       (move-beginning-of-line nil))))
 
-(defun ~duplicate-line ()
-  "Duplicate current line."
-  (interactive)
-  (beginning-of-line)
-  (kill-line)
-  (yank)
-  (newline)
-  (yank)
-  (beginning-of-line)
-  (previous-line))
+(defun ~duplicate-line-or-region (&optional n)
+  "Duplicate current line, or region if active.
+
+With argument N, make N copies.
+With negative N, comment out original line and use the absolute value.
+
+Source: http://stackoverflow.com/a/4717026/219881"
+  (interactive "*p")
+  (let ((use-region (use-region-p)))
+    (save-excursion
+      (let ((text (if use-region        ; Get region if active, otherwise line
+                      (buffer-substring (region-beginning) (region-end))
+                    (prog1 (thing-at-point 'line)
+                      (end-of-line)
+                      (if (< 0 (forward-line 1)) ; Go to beginning of next
+                                        ; line, or make a new one
+                          (newline))))))
+        (dotimes (i (abs (or n 1)))     ; Insert N times, or once if not
+                                        ; specified
+          (insert text))))
+    (if use-region nil              ; Only if we're working with a line (not a
+                                        ; region)
+      (let ((pos (- (point) (line-beginning-position)))) ; Save column
+        (if (> 0 n)                     ; Comment out original with negative
+                                        ; arg
+            (comment-region (line-beginning-position) (line-end-position)))
+        (forward-line 1)
+        (forward-char pos)))))
 
 (defun ~open-line (arg)
   "Open line and move to the next line."
