@@ -1556,7 +1556,7 @@ display result."
                      str)
                     (t
                      (read-shell-command "Tmux: " nil '*shell-command-hist*)))))
-    (~exec (format "tmux send-keys \"%s\" Enter" keys))))
+    (~exec (format "tmux send-keys '%s' Enter" keys))))
 
 (defun ~man-current-word ()
   "`man` this word."
