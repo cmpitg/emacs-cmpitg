@@ -73,62 +73,6 @@
   :commands request)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Racket development
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package racket-mode
-  :load-path "/m/src/racket-mode/"
-  :ensure t
-  :commands racket-mode
-  :mode "\\.rkt\\'"
-  :config (progn
-            ;; TODO: Document about indent changing and keywording
-            (dolist (sym '(λ
-                           ~>
-                           ~>>
-                           define-values
-                           get
-                           post
-                           put
-                           patch
-                           delete
-                           call-with-parameterization
-                           module+))
-              (put sym 'racket-indent-function 1)
-              (add-to-list 'racket-keywords (~symbol->string sym))
-              ;; (add-to-list 'racket-builtins (~symbol->string sym))
-              )
-
-            (dolist (sym '(module
-                           module*))
-              (put sym 'racket-indent-function 2)
-              (add-to-list 'racket-keywords (~symbol->string sym))
-              ;; (add-to-list 'racket-builtins (~symbol->string sym))
-              )
-
-            (add-hook 'racket-mode-hook       '~load-paredit-mode)
-            (add-hook 'racket-repl-mode-hook  '~load-paredit-mode)
-            (add-hook 'racket-mode-hook       'auto-complete-mode)
-            (add-hook 'racket-repl-mode-hook  'auto-complete-mode)
-
-            (bind-key "C-c C-\\" '(lambda (prefix)
-                                    (interactive "P")
-                                    (if prefix
-                                        (progn (insert "(λ () )")
-                                               (backward-char))
-                                      (insert "λ")))
-                      racket-mode-map)
-
-            (bind-key "C-c C-b" 'racket-run racket-mode-map)
-            (bind-key "C-c C-z" 'other-window racket-repl-mode-map)
-            ;; (bind-key "C-c C-z" (lambda ()
-            ;;                       (interactive)
-            ;;                       (call-interactively 'racket-repl)
-            ;;                       (call-interactively 'other-window))
-            ;;           racket-mode-map)
-            (bind-key "C-M-x" 'racket-send-definition racket-mode-map)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scheme development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
