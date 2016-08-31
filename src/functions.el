@@ -96,7 +96,6 @@ horizontal split."
 (defalias 'sbke 'save-buffers-kill-emacs)
 (defalias 'tw 'twit)
 (defalias 'bs 'bookmark-save)
-(defalias 'am 'auto-complete-mode)
 (defalias 'fm 'folding-mode)
 
 (defun ~next-file-buffer ()
