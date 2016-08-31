@@ -114,7 +114,6 @@
                             helm-completion-in-region-fuzzy-match t)
 
                       ;; Project management with Helm Projectile
-
                       (use-package helm-projectile
                         :ensure t
                         :config
