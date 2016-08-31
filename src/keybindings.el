@@ -126,6 +126,7 @@
 (bind-key "C-x M-x" 'execute-extended-command)
 
 (bind-key "<f11>"  'helm-show-kill-ring)
+(bind-key "<S-f11>" 'history-goto-history)
 (bind-key "<C-f12>" 'projectile-commander)
 
 ;;
@@ -141,6 +142,10 @@
 (bind-key "<C-delete>" 'xah-close-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
 (bind-key "<menu> <menu>" 'other-window)
+
+(bind-key "<C-f2>" 'history-add-history)
+(bind-key "C-;" 'history-prev-history)
+(bind-key "C-," 'history-next-history)
 
 (bind-key "C-S-t" 'xah-open-recently-closed)
 
@@ -245,7 +250,7 @@
 (bind-key "s-; s-," '~activate-evil-local-mode)
 
 (bind-key "C-<menu> C-w" 'whitespace-mode)
-(bind-key "<C-menu> C-a" 'auto-complete-mode)
+;; (bind-key "<C-menu> C-a" 'auto-complete-mode)
 (bind-key "<C-menu> <C-return>" 'markdown-mode)
 
 (bind-key "s-z" '~open-current-file-as-admin)
@@ -266,7 +271,7 @@
 
 (bind-key "<f8>" 'helm-mini)
 (bind-key "M-/" 'hippie-expand)
-(bind-key "C-/" 'helm-dabbrev)
+(bind-key "M-C-/" 'helm-dabbrev)
 
 (bind-key "<f12>" 'helm-M-x)
 
