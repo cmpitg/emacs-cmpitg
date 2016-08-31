@@ -162,6 +162,18 @@ horizontal split."
       (get-buffer-process repl-buffer)
       nil)))
 
+(defun ~racket-lookup-documentation (&optional keyword)
+  "Lookup Racket documentation by invoking `raco doc keyword`"
+  (interactive)
+  (let ((keyword (cond ((not (~string-empty? keyword))
+                        keyword)
+                       ((~is-selecting?)
+                        (~get-selection))
+                       (t
+                        (read-string "Keyword: "
+                                     (thing-at-point 'symbol))))))
+    (async-shell-command (format "raco doc %s" keyword))))
+
 (defun ~geiser-send-string (string)
   "Evaluate last sexp with Geiser and send it to the REPL."
   (interactive)
