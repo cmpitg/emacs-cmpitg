@@ -303,15 +303,6 @@
                         (setq venv-location (or (getenv "WORKON_HOME")
                                                 "/m/virtual-envs/"))))))
 
-(use-package django-mode
-  :ensure t
-  :commands python-mode
-  :config (progn
-            (use-package python-django
-              :ensure python-django)
-            (use-package django-html-mode
-              :mode "\\\\.djhtml$")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JavaScript development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
