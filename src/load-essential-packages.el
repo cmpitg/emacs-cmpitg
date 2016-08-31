@@ -752,6 +752,14 @@
 
             (ad-activate 'paredit-mode)
 
+            ;; Use in minibuffer
+            (defun conditionally-enable-paredit-mode ()
+              "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
+              (if (eq this-command 'eval-expression)
+                  (paredit-mode 1)))
+
+            (add-hook 'minibuffer-setup-hook 'conditionally-enable-paredit-mode)
+
             ;; Use with SLIME REPL
             (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 
