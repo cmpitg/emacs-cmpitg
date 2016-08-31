@@ -111,7 +111,20 @@
 
                       ;; Fully enable fuzzy matching
                       (setq helm-mode-fuzzy-match t
-                            helm-completion-in-region-fuzzy-match t))))
+                            helm-completion-in-region-fuzzy-match t)
+
+                      ;; Project management with Helm Projectile
+
+                      (use-package helm-projectile
+                        :ensure t
+                        :config
+                        (progn
+                          (helm-projectile-on)
+                          (setq projectile-require-project-root t)
+                          (setq projectile-switch-project-action 'projectile-dired)
+
+                          ; A bug in projectile ignore that doesn't ignore
+                          (setq projectile-indexing-method 'native))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; History utility, remebering and jumping to places
