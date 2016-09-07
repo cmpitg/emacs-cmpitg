@@ -1587,6 +1587,17 @@ display result."
   (interactive "MCommand: ")
   (shell-command command))
 
+(defun ~exec< ()
+  "Executes a shell command and pipes the output to the current
+buffer.  If there is an active secondary selection active, the
+command is the selection string; otherwise, it is read
+interactively from the minibuffer."
+  (interactive)
+  (let ((command (if (~get-secondary-selection)
+                     (~get-secondary-selection)
+                   (read-shell-command "Command: "))))
+    (shell-command command t)))
+
 
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (by default, activated with M-Mouse-1)."
