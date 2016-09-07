@@ -1587,7 +1587,16 @@ display result."
   (interactive "MCommand: ")
   (shell-command command))
 
-(defun ~exec< ()
+(defun ~read-command-or-get-from-selection ()
+  "If there is an active selection, returns it (assuming that it
+denotes a shell command).  Otherwise, reads and returns a shell
+command from the minibuffer."
+  (interactive)
+  (if (~get-secondary-selection)
+      (~get-secondary-selection)
+    (read-shell-command "Command: ")))
+
+(defun ~exec< (&optional command)
   "Executes a shell command and pipes the output to the current
 buffer.  If there is an active secondary selection active, the
 command is the selection string; otherwise, it is read
