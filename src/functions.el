@@ -1602,12 +1602,10 @@ buffer.  If there is an active secondary selection active, the
 command is the selection string; otherwise, it is read
 interactively from the minibuffer."
   (interactive)
-  (let ((command (if (~get-secondary-selection)
-                     (~get-secondary-selection)
-                   (read-shell-command "Command: "))))
+  (let ((command (or command (~read-command-or-get-from-secondary-selection))))
     (shell-command command t)))
 
-(defun ~exec| ()
+(defun ~exec| (&optional command)
   "Executes a shell command and pipes the output to the current
 buffer.  If there is an active primary selection, it is piped as
 input to the command and the output from the command would
@@ -1615,9 +1613,7 @@ replace the selection.  If there is an active secondary selection
 active, the command is the selection string; otherwise, it is
 read interactively from the minibuffer."
   (interactive)
-  (let ((command (if (~get-secondary-selection)
-                     (~get-secondary-selection)
-                   (read-shell-command "Command: "))))
+  (let ((command (or command (~read-command-or-get-from-secondary-selection))))
     (if (~is-selecting?)
         (shell-command-on-region (~selection-start)
                                  (~selection-end)
