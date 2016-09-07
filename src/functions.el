@@ -1587,7 +1587,7 @@ display result."
   (interactive "MCommand: ")
   (shell-command command))
 
-(defun ~read-command-or-get-from-selection ()
+(defun ~read-command-or-get-from-secondary-selection ()
   "If there is an active selection, returns it (assuming that it
 denotes a shell command).  Otherwise, reads and returns a shell
 command from the minibuffer."
