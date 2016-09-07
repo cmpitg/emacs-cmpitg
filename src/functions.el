@@ -1598,19 +1598,41 @@ interactively from the minibuffer."
                    (read-shell-command "Command: "))))
     (shell-command command t)))
 
+(defun ~exec| ()
+  "Executes a shell command and pipes the output to the current
+buffer.  If there is an active primary selection, it is piped as
+input to the command and the output from the command would
+replace the selection.  If there is an active secondary selection
+active, the command is the selection string; otherwise, it is
+read interactively from the minibuffer."
+  (interactive)
+  (let ((command (if (~get-secondary-selection)
+                     (~get-secondary-selection)
+                   (read-shell-command "Command: "))))
+    (if (~is-selecting?)
+        (shell-command-on-region (~selection-start)
+                                 (~selection-end)
+                                 command
+                                 t
+                                 t
+                                 t)
+      (shell-command command t))))
 
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (by default, activated with M-Mouse-1)."
   (x-get-selection 'SECONDARY))
 
+(defalias '~exec-then-pipe '~exec<)
 (defalias 'popup-shell-command  '~popup-shell-command)
 (defalias 'man-current-word '~man-current-word)
 (defalias 'exec '~exec)
 (defalias 'exec-in-other-window '~exec-in-other-window)
 (defalias 'exec-then-pipe '~exec-then-pipe)
 
+(defalias '~filter-command '~exec|
   "Filter a command")
 
+(defalias '~filter-command-other-window 'shell-command-on-region
   "Filter a command but pipe the other to other window")
 
 (defun* ~create-snippet (&optional mode
