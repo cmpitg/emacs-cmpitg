@@ -1587,22 +1587,6 @@ display result."
   (interactive "MCommand: ")
   (shell-command command))
 
-(defun ~exec-then-pipe (command)
-  "Execute and pipe output to the current buffer."
-  (interactive "MCommand: ")
-  (shell-command command t))
-
-(defun ~exec-then-pipe-selection ()
-  "Execute selection and pipe output to the current buffer."
-  (interactive)
-  (~exec-then-pipe (~current-selection)))
-
-(defun ~pipe-then-exec (command)
-  "Pipe current region to a command, exec it, and pipe the output back."
-  (interactive "MCommand: ")
-  (shell-command-on-region (if mark-active (region-beginning) 1)
-                           (if mark-active (region-end) 1)
-                           command t))
 
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (by default, activated with M-Mouse-1)."
@@ -1613,13 +1597,9 @@ display result."
 (defalias 'exec '~exec)
 (defalias 'exec-in-other-window '~exec-in-other-window)
 (defalias 'exec-then-pipe '~exec-then-pipe)
-(defalias 'exec-then-pipe-selection '~exec-then-pipe-selection)
-(defalias 'pipe-then-exec '~pipe-then-exec)
 
-(defalias '~filter-command '~pipe-then-exec
   "Filter a command")
 
-(defalias '~pipe-then-exec-in-other-window 'shell-command-on-region
   "Filter a command but pipe the other to other window")
 
 (defun* ~create-snippet (&optional mode
