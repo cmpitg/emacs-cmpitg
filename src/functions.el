@@ -1604,6 +1604,10 @@ display result."
                            (if mark-active (region-end) 1)
                            command t))
 
+(defun ~get-secondary-selection ()
+  "Gets the secondary selection (by default, activated with M-Mouse-1)."
+  (x-get-selection 'SECONDARY))
+
 (defalias 'popup-shell-command  '~popup-shell-command)
 (defalias 'man-current-word '~man-current-word)
 (defalias 'exec '~exec)
