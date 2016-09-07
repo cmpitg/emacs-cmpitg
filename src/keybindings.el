@@ -199,10 +199,9 @@
 ;;
 
 (bind-key "<f9>" 'compile)
-(bind-key "s-a" '~popup-shell-command)
-(bind-key "s-A" '~exec-then-pipe)
-(bind-key "M-s-a" '~pipe-then-exec)
-(bind-key "M-s-A" '~pipe-then-exec-in-other-window)
+(bind-key "s-a" '~exec|)
+;; (bind-key "s-a" '~exec<)
+(bind-key "s-A" '~popup-shell-command)
 
 (bind-key "s-m" '~eval-then-replace-last-exp)
 (bind-key "s-b" '~eval-then-replace)
