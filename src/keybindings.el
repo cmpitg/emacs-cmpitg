@@ -200,7 +200,7 @@
 ;;
 
 (bind-key "<f9>" 'compile)
-(bind-key "s-a" '~exec|)
+(bind-key "s-a" '~exec|-select-output)
 ;; (bind-key "s-a" '~exec<)
 (bind-key "s-A" '~popup-shell-command)
 
