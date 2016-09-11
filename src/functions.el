@@ -1633,6 +1633,17 @@ it is read from the minibuffer."
       (insert (shell-command-to-string command)))
     (~popup-buffer "*Shell Output*")))
 
+(defun ~exec|-select-output ()
+  "Calls `~exec|'.  After the output has been piped in to the
+buffer, select it."
+  (interactive)
+  (let ((marker-start (copy-marker (region-beginning) nil))
+        (marker-end (copy-marker (region-end) t)))
+    (call-interactively '~exec|)
+    (set-mark marker-end)
+    (goto-char marker-start)
+    (setq deactivate-mark nil)))
+
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (by default, activated with M-Mouse-1)."
   (x-get-selection 'SECONDARY))
