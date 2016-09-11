@@ -1624,12 +1624,9 @@ read from the minibuffer."
   "Gets the secondary selection (by default, activated with M-Mouse-1)."
   (x-get-selection 'SECONDARY))
 
-(defalias '~exec-then-pipe '~exec<)
 (defalias 'popup-shell-command  '~popup-shell-command)
 (defalias 'man-current-word '~man-current-word)
-(defalias 'exec '~exec)
 (defalias 'exec-in-other-window '~exec-in-other-window)
-(defalias 'exec-then-pipe '~exec-then-pipe)
 
 (defalias '~filter-command '~exec|
   "Filter a command")
