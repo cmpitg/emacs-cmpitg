@@ -1551,6 +1551,20 @@ display result."
   (interactive)
   (manual-entry (current-word)))
 
+(defun ~exec-with-input (command input-text)
+  "Executes a shell command with `input-text' piped to stdin and
+returns output (+ error) as string."
+  (interactive)
+  (with-temp-buffer
+    (insert input-text)
+    (shell-command-on-region (point-min)
+                             (point-max)
+                             command
+                             t
+                             t
+                             nil)
+    (buffer-string)))
+
 (defun ~exec (command)
   "Execute a shell command then return its value as string."
   (interactive "MCommand: ")
