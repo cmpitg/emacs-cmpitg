@@ -1620,6 +1620,19 @@ read from the minibuffer."
                                  nil)
       (shell-command command t))))
 
+(defun ~exec> (&optional command)
+  "Executes a shell command and pipes the output a pop-up buffer
+named \"*Shell Output*\".  If there is an active secondary
+selection active, the command is the selection string; otherwise,
+it is read from the minibuffer."
+  (interactive)
+  (let ((command (or command
+                     (~read-command-or-get-from-secondary-selection))))
+    (get-buffer-create "*Shell Output*")
+    (with-current-buffer "*Shell Output*"
+      (insert (shell-command-to-string command)))
+    (~popup-buffer "*Shell Output*")))
+
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (by default, activated with M-Mouse-1)."
   (x-get-selection 'SECONDARY))
