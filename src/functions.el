@@ -1578,19 +1578,25 @@ returns output (+ error) as string."
   (shell-command command))
 
 (defun ~read-command-or-get-from-secondary-selection ()
-  "If there is an active selection, returns it (assuming that it
-denotes a shell command).  Otherwise, reads and returns a shell
-command from the minibuffer."
+  "Without prefix argument, if there is an active selection,
+returns it (assuming that it denotes a shell command);
+otherwise, reads and returns a shell command from the
+minibuffer.
+
+With prefix argument, always reads the shell command from the
+minibuffer."
   (interactive)
-  (if (~get-secondary-selection)
+  (if (and (~get-secondary-selection) (not current-prefix-arg))
       (~get-secondary-selection)
     (read-shell-command "Command: ")))
 
 (defun ~exec< (&optional command)
   "Executes a shell command and pipes the output to the current
 buffer.  If there is an active secondary selection active, the
-command is the selection string; otherwise, it is read
-interactively from the minibuffer."
+command is the selection string; otherwise, it is read from the
+minibuffer.
+
+With prefix argument, always reads command from the minibuffer."
   (interactive)
   (let ((command (or command (~read-command-or-get-from-secondary-selection))))
     (shell-command command t)))
@@ -1601,7 +1607,7 @@ buffer.  If there is an active primary selection, it is piped as
 input to the command and the output from the command would
 replace the selection.  If there is an active secondary selection
 active, the command is the selection string; otherwise, it is
-read interactively from the minibuffer."
+read from the minibuffer."
   (interactive)
   (let ((command (or command (~read-command-or-get-from-secondary-selection))))
     (if (~is-selecting?)
