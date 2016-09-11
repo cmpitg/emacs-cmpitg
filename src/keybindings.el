@@ -125,7 +125,8 @@
 (bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-x M-x" 'execute-extended-command)
 
-(bind-key "<f11>"  'helm-show-kill-ring)
+(bind-key "<f11>" 'helm-show-kill-ring)
+(bind-key "<M-f11>" 'helm-all-mark-rings)
 (bind-key "<S-f11>" 'history-goto-history)
 (bind-key "<C-f12>" 'projectile-commander)
 
