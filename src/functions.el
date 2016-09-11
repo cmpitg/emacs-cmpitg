@@ -1072,7 +1072,7 @@ TODO: Handling comment when `comment-end' is not empty.
          (year (if year
                  year
                  (read-string "Year: ")))
-         
+
          (project-name-exists? (if (or (null project-name)
                                        (= 0 (length project-name)))
                                  nil
@@ -1091,17 +1091,17 @@ TODO: Handling comment when `comment-end' is not empty.
                       "${comment} This file is part of ${project-name} project."))
          (gplv3-header-text (s-lex-format "${comment}
 ${comment} Copyright (C) ${year}  ${author}
-${comment} 
+${comment}
 ${comment} ${this-file-or-project-name} is free software: you can redistribute it and/or modify
 ${comment} it under the terms of the GNU General Public License as published by
 ${comment} the Free Software Foundation, either version 3 of the License, or
 ${comment} \(at your option\) any later version.
-${comment} 
+${comment}
 ${comment} ${this-file-or-project-name} is distributed in the hope that it will be useful,
 ${comment} but WITHOUT ANY WARRANTY; without even the implied warranty of
 ${comment} MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ${comment} GNU General Public License for more details.
-${comment} 
+${comment}
 ${comment} You should have received a copy of the GNU General Public License
 ${comment} along with ${this-file-or-project-name-lowcase}.  If not, see <http://www.gnu.org/licenses/>.
 ${comment}
@@ -1295,32 +1295,6 @@ Example:
   (interactive)
   (and (string-match ".*\.ls$" (~current-file-full-path))
        (compile (concat "livescript -c -d " (~current-file-full-path)))))
-
-;; (defun ~toggle-ibus ()
-;;   "Toggle ibus."
-;;   (interactive)
-
-;;   (unless (~is-var-defined? '*is-ibus-on?*)
-;;     (defvar *is-ibus-on?* nil))
-
-;;   (if (null *is-ibus-on?*)
-;;     (progn (ibus-enable)
-;;            (setf *is-ibus-on?* t))
-;;     (progn (ibus-disable)
-;;            (setf *is-ibus-on?* nil))))
-
-;; (defun ~toggle-ecb ()
-;;   "Toggle ECB."
-;;   (interactive)
-
-;;   (unless (~is-var-defined? '*is-ecb-running?*)
-;;     (defvar *is-ecb-running?* nil))
-
-;;   (if (null *is-ecb-running?*)
-;;     (progn (ecb-activate)
-;;            (setf *is-ecb-running?* t))
-;;     (progn (ecb-deactivate)
-;;            (setf *is-ecb-running?* nil))))
 
 (defun ~load-paredit-mode ()
   "Load paredit mode and disable autopair."
