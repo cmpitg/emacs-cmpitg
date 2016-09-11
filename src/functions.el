@@ -1554,7 +1554,9 @@ display result."
 (defun ~exec (command)
   "Execute a shell command then return its value as string."
   (interactive "MCommand: ")
-  (shell-command command))
+  (with-temp-buffer
+    (shell-command command t nil)
+    (buffer-string)))
 
 (defun ~exec-in-other-window (command)
   "Execute in other window."
