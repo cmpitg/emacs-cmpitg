@@ -69,69 +69,132 @@
 ;; Smart completion framework
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package projectile
+  :ensure projectile
+  :diminish projectile-mode
+  :config
+  (progn
+    (projectile-global-mode)
+
+    (add-to-list 'projectile-globally-ignored-directories "node_modules*")
+    (add-to-list 'projectile-globally-ignored-directories "*bower_components*")
+    (add-to-list 'projectile-globally-ignored-directories "bower_components")
+    (add-to-list 'projectile-globally-ignored-directories ".cache")
+    (add-to-list 'projectile-globally-ignored-files "*.pyc")
+    (add-to-list 'projectile-globally-ignored-files ".*pyc")
+
+    (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-find-dir-includes-top-level t)
+    (setq projectile-enable-caching t)
+    (setq projectile-indexing-method 'alien)
+
+    ;; (setq projectile-switch-project-action 'projectile-dired)
+    ;; (setq projectile-switch-project-action 'projectile-find-dir)
+
+    (bind-key "M-v" nil)
+    (bind-key "M-v b o" 'projectile-find-file-other-window projectile-mode-map)
+
+    ;; Customize find file command via function
+    ;; projectile-get-ext-command
+    (setq projectile-git-command projectile-generic-command)
+    (setq projectile-hg-command projectile-generic-command)))
+
 (use-package helm-config
   :ensure helm
   :commands (helm-find-files helm-buffers-list helm-bookmarks)
-  :config (use-package helm
-            :config (progn
-                      (helm-mode 1)
-                      (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
+  :config
+  (use-package helm
+    :config (progn
+              (helm-mode 1)
+              (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
 
-                      ;; The following call to helm-follow-mode is local and
-                      ;; has no effect.  Read its documentation for the possible effect.
-                      ;; (helm-follow-mode 1)
+              ;; The following call to helm-follow-mode is local and has no
+              ;; effect.  Read its documentation for the possible effect.
+              ;; (helm-follow-mode 1)
 
-                      ;;
-                      ;; helm-follow currently comes with a cost that it opens
-                      ;; every file user is selecting in the Helm buffer. Add
-                      ;; this when you're absolutely sure you would open all
-                      ;; files when visiting them.
-                      ;;
-                      ;; (add-hook 'helm-after-update-hook #'(lambda ()
-                      ;;                                       (helm-follow-mode 1)))
+              ;;
+              ;; helm-follow currently comes with a cost that it opens every
+              ;; file user is selecting in the Helm buffer. Add this when
+              ;; you're absolutely sure you would open all files when visiting
+              ;; them.
+              ;;
+              ;; (add-hook 'helm-after-update-hook #'(lambda ()
+              ;;                                       (helm-follow-mode 1)))
 
-                      ;; Follow mode
-                      (eval-after-load "helm-multi-occur-1"
-                        '(progn
-                           (helm-attrset 'follow 1 helm-source-moccur)))
+              ;; Follow mode
+              (eval-after-load "helm-multi-occur-1"
+                '(progn
+                   (helm-attrset 'follow 1 helm-source-moccur)))
 
-                      (eval-after-load "helm-occur-from-isearch"
-                        '(progn
-                           (helm-attrset 'follow 1 helm-source-occur)))
+              (eval-after-load "helm-occur-from-isearch"
+                '(progn
+                   (helm-attrset 'follow 1 helm-source-occur)))
 
-                      (eval-after-load "helm-occur"
-                        '(progn
-                           (helm-attrset 'follow 1 helm-source-occur)))
+              (eval-after-load "helm-occur"
+                '(progn
+                   (helm-attrset 'follow 1 helm-source-occur)))
 
-                      ;; Stupid bug makes me comment this line, why????
-                      (eval-after-load "helm-buffers-list"
-                        '(progn
-                           (eval-after-load "helm-buffers"
-                             '(progn
-                                (helm-attrset 'follow 1 helm-source-buffers-list)))))
+              ;; Stupid bug makes me comment this line, why????
+              (eval-after-load "helm-buffers-list"
+                '(progn
+                   (eval-after-load "helm-buffers"
+                     '(progn
+                        (helm-attrset 'follow
+                                      1
+                                      helm-source-buffers-list)))))
 
-                      (eval-after-load "helm-bookmark"
-                        '(progn
-                           (helm-attrset 'follow 1 helm-source-bookmarks)))
+              (eval-after-load "helm-bookmark"
+                '(progn
+                   (helm-attrset 'follow 1 helm-source-bookmarks)))
 
-                      ;; Don't auto change-dir when find-file
-                      (setq-default helm-ff-auto-update-initial-value nil)
+              ;; Don't auto change-dir when find-file
+              (setq-default helm-ff-auto-update-initial-value nil)
 
-                      ;; Fully enable fuzzy matching
-                      (setq helm-mode-fuzzy-match t
-                            helm-completion-in-region-fuzzy-match t)
+              ;; Fully enable fuzzy matching
+              (setq helm-mode-fuzzy-match t
+                    helm-completion-in-region-fuzzy-match t)
 
-                      ;; Project management with Helm Projectile
-                      (use-package helm-projectile
-                        :ensure t
-                        :config
-                        (progn
-                          (helm-projectile-on)
-                          (setq projectile-require-project-root t)
-                          (setq projectile-switch-project-action 'projectile-dired)
+              (bind-key "<backtab>" 'helm-execute-persistent-action helm-map)
+              (bind-key "<f12>" 'helm-minibuffer-history minibuffer-local-map)
+              (bind-key "<S-f1>" 'helm-minibuffer-history minibuffer-local-map)
 
-                          ; A bug in projectile ignore that doesn't ignore
-                          (setq projectile-indexing-method 'native))))))
+              (when (executable-find "curl")
+                (setq helm-google-suggest-use-curl-p t))
+
+              ;; Open Helm buffer inside current window, do not disturb other
+              ;; window
+              (setq helm-split-window-in-side-p t)
+
+              ;; Make Helm items cycleable
+              ;; (setq helm-move-to-line-cycle-in-source t)
+
+              ;; Search for library in `require' and `declare-function'
+              ;; (setq helm-ff-search-library-in-sexp t)
+
+              ;; Some fuzzy matching option
+              (setq helm-M-x-fuzzy-match t)
+              (setq helm-buffers-fuzzy-matching t)
+              (setq helm-recentf-fuzzy-match t)
+              (setq helm-semantic-fuzzy-match t)
+              (setq helm-imenu-fuzzy-match t)
+              (setq helm-locate-fuzzy-match t)
+              (setq helm-apropos-fuzzy-match t)
+              (setq helm-lisp-fuzzy-completion t)
+
+              (setq helm-ff-file-name-history-use-recentf t)
+
+              ;; Project management with Helm Projectile
+              (use-package helm-projectile
+                :ensure t
+                :config
+                (progn
+                  (helm-projectile-on)
+                  (setq projectile-completion-system 'helm)
+                  (setq projectile-require-project-root t)
+                  (setq projectile-switch-project-action 'projectile-dired)
+
+                  ;; A bug in projectile ignore that doesn't ignore
+                  (setq projectile-indexing-method 'native))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; History utility, remebering and jumping to places
