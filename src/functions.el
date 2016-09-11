@@ -1609,14 +1609,15 @@ replace the selection.  If there is an active secondary selection
 active, the command is the selection string; otherwise, it is
 read from the minibuffer."
   (interactive)
-  (let ((command (or command (~read-command-or-get-from-secondary-selection))))
+  (let ((command (or command
+                     (~read-command-or-get-from-secondary-selection))))
     (if (~is-selecting?)
-        (shell-command-on-region (~selection-start)
-                                 (~selection-end)
+        (shell-command-on-region (region-beginning)
+                                 (region-end)
                                  command
                                  t
                                  t
-                                 t)
+                                 nil)
       (shell-command command t))))
 
 (defun ~get-secondary-selection ()
