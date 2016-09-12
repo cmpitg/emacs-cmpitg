@@ -70,7 +70,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package projectile
-  :ensure projectile
+  :ensure t
   :diminish projectile-mode
   :config
   (progn
