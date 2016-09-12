@@ -101,7 +101,6 @@
 
 (use-package helm-config
   :ensure helm
-  :commands (helm-find-files helm-buffers-list helm-bookmarks)
   :config
   (use-package helm
     :config (progn
