@@ -180,20 +180,20 @@
               (setq helm-apropos-fuzzy-match t)
               (setq helm-lisp-fuzzy-completion t)
 
-              (setq helm-ff-file-name-history-use-recentf t)
+              (setq helm-ff-file-name-history-use-recentf t))))
 
-              ;; Project management with Helm Projectile
-              (use-package helm-projectile
-                :ensure t
-                :config
-                (progn
-                  (helm-projectile-on)
-                  (setq projectile-completion-system 'helm)
-                  (setq projectile-require-project-root t)
-                  (setq projectile-switch-project-action 'projectile-dired)
+;; Project management with Helm Projectile
+(use-package helm-projectile
+  :ensure t
+  :config
+  (progn
+    (helm-projectile-on)
+    (setq projectile-completion-system 'helm)
+    (setq projectile-require-project-root t)
+    (setq projectile-switch-project-action 'projectile-dired)
 
-                  ;; A bug in projectile ignore that doesn't ignore
-                  (setq projectile-indexing-method 'native))))))
+    ;; A bug in projectile ignore that doesn't ignore
+    (setq projectile-indexing-method 'native)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; History utility, remebering and jumping to places
