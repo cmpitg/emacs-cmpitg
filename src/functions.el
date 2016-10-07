@@ -1651,9 +1651,10 @@ it is read from the minibuffer."
   "Calls `~exec|'.  After the output has been piped in to the
 buffer, select it."
   (interactive)
-  (let ((marker-start (copy-marker (region-beginning) nil))
-        (marker-end (copy-marker (region-end) t)))
+  (let ((marker-start (copy-marker (or (region-beginning) (point)) nil))
+        (marker-end (copy-marker (or (region-end) (point)) t)))
     (call-interactively '~exec|)
+    (deactivate-mark t)
     (set-mark marker-end)
     (goto-char marker-start)
     (setq deactivate-mark nil)))
