@@ -734,6 +734,20 @@ followed."
     (insert content)
     (write-file filename)))
 
+(defun revert-all-buffers ()
+  "Refreshes all openen file buffers if they are not modified."
+  (interactive)
+  (->> (buffer-list)
+       (-filter '(lambda (buffer)
+                   (let ((current-file-name (buffer-file-name buffer)))
+                     (and current-file-name
+                          (file-exists-p current-file-name)
+                          (not (buffer-modified-p buffer))))))
+       (-map '(lambda (buffer)
+                (with-current-buffer buffer
+                  (revert-buffer t t t)))))
+  (message "Refreshed opened file buffers."))
+
 (defun ~make-executable ()
   "chmod +x current file."
   (interactive)
