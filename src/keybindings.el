@@ -201,8 +201,9 @@
 
 (bind-key "<f9>" 'compile)
 (bind-key "s-a" '~exec|-select-output)
+(bind-key "s-A" '~exec>)
 ;; (bind-key "s-a" '~exec<)
-(bind-key "s-A" '~popup-shell-command)
+;; (bind-key "s-A" '~popup-shell-command)
 
 (bind-key "s-m" '~eval-then-replace-last-exp)
 (bind-key "s-b" '~eval-then-replace)
