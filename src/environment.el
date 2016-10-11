@@ -67,10 +67,11 @@
 ;; Hide the toolbar
 (tool-bar-mode -1)
 
-;; Hide the scrollbar
-(scroll-bar-mode -1)
+;; I use mouse, so scroll bar comes in handy
+;; (scroll-bar-mode -1)
+(scroll-bar-mode 1)
+(set-scroll-bar-mode 'left)
 
-;; Hide the menu bar
 ;; (menu-bar-mode -1)
 (menu-bar-mode 1)
 
@@ -93,7 +94,7 @@
 (display-battery-mode 1)
 
 ;;;; Use font lock
-(global-font-lock-mode t)
+;; (global-font-lock-mode t)
 (setq font-lock-maximum-size nil)
 
 ;; Set transparency
