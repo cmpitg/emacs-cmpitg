@@ -56,6 +56,9 @@
 ;; Minimal config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(unless (string= "1" (getenv "EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR"))
+  (toggle-debug-on-error nil))
+
 (require 'ee:functions                (~get-config "functions.el"))
 (require 'ee:load-package-manager     (~get-config "load-package-manager.el"))
 (require 'ee:load-essential-packages  (~get-config "load-essential-packages.el"))
