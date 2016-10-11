@@ -2,3 +2,9 @@
 
 * Emacs server with https://github.com/cmpitg/emnode[Emnode] -- better
   interaction: cleaner, wider tools, ...
+
+* By default, `emacs-cmpitg` script (that invokes Emacs with my full
+  configuration) disables the `toggle-debug-on-error` (TODO) option.  Should
+  you want to turn it on, set the environment variable
+  `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR` to `1`,
+  e.g. `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR=1 emacs-cmpitg`.
