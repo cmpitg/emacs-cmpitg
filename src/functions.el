@@ -746,7 +746,7 @@ followed."
        (-map '(lambda (buffer)
                 (with-current-buffer buffer
                   (revert-buffer t t t)))))
-  (message "Refreshed opened file buffers."))
+  (message "Refreshed opened file buffers"))
 
 (defun ~make-executable ()
   "chmod +x current file."
