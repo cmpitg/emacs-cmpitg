@@ -618,6 +618,15 @@ global mode map with prefix `s-SPC' at the same time."
            (bind-key ,(format "s-SPC %s" key) command keymap)
            (bind-key ,(format "SPC %s" key) command evil-keymap))))
 
+(defun* ~bind-key-with-prefix-local (key command &key (keymap global-map))
+  "Like `~bind-key-with-prefix', except that instead of bindind
+to `evil-normal-state-map' it binds to
+`evil-normal-state-local-map'."
+  (interactive)
+  (~bind-key-with-prefix key command
+                         :keymap keymap
+                         :evil-keymap evil-normal-state-local-map))
+
 (defun ~bind-key-temporary ()
   "Interactive command for `bind-key'."
   (interactive)
