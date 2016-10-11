@@ -1,5 +1,1 @@
-filebrowser-lastdir.txt
-config-cmpitg/
-deprecated/
-/load-personal-stuff.el
-/src/personal.el
+/src/machine-specific.el
