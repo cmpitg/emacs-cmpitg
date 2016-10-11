@@ -451,6 +451,22 @@ file does not exist."
               (message "File %s doesn't exist" path)))
     (otherwise (message "Invalid file path: %s" path))))
 
+(defun ~visit-toolbox ()
+  "Visits my toolbox."
+  (interactive)
+  (~open-file-if-existed (or *toolbox-path*
+                             "/m/Toolbox/Toolbox.md")))
+
+(defun ~visit-experimental-config ()
+  "Visits the experimental config."
+  (interactive)
+  (~open-file-if-existed (~get-config "experimental.el")))
+
+(defun ~visit-cmpitg-package-config ()
+  "Visit my personal config."
+  (interactive)
+  (~open-file-if-existed (~get-config "cmpitg-flavored-packages.el")))
+
 (defun ~add-load-path (path)
   "Add path to load-path."
   (add-to-list 'load-path path))
