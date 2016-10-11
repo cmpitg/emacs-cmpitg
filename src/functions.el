@@ -607,6 +607,17 @@ E.g.
                           (t
                            (call-interactively current-action)))))
             evil-normal-state-map))
+
+(defun* ~bind-key-with-prefix (key command &key
+                                   (keymap global-map)
+                                   (evil-keymap evil-normal-state-map))
+  "Bind key in `evil-normal-state-map' with prefix `SPC' and in
+global mode map with prefix `s-SPC' at the same time."
+  (interactive)
+  (eval `(progn
+           (bind-key ,(format "s-SPC %s" key) command keymap)
+           (bind-key ,(format "SPC %s" key) command evil-keymap))))
+
 (defun ~bind-key-temporary ()
   "Interactive command for `bind-key'."
   (interactive)
