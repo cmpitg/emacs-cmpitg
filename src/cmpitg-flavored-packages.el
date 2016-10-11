@@ -504,6 +504,18 @@
               (exec-path-from-shell-initialize))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; CoffeeScript mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package coffee-mode
+  :ensure t
+  :mode "\\.coffee\\'"
+  :init (progn
+          (setq whitespace-action '(auto-cleanup))
+          (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
+          (custom-set-variables '(coffee-tab-width 2))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Quickly copy stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/zonuexe/emacs-copyit
