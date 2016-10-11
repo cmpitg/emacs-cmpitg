@@ -442,6 +442,15 @@ E.g.
                (file-regular-p file-path))
       (load-file file-path))))
 
+(defun ~open-file-if-existed (path)
+  "Opens file if exists of displays a message notifying that the
+file does not exist."
+  (typecase path
+    (string (if (file-exists-p path)
+                (find-file path)
+              (message "File %s doesn't exist" path)))
+    (otherwise (message "Invalid file path: %s" path))))
+
 (defun ~add-load-path (path)
   "Add path to load-path."
   (add-to-list 'load-path path))
