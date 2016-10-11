@@ -435,6 +435,13 @@ E.g.
                  preprocessed-sexp)))
     (~eval-string sexp)))
 
+(defun ~load-files (&rest paths)
+  "Load Emacs Lisp source files when they exists."
+  (dolist (file-path paths)
+    (when (and (file-exists-p file-path)
+               (file-regular-p file-path))
+      (load-file file-path))))
+
 (defun ~add-load-path (path)
   "Add path to load-path."
   (add-to-list 'load-path path))
