@@ -36,9 +36,9 @@
 ;; Version control systems: Mercurial and Git
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package ahg
+(use-package monky
   :ensure t
-  :commands ahg-status)
+  :commands monky-status)
 
 (use-package magit
   :ensure t
