@@ -457,6 +457,11 @@ file does not exist."
   (~open-file-if-existed (or *toolbox-path*
                              "/m/Toolbox/Toolbox.md")))
 
+(defun ~visit-keybindings ()
+  "Jump to personal keybinding file."
+  (interactive)
+  (~open-file-if-existed (~get-config "keybindings.el")))
+
 (defun ~visit-experimental-config ()
   "Visits the experimental config."
   (interactive)
