@@ -187,6 +187,8 @@
 (bind-key "C-!" 'mc/mark-previous-like-this)
 (bind-key "C-c C-." 'mc/mark-all-like-this)
 
+(bind-key "s-k" 'ace-jump-mode)
+
 (bind-key "s-=" 'er/expand-region)
 (bind-key "M-z" 'zap-up-to-char)
 
