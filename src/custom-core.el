@@ -94,6 +94,9 @@
 ;; Expand tabs to spaces
 (setq-default indent-tabs-mode nil)
 
+;; Subword should include camelCase notation
+(global-subword-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Preventing window stealing by cancelling the role of other-window
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
