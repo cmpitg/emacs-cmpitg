@@ -480,7 +480,14 @@
           (bind-key "s-k" 'ace-jump-mode)
           (bind-key "C-x SPC" 'ace-jump-mode-pop-mark))
   :config (progn
-            (ace-jump-mode-enable-mark-sync)))
+            (ace-jump-mode-enable-mark-sync)
+            ;; * Without prefix, ace-jump directs toward char
+            ;; * With 1 prefix, line
+            ;; * With 2 prefixes, word
+            (setq ace-jump-mode-submode-list
+                  '(ace-jump-char-mode
+                    ace-jump-line-mode
+                    ace-jump-word-mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Buffer navigation with pattern matching and replacing
