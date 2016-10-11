@@ -71,5 +71,11 @@
 ;; My config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'ee:cmpitg-flavored-packages (~get-config "cmpitg-flavored-packages.el"))
-(require 'ee:personal                 (~get-config "personal.el"))
+(require 'ee:cmpitg-flavored-packages
+         (~get-config "cmpitg-flavored-packages.el"))
+
+(unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
+  (~load-files (~get-config "experimental.el")))
+
+;; Load machine-specific settings if existed
+(~load-files "~/.emacs-machine-specific.el" (~get-config "machine-specific.el"))
