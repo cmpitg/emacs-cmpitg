@@ -390,6 +390,12 @@ need its top-level brackets.  This function returns a string."
     (kill-region (selection-start) (selection-end))
     (insert (format "%s" value))))
 
+(defun ~parenthesize-last-sexp ()
+  "Parenthesize last sexp in and using Paredit mode."
+  (interactive)
+  (paredit-backward)
+  (paredit-wrap-round))
+
 (defun ~insert-full-line-comment ()
   "Insert a 78-char line full of comment characters."
   (interactive)
