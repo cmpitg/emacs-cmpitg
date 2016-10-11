@@ -596,6 +596,17 @@ E.g.
 ;;                          (~add-bracket-and-eval ,symbol))))
 ;;     (bind-key (format-kbd-macro key-binding) fn)))
 
+(defun bind-keys-paredit-mode ()
+  "Bind keys in paredit-enabled mode."
+  (interactive)
+  (bind-key "W" (lambda ()
+                  (interactive)
+                  (let ((current-action (key-binding (kbd "W"))))
+                    (cond ((~is-minor-mode-active? 'paredit-mode)
+                           (call-interactively 'paredit-forward))
+                          (t
+                           (call-interactively current-action)))))
+            evil-normal-state-map))
 (defun ~bind-key-temporary ()
   "Interactive command for `bind-key'."
   (interactive)
