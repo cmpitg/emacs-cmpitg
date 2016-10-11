@@ -101,6 +101,7 @@
 
 (use-package helm-config
   :ensure helm
+  :diminish helm-mode
   :config
   (use-package helm
     :config (progn
