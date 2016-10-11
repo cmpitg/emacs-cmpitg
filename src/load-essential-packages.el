@@ -154,6 +154,19 @@
               (setq helm-mode-fuzzy-match t
                     helm-completion-in-region-fuzzy-match t)
 
+              ;;
+              ;; Setting up Helm follow mode
+              ;;
+              ;; This is why I hate Helm developer:
+              ;; https://github.com/emacs-helm/helm/issues/530
+              ;;
+
+              (helm-occur-init-source)
+
+              (helm-attrset 'follow 1 helm-source-occur)
+              (helm-attrset 'follow 1 helm-source-regexp)
+              ;; (helm-attrset 'follow 1 helm-source-moccur)
+
               (bind-key "<backtab>" 'helm-execute-persistent-action helm-map)
               (bind-key "<f12>" 'helm-minibuffer-history minibuffer-local-map)
               (bind-key "<S-f1>" 'helm-minibuffer-history minibuffer-local-map)
