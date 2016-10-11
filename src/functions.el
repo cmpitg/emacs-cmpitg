@@ -390,6 +390,15 @@ need its top-level brackets.  This function returns a string."
     (kill-region (selection-start) (selection-end))
     (insert (format "%s" value))))
 
+(defun ~insert-full-line-comment ()
+  "Insert a 78-char line full of comment characters."
+  (interactive)
+  (let ((comment (s-trim comment-start)))
+    (->> (loop for time from (current-column) upto 77 by (length comment)
+               collect comment)
+         (s-join "")
+         insert)))
+
 (defun ~insert-into-emacs-lisp-docstring (string)
   "Interactive command.  Prompt and insert a string and escape it
 as Emacs Lisp docstring format.
