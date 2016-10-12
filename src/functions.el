@@ -22,9 +22,23 @@
   (interactive)
   (helm-projectile-grep))
 
+(defun ~helm-projectile-find-files-at-dir (dir)
+  "Activate `helm-projectile-find-files', taking a specific
+directory as project root."
+  ;; Ignore the obsolete, we do need the powerful dynamic binding capability
+  ;; of flet that neither cl-flet nor cl-letf provides
+  (flet ((projectile-project-root () dir)
+         (projectile-current-project-files
+          ()
+          (let (files)
+            (setq files (-mapcat #'projectile-dir-files
+                                 (projectile-get-project-directories)))
+            (projectile-sort-files files))))
+    (call-interactively 'helm-projectile-find-file)))
+
 (defun ~helm-find-files-current-dir ()
-  "Activate `helm-projectile-find-files', taking current directory as project
-root."
+  "Activate `helm-projectile-find-files', taking current
+directory as project root."
   (interactive)
   ;; Ignore the obsolete, we do need the powerful dynamic binding capability
   ;; of flet that neither cl-flet nor cl-letf provides
