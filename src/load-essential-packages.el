@@ -219,7 +219,10 @@
   :config (progn
             (setq history-history-max 256
                   history-window-local-history nil)
-            (history-mode 1)))
+            (history-mode 1)
+
+            (bind-key "s-h" 'history-preview-prev-history history-map)
+            (bind-key "s-n" 'history-preview-next-history history-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Remote file processing with Tramp
