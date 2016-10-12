@@ -103,7 +103,7 @@
 ;; Hide the toolbar
 (tool-bar-mode -1)
 
-;; I use mouse, so scroll bar comes in handy
+;; 1 use mouse, so scroll bar comes in handy
 ;; (scroll-bar-mode -1)
 (scroll-bar-mode 1)
 (set-scroll-bar-mode 'left)
@@ -135,6 +135,11 @@
 
 ;; Set transparency
 ;; (set-frame-parameter nil 'alpha 78)
+
+;; Vertical split
+(setq split-width-threshold nil)
+;; Horizontal split
+;;(setq split-width-threshold 1)
 
 ;;; Blink cursor
 (blink-cursor-mode t)
