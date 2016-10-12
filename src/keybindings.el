@@ -126,6 +126,8 @@
 (bind-key "C-x M-x" 'execute-extended-command)
 
 (bind-key "<f11>" 'helm-show-kill-ring)
+;; (bind-key "<f7>" 'project-explorer)
+(bind-key "<f7>" 'neotree-toggle)
 (bind-key "<M-f11>" 'helm-all-mark-rings)
 (bind-key "<S-f11>" 'history-goto-history)
 (bind-key "<C-f12>" 'projectile-commander)
@@ -145,6 +147,7 @@
 (bind-key "<menu> <menu>" 'other-window)
 
 (bind-key "<C-f2>" 'history-add-history)
+;; (bind-key "<C-f2>" '(lambda () (interactive) (history-add-history t)))
 (bind-key "C-;" 'history-prev-history)
 (bind-key "C-," 'history-next-history)
 
@@ -171,8 +174,6 @@
 ;; Text
 ;;
 
-(bind-key "C-<f5>" 'previous-error)
-(bind-key "C-<f7>" 'next-error)
 (bind-key "C-o" '~open-line)
 (bind-key "C-S-O" '~open-line-before)
 (bind-key "C-=" 'align-regexp)
@@ -206,6 +207,7 @@
 (bind-key "s-A" '~exec>)
 ;; (bind-key "s-a" '~exec<)
 ;; (bind-key "s-A" '~popup-shell-command)
+(bind-key "s-[" 'emamux:send-region)
 
 (bind-key "s-m" '~eval-then-replace-last-exp)
 (bind-key "s-b" '~eval-then-replace)
