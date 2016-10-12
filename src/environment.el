@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -59,6 +59,42 @@
 ;; (inspiration-990434)
 ;; (color-theme-charcoal-black)
 ;; (color-theme-calm-forest)
+
+(dolist (theme-name '(subatomic256-theme
+                      afternoon-theme
+                      monokai-theme
+                      solarized-theme
+                      autumn-light-theme
+                      tango-plus-theme
+                      tommyh-theme))
+  (unless (package-installed-p theme-name)
+    (package-install theme-name)))
+
+(~add-load-path "/m/src/emacs-themes")
+(~add-load-path "/m/src/emacs-themes/tommyh-theme")
+(~add-load-path "/m/src/emacs-themes/tango-plus-theme")
+
+;; (require 'color-theme-acme-light)
+
+;; (color-theme-textmate-modified)         ; Very good theme
+(color-theme-acme-light)
+
+;; (color-theme-molokai)
+;; (color-theme-zenburn)
+;; (color-theme-textmate)
+;; (color-theme-twilight)
+;; (inspiration-144382)
+;; (inspiration-648409)
+;; (inspiration-990434)
+;; (color-theme-charcoal-black)
+;; (color-theme-calm-forest)
+;; (load-theme 'solarized-dark t)
+;; (load-theme 'autumn-light t)
+;; (load-theme 'tango-plus t)
+;; (load-theme 'tommyh t)
+;; (load-theme 'afternoon t)               ; Very good theme
+;; (load-theme 'monokai t)         ; White color is too constrast that it hurt my
+;;                                 ; eyes
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
