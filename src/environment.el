@@ -315,3 +315,13 @@ about what flexible matching means in this context."
 ;;               scroll-down-aggressively 0.01)
 
 (provide 'ee:config-environment)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Wrap long lines
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-visual-line-mode 1)
+
+(ignore-errors
+  (diminish 'visual-line-mode)
+  (diminish 'global-visual-line-mode))
