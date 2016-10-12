@@ -355,7 +355,32 @@ about what flexible matching means in this context."
 ;; (setq-default scroll-up-aggressively 0.01
 ;;               scroll-down-aggressively 0.01)
 
-(provide 'ee:config-environment)
+(custom-set-variables
+ '(face-font-family-alternatives (quote (("Monaco" "Consolas" "Monospace")
+                                         ("Monaco" "Consolas" "CMU Typewriter Text" "fixed")
+                                         ("Geneva" "Sans Serif" "helv" "helvetica" "arial" "fixed")
+                                         ("helv" "helvetica" "arial" "fixed"))))
+ '(safe-local-variable-values (quote ((Syntax . ANSI-Common-Lisp) (Base . 10) (encoding . utf-8))))
+ '(show-paren-mode t)
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
+
+(custom-set-faces
+ '(default ((t (:inherit nil
+                         :stipple nil
+                         :inverse-video nil
+                         :box nil
+                         :strike-through nil
+                         :overline nil
+                         :underline nil
+                         :slant normal
+                         :weight normal
+                         :height 100
+                         :width normal
+                         :foundry "unknown"
+                         :family "Monaco"))))
+ '(rst-level-1-face ((t (:embolden t))) t))
+
+(setq css-indent-offset 2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Wrap long lines
@@ -366,3 +391,5 @@ about what flexible matching means in this context."
 (ignore-errors
   (diminish 'visual-line-mode)
   (diminish 'global-visual-line-mode))
+
+(provide 'ee:config-environment)
