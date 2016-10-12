@@ -937,5 +937,50 @@
   :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; File browser
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; https://github.com/sabof/project-explorer
+;;
+;; (use-package project-explorer
+;;   :ensure t)
+
+;;
+;; Neotree might break tab completion in minibuffer
+;;
+;; https://github.com/jaypei/emacs-neotree
+;; https://www.emacswiki.org/emacs/NeoTree
+;;
+
+(use-package neotree
+  :ensure t
+  :config
+  (progn
+    ;; (setq neo-theme 'icons)
+    (setq neo-theme 'arrow)
+
+    (setq projectile-switch-project-action
+          'neotree-projectile-action)
+
+    (add-hook 'neotree-mode-hook
+              (lambda ()
+                (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+                (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
+                (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+                (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)))
+
+    ;; If you use popwin, when NeoTree is open and successively a temporary
+    ;; buffer is opened with popwin, a new window with the NeoTree buffer is
+    ;; displayed side by side next to the first one (#50). This code will help
+    ;; you
+
+    (when neo-persist-show
+      (add-hook 'popwin:before-popup-hook
+                (lambda () (setq neo-persist-show nil)))
+      (add-hook 'popwin:after-popup-hook
+                (lambda () (setq neo-persist-show t))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'ee:load-essential-packages)
