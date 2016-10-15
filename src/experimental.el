@@ -279,26 +279,6 @@ described the updated list."
 ;;             (setq golden-ratio-exclude-mode '(" *NeoTree*" "ediff-mode" "dired-mode"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Directory tree
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;
-;; Nav is tested, good enough to go
-;;
-
-;; https://github.com/ancane/emacs-nav
-
-;; (use-package nav
-;;   :load-path "/m/src/emacs-nav"
-;;   :config (progn
-;;             (nav-disable-overeager-window-splitting)))
-;;           (progn
-
-;; (eval-after-load "evil-mode"
-;;   '(progn
-;;      (bind-key "SPC o a" 'nav-toggle evil-normal-state-map)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Personal functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -390,16 +370,6 @@ described the updated list."
   (call-interactively 'multi-scratch-new)
   (insert-register 'clone)
   (keyboard-quit))
-
-(defun ~helm-projectile-find-file-other-window ()
-  (interactive)
-  (ignore-errors
-    (call-interactively 'windmove-right))
-  (call-interactively 'helm-projectile-find-file))
-
-(defun ~find-file-other-window ()
-  (interactive)
-  (call-interactively 'ido-find-file-other-window))
 
 (defun ~list-buffers ()
   (interactive)
