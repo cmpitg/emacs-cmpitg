@@ -15,14 +15,18 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(setq user-full-name "Ha-Duong Nguyen"
-      user-mail-address "cmpitg@gmail.com"
-      *toolbox-path* "/m/Toolbox/Toolbox.md"
-      *saved-macro-path* "/m/scratch/emacs-macros.el"
-      *scratch-dir* "/m/scratch/"
-      *sbcl-bin-path* "~/bin/sbcl-cmpitg"
-      *quicklisp-path* "/m/opt/quicklisp/"
-      *notes-path* "~/Docs/Notes")
+;;
+;; Must be in machine-specific config
+;;
+
+;; (setq user-full-name ""
+;;       user-mail-address ""
+;;       *toolbox-path* ""
+;;       *saved-macro-path* ""
+;;       *scratch-dir* ""
+;;       *sbcl-bin-path* ""
+;;       *quicklisp-path* ""
+;;       *notes-path* "")
 
 (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
