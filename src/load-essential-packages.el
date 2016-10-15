@@ -937,7 +937,7 @@
   :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; File browser
+;; Side-bar directory tree
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;
@@ -945,6 +945,22 @@
 ;;
 ;; (use-package project-explorer
 ;;   :ensure t)
+
+;;
+;; Nav is tested, good enough to go
+;;
+
+;; https://github.com/ancane/emacs-nav
+
+;; (use-package nav
+;;   :load-path "/m/src/emacs-nav"
+;;   :config (progn
+;;             (nav-disable-overeager-window-splitting)))
+;;           (progn
+
+;; (eval-after-load "evil-mode"
+;;   '(progn
+;;      (bind-key "SPC o a" 'nav-toggle evil-normal-state-map)))
 
 ;;
 ;; Neotree might break tab completion in minibuffer
