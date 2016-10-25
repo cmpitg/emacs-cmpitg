@@ -1933,9 +1933,6 @@ text."
       (-> (~exec cmd)
           remove-whitespaces))))
 
-(defun ~get-header-from-mail (header path)
-  "Retrieves a specific header field from a mail file."
-  (~get-mail-header header (~read-file path)))
 
 (defun* ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
