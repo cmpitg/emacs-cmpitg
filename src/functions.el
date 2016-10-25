@@ -1921,7 +1921,22 @@ text."
 (defalias 'first-char-as-string '~first-char-as-string)
 (defalias 'last-char-as-string '~last-char-as-string)
 
-(defun* ~send-mail (&key (to "") (subject "") (body ""))
+(defun ~get-header-from-mail (header path)
+  "Retrieves a specific header field from a mail file."
+  (labels ((remove-whitespaces
+            (str)
+            (replace-regexp-in-string "[ \t\n]*$" "" str)))
+    (-> (concat "sed -n '/^"
+                header
+                ":/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}' "
+                path
+                " | sed -n 's/^"
+                header
+                ": \\(.*\\)$/\\1/Ip'")
+        ~exec
+        remove-whitespaces)))
+
+(defun* ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
   (~exec (format "thunderbird-bin -compose \"to='%s',subject='%s'\",body=\"'%s'\""
                  to
