@@ -1933,6 +1933,15 @@ text."
       (-> (~exec cmd)
           remove-whitespaces))))
 
+(defun ~get-mail-user-agent (msg)
+  "Retrieves the User-Agent of the mail sender."
+  (let ((x-mailer (~get-mail-header "x-mailer" msg))
+        (user-agent (~get-mail-header "user-agent" msg)))
+    (cond
+     ((string= x-mailer user-agent) user-agent)
+     ((string= x-mailer "")         user-agent)
+     ((string= user-agent "")       x-mailer)
+     (t (format "%s (x-mailer)\n%s (user-agent)" x-mailer user-agent)))))
 
 (defun* ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
