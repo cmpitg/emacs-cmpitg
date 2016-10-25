@@ -1921,20 +1921,21 @@ text."
 (defalias 'first-char-as-string '~first-char-as-string)
 (defalias 'last-char-as-string '~last-char-as-string)
 
-(defun ~get-header-from-mail (header path)
-  "Retrieves a specific header field from a mail file."
+(defun ~get-mail-header (header msg)
+  "Retrieves a specific header field from a full mail."
   (labels ((remove-whitespaces
             (str)
             (replace-regexp-in-string "[ \t\n]*$" "" str)))
-    (-> (concat "sed -n '/^"
-                header
-                ":/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}' "
-                path
-                " | sed -n 's/^"
-                header
-                ": \\(.*\\)$/\\1/Ip'")
-        ~exec
-        remove-whitespaces)))
+    (let ((cmd (concat (format " sed -n '/^%s:/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}'" header)
+                       (format " <(cat <<< '%s')" msg)
+                       " | "
+                       (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip'" header))))
+      (-> (~exec cmd)
+          remove-whitespaces))))
+
+(defun ~get-header-from-mail (header path)
+  "Retrieves a specific header field from a mail file."
+  (~get-mail-header header (~read-file path)))
 
 (defun* ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
