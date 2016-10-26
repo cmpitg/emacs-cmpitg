@@ -1921,22 +1921,25 @@ text."
 (defalias 'first-char-as-string '~first-char-as-string)
 (defalias 'last-char-as-string '~last-char-as-string)
 
-(defun ~get-mail-header (header msg)
+(defun* ~get-mail-header (header msg-or-path &key (from-path nil))
   "Retrieves a specific header field from a full mail."
   (labels ((remove-whitespaces
             (str)
             (replace-regexp-in-string "[ \t\n]*$" "" str)))
-    (let ((cmd (concat (format " sed -n '/^%s:/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}'" header)
-                       (format " <(cat <<< '%s')" msg)
+
+    (let ((cmd (concat (format " sed -n '/^%s:/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}' " header)
+                       (if from-path msg-or-path "")
                        " | "
-                       (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip'" header))))
-      (-> (~exec cmd)
+                       (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip' " header))))
+      (-> (if from-path
+              (~exec cmd)
+            (~exec-with-input cmd msg-or-path))
           remove-whitespaces))))
 
-(defun ~get-mail-user-agent (msg)
+(defun* ~get-mail-user-agent (msg-or-path &key (from-path nil))
   "Retrieves the User-Agent of the mail sender."
-  (let ((x-mailer (~get-mail-header "x-mailer" msg))
-        (user-agent (~get-mail-header "user-agent" msg)))
+  (let ((x-mailer   (~get-mail-header "x-mailer" msg-or-path :from-path from-path))
+        (user-agent (~get-mail-header "user-agent" msg-or-path :from-path from-path)))
     (cond
      ((string= x-mailer user-agent) user-agent)
      ((string= x-mailer "")         user-agent)
