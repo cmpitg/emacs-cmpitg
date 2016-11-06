@@ -1923,18 +1923,14 @@ text."
 
 (defun* ~get-mail-header (header msg-or-path &key (from-path nil))
   "Retrieves a specific header field from a full mail."
-  (labels ((remove-whitespaces
-            (str)
-            (replace-regexp-in-string "[ \t\n]*$" "" str)))
-
-    (let ((cmd (concat (format " sed -n '/^%s:/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}' " header)
-                       (if from-path msg-or-path "")
-                       " | "
-                       (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip' " header))))
-      (-> (if from-path
-              (~exec cmd)
-            (~exec-with-input cmd msg-or-path))
-          remove-whitespaces))))
+  (let ((cmd (concat (format " sed -n '/^%s:/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}' " header)
+                     (if from-path msg-or-path "")
+                     " | "
+                     (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip' " header))))
+    (--> (if from-path
+             (~exec cmd)
+           (~exec-with-input cmd msg-or-path))
+         (replace-regexp-in-string "[ \t\n]*$" "" it))))
 
 (defun* ~get-mail-user-agent (msg-or-path &key (from-path nil))
   "Retrieves the User-Agent of the mail sender."
