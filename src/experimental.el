@@ -314,12 +314,12 @@ described the updated list."
 
           (t
            ;; Kill NeoTree
-           (and (get-buffer *neotree-buffer-name*)
-                (kill-buffer *neotree-buffer-name*))
+           ;; (and (get-buffer *neotree-buffer-name*)
+           ;;      (kill-buffer *neotree-buffer-name*))
 
            ;; Kill Menu
-           (and (get-buffer menu-buffer-name)
-                (kill-buffer menu-buffer-name))
+           ;; (and (get-buffer menu-buffer-name)
+           ;;      (kill-buffer menu-buffer-name))
 
            ;; (progn
            ;;   ;; Start NeoTree
