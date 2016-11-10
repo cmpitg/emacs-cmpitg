@@ -130,7 +130,8 @@
 (bind-key "<f7>" 'neotree-toggle)
 (bind-key "<M-f11>" 'helm-all-mark-rings)
 (bind-key "<S-f11>" 'history-goto-history)
-(bind-key "<C-f12>" 'projectile-commander)
+(bind-key "<C-f12>" 'gist-list)
+;; (bind-key "<C-f12>" 'projectile-commander)
 
 ;;
 ;; Buffer
