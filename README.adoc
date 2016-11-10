@@ -33,5 +33,4 @@ Do this once for each new project:
 === Working on an available project
 
 * `M-x pyvenv-workon`
-
 * Have fun

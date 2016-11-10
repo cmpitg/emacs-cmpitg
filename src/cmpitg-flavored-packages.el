@@ -625,5 +625,83 @@
              '(shell-pop-universal-key "<S-f9>"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Evil mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package evil
+  :ensure t
+  :config (progn
+            (use-package evil-paredit
+              :ensure t
+              :config (progn
+                        (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+                        (add-hook 'lisp-mode-hook 'evil-paredit-mode)
+                        (add-hook 'scheme-mode-hook 'evil-paredit-mode)))
+
+            (use-package evil-surround
+              :ensure t
+              :config (progn
+                        (global-evil-surround-mode 1)))
+
+            (evil-mode 1)
+            (bind-key [mouse-2] nil evil-normal-state-map)
+            (bind-key [mouse-2] nil evil-visual-state-map)
+            (bind-key [mouse-2] nil evil-insert-state-map)
+
+            ;; (define-key evil-motion-state-map [down-mouse-1] 'evil-mouse-drag-region)
+            ;; (lookup-key evil-motion-state-map [down-mouse-1])
+            ;; (lookup-key evil-normal-state-map [down-mouse-1])
+            ;; (lookup-key evil-visual-state-map [down-mouse-1])
+
+            ;; (delete 'multi-term-mode evil-insert-state-modes)
+            ;; (delete 'term-mode evil-insert-state-modes)
+            (eval-after-load 'evil-vars
+              '(progn
+                 (evil-set-initial-state 'term-mode 'emacs)
+                 (evil-set-initial-state 'multi-term-mode 'emacs)
+                 (evil-set-initial-state 'ansi-term-mode 'emacs)
+                 (evil-set-initial-state 'magit-log-edit-mode 'emacs)
+                 (evil-set-initial-state 'dired-mode 'emacs)
+                 (evil-set-initial-state 'nav-mode 'emacs)
+                 (evil-set-initial-state 'grep-mode 'emacs)
+                 (evil-set-initial-state 'bs-mode 'emacs)
+                 (evil-set-initial-state 'ibuffer-mode 'normal)))
+
+            (setq evil-emacs-state-cursor 'bar)
+            (setq-default cursor-type 'hbar)
+            (setq-default cursor-type 'bar)
+
+            (bind-spacemacs-like-keys)
+
+            (define-key evil-insert-state-map "\C-y" 'yank)
+            (define-key evil-insert-state-map "\C-o" '~open-line)
+            (define-key evil-insert-state-map "\C-w" 'kill-region)
+            (define-key evil-insert-state-map "\C-k"
+              (lambda ()
+                (interactive)
+                (if (member* mode-name '("Emacs-Lisp" "Lisp") :test 'equalp)
+                    (call-interactively 'paredit-kill)
+                  (call-interactively 'kill-line))))
+
+            ;; * to search forward, # to search backward
+            (use-package evil-visualstar
+              :ensure t
+              :init (progn
+                      (global-evil-visualstar-mode)
+                      ;; (setq evil-visualstar/persistent nil)
+                      ))
+
+            ;; Better jumper with C-i and C-o
+            (use-package evil-jumper
+              :ensure t
+              :init (progn
+                      (evil-jumper-mode t)))
+
+            ;; Doesn't work
+            ;; (evil-set-initial-state 'lisp-mode 'emacs)
+            ;; (evil-set-initial-state 'emacs-lisp-mode 'emacs)
+            ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'ee:cmpitg-flavored-packages)
