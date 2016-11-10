@@ -19,3 +19,19 @@
 ** If there is `.emacs-machine-specific.el` file in your home directory or
    `machine-specific.el` in the `src/` directory of this repo, they will be
    loaded.  Those files are meant to store machine-specific configuration.
+
+== Python development workflow
+
+=== Project setup
+
+Do this once for each new project:
+
+* Open a file in the project
+* `M-x pyvenv-workon` and choose the appropriate virtual env
+* `M-x elpy-config` and install necessary dependencies
+
+=== Working on an available project
+
+* `M-x pyvenv-workon`
+
+* Have fun
