@@ -28,6 +28,15 @@
 ;;       *quicklisp-path* ""
 ;;       *notes-path* "")
 
+;; (setq user-full-name "Ha-Duong Nguyen"
+;;       user-mail-address "cmpitg@gmail.com"
+;;       *toolbox-path* "/m/Toolbox/Toolbox.md"
+;;       *saved-macro-path* "/m/scratch/emacs-macros.el"
+;;       *scratch-dir* "/m/scratch/"
+;;       *sbcl-bin-path* "~/bin/sbcl-cmpitg"
+;;       *quicklisp-path* "/m/opt/quicklisp/"
+;;       *notes-path* "~/Docs/Notes")
+
 (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 (eval-after-load "vdiff-mode"
@@ -79,8 +88,6 @@
   :config (progn
             (persistent-scratch-setup-default)
             (persistent-scratch-autosave-mode 1)))
-
-;; (global-auto-complete-mode -1)
 
 (use-package restclient
   :ensure t)
@@ -264,8 +271,8 @@ described the updated list."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/dominikh/go-mode.el
 
-(use-package go-mode-autoloads
-  :ensure go-mode)
+;; (use-package go-mode-autoloads
+;;   :ensure go-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto-resizing wihh golden ratio
@@ -402,23 +409,6 @@ described the updated list."
 ;;   :config (progn
 ;;             (bind-key "s-t" 'ido-next-match minibuffer-local-map)
 ;;             (bind-key "s-c" 'ido-prev-match minibuffer-local-map)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Erlang development
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; https://github.com/tjarvstrand/edts
-;;   edts-man-setup to setup documentation
-;;   Make sure you have `rebar' 2.0.1+ installed, then
-;;       cd ~/.emacs.d/elpa/edts*/
-;;       find . -name rebar -print0 | xargs -0 -I{} echo "{}"
-;;       make
-
-;; (use-package edts-start
-;;   :ensure edts
-;;   :config (progn
-;;             (setq erlang-electric-commands '(erlang-electric-comma
-;;                                              erlang-electric-semicolon))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Erlang Elixir

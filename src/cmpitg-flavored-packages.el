@@ -134,6 +134,24 @@
 ;; (use-package quack)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Erlang development
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; https://github.com/tjarvstrand/edts
+;;   edts-man-setup to setup documentation
+;;   Make sure you have `rebar' 2.0.1+ installed, then
+;;       cd ~/.emacs.d/elpa/edts*/
+;;       find . -name rebar -print0 | xargs -0 -I{} echo "{}"
+;;       make
+
+(use-package edts-start
+  :ensure t
+  :disabled t
+  :config (progn
+            (setq erlang-electric-commands '(erlang-electric-comma
+                                             erlang-electric-semicolon))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scala development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
