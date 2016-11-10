@@ -439,7 +439,7 @@ described the updated list."
 ;;
 
 ;; (use-package guide-key
-;;   :ensure guide-key
+;;   :ensure t
 ;;   :diminish guide-key-mode
 ;;   :config (progn
 ;;             (setq guide-key/guide-key-sequence '("C-x"
