@@ -222,6 +222,8 @@
             (lambda ()
               (~bind-key-with-prefix-local "h f" '~emacs-lisp/help-function))))
 
+(bind-spacemacs-like-keys)
+
 (defalias '~my/file-notes '~visit-my-notes)
 
 (defalias '~emacs-lisp/help-function 'describe-function)
