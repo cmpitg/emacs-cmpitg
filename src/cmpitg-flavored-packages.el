@@ -190,6 +190,83 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; https://cider.readthedocs.io/en/latest/
+;; https://github.com/clojure-emacs/cider/blob/master/doc/configuration.md
+;;
+
+(use-package clojure-mode
+  :ensure t
+  :commands clojure-mode
+  :mode "\\.clj\\'"
+  :config
+  (progn
+    (use-package cider
+      :ensure cider
+      :config (progn
+                ;; https://github.com/clojure-emacs/helm-cider
+                (use-package helm-cider
+                  :ensure t
+                  :config (helm-cider-mode 1))
+
+                (use-package clojure-cheatsheet
+                  :ensure t)
+
+                (use-package clojurescript-mode
+                  :ensure t)
+
+                ;; (add-hook 'clojure-mode-hook 'cider-mode)
+                (add-hook 'clojure-mode-hook '~load-paredit-mode)
+
+                ;; Only display eldoc for current function/macro, not current symbol
+                (setq cider-eldoc-display-for-symbol-at-point nil)
+                (add-hook 'cider-mode-hook 'eldoc-mode)
+
+                (add-hook 'cider-repl-mode-hook '~load-paredit-mode)
+
+                ;; ;; Moving inside subword
+                (add-hook 'cider-repl-mode-hook 'subword-mode)
+
+                ;; Hide *nrepl-connection* and *nrepl-server*
+                (setq nrepl-hide-special-buffers t)
+
+                ;; Prevent the auto-display of the REPL buffer in a separate window after
+                ;; connection is established
+                ;; (setq cider-repl-pop-to-buffer-on-connect nil)
+                (setq cider-repl-pop-to-buffer-on-connect t)
+
+                ;; the REPL
+                (setq cider-popup-stacktraces nil)
+
+                ;; Enable error buffer popping also in the REPL
+                (setq cider-repl-popup-stacktraces t)
+
+                (setq nrepl-buffer-name-separator "-")
+                (setq nrepl-buffer-name-show-port t)
+
+                (setq cider-repl-history-size 9999)
+
+                (use-package cider-grimoire)
+
+                ;;
+                ;; Clojure latest library
+                ;;   https://github.com/AdamClements/latest-clojure-libraries
+                ;;
+                (use-package latest-clojure-libraries
+                  :ensure t
+                  :init (progn
+                          (defalias '~clojure-insert-latest-dependency
+                            'latest-clojure-libraries-insert-dependency)))
+
+                (define-clojure-indent
+                  (defroutes 'defun)
+                  (GET 2)
+                  (POST 2)
+                  (PUT 2)
+                  (DELETE 2)
+                  (HEAD 2)
+                  (ANY 2)
+                  (context 2))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby development
@@ -670,8 +747,6 @@
             (setq evil-emacs-state-cursor 'bar)
             (setq-default cursor-type 'hbar)
             (setq-default cursor-type 'bar)
-
-            (bind-spacemacs-like-keys)
 
             (define-key evil-insert-state-map "\C-y" 'yank)
             (define-key evil-insert-state-map "\C-o" '~open-line)
