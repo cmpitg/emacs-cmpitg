@@ -103,7 +103,9 @@
             (bind-key "s-C" 'paredit-backward-up        paredit-mode-map)
             (bind-key "s-T" 'paredit-forward-up         paredit-mode-map)
             (bind-key "s-R" 'paredit-forward            paredit-mode-map)
-            (bind-key "s-G" 'paredit-backward           paredit-mode-map)))
+            (bind-key "s-G" 'paredit-backward           paredit-mode-map)
+
+            (bind-key "C-c l (" '~parenthesize-last-sexp paredit-mode-map)))
 
 (use-package helm
   :config (progn
