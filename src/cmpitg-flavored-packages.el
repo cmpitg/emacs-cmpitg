@@ -42,7 +42,11 @@
 
 (use-package magit
   :ensure t
-  :commands (magit-status ~get-scm magit-get-top-dir))
+  :commands (magit-status ~get-scm magit-get-top-dir)
+  :config (progn
+            (setf magit-push-always-verify 'pp)
+            ;; (setf git-commit-check-style-conventions nil)
+            (setf git-commit-finish-query-functions nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP request library
