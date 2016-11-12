@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.error
+# key: err
+# group: js-mode
+# --
+console.error($0);

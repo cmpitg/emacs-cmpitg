@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Define a function without docstring
+# key: def
+# group: python-mode
+# --
+def ${1:function_name()}:
+    $2

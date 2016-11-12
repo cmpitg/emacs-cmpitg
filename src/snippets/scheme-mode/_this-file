@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Add this-file
+# key: _this-file
+# group: scheme-mode
+# --
+(syntax-source #'here)

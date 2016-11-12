@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: writeln
+# key: wrl
+# group: opascal-mode
+# --
+WriteLn($0);

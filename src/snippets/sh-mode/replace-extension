@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Replace file extension in Zsh
+# key: replace-extension
+# group: sh-mode
+# --
+${1:file_name}:r.${2:new_ext}

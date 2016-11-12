@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Read convenient functions
+# key: read-funcs
+# group: sh-mode
+# --
+current_dir_=\$(dirname "\$0")
+. "\${current_dir_}/functions"

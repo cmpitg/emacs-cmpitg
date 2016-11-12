@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: System.out.println
+# key: sout
+# group: java-mode
+# --
+System.out.println($1);$0

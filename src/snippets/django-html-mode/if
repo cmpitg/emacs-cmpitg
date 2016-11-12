@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: If statement
+# key: %if
+# group: django-html-mode
+# --
+{% if $1 %}$2{% endif %}

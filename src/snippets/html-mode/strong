@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: strong tag
+# key: strong
+# group: html-mode
+# --
+<strong>$1</strong>

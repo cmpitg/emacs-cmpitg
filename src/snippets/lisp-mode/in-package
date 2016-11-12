@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: in-package
+# key: i-p
+# group: lisp-mode
+# --
+(in-package #:$0)

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: for
+# key: for
+# group: delphi-mode
+# --
+for $1 := $2 to $3 do

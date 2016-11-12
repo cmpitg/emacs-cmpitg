@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Add compile-command
+# key: compile-cmd
+# group: emacs-lisp-mode
+# --
+-*- compile-command: "$1" -*-

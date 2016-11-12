@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: begin-end
+# key: be
+# group: opascal-mode
+# --
+begin
+    $0
+end;

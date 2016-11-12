@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: assert-equal
+# key: aeq
+# group: lisp-mode
+# --
+(assert-equal ${1:expected} ${2:exp})

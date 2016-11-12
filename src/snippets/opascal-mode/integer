@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: integer
+# key: int
+# group: opascal-mode
+# --
+Integer

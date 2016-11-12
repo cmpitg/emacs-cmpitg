@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: defmacro
+# key: defmacro
+# group: elixir-mode
+# --
+defmacro $0 do
+end

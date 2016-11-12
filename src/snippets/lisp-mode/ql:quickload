@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ql:quickload
+# key: ql
+# group: lisp-mode
+# --
+(ql:quickload "$0")

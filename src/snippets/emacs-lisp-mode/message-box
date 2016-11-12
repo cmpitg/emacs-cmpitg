@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: message-box
+# key: msgbox
+# group: emacs-lisp-mode
+# --
+(message-box $1)

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Add hiccup as a dependency vector
+# key: -ahc
+# group: clojure-mode
+# --
+[hiccup "1.0.5"]

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: bind-key to evil-normal-state-map
+# key: bind
+# group: emacs-lisp-mode
+# --
+(bind-key "${1:key-sequence}" ${2:'~function-name} evil-normal-state-map)

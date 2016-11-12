@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: displayln
+# key: ln
+# group: scheme-mode
+# --
+(displayln $1)

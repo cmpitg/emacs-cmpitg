@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: cond
+# key: cond
+# group: scheme-mode
+# --
+(cond [$1]$2)

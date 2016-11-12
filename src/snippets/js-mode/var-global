@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: var GLOBAL_THING = this.GLOBAL_THING || {}
+# key: vg
+# group: js-mode
+# --
+var ${1:THING} = this.$1 || {};

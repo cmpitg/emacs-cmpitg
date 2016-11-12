@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: div
+# key: div
+# group: html-mode
+# --
+<div>$0</div>

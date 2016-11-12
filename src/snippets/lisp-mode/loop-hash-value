@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Loop hash keys and values
+# key: loop-hash-value
+# group: lisp-mode
+# --
+(loop for ${1:value} being the hash-keys of ${2:a-hash}$3)

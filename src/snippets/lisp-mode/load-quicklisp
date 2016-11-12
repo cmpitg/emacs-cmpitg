@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Load quicklisp
+# key: load-ql
+# group: lisp-mode
+# --
+(load "/home/cmpitg/.sbclrc")

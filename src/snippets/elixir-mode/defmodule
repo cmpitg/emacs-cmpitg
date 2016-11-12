@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: defmodule
+# key: defmodule
+# group: elixir-mode
+# --
+defmodule $1 do
+	$0
+end

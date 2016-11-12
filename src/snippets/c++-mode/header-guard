@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Header guard
+# key: header-guard
+# group: c++-mode
+# --
+#ifndef $1
+#define $1
+$0
+#endif

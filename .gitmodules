@@ -1,0 +1,3 @@
+[submodule "src/local-packages/acme-mouse"]
+	path = src/local-packages/acme-mouse
+	url = https://github.com/akrito/acme-mouse.git

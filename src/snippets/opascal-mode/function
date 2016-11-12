@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: function
+# key: func
+# group: opascal-mode
+# --
+function $1:$2;
+begin
+    $0
+end;

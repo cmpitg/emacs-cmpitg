@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: This directory
+# key: _this-dir
+# group: sh-mode
+# --
+THIS_FILE=$(readlink -f "\$0")S
+THIS_DIR=$(dirname "\${SCRIPT_PATH}")

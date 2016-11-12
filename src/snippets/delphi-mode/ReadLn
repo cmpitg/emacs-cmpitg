@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ReadLn
+# key: rl
+# group: delphi-mode
+# --
+ReadLn($1);

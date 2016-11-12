@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: Init cmpitg config
+# key: cmpitg-init
+# group: racket-mode
+# --
+#lang rackjure
+(current-curly-dict hash)
+
+(require toml)
+(require 2htdp/batch-io)
+(require racket/path)
+
+(require (file "/m/config/racket/ferb.rkt"))
+(define +global-config-path+ "/m/config/global-config.toml")
+(define *config* (parse-toml (read-file +global-config-path+)))

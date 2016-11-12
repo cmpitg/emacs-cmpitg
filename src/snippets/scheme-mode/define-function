@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Define function
+# key: dfn
+# group: scheme-mode
+# --
+(define ($1)$2)

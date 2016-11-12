@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: string
+# key: str
+# group: opascal-mode
+# --
+String

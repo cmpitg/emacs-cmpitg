@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Simulation of while control structure (not recommended)
+# key: while
+# group: lisp-mode
+# --
+(loop
+    do (progn
+        (if ${1:condition} (return${2: value}))$0))
