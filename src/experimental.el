@@ -55,6 +55,20 @@
         ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Alignment and indentation
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'sh-mode-hook (lambda ()
+                          (setq indent-tabs-mode t
+                                sh-basic-offset 4)))
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode t
+                  sh-basic-offset 4)
+            (add-to-list 'whitespace-style 'indentation::tab)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;
 ;;; Q: What happens if I turn off all syntax coloring?
