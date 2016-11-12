@@ -531,7 +531,7 @@
   :commands eshell
   :init (progn
           (use-package exec-path-from-shell
-            :ensure exec-path-from-shell)
+            :ensure t)
 
           ;; ElDoc in Eshell
           (defadvice eldoc-current-symbol
@@ -753,6 +753,8 @@
                  (evil-set-initial-state 'multi-term-mode 'emacs)
                  (evil-set-initial-state 'ansi-term-mode 'emacs)
                  (evil-set-initial-state 'magit-log-edit-mode 'emacs)
+                 (evil-set-initial-state 'magit-popup-mode 'emacs)
+                 (evil-set-initial-state 'neotree-mode 'emacs)
                  (evil-set-initial-state 'dired-mode 'emacs)
                  (evil-set-initial-state 'nav-mode 'emacs)
                  (evil-set-initial-state 'grep-mode 'emacs)
