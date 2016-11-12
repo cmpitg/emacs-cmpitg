@@ -15,6 +15,10 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; FIXME
+(defvar *emacs-menu-file*           "/m/Toolbox/Emacs-Menu.txt")
+(setq vc-follow-symlinks t) ; Always follow symlinks
+
 ;;
 ;; Must be in machine-specific config
 ;;
@@ -43,9 +47,6 @@
   '(progn
      (bind-key "<f6>" vdiff-mode-prefix-map vdiff-mode-map)
      (evil-define-key 'normal vdiff-mode-map "," vdiff-mode-prefix-map)))
-
-;; (~update-gpg-agent-info)
-
 
 (setf openwith-associations
       '(("\\.pdf\\'" "evince" (file))
@@ -104,7 +105,7 @@
 ;; File navigation
 ;;
 
-(bind-key "s-; f n" '~visit-my-notes)
+(bind-key "s-; f n" 'cmpitg:visit-notes)
 
 (bind-key "C-<home>" '~jekyll-add-last-updated)
 
@@ -208,7 +209,7 @@
   (~bind-key-with-prefix "g o o" '~google)
 
   ;; With Return key
-  (bind-key "RET n" '~visit-my-notes evil-normal-state-map)
+  (bind-key "RET n" 'cmpitg:visit-notes evil-normal-state-map)
   (bind-key "RET g" 'magit-status evil-normal-state-map)
   (bind-key "C-z" 'keyboard-quit evil-normal-state-map)
   (bind-key "C-z" 'keyboard-quit evil-visual-state-map)
@@ -224,7 +225,7 @@
 
 (bind-spacemacs-like-keys)
 
-(defalias '~my/file-notes '~visit-my-notes)
+(defalias '~my/file-notes 'cmpitg:visit-notes)
 
 (defalias '~emacs-lisp/help-function 'describe-function)
 (defalias '~help-key 'describe-key)
@@ -291,7 +292,10 @@ described the updated list."
 ;; Personal functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *emacs-menu-file*           "/m/Toolbox/Emacs-Menu.txt")
+(defun ~open-local-toolbox ()
+  "Open the toolbox.el in current directory."
+  (interactive)
+  (find-file "toolbox.el"))
 
 (defun ~is-default-layout? ()
   "Determine whether the current layout is my personal default."
@@ -394,7 +398,6 @@ described the updated list."
 ;; (add-hook 'helm-after-update-hook #'(lambda ()
 ;;                                       (helm-follow-mode 1)))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ido everywhere
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -468,6 +471,10 @@ described the updated list."
 
 ;; Better if indentation
 (put 'if 'common-lisp-indent-function 2)
+(put 'define-command 'common-lisp-indent-function 2)
+(put 'if-let 'common-lisp-indent-function 2)
+(put 'defcmd 'common-lisp-indent-function 2)
+(put 'define-test 'common-lisp-indent-function 1)
 
 ;; (use-package sly
 ;;   :load-path "/m/src/sly"
@@ -497,7 +504,7 @@ described the updated list."
 ;;             (load "/m/opt/quicklisp/clhs-use-local.el" t)))
 
 (use-package slime
-  :ensure slime
+  :ensure t
   :commands common-lisp-mode
   :config (progn
             (put 'if 'common-lisp-indent-function 2)
@@ -613,7 +620,7 @@ line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package mag-menu
-  :ensure mag-menu)
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Google this
@@ -628,7 +635,7 @@ line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (use-package paradox
-;;   :ensure paradox
+;;   :ensure t
 ;;   :bind ("s-v" . paradox-list-packages))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -636,7 +643,7 @@ line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ace-jump-buffer
-  :ensure ace-jump-buffer
+  :ensure t
   :init (progn
           (bind-key "s-j" 'ace-jump-buffer)
           (bind-key "s-J" 'ace-jump-buffer-other-window)))
@@ -661,8 +668,8 @@ line."
 ;; Simple menu building
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package simple-menu
-  :load-path "/m/src/simple-menu")
+;; (use-package simple-menu
+;;   :load-path "/m/src/simple-menu")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JavaScript
@@ -676,9 +683,8 @@ line."
 ;; tr 'A-Za-z' 'N-ZA-Mn-za-m'
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 ;; Pattern-based command execution
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'wand)
 
@@ -819,21 +825,6 @@ path\)' if there is no line number."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package python
-  :config (progn
-            (setq python-shell-interpreter "ipython"
-                  python-shell-interpreter-args ""
-                  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-                  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-                  python-shell-completion-setup-code
-                  "from IPython.core.completerlib import module_completion"
-                  python-shell-completion-module-string-code
-                  "';'.join(module_completion('''%s'''))\n"
-                  python-shell-completion-string-code
-                  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defalias 'pi 'package-install)
 (defalias 'fl 'find-library)
 (defalias 'll '~load-files)
@@ -938,65 +929,73 @@ E.g.
 ;; Racket development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package racket-mode
-  :load-path "/m/src/racket-mode/"
-  :ensure t
-  :commands racket-mode
-  :mode "\\.rkt\\'"
-  :config (progn
-            ;; TODO: Document about indent changing and keywording
-            (dolist (sym '(λ
-                           ~>
-                           ~>>
-                           define-values
-                           get
-                           post
-                           put
-                           patch
-                           delete
-                           call-with-parameterization
-                           module+))
-              (put sym 'racket-indent-function 1)
-              (add-to-list 'racket-keywords (~symbol->string sym))
-              ;; (add-to-list 'racket-builtins (~symbol->string sym))
-              )
+;; (use-package racket-mode
+;;   :load-path "/m/src/racket-mode/"
+;;   :ensure t
+;;   :commands racket-mode
+;;   :mode "\\.rkt\\'"
+;;   :config (progn
+;;             ;; TODO: Document about indent changing and keywording
+;;             (dolist (sym '(λ
+;;                            ~>
+;;                            ~>>
+;;                            define-values
+;;                            get
+;;                            post
+;;                            put
+;;                            patch
+;;                            delete
+;;                            call-with-parameterization
+;;                            module+))
+;;               (put sym 'racket-indent-function 1)
+;;               (add-to-list 'racket-keywords (~symbol->string sym))
+;;               ;; (add-to-list 'racket-builtins (~symbol->string sym))
+;;               )
 
-            (dolist (sym '(module
-                           module*))
-              (put sym 'racket-indent-function 2)
-              (add-to-list 'racket-keywords (~symbol->string sym))
-              ;; (add-to-list 'racket-builtins (~symbol->string sym))
-              )
+;;             (dolist (sym '(module
+;;                            module*))
+;;               (put sym 'racket-indent-function 2)
+;;               (add-to-list 'racket-keywords (~symbol->string sym))
+;;               ;; (add-to-list 'racket-builtins (~symbol->string sym))
+;;               )
 
-            (add-hook 'racket-mode-hook       '~load-paredit-mode)
-            (add-hook 'racket-repl-mode-hook  '~load-paredit-mode)
-            ;; (add-hook 'racket-mode-hook       'auto-complete-mode)
-            ;; (add-hook 'racket-repl-mode-hook  'auto-complete-mode)
+;;             (add-hook 'racket-mode-hook       '~load-paredit-mode)
+;;             (add-hook 'racket-repl-mode-hook  '~load-paredit-mode)
+;;             ;; (add-hook 'racket-mode-hook       'auto-complete-mode)
+;;             ;; (add-hook 'racket-repl-mode-hook  'auto-complete-mode)
 
-            (bind-key "C-c C-\\" '(lambda (prefix)
-                                    (interactive "P")
-                                    (if prefix
-                                        (progn (insert "(λ () )")
-                                               (backward-char))
-                                      (insert "λ")))
-                      racket-mode-map)
+;;             (bind-key "C-c C-\\" '(lambda (prefix)
+;;                                     (interactive "P")
+;;                                     (if prefix
+;;                                         (progn (insert "(λ () )")
+;;                                                (backward-char))
+;;                                       (insert "λ")))
+;;                       racket-mode-map)
 
-            (bind-key "C-c C-b" 'racket-run racket-mode-map)
-            (bind-key "C-c C-z" 'other-window racket-repl-mode-map)
-            ;; (bind-key "C-c C-z" (lambda ()
-            ;;                       (interactive)
-            ;;                       (call-interactively 'racket-repl)
-            ;;                       (call-interactively 'other-window))
-            ;;           racket-mode-map)
-            (bind-key "C-M-x" 'racket-send-definition racket-mode-map)))
+;;             (bind-key "C-c C-b" 'racket-run racket-mode-map)
+;;             (bind-key "C-c C-z" 'other-window racket-repl-mode-map)
+;;             ;; (bind-key "C-c C-z" (lambda ()
+;;             ;;                       (interactive)
+;;             ;;                       (call-interactively 'racket-repl)
+;;             ;;                       (call-interactively 'other-window))
+;;             ;;           racket-mode-map)
+;;             (bind-key "C-M-x" 'racket-send-definition racket-mode-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ~visit-my-notes ()
+(defun* cmpitg:visit-notes ()
   "Visits my notes."
   (interactive)
   (~helm-projectile-find-files-at-dir (or *notes-path*
                                           "~/Docs/Notes")))
+
+(defun cmpitg:visit-todo ()
+  "Visit my TODO list."
+  (interactive)
+  (find-file (concat (file-name-as-directory *scratch-dir*)
+                     "TODO.org")))
+
+(bind-key "s-; s-;" 'cmpitg:visit-todo)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -1285,8 +1284,6 @@ code block."
 ;; Various indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Common Lisp-style indentation
 ;; (add-hook 'lisp-mode-hook
 ;;           (lambda ()
@@ -1296,6 +1293,10 @@ code block."
 ;;           (lambda ()
 ;;             (set (make-local-variable 'lisp-indent-function)
 ;;                  'common-lisp-indent-function)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Menu bar
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (remove-menu [menu-bar layout])
 
@@ -1552,22 +1553,6 @@ directory."
 (bind-key "s-; f f" '~goto-sync-notes)
 (bind-key "<C-menu> <C-menu> C-e" 'emacs-lisp-mode)
 
-(use-package paredit
-  :config (progn
-            (bind-key "C-c l (" '~parenthesize-last-sexp paredit-mode-map)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun cmpitg:visit-todo ()
-  "Visit my TODO list at ~/Docs/Org/TODO.org"
-  (interactive)
-  (find-file "~/Docs/Org/TODO.org"))
-
-(bind-key "s-; s-;" 'cmpitg:visit-todo)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Some themes
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (use-package inertial-scroll :ensure t)
@@ -1615,8 +1600,9 @@ directory."
 ;; Last
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package acme-mouse
-  :load-path "/m/src/acme-mouse")
+(~add-load-path (~get-config "local-packages/acme-mouse"))
+
+(require 'acme-mouse)
 
 (bind-key "<C-mouse-1>" '~exec|-select-output)
 (global-unset-key (kbd "<C-down-mouse-1>"))
