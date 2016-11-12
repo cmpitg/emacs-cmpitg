@@ -516,7 +516,7 @@
   :ensure t
   :commands swoop
   :init (use-package helm-swoop
-          :ensure helm-swoop))
+          :ensure t))
 
 ;; (defun ~swoop-bare (&optional $query)
 ;;   "Search through words within the current buffer.  Don't take

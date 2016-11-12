@@ -392,4 +392,6 @@ about what flexible matching means in this context."
   (diminish 'visual-line-mode)
   (diminish 'global-visual-line-mode))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (provide 'ee:config-environment)
