@@ -61,6 +61,11 @@
    (toggle-debug-on-error nil))
 
 (require 'ee:functions                (~get-config "functions.el"))
+
+;; Load machine-specific-init settings if existed
+(~load-files "~/.emacs-machine-specific-init.el"
+             (~get-config "machine-specific-init.el"))
+
 (require 'ee:load-package-manager     (~get-config "load-package-manager.el"))
 (require 'ee:load-essential-packages  (~get-config "load-essential-packages.el"))
 (require 'ee:custom-core              (~get-config "custom-core.el"))
@@ -78,4 +83,5 @@
   (~load-files (~get-config "experimental.el")))
 
 ;; Load machine-specific settings if existed
-(~load-files "~/.emacs-machine-specific.el" (~get-config "machine-specific.el"))
+(~load-files "~/.emacs-machine-specific.el"
+             (~get-config "machine-specific.el"))
