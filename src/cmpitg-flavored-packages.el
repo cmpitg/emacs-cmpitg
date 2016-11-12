@@ -801,5 +801,23 @@
 (use-package nginx-mode
   :ensure t)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Mixing tabs and spaces
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; http://www.emacswiki.org/emacs/SmartTabs#toc1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package smart-tabs-mode
+  :ensure t
+  :init (progn
+          (smart-tabs-insinuate 'c 'javascript 'python)
+          (setq-default tab-width 4)
+          (add-hook 'python-mode-hook
+                    (lambda ()
+                      (setq indent-tabs-mode t)
+                      (setq tab-width (default-value 'tab-width))
+                      (setq whitespace-style '(trailing empty))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'ee:cmpitg-flavored-packages)
