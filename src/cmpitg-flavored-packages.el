@@ -201,7 +201,6 @@
 
 (use-package clojure-mode
   :ensure t
-  :commands clojure-mode
   :mode "\\.clj\\'"
   :config
   (progn
@@ -233,15 +232,11 @@
 
                 ;; Hide *nrepl-connection* and *nrepl-server*
                 (setq nrepl-hide-special-buffers t)
-
                 ;; Prevent the auto-display of the REPL buffer in a separate window after
                 ;; connection is established
                 ;; (setq cider-repl-pop-to-buffer-on-connect nil)
                 (setq cider-repl-pop-to-buffer-on-connect t)
-
-                ;; the REPL
                 (setq cider-popup-stacktraces nil)
-
                 ;; Enable error buffer popping also in the REPL
                 (setq cider-repl-popup-stacktraces t)
 
@@ -250,17 +245,19 @@
 
                 (setq cider-repl-history-size 9999)
 
+                ;; Clojure docs lookup
                 (use-package cider-grimoire)
 
-                ;;
-                ;; Clojure latest library
-                ;;   https://github.com/AdamClements/latest-clojure-libraries
-                ;;
-                (use-package latest-clojure-libraries
+                (use-package clj-refactor
                   :ensure t
-                  :init (progn
-                          (defalias '~clojure-insert-latest-dependency
-                            'latest-clojure-libraries-insert-dependency)))
+                  :config
+                  (progn
+                    (defun my/clojure-refactor-hooking ()
+                      (clj-refactor-mode 1)
+                      (yas-minor-mode 1)
+                      (cljr-add-keybindings-with-prefix "C-c C-l"))
+
+                    (add-hook 'clojure-mode-hook #'my/clojure-refactor-hooking)))
 
                 (define-clojure-indent
                   (defroutes 'defun)
