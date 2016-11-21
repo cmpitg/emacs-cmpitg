@@ -267,7 +267,8 @@
                   (DELETE 2)
                   (HEAD 2)
                   (ANY 2)
-                  (context 2))))))
+                  (context 2)
+                  (are '(2 1)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby development
@@ -725,6 +726,7 @@
               :config (progn
                         (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
                         (add-hook 'lisp-mode-hook 'evil-paredit-mode)
+                        (add-hook 'clojure-mode-hook 'evil-paredit-mode)
                         (add-hook 'scheme-mode-hook 'evil-paredit-mode)))
 
             (use-package evil-surround
@@ -756,6 +758,9 @@
                  (evil-set-initial-state 'nav-mode 'emacs)
                  (evil-set-initial-state 'grep-mode 'emacs)
                  (evil-set-initial-state 'bs-mode 'emacs)
+                 (evil-set-initial-state 'cider-repl-mode 'emacs)
+                 (evil-set-initial-state 'cider-popup-buffer-mode 'emacs)
+                 (evil-set-initial-state 'help-mode 'emacs)
                  (evil-set-initial-state 'ibuffer-mode 'normal)))
 
             (setq evil-emacs-state-cursor 'bar)
