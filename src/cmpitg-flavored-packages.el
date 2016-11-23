@@ -218,8 +218,13 @@
                 (use-package clojurescript-mode
                   :ensure t)
 
+                (use-package midje-mode
+                  :ensure t
+                  :diminish midje-mode)
+
                 ;; (add-hook 'clojure-mode-hook 'cider-mode)
                 (add-hook 'clojure-mode-hook '~load-paredit-mode)
+                (add-hook 'clojure-mode-hook 'midje-mode)
 
                 ;; Only display eldoc for current function/macro, not current symbol
                 (setq cider-eldoc-display-for-symbol-at-point nil)
