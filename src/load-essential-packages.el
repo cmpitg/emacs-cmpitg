@@ -983,9 +983,6 @@
     ;; (setq neo-theme 'icons)
     (setq neo-theme 'arrow)
 
-    (setq projectile-switch-project-action
-          'neotree-projectile-action)
-
     (add-hook 'neotree-mode-hook
               (lambda ()
                 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
