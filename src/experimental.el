@@ -1621,6 +1621,172 @@ directory."
 ;;            ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Email with mu4e
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; *
+;;   cd local-packages/mu
+;;   autoreconf -i
+;;   ./configure
+;;   make
+;; * /m/mail
+;; * ~/.authinfo
+;;
+;;
+;; Check if Mu is working
+;;   $ mu index --maildir=/m/mail/boxes/cmpitg-at-gmail
+;;   $ mu find hello
+;;
+
+(when (string= "1" (getenv "EMACS_ENABLED_MAIL"))
+  (~add-load-path (~get-config "local-packages/mu/mu4e"))
+
+  (use-package mu4e
+    :config
+    (progn
+      ;; Use Helm instead of ido
+      (use-package helm-mu
+        :ensure t
+        :config (progn
+                  (define-key mu4e-main-mode-map "s" 'helm-mu)
+                  (define-key mu4e-headers-mode-map "s" 'helm-mu)
+                  (define-key mu4e-view-mode-map "s" 'helm-mu)))
+      (setq mu4e-completing-read-function completing-read-function)
+
+      ;; Add user-agent to mail view
+      (add-to-list 'mu4e-header-info-custom
+                   '(:user-agent . (:name "User-Agent"
+                                    :shortname "UserAgent"
+                                    :help "User Agent of sender"
+                                    :function (lambda (mu4e-msg)
+                                                (let ((path (or (mu4e-message-field mu4e-msg :path)
+                                                                "")))
+                                                  (if (not (file-readable-p path))
+                                                      "Mail file is not accessible"
+                                                    (~get-mail-user-agent path :from-path t)))))))
+
+      ;; Add long date format
+      (add-to-list 'mu4e-header-info-custom
+                   '(:long-date . (:name "Long-Date"
+                                   :shortname "LongDate"
+                                   :help "Date & time of sending, long, readable format"
+                                   :function (lambda (mu4e-msg)
+                                               (let ((date&time (mu4e-msg-field mu4e-msg :date)))
+                                                 (format-time-string "%a, %d %b %Y %H:%M:%S" date&time))))))
+
+      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
+      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail:Inbox")
+
+      (setq mu4e-maildir        "/m/mail/boxes/cmpitg-at-gmail")
+      (setq mu4e-attachment-dir "~/Downloads")
+
+      (setq mu4e-headers-results-limit 2000)
+      (setq mu4e-view-fields '(:from
+                               :to :cc :subject :user-agent :flags :date
+                               :maildir :mailing-list :tags :attachments
+                               :signature :decryption))
+
+      (setq mu4e-headers-fields `((:long-date . 25)
+                                  (:flags . 6)
+                                  (:from . 30)
+                                  (:to . 20)
+                                  (:subject)))
+
+      (setq mu4e-update-interval 180)
+      (setq mu4e-update-interval nil)
+
+      (setq mu4e-sent-folder   "/local-sent"
+            mu4e-drafts-folder "/local-drafts"
+            mu4e-trash-folder  "/local-trash")
+
+      ;; Frequent folders; accessed with 'j' ('jump')
+      (setq mu4e-maildir-shortcuts
+            '(("/archive"      . ?a)
+              ("/inbox"        . ?i)
+              ("/local-drafts" . ?d)
+              ("/TODO"         . ?t)
+              ("/sent"         . ?s)))
+
+      (setq mail-default-headers "BCC: cmpitg@gmail.com")
+      (setq mu4e-reply-to-address   "cmpitg@gmail.com")
+      (setq mu4e-compose-signature  (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
+
+      (setq message-send-mail-function     'smtpmail-send-it)
+      (setq send-mail-function             'smtpmail-send-it)
+      (setq smtpmail-default-smtp-server   "smtp.gmail.com")
+      (setq smtpmail-smtp-server           "smtp.gmail.com")
+      (setq smtpmail-smtp-service          587)
+      (setq smtpmail-starttls-credentials  '(("smtp.gmail.com" 587 nil nil)))
+      (setq smtpmail-debug-info            t)
+      (setq starttls-gnutls-program        "/usr/bin/gnutls-cli")
+      (setq starttls-extra-arguments       nil)
+      (setq starttls-use-gnutls            t)
+      (setq smtpmail-auth-credentials      "~/.authinfo")
+
+      ;; Don't save messages to Sent Messages, Gmail/IMAP takes care of this
+      (setq mu4e-sent-messages-behavior  'delete)
+
+      ;; If you need offline mode, set these -- and create the queue dir
+      ;; with 'mu mkdir', i.e. mu mkdir <path-to-queue>
+      (setq smtpmail-queue-mail  nil)
+      (setq smtpmail-queue-dir   "/m/mail/queue/cur")
+
+      (setq mu4e-html2text-command "lynx -dump -stdin")
+      ;; (setq mu4e-html2text-command "w3m -T text/html")
+      (setq mu4e-view-show-images t)
+
+      (when (fboundp 'imagemagick-register-types)
+        (imagemagick-register-types))
+
+      (add-to-list 'mu4e-view-actions
+                   '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+      (setq browse-url-browser-function 'browse-url-firefox)
+
+      ;; Don't keep message buffers around
+      (setq message-kill-buffer-on-exit t)
+
+      (setq mu4e-user-mail-address-list '("cmpitg@gmail.com"
+                                          "hd@bayo.vn"))
+
+      (setq mu4e-contexts
+            `(,(make-mu4e-context
+                :name "cmpitg@gmail"
+                :enter-func (lambda () (mu4e-message "Context: cmpitg@gmail"))
+                :match-func (lambda (msg)
+                              (and msg
+                                   (mu4e-message-contact-field-matches msg :to "cmpitg@gmail.com")
+                                   (mu4e-message-contact-field-matches msg :to "nha.duong@gmail.com")))
+                :vars '((mu4e-reply-to-address . "cmpitg@gmail.com")
+                        (user-mail-address . "cmpitg@gmail.com")
+                        (user-full-name . "Ha-Duong Nguyen")
+                        (mail-default-headers . "BCC: cmpitg@gmail.com")
+                        (mu4e-compose-signature . (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
+                        (smtpmail-default-smtp-server . "smtp.gmail.com")
+                        (smtpmail-smtp-server . "smtp.gmail.com")
+                        (smtpmail-smtp-service . 587)
+                        (smtpmail-starttls-credentials . '(("smtp.gmail.com" 587 nil nil)))
+                        (mu4e-maildir . "/m/mail/boxes/cmpitg-at-gmail")))
+              ,(make-mu4e-context
+                :name "hd@bayo"
+                :enter-func (lambda () (mu4e-message "Context: hd@bayo"))
+                :match-func (lambda (msg)
+                              (and msg
+                                   (mu4e-message-contact-field-matches msg :to "hd@bayo.vn")))
+                :vars '((mu4e-reply-to-address . "hd@bayo.vn")
+                        (user-mail-address . "hd@bayo.vn")
+                        (user-full-name . "Ha-Duong Nguyen")
+                        (mail-default-headers . "BCC: cmpitg@gmail.com, hd@bayo.vn")
+                        (mu4e-compose-signature . (~read-file "/m/mail/signature_hd-at-bayo.txt"))
+                        (smtpmail-default-smtp-server . "mail.securemail.vn")
+                        (smtpmail-smtp-server . "mail.securemail.vn")
+                        (smtpmail-smtp-service . 587)
+                        (smtpmail-starttls-credentials . '(("mail.securemail.vn" 587 nil nil)))
+                        (mu4e-maildir . "/m/mail/boxes/cmpitg-at-gmail")))))))
+
+  (bind-key "<M-f12>" 'mu4e))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Last
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
