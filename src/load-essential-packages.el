@@ -361,11 +361,12 @@
 ;; Recent files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package recentf
-  :ensure t
-  :init (progn
-          (recentf-mode 1)
-          (setq recentf-max-menu-items 256)))
+(unless (string= "1" (getenv "EMACS_SPECIALIZED"))
+  (use-package recentf
+    :ensure t
+    :init (progn
+            (recentf-mode 1)
+            (setq recentf-max-menu-items 256))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Smoother scrolling
