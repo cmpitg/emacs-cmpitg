@@ -1789,43 +1789,62 @@ E.g.
       ;; Don't keep message buffers around
       (setq message-kill-buffer-on-exit t)
 
-      (setq mu4e-user-mail-address-list '("cmpitg@gmail.com"
-                                          "hd@bayo.vn"))
+      (setq mu4e-user-mail-address-list (list))
+      (setq mu4e-contexts (list))
+      (cmpitg/add-mu4e-account :context-name "cmpitg@gmail"
+                               :full-name "Ha-Duong Nguyen"
+                               :mail-address "cmpitg@gmail.com"
+                               :match-recipients '("cmpitg@gmail.com" "nha.duong@gmail.com")
+                               :default-headers "BCC: cmpitg@gmail.com"
+                               :smtp-server "smtp.gmail.com:587"
+                               :maildir "/m/mail/boxes/cmpitg-at-gmail"
+                               :signature-file "/m/mail/signature_cmpitg-at-gmail.txt")
+      (cmpitg/add-mu4e-account :context-name "hd@bayo"
+                               :full-name "Ha-Duong Nguyen"
+                               :mail-address "hd@bayo.vn"
+                               :match-recipients '("hd@bayo.vn")
+                               :default-headers "BCC: cmpitg@gmail.com, hd@bayo.vn"
+                               :smtp-server "mail.securemail.vn:587"
+                               :maildir "/m/mail/boxes/cmpitg-at-gmail"
+                               :signature-file "/m/mail/signature_hd-at-bayo.txt")
 
-      (setq mu4e-contexts
-            `(,(make-mu4e-context
-                :name "cmpitg@gmail"
-                :enter-func (lambda () (mu4e-message "Context: cmpitg@gmail"))
-                :match-func (lambda (msg)
-                              (and msg
-                                   (mu4e-message-contact-field-matches msg :to "cmpitg@gmail.com")
-                                   (mu4e-message-contact-field-matches msg :to "nha.duong@gmail.com")))
-                :vars '((mu4e-reply-to-address . "cmpitg@gmail.com")
-                        (user-mail-address . "cmpitg@gmail.com")
-                        (user-full-name . "Ha-Duong Nguyen")
-                        (mail-default-headers . "BCC: cmpitg@gmail.com")
-                        (mu4e-compose-signature . (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
-                        (smtpmail-default-smtp-server . "smtp.gmail.com")
-                        (smtpmail-smtp-server . "smtp.gmail.com")
-                        (smtpmail-smtp-service . 587)
-                        (smtpmail-starttls-credentials . '(("smtp.gmail.com" 587 nil nil)))
-                        (mu4e-maildir . "/m/mail/boxes/cmpitg-at-gmail")))
-              ,(make-mu4e-context
-                :name "hd@bayo"
-                :enter-func (lambda () (mu4e-message "Context: hd@bayo"))
-                :match-func (lambda (msg)
-                              (and msg
-                                   (mu4e-message-contact-field-matches msg :to "hd@bayo.vn")))
-                :vars '((mu4e-reply-to-address . "hd@bayo.vn")
-                        (user-mail-address . "hd@bayo.vn")
-                        (user-full-name . "Ha-Duong Nguyen")
-                        (mail-default-headers . "BCC: cmpitg@gmail.com, hd@bayo.vn")
-                        (mu4e-compose-signature . (~read-file "/m/mail/signature_hd-at-bayo.txt"))
-                        (smtpmail-default-smtp-server . "mail.securemail.vn")
-                        (smtpmail-smtp-server . "mail.securemail.vn")
-                        (smtpmail-smtp-service . 587)
-                        (smtpmail-starttls-credentials . '(("mail.securemail.vn" 587 nil nil)))
-                        (mu4e-maildir . "/m/mail/boxes/cmpitg-at-gmail")))))))
+      ;; (setq mu4e-user-mail-address-list '("cmpitg@gmail.com"
+      ;;                                     "hd@bayo.vn"))
+      ;; (setq mu4e-contexts
+      ;;       `(,(make-mu4e-context
+      ;;           :name "cmpitg@gmail"
+      ;;           :enter-func (lambda () (mu4e-message "Context: cmpitg@gmail"))
+      ;;           :match-func (lambda (msg)
+      ;;                         (and msg
+      ;;                              (mu4e-message-contact-field-matches msg :to "cmpitg@gmail.com")
+      ;;                              (mu4e-message-contact-field-matches msg :to "nha.duong@gmail.com")))
+      ;;           :vars '((mu4e-reply-to-address . "cmpitg@gmail.com")
+      ;;                   (user-mail-address . "cmpitg@gmail.com")
+      ;;                   (user-full-name . "Ha-Duong Nguyen")
+      ;;                   (mail-default-headers . "BCC: cmpitg@gmail.com")
+      ;;                   (mu4e-compose-signature . (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
+      ;;                   (smtpmail-default-smtp-server . "smtp.gmail.com")
+      ;;                   (smtpmail-smtp-server . "smtp.gmail.com")
+      ;;                   (smtpmail-smtp-service . 587)
+      ;;                   (smtpmail-starttls-credentials . '(("smtp.gmail.com" 587 nil nil)))
+      ;;                   (mu4e-maildir . "/m/mail/boxes/cmpitg-at-gmail")))
+      ;;         ,(make-mu4e-context
+      ;;           :name "hd@bayo"
+      ;;           :enter-func (lambda () (mu4e-message "Context: hd@bayo"))
+      ;;           :match-func (lambda (msg)
+      ;;                         (and msg
+      ;;                              (mu4e-message-contact-field-matches msg :to "hd@bayo.vn")))
+      ;;           :vars '((mu4e-reply-to-address . "hd@bayo.vn")
+      ;;                   (user-mail-address . "hd@bayo.vn")
+      ;;                   (user-full-name . "Ha-Duong Nguyen")
+      ;;                   (mail-default-headers . "BCC: cmpitg@gmail.com, hd@bayo.vn")
+      ;;                   (mu4e-compose-signature . (~read-file "/m/mail/signature_hd-at-bayo.txt"))
+      ;;                   (smtpmail-default-smtp-server . "mail.securemail.vn")
+      ;;                   (smtpmail-smtp-server . "mail.securemail.vn")
+      ;;                   (smtpmail-smtp-service . 587)
+      ;;                   (smtpmail-starttls-credentials . '(("mail.securemail.vn" 587 nil nil)))
+      ;;                   (mu4e-maildir . "/m/mail/boxes/cmpitg-at-gmail")))))
+      ))
 
   (bind-key "<M-f12>" 'mu4e))
 
