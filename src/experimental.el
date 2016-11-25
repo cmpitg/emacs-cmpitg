@@ -1642,6 +1642,49 @@ directory."
 (when (string= "1" (getenv "EMACS_ENABLED_MAIL"))
   (~add-load-path (~get-config "local-packages/mu/mu4e"))
 
+  (defun* cmpitg/add-mu4e-account (&key context-name
+                                        full-name
+                                        mail-address
+                                        match-recipients
+                                        default-headers
+                                        smtp-server
+                                        maildir
+                                        signature-file)
+    "Add a mu4e mail account.
+
+E.g.
+
+\(cmpitg/add-mu4e-account :context-name \"cmpitg@gmail\"
+                         :full-name \"Ha-Duong Nguyen\"
+                         :mail-address \"cmpitg@gmail.com\"
+                         :match-recipients '\(\"cmpitg.gmail.com\"\)
+                         :default-headers \"BCC: cmpitg@gmail.com\"
+                         :smtp-server \"smtp.gmail.com:587\"
+                         :maildir \"/m/mail/boxes/cmpitg-at-gmail\"
+                         :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"\)'"
+    (add-to-list 'mu4e-user-mail-address-list mail-address t)
+    (destructuring-bind (smtp-server smtp-port) (s-split ":" smtp-server)
+      (add-to-list 'mu4e-contexts
+                   (make-mu4e-context
+                    :name context-name
+                    :enter-func (lambda () (mu4e-message (format "Context: %s") context-name))
+                    :match-func (lambda (msg)
+                                  (and msg
+                                       (-reduce (lambda (res x)
+                                                  (and (mu4e-message-contact-field-matches msg :to x)))
+                                                match-recipients)))
+                    :vars `((mu4e-reply-to-address . ,mail-address)
+                            (user-mail-address . ,mail-address)
+                            (user-full-name . ,full-name)
+                            (mail-default-headers . ,default-headers)
+                            (mu4e-compose-signature . ,(~read-file signature-file))
+                            (smtpmail-default-smtp-server . ,smtp-server)
+                            (smtpmail-smtp-server . ,smtp-server)
+                            (smtpmail-smtp-service . ,smtp-port)
+                            (smtpmail-starttls-credentials . ((,smtp-server ,smtp-port nil nil)))
+                            (mu4e-maildir . ,maildir)))
+                   t)))
+
   (use-package mu4e
     :config
     (progn
