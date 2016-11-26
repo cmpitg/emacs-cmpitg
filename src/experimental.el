@@ -104,6 +104,7 @@
 
 (use-package sublimity
   :ensure t
+  :disabled t
   :config (progn
             (require 'sublimity-scroll)
             (sublimity-mode 1)))
