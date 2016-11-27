@@ -361,7 +361,7 @@
 ;; Recent files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(unless (string= "1" (getenv "EMACS_ENABLED_MAIL"))
+(unless (cmpitg/specialized-emacs?)
   (use-package recentf
     :ensure t
     :init (progn
