@@ -1511,8 +1511,10 @@ is not inside a snippet."
   (interactive)
   (srun "make"))
 
-(bind-key "<f5>"   '~cl/next-snippet adoc-mode-map)
-(bind-key "<f6>"   '~cl/compile-snippet adoc-mode-map)
+(eval-after-load "adoc-mode"
+  '(progn
+     (bind-key "<f5>"   '~cl/next-snippet adoc-mode-map)
+     (bind-key "<f6>"   '~cl/compile-snippet adoc-mode-map)))
 (bind-key "<S-f5>" 'ulqui:generate-src-current-dir)
 (bind-key "<S-f6>" 'ulqui:generate-html-current-dir)
 (bind-key "C-S-b"  'ulqui:tmux-make)
@@ -1729,7 +1731,7 @@ E.g.
                                                        (format-time-string "%a, %d %b %Y %H:%M:%S" date&time))))))
 
       (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
-      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail:Inbox")
+      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful")
 
       (setq mu4e-maildir        "/m/mail/boxes/cmpitg-at-gmail")
       (setq mu4e-attachment-dir "~/Downloads")
@@ -1749,19 +1751,20 @@ E.g.
       (setq mu4e-update-interval 180)
       (setq mu4e-update-interval nil)
 
-      (setq mu4e-sent-folder   "/local-sent"
-            mu4e-drafts-folder "/local-drafts"
-            mu4e-trash-folder  "/local-trash")
+      (setq mu4e-sent-folder   "/sent"
+            mu4e-drafts-folder "/draft"
+            mu4e-trash-folder  "/trash")
 
       ;; Frequent folders; accessed with 'j' ('jump')
       (setq mu4e-maildir-shortcuts
-            '(("/archive"      . ?a)
-              ("/inbox"        . ?i)
-              ("/local-drafts" . ?d)
-              ("/TODO"         . ?t)
-              ("/sent"         . ?s)))
+            '(("/inbox"          . ?i)
+              ("/top-todo"       . ?t)
+              ("/top-delegated"  . ?d)
+              ("/top-awaiting"   . ?a)
+              ("/draft"          . ?r)
+              ("/sent"           . ?s)))
 
-      (setq mail-default-headers "BCC: cmpitg@gmail.com")
+      (setq mail-default-headers    "BCC: cmpitg@gmail.com")
       (setq mu4e-reply-to-address   "cmpitg@gmail.com")
       (setq mu4e-compose-signature  (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
 
