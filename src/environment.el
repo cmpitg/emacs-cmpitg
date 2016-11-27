@@ -337,9 +337,8 @@ about what flexible matching means in this context."
 ;; Don't accelerate scrolling
 ;; (setq mouse-wheel-progressive-speed nil)
 
-;; (setq scroll-step 3)
-
-;; (setq scroll-conservatively 10000)
+(setq scroll-step 3)
+(setq scroll-conservatively 10000)
 
 ;; (setq redisplay-dont-pause t
 ;;       scroll-margin 1
