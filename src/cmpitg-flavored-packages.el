@@ -521,10 +521,11 @@
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package save-visited-files
-  :ensure t
-  :config (progn
-            (turn-on-save-visited-files-mode)))
+(unless (cmpitg/specialized-emacs?)
+  (use-package save-visited-files
+    :ensure t
+    :config (progn
+              (turn-on-save-visited-files-mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
