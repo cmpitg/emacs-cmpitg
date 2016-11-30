@@ -1651,8 +1651,9 @@ directory."
                                         match-recipients
                                         default-headers
                                         smtp-server
+                                        signature-file
                                         maildir
-                                        signature-file)
+                                        maildir-shortcuts)
     "Add a mu4e mail account.
 
 E.g.
@@ -1663,8 +1664,9 @@ E.g.
                          :match-recipients '\(\"cmpitg.gmail.com\"\)
                          :default-headers \"BCC: cmpitg@gmail.com\"
                          :smtp-server \"smtp.gmail.com:587\"
+                         :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"
                          :maildir \"/m/mail/boxes/cmpitg-at-gmail\"
-                         :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"\)'"
+                         :maildir-shortcuts '\(\"/Inbox\" . ?i\)\)"
     ;; Because Emacs uses dynamic binidng by default
     (lexical-let ((context-name context-name)
                   (full-name full-name)
@@ -1672,8 +1674,9 @@ E.g.
                   (match-recipients match-recipients)
                   (default-headers default-headers)
                   (smtp-server smtp-server)
+                  (signature-file signature-file)
                   (maildir maildir)
-                  (signature-file signature-file))
+                  (maildir-shortcuts maildir-shortcuts))
       (add-to-list 'mu4e-user-mail-address-list mail-address t)
       (destructuring-bind (smtp-server smtp-port) (s-split ":" smtp-server)
         (add-to-list 'mu4e-contexts
@@ -1694,7 +1697,8 @@ E.g.
                               (smtpmail-smtp-server . ,smtp-server)
                               (smtpmail-smtp-service . ,smtp-port)
                               (smtpmail-starttls-credentials . ((,smtp-server ,smtp-port nil nil)))
-                              (mu4e-maildir . ,maildir)))
+                              (mu4e-maildir . ,maildir)
+                              (mu4e-maildir-shortcuts . ,maildir-shortcuts)))
                      t))))
 
   (use-package mu4e
@@ -1731,9 +1735,9 @@ E.g.
                                                        (format-time-string "%a, %d %b %Y %H:%M:%S" date&time))))))
 
       (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
-      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful")
+      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful hd-at-mamk_all")
 
-      (setq mu4e-maildir        "/m/mail/boxes/cmpitg-at-gmail")
+      ;; (setq mu4e-maildir        "/m/mail/boxes/cmpitg-at-gmail")
       (setq mu4e-attachment-dir "~/Downloads")
 
       (setq mu4e-headers-results-limit 2000)
@@ -1755,18 +1759,9 @@ E.g.
             mu4e-drafts-folder "/draft"
             mu4e-trash-folder  "/trash")
 
-      ;; Frequent folders; accessed with 'j' ('jump')
-      (setq mu4e-maildir-shortcuts
-            '(("/inbox"          . ?i)
-              ("/top-todo"       . ?t)
-              ("/top-delegated"  . ?d)
-              ("/top-awaiting"   . ?a)
-              ("/draft"          . ?r)
-              ("/sent"           . ?s)))
-
-      (setq mail-default-headers    "BCC: cmpitg@gmail.com")
-      (setq mu4e-reply-to-address   "cmpitg@gmail.com")
-      (setq mu4e-compose-signature  (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
+      ;; (setq mail-default-headers    "BCC: cmpitg@gmail.com")
+      ;; (setq mu4e-reply-to-address   "cmpitg@gmail.com")
+      ;; (setq mu4e-compose-signature  (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
 
       (setq message-send-mail-function     'smtpmail-send-it)
       (setq send-mail-function             'smtpmail-send-it)
@@ -1812,16 +1807,38 @@ E.g.
                                :match-recipients '("cmpitg@gmail.com" "nha.duong@gmail.com")
                                :default-headers "BCC: cmpitg@gmail.com"
                                :smtp-server "smtp.gmail.com:587"
+                               :signature-file "/m/mail/signature_cmpitg-at-gmail.txt"
                                :maildir "/m/mail/boxes/cmpitg-at-gmail"
-                               :signature-file "/m/mail/signature_cmpitg-at-gmail.txt")
+                               :maildir-shortcuts '(("/Inbox"          . ?i)
+                                                    ("/top-todo"       . ?t)
+                                                    ("/top-delegated"  . ?d)
+                                                    ("/top-awaiting"   . ?a)
+                                                    ("/draft"          . ?r)
+                                                    ("/sent"           . ?s)))
       (cmpitg:add-mu4e-account :context-name "hd@bayo"
                                :full-name "Ha-Duong Nguyen"
                                :mail-address "hd@bayo.vn"
                                :match-recipients '("hd@bayo.vn")
                                :default-headers "BCC: cmpitg@gmail.com, hd@bayo.vn"
                                :smtp-server "mail.securemail.vn:587"
+                               :signature-file "/m/mail/signature_hd-at-bayo.txt"
                                :maildir "/m/mail/boxes/cmpitg-at-gmail"
-                               :signature-file "/m/mail/signature_hd-at-bayo.txt")))
+                               :maildir-shortcuts '(("/Inbox"          . ?i)
+                                                    ("/top-todo"       . ?t)
+                                                    ("/top-delegated"  . ?d)
+                                                    ("/top-awaiting"   . ?a)
+                                                    ("/draft"          . ?r)
+                                                    ("/sent"           . ?s)))
+      (cmpitg:add-mu4e-account :context-name "m-hd@mamk"
+                               :full-name "Ha-Duong Nguyen"
+                               :mail-address "duongng"
+                               :match-recipients '("Duong.Nguyen2@metropolia.fi")
+                               :default-headers "BCC: cmpitg@gmail.com, Duong.Nguyen2@metropolia.fi"
+                               :smtp-server "smtp.metropolia.fi:587"
+                               :signature-file "/m/mail/signature_hd-at-mamk.txt"
+                               :maildir "/m/mail/boxes/hd-at-mamk"
+                               :maildir-shortcuts '(("/Inbox"          . ?i)
+                                                    ("/Drafts"         . ?r)))))
 
   (bind-key "<M-f12>" 'mu4e))
 
