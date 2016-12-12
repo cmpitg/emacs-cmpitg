@@ -50,7 +50,7 @@
 (setq minibuffer-prompt-properties
       (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
 
-;;; Use the same clipboard with X
+;; Use the same clipboard with X
 (setq x-select-enable-clipboard t)
 
 ;; Disable shift selection
