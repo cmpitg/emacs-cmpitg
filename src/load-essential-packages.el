@@ -361,11 +361,12 @@
 ;; Recent files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package recentf
-  :ensure t
-  :init (progn
-          (recentf-mode 1)
-          (setq recentf-max-menu-items 256)))
+(unless (cmpitg/specialized-emacs?)
+  (use-package recentf
+    :ensure t
+    :init (progn
+            (recentf-mode 1)
+            (setq recentf-max-menu-items 256))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Smoother scrolling
@@ -982,9 +983,6 @@
   (progn
     ;; (setq neo-theme 'icons)
     (setq neo-theme 'arrow)
-
-    (setq projectile-switch-project-action
-          'neotree-projectile-action)
 
     (add-hook 'neotree-mode-hook
               (lambda ()

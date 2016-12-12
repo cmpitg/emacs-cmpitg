@@ -201,7 +201,6 @@
 
 (use-package clojure-mode
   :ensure t
-  :commands clojure-mode
   :mode "\\.clj\\'"
   :config
   (progn
@@ -219,8 +218,13 @@
                 (use-package clojurescript-mode
                   :ensure t)
 
+                (use-package midje-mode
+                  :ensure t
+                  :diminish midje-mode)
+
                 ;; (add-hook 'clojure-mode-hook 'cider-mode)
                 (add-hook 'clojure-mode-hook '~load-paredit-mode)
+                (add-hook 'clojure-mode-hook 'midje-mode)
 
                 ;; Only display eldoc for current function/macro, not current symbol
                 (setq cider-eldoc-display-for-symbol-at-point nil)
@@ -233,15 +237,11 @@
 
                 ;; Hide *nrepl-connection* and *nrepl-server*
                 (setq nrepl-hide-special-buffers t)
-
                 ;; Prevent the auto-display of the REPL buffer in a separate window after
                 ;; connection is established
                 ;; (setq cider-repl-pop-to-buffer-on-connect nil)
                 (setq cider-repl-pop-to-buffer-on-connect t)
-
-                ;; the REPL
                 (setq cider-popup-stacktraces nil)
-
                 ;; Enable error buffer popping also in the REPL
                 (setq cider-repl-popup-stacktraces t)
 
@@ -250,17 +250,19 @@
 
                 (setq cider-repl-history-size 9999)
 
+                ;; Clojure docs lookup
                 (use-package cider-grimoire)
 
-                ;;
-                ;; Clojure latest library
-                ;;   https://github.com/AdamClements/latest-clojure-libraries
-                ;;
-                (use-package latest-clojure-libraries
+                (use-package clj-refactor
                   :ensure t
-                  :init (progn
-                          (defalias '~clojure-insert-latest-dependency
-                            'latest-clojure-libraries-insert-dependency)))
+                  :config
+                  (progn
+                    (defun my/clojure-refactor-hooking ()
+                      (clj-refactor-mode 1)
+                      (yas-minor-mode 1)
+                      (cljr-add-keybindings-with-prefix "C-c C-l"))
+
+                    (add-hook 'clojure-mode-hook #'my/clojure-refactor-hooking)))
 
                 (define-clojure-indent
                   (defroutes 'defun)
@@ -270,7 +272,8 @@
                   (DELETE 2)
                   (HEAD 2)
                   (ANY 2)
-                  (context 2))))))
+                  (context 2)
+                  (are '(2 1)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby development
@@ -518,10 +521,11 @@
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package save-visited-files
-  :ensure t
-  :config (progn
-            (turn-on-save-visited-files-mode)))
+(unless (cmpitg/specialized-emacs?)
+  (use-package save-visited-files
+    :ensure t
+    :config (progn
+              (turn-on-save-visited-files-mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
@@ -728,6 +732,7 @@
               :config (progn
                         (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
                         (add-hook 'lisp-mode-hook 'evil-paredit-mode)
+                        (add-hook 'clojure-mode-hook 'evil-paredit-mode)
                         (add-hook 'scheme-mode-hook 'evil-paredit-mode)))
 
             (use-package evil-surround
@@ -759,6 +764,9 @@
                  (evil-set-initial-state 'nav-mode 'emacs)
                  (evil-set-initial-state 'grep-mode 'emacs)
                  (evil-set-initial-state 'bs-mode 'emacs)
+                 (evil-set-initial-state 'cider-repl-mode 'emacs)
+                 (evil-set-initial-state 'cider-popup-buffer-mode 'emacs)
+                 (evil-set-initial-state 'help-mode 'emacs)
                  (evil-set-initial-state 'ibuffer-mode 'normal)))
 
             (setq evil-emacs-state-cursor 'bar)
