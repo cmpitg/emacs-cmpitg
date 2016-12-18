@@ -1,5 +1,7 @@
 = cmpitg's Emacs config
 
+TODO.  Stay tuned for more!
+
 * Emacs server with https://github.com/cmpitg/emnode[Emnode] -- better
   interaction: cleaner, wider tools, ...
 
@@ -19,6 +21,40 @@
 ** If there is `.emacs-machine-specific.el` file in your home directory or
    `machine-specific.el` in the `src/` directory of this repo, they will be
    loaded.  Those files are meant to store machine-specific configuration.
+
+== How to run
+
+* Environment variables:
+** `EMACS_PORT`
+** `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR`
+** `EMACS_NO_EXPERIMENTAL`
+** `EMACS_ENABLED_MAIL`
+** `EMACS_ENABLED_NOTES`
+
+* High-level entry point: `remacs`
+
+* Low-level entry point: `emacs-cmpitg`
+
+=== Emacs as text editor
+
+[source,sh]
+----
+remacs edit <path>
+----
+
+=== Emacs as mail browser (mu4e)
+
+[source,sh]
+----
+remacs mail
+----
+
+=== Emacs as note taker
+
+[source,sh]
+----
+remacs notes
+----
 
 == Python development workflow
 
