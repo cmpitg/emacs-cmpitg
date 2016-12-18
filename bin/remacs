@@ -1,0 +1,183 @@
+#!/bin/bash
+
+export GPG_TTY=$(tty)
+
+if [[ "${1}" = "--help" ]]; then
+	cat <<EOF
+Usage: remacs [remacs-options] <command> [arguments] ...
+
+'command' denotes the main functionality of how Remacs is used.  'command' is
+one of the following:
+
+  edit   :: Text editor
+  mail   :: Mail browser
+  notes  :: Note taker
+  eval   :: Evals an Emacs Lisp expression instead of starting application
+
+One or more Remacs options might be specificied:
+
+  --port <port-number>  :: An HTTP port number on which the Emacs server is
+						   listened.
+  --base-init <path>    :: The main Emacs Lisp init file.
+  --init <path>         :: An additional Emacs Lisp init file.
+  --verbose             :: Prints command, options, and arguments
+
+If '--port' is not specified, by default,
+  text editor uses port 9999
+  mail uses port 9998
+  notes uses port 9997
+
+Examples:
+
+  remacs edit <path>
+    Opens a file.
+
+  remacs edit <path>:<line-number>
+    Opens a file, jumps to a specific line.
+
+  remacs edit <path>:/<pattern>/
+    Opens a file, jumps to the first line containing a specific pattern.
+
+  remacs mail
+    Opens mail browser.
+
+  remacs notes
+    Opens note utility.
+
+  remacs eval <expression>
+    Evals an Emacs Lisp expression.
+EOF
+	exit 0
+fi
+
+##############################################################################
+# Reading commands and arguments
+##############################################################################
+
+command_=""
+port_=""
+base_init_="/m/src/emacs-cmpitg/src/init.el"
+init_=""
+verbose_="0"
+tmpdir_="${TMPDIR:-/tmp/${USER}}"
+
+while [[ "${1}" == --* ]]; do
+	case "${1}" in
+		--port)
+			port_="${2}"
+			shift
+			;;
+		--init)
+			init_="${2}"
+			shift
+			;;
+		--base-init)
+			base_init_="${2}"
+			shift
+			;;
+		--verbose)
+			verbose_=1
+			;;
+		*)
+			echo Invalid options "${1}". >&2
+			exit 2
+	esac
+	shift
+done
+
+case "${1}" in
+	edit|eval)
+		command_="${1}"
+		port_=${port_:-9999}
+		;;
+	mail)
+		command_=mail
+		port_=${port_:-9998}
+		;;
+	notes)
+		command_=notes
+		port_=${port_:-9997}
+		;;
+	"")
+		echo Missing command.  See Remacs --help for usage. >&2
+		exit 1
+		;;
+	*)
+		echo Invalid command "${1}". >&2
+		exit 1
+		;;
+esac
+shift
+
+if [[ "${verbose_}" = "1" ]]; then
+	echo Command: ${command_}
+	echo Port: ${port_}
+	echo Base init: ${base_init_}
+	if ! [[ "${init_}" = "" ]]; then
+		echo Init: ${init_}
+	fi
+fi
+
+##############################################################################
+# Helpers
+##############################################################################
+
+server_running_p() {
+	(curl 0:${1} &>/dev/null) && echo 1 || echo 0
+}
+
+wait_until_port_open() {
+	while [[ $(server_running_p ${1}) = "0" ]]; do
+		sleep 1
+	done
+}
+
+##############################################################################
+# Main
+##############################################################################
+
+if [[ $(server_running_p ${port_}) = "0" ]]; then
+	case "${command_}" in
+		mail)
+			export EMACS_ENABLED_MAIL=1
+			;;
+		notes)
+			export EMACS_ENABLED_NOTES=1
+			;;
+	esac
+
+	export EMACS_PORT=${port_}
+
+	# Start the server
+	if [[ "${init_}" = "" ]]; then
+		nohup emacs -Q \
+			--load "${base_init_}" \
+			>"${tmpdir_}/emacs-${port_}.out" \
+			2>"${tmpdir_}/emacs-${port_}.err" &
+	else
+		nohup emacs -Q \
+			--load "${base_init_}" \
+			--load "${init_}" \
+			>"${tmpdir_}/emacs-${port_}" \
+			2>"${tmpdir_}/emacs-${port_}.err" &
+	fi
+fi
+
+wait_until_port_open "${port_}"
+
+case "${command_}" in
+	eval)
+		if [[ "${1}" = "" ]]; then
+			echo No expression to eval. >&2
+			exit 1
+		fi
+
+		curl "0:${port_}/eval/" -d "$@"
+		;;
+	edit)
+		if [[ "$1" == /* ]]; then
+			curl "0:${port_}/open/$@"
+		elif ! [[ "${1}" = "" ]]; then
+			curl "0:${port_}/open/${PWD}/$@"
+		fi
+esac
