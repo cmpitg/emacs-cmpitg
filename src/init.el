@@ -39,11 +39,23 @@
 ;; Specialized Emacs - Mail browser, ...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'cl)
+
+(defun cmpitg/emacs-as ()
+  "Return :mail, :notes, or nil when Emacs is running as mail
+browser, note taker, or ... just Emacs."
+  (loop for x in process-environment
+        when (and (string-prefix-p "EMACS_ENABLED_" x nil)
+                  (string-prefix-p "1=" (reverse x)))
+        return (let ((x (substring x (length "EMACS_ENABLED_"))))
+                 (intern (concat ":" (downcase (substring x
+                                                          0 (- (length x)
+                                                               (length "1=")))))))))
+
 (defun cmpitg/specialized-emacs? ()
   "Check if Emacs is running in specialized mode (mail browser,
 note taker, ...)"
-  (string= "1" (or (getenv "EMACS_ENABLED_MAIL")
-                   (getenv "EMACS_ENABLED_NOTES"))))
+  (cmpitg/emacs-as))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
