@@ -145,8 +145,16 @@
 (blink-cursor-mode t)
 
 ;;; Set frame title
-(setq frame-title-format
-      '(multiple-frames "%b" ("@" system-name )))
+;; (setq frame-title-format
+;;       '(multiple-frames "%b" ("@" system-name )))
+(let ((emacs-as (-> (or (cmpitg/emacs-as) :emacs)
+                    keyword->symbol
+                    symbol->string
+                    capitalize)))
+  (setq-default frame-title-format `(,emacs-as " \u262f "
+                                               (buffer-file-name "%f"
+                                                                 (dired-directory dired-directory "%b")))))
+
 
 ;; read-quoted-char-radix (10 or 16)
 
