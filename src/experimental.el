@@ -224,7 +224,7 @@
   ;; Toolbox
   (~bind-key-with-prefix "t b" '~toolbox)
   (~bind-key-with-prefix "c l f" '~clone-file)
-  (~bind-key-with-prefix "n f " 'new-frame)
+  (~bind-key-with-prefix "n f " 'make-frame)
 
   ;; Help
   (~bind-key-with-prefix "h k" '~help-key)
