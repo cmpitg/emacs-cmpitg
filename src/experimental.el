@@ -877,9 +877,9 @@ path\)' if there is no line number."
 (defun ~ipc-eval (httpcon)
   (let* ((expr (format "%s" (emnode:http-data httpcon))))
     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
-    ;; (emnode:http-end httpcon (format "> Eval'ing: %s" expr))
     (unless (~string-empty? (s-trim expr))
-      (emnode:http-end httpcon (format "%s" (~add-bracket-and-eval expr))))))
+      (emnode:http-end httpcon (or (ignore-errors (format "%s" (~add-bracket-and-eval expr)))
+                                   "")))))
 
 (defun ~ipc-open-file (httpcon)
   (let ((path (emnode:http-get-arg httpcon 1)))
