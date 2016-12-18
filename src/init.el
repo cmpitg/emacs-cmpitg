@@ -40,8 +40,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun cmpitg/specialized-emacs? ()
-  "Check if Emacs is running in specialized mode (mail broswer, ...)"
-  (string= "1" (getenv "EMACS_ENABLED_MAIL")))
+  "Check if Emacs is running in specialized mode (mail browser,
+note taker, ...)"
+  (string= "1" (or (getenv "EMACS_ENABLED_MAIL")
+                   (getenv "EMACS_ENABLED_NOTES"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
