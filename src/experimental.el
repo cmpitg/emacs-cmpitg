@@ -906,12 +906,11 @@ path\)' if there is no line number."
   :config
   (progn
     (setq emnode:*log-level* emnode:+log-none+)
-    (emnode:stop 9999)
-    (ignore-errors
-      ;; (emnode-start (lambda (httpcon)
-      ;;                 (emnode-hostpath-dispatcher httpcon *emnode-routes*))
-      ;;               :port 9999)
-      (emnode:start-server *emnode-routes* :port 9999))))
+    (let ((cmpitg/server-port (string-to-int (or (getenv "EMACS_PORT")
+                                                 "9999"))))
+      (emnode:stop cmpitg/server-port)
+      (ignore-errors
+        (emnode:start-server *emnode-routes* :port cmpitg/server-port)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
