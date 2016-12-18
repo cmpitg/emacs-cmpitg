@@ -178,6 +178,8 @@
 ;; Text
 ;;
 
+(bind-key "<S-delete>" 'delete-region)
+
 (bind-key "C-o" '~open-line)
 (bind-key "C-S-O" '~open-line-before)
 (bind-key "C-=" 'align-regexp)
