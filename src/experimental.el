@@ -711,103 +711,106 @@ line."
 ;; Pattern-based command execution
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'wand)
+(eval-and-compile
+  (defun cmpitg/wand-load-path ()
+    (~get-config "local-packages/wand")))
 
 (use-package wand
-  :init (progn
-          ;; TODO
+  :load-path (lambda () (list (cmpitg/wand-load-path)))
+  :config (progn
+            ;; TODO
 
-          ;;
-          ;; * Window management, switch to convenient window
-          ;; * Tryout Twitter Bootstrap
-          ;; * SCM
-          ;; * Bookmark, open file in external programs
-          ;; * Controlling Firefox, evaluation JavaScript
-          ;; * Live shell command
-          ;; * Slide show
-          ;;
-          ;; Some cool Acme use cases
-          ;;
+            ;;
+            ;; * Window management, switch to convenient window
+            ;; * Tryout Twitter Bootstrap
+            ;; * SCM
+            ;; * Bookmark, open file in external programs
+            ;; * Controlling Firefox, evaluation JavaScript
+            ;; * Live shell command
+            ;; * Slide show
+            ;;
+            ;; Some cool Acme use cases
+            ;;
 
-          ;;
-          ;; $ ls
-          ;; $ cd ~; ls
-          ;; file:/mnt/Data/Knowledge/IT/Programming Languages/Common Lisp/On Lisp.pdf
-          ;; file:/mnt/Data/
-          ;; https://google.com
-          ;; http://vnexpress.net
-          ;; #> message-box "Hello World!!!!"
-          ;; mail:cmpitg@gmail.com
-          ;; mail/subscribe:<listname>@lists.debian.org -> <listname>-REQUEST@lists.debian.org
-          ;; #> google "hello world program"
-          ;;
+            ;;
+            ;; $ ls
+            ;; $ cd ~; ls
+            ;; file:/mnt/Data/Knowledge/IT/Programming Languages/Common Lisp/On Lisp.pdf
+            ;; file:/mnt/Data/
+            ;; https://google.com
+            ;; http://vnexpress.net
+            ;; #> message-box "Hello World!!!!"
+            ;; mail:cmpitg@gmail.com
+            ;; mail/subscribe:<listname>@lists.debian.org -> <listname>-REQUEST@lists.debian.org
+            ;; #> google "hello world program"
+            ;;
 
-          ;; (bind-key "<mouse-3>" 'wand:execute)
+            ;; (bind-key "<mouse-3>" 'wand:execute)
 
-          ;; gg:español
-          ;; ff:alert(document.title);
-          ;; #> ~firefox "https://github.com/cmpitg/wand"
-          ;; #> ~send-to-mozrepl "alert(document.title);"
+            ;; gg:español
+            ;; ff:alert(document.title);
+            ;; #> ~firefox "https://github.com/cmpitg/wand"
+            ;; #> ~send-to-mozrepl "alert(document.title);"
 
-          (setq wand:*rules*
-                (list (wand:create-rule :match "----\n[^ ]* +"
-                                        :capture :after
-                                        :action ~current-snippet->file)
-                      (wand:create-rule :match "\\$ "
-                                        :capture :after
-                                        :action ~popup-shell-command)
-                      (wand:create-rule :match ">\\$ "
-                                        :capture :after
-                                        :action erun)
-                      (wand:create-rule :match "> "
-                                        :capture :after
-                                        :action srun)
-                      (wand:create-rule :match "https?://"
-                                        :capture :whole
-                                        :action ~firefox)
-                      (wand:create-rule :match "web:"
-                                        :capture :after
-                                        :action (lambda (str)
-                                                  (interactive)
-                                                  (~firefox (format "file://%s" str))))
-                      (wand:create-rule :match "file:"
-                                        :capture :after
-                                        :action toolbox:open-file)
-                      (wand:create-rule :match "#> "
-                                        :capture :after
-                                        :action ~add-bracket-and-eval)
-                      (wand:create-rule :match "gg:"
-                                        :capture :after
-                                        :action ~google)
-                      (wand:create-rule :match "ff:"
-                                        :capture :after
-                                        :action ~send-to-mozrepl)
-                      (wand:create-rule :match "mailto:"
-                                        :capture :after
-                                        :action (lambda (str)
-                                                  (~send-mail :to str)))
-                      (wand:create-rule :match ".*"
-                                        :capture :whole
-                                        :action (lambda (str)
-                                                  (interactive)
-                                                  ;; (message-box "Here: %s -> " str (~file-pattern? str))
-                                                  (cond ((~file-pattern? str)
-                                                         (multiple-value-bind (path pattern)
-                                                             (~deconstruct-path str)
-                                                           (find-file path)
-                                                           (when pattern
-                                                             (cond ((numberp pattern)
-                                                                    (goto-line pattern))
-                                                                   (t
-                                                                    (beginning-of-buffer)
-                                                                    (re-search-forward pattern))))))
-                                                        ((and (eq 'lisp-mode major-mode)
-                                                              (slime-connected-p))
-                                                         ;; (message-box "lisp-mode")
-                                                         (call-interactively 'slime-eval-region))
-                                                        (t
-                                                         ;; (message-box "emacs-lisp mode")
-                                                         (call-interactively 'wand:eval-string)))))))))
+            (setq wand:*rules*
+                  (list (wand:create-rule :match "----\n[^ ]* +"
+                                          :capture :after
+                                          :action ~current-snippet->file)
+                        (wand:create-rule :match "\\$ "
+                                          :capture :after
+                                          :action ~popup-shell-command)
+                        (wand:create-rule :match ">\\$ "
+                                          :capture :after
+                                          :action erun)
+                        (wand:create-rule :match "> "
+                                          :capture :after
+                                          :action srun)
+                        (wand:create-rule :match "https?://"
+                                          :capture :whole
+                                          :action ~firefox)
+                        (wand:create-rule :match "web:"
+                                          :capture :after
+                                          :action (lambda (str)
+                                                    (interactive)
+                                                    (~firefox (format "file://%s" str))))
+                        (wand:create-rule :match "file:"
+                                          :capture :after
+                                          :action toolbox:open-file)
+                        (wand:create-rule :match "#> "
+                                          :capture :after
+                                          :action ~add-bracket-and-eval)
+                        (wand:create-rule :match "gg:"
+                                          :capture :after
+                                          :action ~google)
+                        (wand:create-rule :match "ff:"
+                                          :capture :after
+                                          :action ~send-to-mozrepl)
+                        (wand:create-rule :match "mailto:"
+                                          :capture :after
+                                          :action (lambda (str)
+                                                    (~send-mail :to str)))
+                        (wand:create-rule :match ".*"
+                                          :capture :whole
+                                          :action (lambda (str)
+                                                    (interactive)
+                                                    ;; (message-box "Here: %s -> " str (~file-pattern? str))
+                                                    (cond ((~file-pattern? str)
+                                                           (multiple-value-bind (path pattern)
+                                                               (~deconstruct-path str)
+                                                             (find-file path)
+                                                             (when pattern
+                                                               (cond ((numberp pattern)
+                                                                      (goto-line pattern))
+                                                                     (t
+                                                                      (beginning-of-buffer)
+                                                                      (re-search-forward pattern))))))
+                                                          ((and (eq 'lisp-mode major-mode)
+                                                                (slime-connected-p))
+                                                           ;; (message-box "lisp-mode")
+                                                           (call-interactively 'slime-eval-region))
+                                                          (t
+                                                           ;; (message-box "emacs-lisp mode")
+                                                           (call-interactively 'wand:eval-string)))))))))
 
 (defun ~file-pattern? (str)
   "Determines if a string is a file pattern \(`path' or
@@ -900,8 +903,12 @@ path\)' if there is no line number."
 ;; $ curl 0:9999/open//m/src
 ;; $ curl 0:9999/exec//tmp/tmp.el
 
+(eval-and-compile
+  (defun cmpitg/emnode-load-path ()
+    (~get-config "local-packages/emnode")))
+
 (use-package emnode
-  :load-path "/m/src/emnode"
+  :load-path (lambda () (list (cmpitg/emnode-load-path)))
   :ensure elnode
   :config
   (progn
@@ -1846,7 +1853,6 @@ E.g.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (~add-load-path (~get-config "local-packages/acme-mouse"))
-
 (require 'acme-mouse)
 
 (bind-key "<C-mouse-1>" '~exec|-select-output)

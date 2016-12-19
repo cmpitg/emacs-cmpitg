@@ -61,18 +61,19 @@ note taker, ...)"
 ;; Config helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun ~get-config (&rest paths)
-  "Returns path to a config file or directory."
-  (apply 'concat *config-dir* paths))
+(eval-when-compile
+ (defun ~get-config (&rest paths)
+   "Returns path to a config file or directory."
+   (apply 'concat *config-dir* paths))
 
-(defun ~get-library-full-path (library-name)
-  "Return the full path to a library."
-  (save-excursion
-    (find-library library-name)
-    (let ((file-path (or (expand-file-name buffer-file-name)
-                         "")))
-      (kill-buffer)
-      file-path)))
+ (defun ~get-library-full-path (library-name)
+   "Return the full path to a library."
+   (save-excursion
+     (find-library library-name)
+     (let ((file-path (or (expand-file-name buffer-file-name)
+                          "")))
+       (kill-buffer)
+       file-path))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Minimal config
