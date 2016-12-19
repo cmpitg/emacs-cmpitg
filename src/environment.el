@@ -147,14 +147,15 @@
 ;;; Set frame title
 ;; (setq frame-title-format
 ;;       '(multiple-frames "%b" ("@" system-name )))
-(let ((emacs-as (-> (or (cmpitg/emacs-as) :emacs)
-                    keyword->symbol
-                    symbol->string
-                    capitalize)))
+(let ((emacs-as (--> (or (cmpitg/emacs-as) :emacs)
+                     (symbol-name it)
+                     (substring it 1)
+                     (intern it)
+                     (symbol->string it)
+                     (capitalize it))))
   (setq-default frame-title-format `(,emacs-as " \u262f "
                                                (buffer-file-name "%f"
                                                                  (dired-directory dired-directory "%b")))))
-
 
 ;; read-quoted-char-radix (10 or 16)
 
