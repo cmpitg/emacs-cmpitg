@@ -7,3 +7,6 @@
 [submodule "src/local-packages/wand"]
 	path = src/local-packages/wand
 	url = git@github.com:cmpitg/wand.git
+[submodule "src/local-packages/emnode"]
+	path = src/local-packages/emnode
+	url = git@github.com:cmpitg/emnode.git
