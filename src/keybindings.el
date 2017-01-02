@@ -274,9 +274,14 @@
 ;; (bind-key "M-x" 'execute-extended-command)
 ;; (bind-key "M-/" 'dabbrev-expand)
 
+;; helm-do-ag: Helm'ing while typing to search right away
+;; helm-ag: search first, then Helm'ing while typing to filter
 ;; (bind-key "<f10>" 'helm-do-grep-ag)
-(bind-key "<f10>" 'helm-ag)
-(bind-key "<C-f10>" 'ack)
+;; (bind-key "<f10>" 'helm-ag)
+;; (bind-key "<f10>" 'helm-ag-project-root)
+(bind-key "<f10>" 'helm-do-ag-project-root)
+(bind-key "<C-f10>" 'helm-do-ag)
+;; (bind-key "<C-f10>" 'ack)
 
 (bind-key "s-@" '~duplicate-line-or-region)
 
