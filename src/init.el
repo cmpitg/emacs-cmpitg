@@ -41,12 +41,18 @@
 
 (require 'cl)
 
+;; Prior to Emacs 25, `reverse' doesn't receive string argument
+
+(defun _reverse-string (str)
+  "Reverse a string."
+  (apply #'string (reverse (string-to-list str))))
+
 (defun cmpitg/emacs-as ()
   "Return :mail, :notes, or nil when Emacs is running as mail
 browser, note taker, or ... just Emacs."
   (loop for x in process-environment
         when (and (string-prefix-p "EMACS_ENABLED_" x nil)
-                  (string-prefix-p "1=" (reverse x)))
+                  (string-prefix-p "1=" (_reverse-string x)))
         return (let ((x (substring x (length "EMACS_ENABLED_"))))
                  (intern (concat ":" (downcase (substring x
                                                           0 (- (length x)
