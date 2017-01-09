@@ -69,7 +69,12 @@ directory as project root."
 (defun toolbox:open-with (file cmd)
   "Opens file with a command line.  File name is quoted
 automatically quoted."
-  (~exec (format cmd file)))
+  (call-process "bash"
+                nil
+                0
+                nil
+                "-c"
+                (format cmd file)))
 
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
