@@ -15,6 +15,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+(setf *open-with-regexps*
+      `(("\\.pdf" . "evince '%s'")))
+
 ;; FIXME
 (defvar *emacs-menu-file*           "/m/Toolbox/Emacs-Menu.txt")
 (setq vc-follow-symlinks t) ; Always follow symlinks
