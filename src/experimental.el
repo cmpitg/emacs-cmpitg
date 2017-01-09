@@ -779,6 +779,12 @@ line."
                         (wand:create-rule :match "file:"
                                           :capture :after
                                           :action toolbox:open-file)
+                        (wand:create-rule :match "\"[^\"]*\""
+                                          :capture "\"\\([^\"]*\\)\""
+                                          :action toolbox:open-file)
+                        (wand:create-rule :match "'[^']*'"
+                                          :capture "'\\([^']*\\)'"
+                                          :action toolbox:open-file)
                         (wand:create-rule :match "#> "
                                           :capture :after
                                           :action ~add-bracket-and-eval)
