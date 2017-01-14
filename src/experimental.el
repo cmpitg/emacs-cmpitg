@@ -827,30 +827,6 @@ line."
                                                            ;; (message-box "emacs-lisp mode")
                                                            (call-interactively 'wand:eval-string)))))))))
 
-(defun ~file-pattern? (str)
-  "Determines if a string is a file pattern \(`path' or
-`path:line-number', or `path:pattern'\)."
-  (let ((str (s-trim str)))
-   (or (f-exists? str)
-       (let ((components (s-split ":" str)))
-         (and (= 2 (length components))
-              (f-exists? (first components)))))))
-
-(defun ~deconstruct-path (path)
-  "Deconstructs a file pattern into `\(values path
-line-number\)', `\(values path pattern\)' or just `\(values
-path\)' if there is no line number."
-  (let ((path (s-trim path)))
-    (if (~file-pattern? path)
-        (or (and (f-exists? path)
-                 (values path))
-            (let ((components (s-split ":" path)))
-              (values (first components) (let ((num (string-to-int (second components))))
-                                           (if (zerop num)
-                                               (second components)
-                                             num)))))
-      (values))))
-
 (defun ~current-snippet->file (path)
   "Generates the corresponding file from current snippet."
   (interactive)

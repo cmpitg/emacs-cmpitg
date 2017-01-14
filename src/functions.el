@@ -77,6 +77,29 @@ directory as project root."
             (values path number)))
       (values path))))
 
+(defun* ~file-pattern? (str &key (must-exists t))
+  "Determines if a string is a file pattern \(`path' or
+`path:line-number', or `path:pattern'\).  By default, the
+corresponding file must exist for this function to return `t'.
+To remove this constraint, pass in `:must-exists nil'.  E.g.
+
+\(~file-pattern? \"/tmp/aoeu\"\)                                        ⇒ t
+\(~file-pattern? \"/tmp/aoeu:10\"\)                                     ⇒ t
+\(~file-pattern? \"/tmp/aoeu:/hello world/\"\)                          ⇒ t
+\(~file-pattern? \"/tmp/non-existent\"\)                                ⇒ nil
+\(~file-pattern? \"/tmp/non-existent\" :must-exists nil\)               ⇒ t
+\(~file-pattern? \"/tmp/non-existent:10\" :must-exists nil\)            ⇒ t
+\(~file-pattern? \"/tmp/non-existent:/hello world/\" :must-exists nil\) ⇒ t
+"
+  (cl-flet ((check-file-exists? (path) (if must-exists
+                                           (f-exists? path)
+                                         t)))
+    (let ((str (s-trim str)))
+      (or (check-file-exists? str)
+          (let ((components (s-split ":" str)))
+            (and (= 2 (length components))
+                 (check-file-exists? (first components))))))))
+
 (defun toolbox:open-file (path)
   "Opens path and open with external program if necessary."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
