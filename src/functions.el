@@ -51,6 +51,32 @@ directory as project root."
             (projectile-sort-files files))))
     (call-interactively 'helm-projectile-find-file)))
 
+(defun ~deconstruct-path (path)
+  "Deconstructs a path notation into `path' and `number' or
+`pattern'.  See the following examples for further information:
+
+\(~deconstruct-path \"/tmp/aoeu\"\)                       ⇒ \(values \"/tmp/aoeu\"\)
+\(~deconstruct-path \"/tmp/aoeu:10\"\)                    ⇒ \(values \"/tmp/aoeu\" 10\)
+\(~deconstruct-path \"/tmp/aoeu:10/other/:20\"\)          ⇒ \(values \"/tmp/aoeu:10/other/:20\" 20\)
+\(~deconstruct-path \"/tmp/aoeu:/hello world/\"\)         ⇒ \(values \"/tmp/aoeu\" \"hello world\"\)
+\(~deconstruct-path \"/tmp/aoeu:/inside:/hello world/\"\) ⇒ \(values \"/tmp/aoeu:/inside\" \"hello world\"\)
+"
+  (let ((matches (or (s-match (rx (group (one-or-more any))
+                                  ":" (group (one-or-more digit))
+                                  eol)
+                              path)
+                     (s-match (rx (group (one-or-more any))
+                                  ":/" (group (one-or-more any)) "/" eol)
+                              path))))
+    (if matches
+        (let* ((path (nth 1 matches))
+               (pattern-or-number (nth 2 matches))
+               (number (string-to-int pattern-or-number)))
+          (if (zerop number)
+              (values path pattern-or-number)
+            (values path number)))
+      (values path))))
+
 (defun toolbox:open-file (path)
   "Opens path and open with external program if necessary."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
