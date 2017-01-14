@@ -1835,8 +1835,8 @@ E.g.
 ;; Last
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(~add-load-path (~get-config "local-packages/acme-mouse"))
-(require 'acme-mouse)
+;; (~add-load-path (~get-config "local-packages/acme-mouse"))
+;; (require 'acme-mouse)
 
 (bind-key "<C-mouse-1>" '~exec|-select-output)
 (global-unset-key (kbd "<C-down-mouse-1>"))
