@@ -4,11 +4,11 @@ export GPG_TTY=$(tty)
 
 if [[ "${1}" = "--help" ]]; then
 	cat <<EOF
-Usage: re [re-options] <command> [arguments] ...
+Usage: rmacs [rmacs-options] <command> [arguments] ...
 
-Re is a Renforced Emacs.
+Rmacs is a Re-enforced eMacs.
 
-'command' denotes the main functionality of how Re is used.  'command' is
+'command' denotes the main functionality of how Rmacs is used.  'command' is
 one of the following:
 
   edit   :: Text editor
@@ -16,7 +16,7 @@ one of the following:
   notes  :: Note taker
   eval   :: Evals an Emacs Lisp expression instead of starting application
 
-One or more Re options might be specificied:
+One or more Rmacs options might be specificied:
 
   --port <port-number>  :: An HTTP port number on which the Emacs server is
 						   listened.
@@ -31,22 +31,22 @@ If '--port' is not specified, by default,
 
 Examples:
 
-  re edit <path>
+  rmacs edit <path>
     Opens a file.
 
-  re edit <path>:<line-number>
+  rmacs edit <path>:<line-number>
     Opens a file, jumps to a specific line.
 
-  re edit <path>:/<pattern>/
+  rmacs edit <path>:/<pattern>/
     Opens a file, jumps to the first line containing a specific pattern.
 
-  re mail
+  rmacs mail
     Opens mail browser.
 
-  re notes
+  rmacs notes
     Opens note utility.
 
-  re eval <expression>
+  rmacs eval <expression>
     Evals an Emacs Lisp expression.
 EOF
 	exit 0
