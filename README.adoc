@@ -31,7 +31,7 @@ TODO.  Stay tuned for more!
 ** `EMACS_ENABLED_MAIL`
 ** `EMACS_ENABLED_NOTES`
 
-* High-level entry point: `remacs`
+* High-level entry point: `rmacs`
 
 * Low-level entry point: `emacs-cmpitg`
 
@@ -39,21 +39,21 @@ TODO.  Stay tuned for more!
 
 [source,sh]
 ----
-remacs edit <path>
+rmacs edit <path>
 ----
 
 === Emacs as mail browser (mu4e)
 
 [source,sh]
 ----
-remacs mail
+rmacs mail
 ----
 
 === Emacs as note taker
 
 [source,sh]
 ----
-remacs notes
+rmacs notes
 ----
 
 == Python development workflow
