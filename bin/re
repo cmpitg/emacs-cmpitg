@@ -4,9 +4,11 @@ export GPG_TTY=$(tty)
 
 if [[ "${1}" = "--help" ]]; then
 	cat <<EOF
-Usage: remacs [remacs-options] <command> [arguments] ...
+Usage: re [re-options] <command> [arguments] ...
 
-'command' denotes the main functionality of how Remacs is used.  'command' is
+Re is a Renforced Emacs.
+
+'command' denotes the main functionality of how Re is used.  'command' is
 one of the following:
 
   edit   :: Text editor
