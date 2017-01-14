@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -99,6 +99,28 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
           (let ((components (s-split ":" str)))
             (and (= 2 (length components))
                  (check-file-exists? (first components))))))))
+
+(defun toolbox:open-file-specialized (file-pattern)
+  "Opens a path and jumps to a line based on number or a the
+first occurrence of a pattern.  E.g.
+
+* If `file-pattern' is a path, open it;
+
+* If `file-pattern' is of format \"<path>:<number>\", open the
+  file and jump to the corresponding line number;
+
+* If `file-pattern' is of format \"<path>:/<pattern>/\", open the
+  file and jump to the first occurrence of `pattern'.
+"
+  (multiple-value-bind (path pattern)
+      (~deconstruct-path file-pattern)
+    (find-file path)
+    (when pattern
+      (cond ((numberp pattern)
+             (goto-line pattern))
+            (t
+             (beginning-of-buffer)
+             (re-search-forward pattern))))))
 
 (defun toolbox:open-file (path)
   "Opens path and open with external program if necessary."
