@@ -14,7 +14,7 @@ one of the following:
   notes  :: Note taker
   eval   :: Evals an Emacs Lisp expression instead of starting application
 
-One or more Remacs options might be specificied:
+One or more Re options might be specificied:
 
   --port <port-number>  :: An HTTP port number on which the Emacs server is
 						   listened.
@@ -24,27 +24,27 @@ One or more Remacs options might be specificied:
 
 If '--port' is not specified, by default,
   text editor uses port 9999
-  mail uses port 9998
-  notes uses port 9997
+  mail browser uses port 9998
+  note taker uses port 9997
 
 Examples:
 
-  remacs edit <path>
+  re edit <path>
     Opens a file.
 
-  remacs edit <path>:<line-number>
+  re edit <path>:<line-number>
     Opens a file, jumps to a specific line.
 
-  remacs edit <path>:/<pattern>/
+  re edit <path>:/<pattern>/
     Opens a file, jumps to the first line containing a specific pattern.
 
-  remacs mail
+  re mail
     Opens mail browser.
 
-  remacs notes
+  re notes
     Opens note utility.
 
-  remacs eval <expression>
+  re eval <expression>
     Evals an Emacs Lisp expression.
 EOF
 	exit 0
