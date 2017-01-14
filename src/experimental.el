@@ -1844,12 +1844,9 @@ E.g.
 (bind-key "<S-mouse-1>" 'wand:execute)
 (global-unset-key (kbd "<S-down-mouse-1>"))
 
-(bind-key "<mouse-8>" 'evil-insert)
-;; (bind-key "<mouse-8>" '(lambda ()
-;;                          (interactive)
-;;                          ;; (deactivate-mark t)
-;;                          (call-interactively 'evil-insert)))
-(bind-key "<mouse-9>" 'evil-force-normal-state)
+(bind-key "<mouse-8>" 'kill-ring-save)
+(bind-key "<S-mouse-8>" 'kill-region)
+(bind-key "<mouse-9>" 'yank)
 
 (revert-all-buffers)
 
