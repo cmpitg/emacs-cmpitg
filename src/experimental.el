@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -810,15 +810,7 @@ line."
                                                     (interactive)
                                                     ;; (message-box "Here: %s -> " str (~file-pattern? str))
                                                     (cond ((~file-pattern? str)
-                                                           (multiple-value-bind (path pattern)
-                                                               (~deconstruct-path str)
-                                                             (find-file path)
-                                                             (when pattern
-                                                               (cond ((numberp pattern)
-                                                                      (goto-line pattern))
-                                                                     (t
-                                                                      (beginning-of-buffer)
-                                                                      (re-search-forward pattern))))))
+                                                           (toolbox:open-file str))
                                                           ((and (eq 'lisp-mode major-mode)
                                                                 (slime-connected-p))
                                                            ;; (message-box "lisp-mode")
@@ -879,7 +871,7 @@ line."
   (let ((path (emnode:http-get-arg httpcon 1)))
     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
     (emnode:http-end httpcon (format "> Opening: %s\n" path))
-    (find-file path)))
+    (toolbox:open-file path)))
 
 (defun ~ipc-exec-file (httpcon)
   (let ((path (emnode:http-get-arg httpcon 1)))

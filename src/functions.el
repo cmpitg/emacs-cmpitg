@@ -127,7 +127,7 @@ first occurrence of a pattern.  E.g.
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
                                      *open-with-regexps*
                                    (list))
-                                 (list '(".*" . find-file))))
+                                 (list '(".*" . toolbox:open-file-specialized))))
     (let ((regexp (car regexp&action))
           (action (cdr regexp&action)))
       (when (s-matches-p regexp path)
