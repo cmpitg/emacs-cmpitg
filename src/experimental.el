@@ -785,12 +785,6 @@ line."
                         (wand:create-rule :match "file:"
                                           :capture :after
                                           :action toolbox:open-file)
-                        (wand:create-rule :match "\"[^\"]*\""
-                                          :capture "\"\\([^\"]*\\)\""
-                                          :action toolbox:open-file)
-                        (wand:create-rule :match "'[^']*'"
-                                          :capture "'\\([^']*\\)'"
-                                          :action toolbox:open-file)
                         (wand:create-rule :match "#> "
                                           :capture :after
                                           :action ~add-bracket-and-eval)
@@ -804,19 +798,28 @@ line."
                                           :capture :after
                                           :action (lambda (str)
                                                     (~send-mail :to str)))
+                        (wand:create-rule :match "\"[^\"]*\""
+                                          :capture "\"\\([^\"]*\\)\""
+                                          :action toolbox:open-file)
+                        (wand:create-rule :match "'[^']*'"
+                                          :capture "'\\([^']*\\)'"
+                                          :action toolbox:open-file)
+                        (wand:create-rule :match ".*\\.html$"
+                                          :capture :whole
+                                          :action (lambda (path)
+                                                    (interactive)
+                                                    (toolbox:open-with path "web-browser-gui %s")))
                         (wand:create-rule :match ".*"
                                           :capture :whole
                                           :action (lambda (str)
                                                     (interactive)
-                                                    ;; (message-box "Here: %s -> " str (~file-pattern? str))
+                                                    ;; (message-box "Here: %s -> %s" str (~file-pattern? str))
                                                     (cond ((~file-pattern? str)
                                                            (toolbox:open-file str))
                                                           ((and (eq 'lisp-mode major-mode)
                                                                 (slime-connected-p))
-                                                           ;; (message-box "lisp-mode")
                                                            (call-interactively 'slime-eval-region))
                                                           (t
-                                                           ;; (message-box "emacs-lisp mode")
                                                            (call-interactively 'wand:eval-string)))))))))
 
 (defun ~current-snippet->file (path)
