@@ -419,8 +419,11 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
     (switch-to-buffer buf)
     (funcall (and initial-major-mode))
     (setq default-directory (if (boundp '*scratch-dir*)
-                                   *scratch-dir*
-                                 "/m/scratch/"))
+                                *scratch-dir*
+                              "/m/scratch/"))
+    (set-visited-file-name (format "%s_%s"
+                                   (s-trim (~exec "now-standardized"))
+                                   (s-trim (~exec "uuidgen"))))
     (setq buffer-offer-save t)))
 
 (defalias '~save-file 'save-buffer
