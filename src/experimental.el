@@ -1822,7 +1822,7 @@ E.g.
                                                     ("/sent"           . ?s)))
       (cmpitg:add-mu4e-account :context-name "m-hd@mamk"
                                :full-name "Ha-Duong Nguyen"
-                               :mail-address "duongng"
+                               :mail-address "Duong.Nguyen2@metropolia.fi"
                                :match-recipients '("Duong.Nguyen2@metropolia.fi")
                                :default-headers "BCC: cmpitg@gmail.com, Duong.Nguyen2@metropolia.fi"
                                :smtp-server "smtp.metropolia.fi:587"
