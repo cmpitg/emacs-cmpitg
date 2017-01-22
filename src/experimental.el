@@ -118,11 +118,10 @@
             (persistent-scratch-setup-default)
             (persistent-scratch-autosave-mode 1)))
 
-(use-package winner-mode
-  :config (progn
-            (winner-mode 1)
-            (~bind-key-with-prefix "w h" 'winner-undo)
-            (~bind-key-with-prefix "w n" 'winner-redo)))
+(require 'winner)
+(winner-mode 1)
+(~bind-key-with-prefix "w h" 'winner-undo)
+(~bind-key-with-prefix "w n" 'winner-redo)
 
 (use-package restclient
   :ensure t)
