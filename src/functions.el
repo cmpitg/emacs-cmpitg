@@ -2508,7 +2508,9 @@ buffer.")
                                 (thing-at-point-url-at-point))
                                (t
                                 "https://encrypted.google.com/")))))
-  (~send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url)))
+  ;; (~send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url))
+  (toolbox:run-process (format "firefox '%s'" url)))
+
 
 (defun ~refresh-firefox ()
   "Refresh current tab of Firefox browser."
