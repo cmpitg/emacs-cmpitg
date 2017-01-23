@@ -2548,7 +2548,7 @@ buffer.")
 (defalias 'refresh-firefox '~refresh-firefox)
 (defalias 'start-mozrepl '~start-mozrepl)
 (defalias 'send-to-mozrepl '~send-to-mozrepl)
-(defalias 'auto-reload-firefox-after-save-hook '~auto-reload-firefox-after-save-hook)
+;; (defalias 'auto-reload-firefox-after-save-hook '~auto-reload-firefox-after-save-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
