@@ -137,15 +137,27 @@ first occurrence of a pattern.  E.g.
           (otherwise  (message-box (format "Invalid program %s" action))))
         (return)))))
 
-(defun toolbox:open-with (file cmd)
-  "Opens file with a command line.  File name is quoted
-automatically quoted."
+(defun toolbox:run-process (cmd)
+  "Runs an external process asynchronously.  The process is not
+terminated when Emacs is.  `cmd' is executed via `bash -c'."
   (call-process "bash"
                 nil
                 0
                 nil
                 "-c"
-                (format cmd file)))
+                cmd))
+
+(defun toolbox:open-with (file cmd)
+  "Opens file with a command line.  File name is quoted
+automatically quoted."
+  (toolbox:run-process (format cmd file))
+  ;; (call-process "bash"
+  ;;               nil
+  ;;               0
+  ;;               nil
+  ;;               "-c"
+  ;;               (format cmd file))
+  )
 
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
