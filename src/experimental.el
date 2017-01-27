@@ -57,6 +57,17 @@
         ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "u smplayer" ("-idx" file))
         ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
 
+(defun ~right-click-menu ()
+  `(""
+    ["Cut" clipboard-kill-region (~is-selecting?)]
+    ["Copy" kill-ring-save (~is-selecting?)]
+    ["Paste" yank t]
+    ["Delete" delete-region (~is-selecting?)]
+    ["--" ignore]
+    ["Undo" undo-tree-undo t]
+    ["Redo" undo-tree-redo t]
+    ["--" ignore]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Alignment and indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1839,6 +1850,10 @@ E.g.
 
 ;; (~add-load-path (~get-config "local-packages/acme-mouse"))
 ;; (require 'acme-mouse)
+
+(bind-key "<mouse-3>" '(lambda ()
+                         (interactive)
+                         (popup-menu (~right-click-menu))))
 
 (bind-key "<C-mouse-1>" '~exec|-select-output)
 (global-unset-key (kbd "<C-down-mouse-1>"))
