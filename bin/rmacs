@@ -194,4 +194,8 @@ case "${command_}" in
 		elif ! [[ "${1}" = "" ]]; then
 			curl "0:${port_}/open/${PWD}/$@"
 		fi
+		;;
+	file)
+		# TODO: Open file with file browser
+		;;
 esac
