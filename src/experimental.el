@@ -1641,7 +1641,7 @@ directory."
 ;;   $ mu find hello
 ;;
 
-(when (string= "1" (getenv "EMACS_ENABLED_MAIL"))
+(when (eq :mail (cmpitg/emacs-as))
   (~add-load-path (~get-config "local-packages/mu/mu4e"))
 
   (defun* cmpitg:add-mu4e-account (&key context-name
