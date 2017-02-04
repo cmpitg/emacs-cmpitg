@@ -1640,7 +1640,7 @@ directory."
 ;;
 ;;
 ;; Check if Mu is working
-;;   $ mu index --maildir=/m/mail/boxes/cmpitg-at-gmail
+;;   $ mu index --maildir=/m/mail/boxes
 ;;   $ mu find hello
 ;;
 
@@ -1654,7 +1654,6 @@ directory."
                                         default-headers
                                         smtp-server
                                         signature-file
-                                        maildir
                                         maildir-shortcuts)
     "Add a mu4e mail account.
 
@@ -1667,8 +1666,7 @@ E.g.
                          :default-headers \"BCC: cmpitg@gmail.com\"
                          :smtp-server \"smtp.gmail.com:587\"
                          :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"
-                         :maildir \"/m/mail/boxes/cmpitg-at-gmail\"
-                         :maildir-shortcuts '\(\"/Inbox\" . ?i\)\)"
+                         :maildir-shortcuts '\(\"cmpitg-at-gmail/Inbox\" . ?i\)\)"
     ;; Because Emacs uses dynamic binidng by default
     (lexical-let ((context-name context-name)
                   (full-name full-name)
@@ -1677,7 +1675,6 @@ E.g.
                   (default-headers default-headers)
                   (smtp-server smtp-server)
                   (signature-file signature-file)
-                  (maildir maildir)
                   (maildir-shortcuts maildir-shortcuts))
       (add-to-list 'mu4e-user-mail-address-list mail-address t)
       (destructuring-bind (smtp-server smtp-port) (s-split ":" smtp-server)
@@ -1699,13 +1696,14 @@ E.g.
                               (smtpmail-smtp-server . ,smtp-server)
                               (smtpmail-smtp-service . ,smtp-port)
                               (smtpmail-starttls-credentials . ((,smtp-server ,smtp-port nil nil)))
-                              (mu4e-maildir . ,maildir)
                               (mu4e-maildir-shortcuts . ,maildir-shortcuts)))
                      t))))
 
   (use-package mu4e
     :config
     (progn
+      ;; TODO - Context menu
+
       ;; Use Helm instead of ido
       (use-package helm-mu
         :ensure t
@@ -1739,7 +1737,8 @@ E.g.
       (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
       (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful hd-at-mamk_all")
 
-      ;; (setq mu4e-maildir        "/m/mail/boxes/cmpitg-at-gmail")
+
+      (setq mu4e-maildir "/m/mail/boxes/")
       (setq mu4e-attachment-dir "~/Downloads")
 
       (setq mu4e-headers-results-limit 2000)
@@ -1760,10 +1759,6 @@ E.g.
       (setq mu4e-sent-folder   "/sent"
             mu4e-drafts-folder "/draft"
             mu4e-trash-folder  "/trash")
-
-      ;; (setq mail-default-headers    "BCC: cmpitg@gmail.com")
-      ;; (setq mu4e-reply-to-address   "cmpitg@gmail.com")
-      ;; (setq mu4e-compose-signature  (~read-file "/m/mail/signature_cmpitg-at-gmail.txt"))
 
       (setq message-send-mail-function     'smtpmail-send-it)
       (setq send-mail-function             'smtpmail-send-it)
@@ -1810,13 +1805,12 @@ E.g.
                                :default-headers "BCC: cmpitg@gmail.com"
                                :smtp-server "smtp.gmail.com:587"
                                :signature-file "/m/mail/signature_cmpitg-at-gmail.txt"
-                               :maildir "/m/mail/boxes/cmpitg-at-gmail"
-                               :maildir-shortcuts '(("/Inbox"          . ?i)
-                                                    ("/top-todo"       . ?t)
-                                                    ("/top-delegated"  . ?d)
-                                                    ("/top-awaiting"   . ?a)
-                                                    ("/draft"          . ?r)
-                                                    ("/sent"           . ?s)))
+                               :maildir-shortcuts '(("/cmpitg-at-gmail/Inbox"          . ?i)
+                                                    ("/cmpitg-at-gmail/top-todo"       . ?t)
+                                                    ("/cmpitg-at-gmail/top-delegated"  . ?d)
+                                                    ("/cmpitg-at-gmail/top-awaiting"   . ?a)
+                                                    ("/cmpitg-at-gmail/draft"          . ?r)
+                                                    ("/cmpitg-at-gmail/sent"           . ?s)))
       (cmpitg:add-mu4e-account :context-name "hd@bayo"
                                :full-name "Ha-Duong Nguyen"
                                :mail-address "hd@bayo.vn"
@@ -1824,13 +1818,12 @@ E.g.
                                :default-headers "BCC: cmpitg@gmail.com, hd@bayo.vn"
                                :smtp-server "mail.securemail.vn:587"
                                :signature-file "/m/mail/signature_hd-at-bayo.txt"
-                               :maildir "/m/mail/boxes/cmpitg-at-gmail"
-                               :maildir-shortcuts '(("/Inbox"          . ?i)
-                                                    ("/top-todo"       . ?t)
-                                                    ("/top-delegated"  . ?d)
-                                                    ("/top-awaiting"   . ?a)
-                                                    ("/draft"          . ?r)
-                                                    ("/sent"           . ?s)))
+                               :maildir-shortcuts '(("/cmpitg-at-gmail/Inbox"          . ?i)
+                                                    ("/cmpitg-at-gmail/top-todo"       . ?t)
+                                                    ("/cmpitg-at-gmail/top-delegated"  . ?d)
+                                                    ("/cmpitg-at-gmail/top-awaiting"   . ?a)
+                                                    ("/cmpitg-at-gmail/draft"          . ?r)
+                                                    ("/cmpitg-at-gmail/sent"           . ?s)))
       (cmpitg:add-mu4e-account :context-name "m-hd@mamk"
                                :full-name "Ha-Duong Nguyen"
                                :mail-address "Duong.Nguyen2@metropolia.fi"
@@ -1838,9 +1831,8 @@ E.g.
                                :default-headers "BCC: cmpitg@gmail.com, Duong.Nguyen2@metropolia.fi"
                                :smtp-server "smtp.metropolia.fi:587"
                                :signature-file "/m/mail/signature_hd-at-mamk.txt"
-                               :maildir "/m/mail/boxes/hd-at-mamk"
-                               :maildir-shortcuts '(("/Inbox"          . ?i)
-                                                    ("/Drafts"         . ?r)))))
+                               :maildir-shortcuts '(("/hd-at-mamk/Inbox"          . ?i)
+                                                    ("/hd-at-mamk/Drafts"         . ?r)))))
 
   (bind-key "<M-f12>" 'mu4e))
 
