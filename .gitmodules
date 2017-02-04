@@ -3,7 +3,7 @@
 	url = https://github.com/akrito/acme-mouse.git
 [submodule "src/local-packages/mu"]
 	path = src/local-packages/mu
-	url = https://github.com/djcb/mu.git
+	url = git@github.com:cmpitg/mu.git
 [submodule "src/local-packages/wand"]
 	path = src/local-packages/wand
 	url = git@github.com:cmpitg/wand.git
