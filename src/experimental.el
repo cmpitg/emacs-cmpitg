@@ -1806,8 +1806,7 @@ E.g.
 
       (add-to-list 'mu4e-view-actions
                    '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-      (setq browse-url-browser-function (lambda (url)
-                                          (interactive)
+      (setq browse-url-browser-function (lambda (url &rest args)
                                           (~firefox url :new-window? t)))
 
       ;; Don't keep message buffers around
