@@ -1791,7 +1791,7 @@ E.g.
 
       (add-to-list 'mu4e-view-actions
                    '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-      (setq browse-url-browser-function 'browse-url-firefox)
+      (setq browse-url-browser-function '~firefox)
 
       ;; Don't keep message buffers around
       (setq message-kill-buffer-on-exit t)
