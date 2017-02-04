@@ -200,6 +200,15 @@ horizontal split."
 (defalias 'bs 'bookmark-save)
 (defalias 'fm 'folding-mode)
 
+(defun ~toggle-maximize-buffer ()
+  "Toggles maximization of current buffer."
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))
+
 (defun ~next-file-buffer ()
   "Move to the next non-special buffer, unless it's *scratch*."
   (interactive)
