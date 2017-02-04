@@ -14,6 +14,7 @@ one of the following:
   edit   :: Text editor
   mail   :: Mail browser
   notes  :: Note taker
+  file   :: File manager
   eval   :: Evals an Emacs Lisp expression instead of starting application
 
 One or more Rmacs options might be specificied:
@@ -28,6 +29,7 @@ If '--port' is not specified, by default,
   text editor uses port 9999
   mail browser uses port 9998
   note taker uses port 9997
+  file taker uses port 9996
 
 Examples:
 
@@ -45,6 +47,9 @@ Examples:
 
   rmacs notes
     Opens note utility.
+
+  rmacs file
+    Opens file browser.
 
   rmacs eval <expression>
     Evals an Emacs Lisp expression.
@@ -100,6 +105,10 @@ case "${1}" in
 		command_=notes
 		port_=${port_:-9997}
 		;;
+	file)
+		command_=file
+		port_=${port_:-9996}
+		;;
 	"")
 		echo Missing command.  See Remacs --help for usage. >&2
 		exit 1
@@ -146,6 +155,9 @@ if [[ $(server_running_p ${port_}) = "0" ]]; then
 		notes)
 			export EMACS_ENABLED_NOTES=1
 			;;
+		file)
+			export EMACS_ENABLED_FILE_BROWSER=1
+			;;
 	esac
 
 	export EMACS_PORT=${port_}
@@ -182,4 +194,8 @@ case "${command_}" in
 		elif ! [[ "${1}" = "" ]]; then
 			curl "0:${port_}/open/${PWD}/$@"
 		fi
+		;;
+	file)
+		# TODO: Open file with file browser
+		;;
 esac

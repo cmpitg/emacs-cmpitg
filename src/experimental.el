@@ -1626,6 +1626,14 @@ directory."
 ;;            ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; File browser with Sunrise Commander
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (eq :file-browser (cmpitg/emacs-as))
+  (use-package sunrise-commander
+    :ensure t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Email with mu4e
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1644,7 +1652,7 @@ directory."
 ;;   $ mu find hello
 ;;
 
-(when (string= "1" (getenv "EMACS_ENABLED_MAIL"))
+(when (eq :mail (cmpitg/emacs-as))
   (~add-load-path (~get-config "local-packages/mu/mu4e"))
 
   (defun* cmpitg:add-mu4e-account (&key context-name

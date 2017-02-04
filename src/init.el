@@ -54,9 +54,13 @@ browser, note taker, or ... just Emacs."
         when (and (string-prefix-p "EMACS_ENABLED_" x nil)
                   (string-prefix-p "1=" (_reverse-string x)))
         return (let ((x (substring x (length "EMACS_ENABLED_"))))
-                 (intern (concat ":" (downcase (substring x
-                                                          0 (- (length x)
-                                                               (length "1=")))))))))
+                 (intern (concat ":" (replace-regexp-in-string
+                                      "_"
+                                      "-"
+                                      (downcase
+                                       (substring x
+                                                  0 (- (length x)
+                                                       (length "1="))))))))))
 
 (defun cmpitg/specialized-emacs? ()
   "Check if Emacs is running in specialized mode (mail browser,
