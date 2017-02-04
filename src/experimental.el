@@ -1734,8 +1734,9 @@ E.g.
                                                      (let ((date&time (mu4e-msg-field mu4e-msg :date)))
                                                        (format-time-string "%a, %d %b %Y %H:%M:%S" date&time))))))
 
-      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
-      (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful hd-at-mamk_all")
+      ;; (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
+      ;; (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful hd-at-mamk_all")
+      (setq mu4e-get-mail-command "sync-mails")
 
 
       (setq mu4e-maildir "/m/mail/boxes/")
