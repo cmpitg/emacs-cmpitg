@@ -1741,7 +1741,7 @@ E.g.
       (setq mu4e-maildir "/m/mail/boxes/")
       (setq mu4e-attachment-dir "~/Downloads")
 
-      (setq mu4e-headers-results-limit 2000)
+      (setq mu4e-headers-results-limit 3000)
       (setq mu4e-view-fields '(:from
                                :to :cc :subject :user-agent :flags :date
                                :maildir :mailing-list :tags :attachments
