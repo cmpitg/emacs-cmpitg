@@ -1738,6 +1738,12 @@ E.g.
       ;; (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful hd-at-mamk_all")
       (setq mu4e-get-mail-command "sync-mails")
 
+      (setq mu4e-confirm-quit nil)
+      (setq mu4e-use-fancy-chars nil)
+
+      ;; Try displaying images
+      (setq mu4e-view-show-images t)
+      (setq mu4e-view-image-max-width 800)
 
       (setq mu4e-maildir "/m/mail/boxes/")
       (setq mu4e-attachment-dir "~/Downloads")
