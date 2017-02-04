@@ -2498,7 +2498,7 @@ buffer.")
   (~firefox
    (format "https://encrypted.google.com/search?q=%s" keyword)))
 
-(defun ~firefox (url)
+(defun* ~firefox (url &key (new-window? nil))
   "Open a URL in Firefox."
   (interactive
    (list (read-string "URL: " (cond
@@ -2509,7 +2509,9 @@ buffer.")
                                (t
                                 "https://encrypted.google.com/")))))
   ;; (~send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url))
-  (toolbox:run-process (format "firefox '%s'" url)))
+  (toolbox:run-process (if new-window?
+                           (format "firefox --new-window '%s'" url)
+                         (format "firefox '%s'" url))))
 
 
 (defun ~refresh-firefox ()
