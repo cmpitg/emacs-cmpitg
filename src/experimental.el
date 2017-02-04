@@ -1750,7 +1750,7 @@ E.g.
       (setq mu4e-headers-fields `((:long-date . 25)
                                   (:flags . 6)
                                   (:from . 30)
-                                  (:to . 20)
+                                  (:to . 25)
                                   (:subject)))
 
       (setq mu4e-update-interval 180)
