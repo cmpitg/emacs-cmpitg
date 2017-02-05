@@ -361,7 +361,7 @@
 ;; Recent files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(unless (cmpitg/specialized-emacs?)
+(unless (~specialized-emacs??)
   (use-package recentf
     :ensure t
     :init (progn

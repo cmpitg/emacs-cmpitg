@@ -66,6 +66,8 @@
                                                   0 (- (length x)
                                                        (length "1="))))))))))
 
+(defvar *emacs-server-port*
+  (string-to-int (or (getenv "EMACS_PORT") "9999")))
 
 (defun ~emacs-as ()
   "Return `:mail', `:notes', :file-browser or `nil' when Emacs is
