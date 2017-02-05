@@ -105,7 +105,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
             (and (= 2 (length components))
                  (check-file-exists? (first components))))))))
 
-(defun toolbox:open-file-specialized (file-pattern)
+(defun* toolbox:open-file-specialized (file-pattern &key (new-frame? nil))
   "Opens a path and jumps to a line based on number or a the
 first occurrence of a pattern.  E.g.
 
@@ -119,7 +119,9 @@ first occurrence of a pattern.  E.g.
 "
   (multiple-value-bind (path pattern)
       (~deconstruct-path file-pattern)
-    (find-file path)
+    (if new-frame?
+        (~find-file-new-frame path)
+      (find-file path))
     (when pattern
       (cond ((numberp pattern)
              (goto-line pattern))
@@ -127,12 +129,14 @@ first occurrence of a pattern.  E.g.
              (beginning-of-buffer)
              (re-search-forward pattern))))))
 
-(defun toolbox:open-file (path)
+(defun* toolbox:open-file (path &key (new-frame? nil))
   "Opens path and open with external program if necessary."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
                                      *open-with-regexps*
                                    (list))
-                                 (list '(".*" . toolbox:open-file-specialized))))
+                                 (list '(".*" . (lambda (path)
+                                                  (toolbox:open-file-specialized path
+                                                                                 :new-frame? new-frame?))))))
     (let ((regexp (car regexp&action))
           (action (cdr regexp&action)))
       (when (s-matches-p regexp path)
