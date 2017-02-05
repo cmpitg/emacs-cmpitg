@@ -53,9 +53,7 @@
   "Reverse a string."
   (apply #'string (reverse (string-to-list str))))
 
-(defun cmpitg/emacs-as ()
-  "Return :mail, :notes, or nil when Emacs is running as mail
-browser, note taker, or ... just Emacs."
+(defvar *emacs-as-tool*
   (loop for x in process-environment
         when (and (string-prefix-p "EMACS_ENABLED_" x nil)
                   (string-prefix-p "1=" (_reverse-string x)))
