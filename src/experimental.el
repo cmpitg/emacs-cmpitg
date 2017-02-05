@@ -1756,7 +1756,8 @@ E.g.
                                          :help "Date & time of sending, long, readable format"
                                          :function (lambda (mu4e-msg)
                                                      (let ((date&time (mu4e-msg-field mu4e-msg :date)))
-                                                       (format-time-string "%a, %d %b %Y %H:%M:%S" date&time))))))
+                                                       ;; (format-time-string "%a, %d %b %Y %H:%M:%S" date&time)
+                                                       (format-time-string "%a %d.%m.%Y %H:%M:%S" date&time))))))
 
       ;; (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc -a")
       ;; (setq mu4e-get-mail-command "mbsync -c /m/mail/mbsyncrc cmpitg-gmail_useful hd-at-mamk_all")
@@ -1778,7 +1779,7 @@ E.g.
                                :maildir :mailing-list :tags :attachments
                                :signature :decryption))
 
-      (setq mu4e-headers-fields `((:long-date . 25)
+      (setq mu4e-headers-fields `((:long-date . 23)
                                   (:flags . 6)
                                   (:from . 30)
                                   (:to . 25)
