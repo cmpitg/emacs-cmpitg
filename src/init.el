@@ -41,8 +41,14 @@
 
 (require 'cl)
 
-;; Prior to Emacs 25, `reverse' doesn't receive string argument
+(defun ~value-from-symbol (symbol)
+  "Returns the value that `symbol' hold if it's bound, or `nil'
+  otherwise."
+  (if (boundp symbol)
+      (symbol-value symbol)
+    nil))
 
+;; Prior to Emacs 25, `reverse' doesn't receive string argument
 (defun _reverse-string (str)
   "Reverse a string."
   (apply #'string (reverse (string-to-list str))))

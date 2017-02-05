@@ -909,7 +909,8 @@ line."
   :config
   (progn
     (setq emnode:*log-level* emnode:+log-none+)
-    (let ((cmpitg/server-port (string-to-int (or (getenv "EMACS_PORT")
+    (let ((cmpitg/server-port (string-to-int (or (~value-from-symbol '*server-port*)
+                                                 (getenv "EMACS_PORT")
                                                  "9999"))))
       (emnode:stop cmpitg/server-port)
       (ignore-errors
