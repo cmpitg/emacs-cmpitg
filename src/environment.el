@@ -147,13 +147,14 @@
 ;;; Set frame title
 ;; (setq frame-title-format
 ;;       '(multiple-frames "%b" ("@" system-name )))
-(let ((emacs-as (--> (or (cmpitg/emacs-as) :emacs)
+(let ((emacs-as (--> (or (~emacs-as) :emacs)
                      (symbol-name it)
                      (substring it 1)
                      (intern it)
                      (symbol->string it)
                      (capitalize it))))
-  (setq-default frame-title-format `(,emacs-as " \u262f "
+  (setq-default frame-title-format `(,emacs-as ,(format " @ :%s" *emacs-server-port*)
+                                               " \u262f "
                                                (buffer-file-name "%f"
                                                                  (dired-directory dired-directory "%b")))))
 
