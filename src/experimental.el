@@ -212,6 +212,7 @@
   (~bind-key-with-prefix "r b" 'revert-buffer)
   (~bind-key-with-prefix "n n" '~new-buffer)
   (~bind-key-with-prefix "p p" 'popwin:messages)
+  (~bind-key-with-prefix "z" '~toggle-maximize-buffer)
 
   ;; File
   (~bind-key-with-prefix "f o" 'ido-find-file-other-window)

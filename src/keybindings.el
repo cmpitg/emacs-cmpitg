@@ -149,7 +149,6 @@
 (bind-key "<C-delete>" 'xah-close-current-buffer)
 (bind-key "M-<f4>" 'recentf-open-files)
 (bind-key "<menu> <menu>" 'other-window)
-(bind-key "<M-f10>" '~toggle-maximize-buffer)
 
 (bind-key "<C-f2>" 'history-add-history)
 ;; (bind-key "<C-f2>" '(lambda () (interactive) (history-add-history t)))
