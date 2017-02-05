@@ -522,7 +522,7 @@
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(unless (cmpitg/specialized-emacs?)
+(unless (~specialized-emacs??)
   (use-package save-visited-files
     :ensure t
     :config (progn

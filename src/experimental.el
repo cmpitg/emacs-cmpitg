@@ -1630,7 +1630,7 @@ directory."
 ;; File browser with Sunrise Commander
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (eq :file-browser (cmpitg/emacs-as))
+(when (eq :file-browser (~emacs-as))
   (use-package sunrise-commander
     :ensure t))
 
@@ -1653,7 +1653,7 @@ directory."
 ;;   $ mu find hello
 ;;
 
-(when (eq :mail (cmpitg/emacs-as))
+(when (eq :mail (~emacs-as))
   (~add-load-path (~get-config "local-packages/mu/mu4e"))
 
   (custom-set-faces

@@ -66,10 +66,16 @@
                                                   0 (- (length x)
                                                        (length "1="))))))))))
 
-(defun cmpitg/specialized-emacs? ()
+
+(defun ~emacs-as ()
+  "Return `:mail', `:notes', :file-browser or `nil' when Emacs is
+running as mail browser, note taker, or ... just Emacs the text editor."
+  *emacs-as-tool*)
+
+(defun ~specialized-emacs?? ()
   "Check if Emacs is running in specialized mode (mail browser,
 note taker, ...)"
-  (cmpitg/emacs-as))
+  (~emacs-as))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
