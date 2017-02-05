@@ -1655,6 +1655,22 @@ directory."
 (when (eq :mail (cmpitg/emacs-as))
   (~add-load-path (~get-config "local-packages/mu/mu4e"))
 
+  (custom-set-faces
+   '(default ((t (:inherit nil
+                           :stipple nil
+                           :inverse-video nil
+                           :box nil
+                           :strike-through nil
+                           :overline nil
+                           :underline nil
+                           :slant normal
+                           :weight normal
+                           ;; :height 98
+                           :width normal
+                           :foundry "unknown"
+                           :family "Inconsolata"))))
+   '(rst-level-1-face ((t (:embolden t))) t))
+
   (defun* cmpitg:add-mu4e-account (&key context-name
                                         full-name
                                         mail-address
