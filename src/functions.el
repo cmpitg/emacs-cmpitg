@@ -77,6 +77,11 @@ directory as project root."
             (values path number)))
       (values path))))
 
+(defun ~find-file-new-frame (file &optional wildcards)
+  "Calls `find-file' in a new frame."
+  (let ((pop-up-frames t))
+    (find-file-other-frame path wildcards)))
+
 (defun* ~file-pattern? (str &key (must-exists t))
   "Determines if a string is a file pattern \(`path' or
 `path:line-number', or `path:pattern'\).  By default, the
