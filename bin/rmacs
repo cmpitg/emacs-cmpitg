@@ -4,7 +4,7 @@ export GPG_TTY=$(tty)
 
 if [[ "${1}" = "--help" ]]; then
 	cat <<EOF
-Usage: rmacs [rmacs-options] <command> [arguments] ...
+Usage: rmacs [rmacs-options] <command> [options] [arguments] ...
 
 Rmacs is a Re-enforced eMacs.
 
@@ -20,16 +20,20 @@ one of the following:
 One or more Rmacs options might be specificied:
 
   --port <port-number>  :: An HTTP port number on which the Emacs server is
-						   listened.
+                           listened.
   --base-init <path>    :: The main Emacs Lisp init file.
   --init <path>         :: An additional Emacs Lisp init file.
-  --verbose             :: Prints command, options, and arguments
+  --verbose             :: Prints command, options, and arguments.
 
 If '--port' is not specified, by default,
   text editor uses port 9999
   mail browser uses port 9998
   note taker uses port 9997
   file taker uses port 9996
+
+Possible options for edit:
+
+  --new-frame   :: Create a new frame.
 
 Examples:
 
@@ -189,10 +193,24 @@ case "${command_}" in
 		curl "0:${port_}/eval/" -d "$@"
 		;;
 	edit)
-		if [[ "$1" == /* ]]; then
-			curl "0:${port_}/open/$@"
+		new_frame_="false"
+		case "${1}" in
+			--new-frame)
+				new_frame_="true"
+				shift
+				;;
+		esac
+
+		if [[ "${1}" == /* ]]; then
+			path_="$@"
 		elif ! [[ "${1}" = "" ]]; then
-			curl "0:${port_}/open/${PWD}/$@"
+			path_="${PWD}/$@"
+		fi
+
+		if [[ "${new_frame_}" == "true" ]]; then
+			curl "0:${port_}/open/${path_}?new-frame=true"
+		else
+			curl "0:${port_}/open/${path_}"
 		fi
 		;;
 	file)

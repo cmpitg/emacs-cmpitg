@@ -883,13 +883,13 @@ line."
 (defun ~ipc-open-file (httpcon)
   (let ((path (emnode:http-get-arg httpcon 1)))
     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
-    (emnode:http-end httpcon (format "> Opening: %s\n" path))
-    (toolbox:open-file path)))
+    (emnode:http-end httpcon (format "Opening: %s\n" path))
+    (toolbox:open-file path :new-frame? (emnode-http-param httpcon "new-frame"))))
 
 (defun ~ipc-exec-file (httpcon)
   (let ((path (emnode:http-get-arg httpcon 1)))
     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
-    (emnode:http-end httpcon (format "> Executing: %s" path))
+    (emnode:http-end httpcon (format "Executing: %s" path))
     (with-temp-buffer
       (insert-file-contents path)
       (eval-buffer))))
