@@ -123,11 +123,11 @@
             (require 'sublimity-scroll)
             (sublimity-mode 1)))
 
-(use-package persistent-scratch
-  :ensure t
-  :config (progn
-            (persistent-scratch-setup-default)
-            (persistent-scratch-autosave-mode 1)))
+;; (use-package persistent-scratch
+;;   :ensure t
+;;   :config (progn
+;;             (persistent-scratch-setup-default)
+;;             (persistent-scratch-autosave-mode 1)))
 
 (require 'winner)
 (winner-mode 1)
