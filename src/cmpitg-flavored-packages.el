@@ -327,6 +327,10 @@
                         (setq venv-location (or (getenv "WORKON_HOME")
                                                 "/m/virtual-envs/"))))
 
+            ;; https://www.emacswiki.org/emacs/IndentingPython
+            (add-hook 'python-mode-hook (lambda ()
+                                          (setq-default indent-tabs-mode t)))
+
             ;; (setq python-shell-interpreter "ipython"
             ;;       python-shell-interpreter-args ""
             ;;       python-shell-prompt-regexp "In \\[[0-9]+\\]: "
