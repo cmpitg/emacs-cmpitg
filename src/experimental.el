@@ -1668,6 +1668,7 @@ directory."
                                         match-recipients
                                         default-headers
                                         smtp-server
+                                        sent-folder
                                         signature-file
                                         maildir-shortcuts)
     "Add a mu4e mail account.
@@ -1680,6 +1681,7 @@ E.g.
                          :match-recipients '\(\"cmpitg.gmail.com\"\)
                          :default-headers \"BCC: cmpitg@gmail.com\"
                          :smtp-server \"smtp.gmail.com:587\"
+                         :sent-folder \"/cmpitg-at-gmail/sent\"
                          :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"
                          :maildir-shortcuts '\(\"cmpitg-at-gmail/Inbox\" . ?i\)\)"
     ;; Because Emacs uses dynamic binidng by default
@@ -1689,6 +1691,7 @@ E.g.
                   (match-recipients match-recipients)
                   (default-headers default-headers)
                   (smtp-server smtp-server)
+                  (sent-folder sent-folder)
                   (signature-file signature-file)
                   (maildir-shortcuts maildir-shortcuts))
       (add-to-list 'mu4e-user-mail-address-list mail-address t)
@@ -1713,6 +1716,7 @@ E.g.
                               (smtpmail-smtp-server . ,smtp-server)
                               (smtpmail-smtp-service . ,smtp-port)
                               (smtpmail-starttls-credentials . ((,smtp-server ,smtp-port nil nil)))
+                              (mu4e-sent-folder . ,sent-folder)
                               (mu4e-maildir-shortcuts . ,maildir-shortcuts)))
                      t))))
 
@@ -1799,8 +1803,10 @@ E.g.
 
       (setq mu4e-headers-skip-duplicates t)
 
-      ;; Don't save messages to Sent Messages, Gmail/IMAP takes care of this
-      (setq mu4e-sent-messages-behavior  'delete)
+      ;; Save messages to Sent Messages, Gmail/IMAP doesn't take care of this
+	  ;; as the docs say
+      ;; (setq mu4e-sent-messages-behavior 'delete)
+      (setq mu4e-sent-messages-behavior 'sent)
 
       ;; If you need offline mode, set these -- and create the queue dir
       ;; with 'mu mkdir', i.e. mu mkdir <path-to-queue>
@@ -1831,6 +1837,7 @@ E.g.
                                :default-headers "BCC: cmpitg@gmail.com"
                                :smtp-server "smtp.gmail.com:587"
                                :signature-file "/m/mail/signature_cmpitg-at-gmail.txt"
+                               :sent-folder "/cmpitg-at-gmail/sent"
                                :maildir-shortcuts '(("/cmpitg-at-gmail/Inbox"          . ?i)
                                                     ("/cmpitg-at-gmail/top-todo"       . ?t)
                                                     ("/cmpitg-at-gmail/top-delegated"  . ?d)
@@ -1844,6 +1851,7 @@ E.g.
                                :default-headers "BCC: cmpitg@gmail.com, hd@bayo.vn"
                                :smtp-server "mail.securemail.vn:587"
                                :signature-file "/m/mail/signature_hd-at-bayo.txt"
+                               :sent-folder "/cmpitg-at-gmail/sent"
                                :maildir-shortcuts '(("/cmpitg-at-gmail/Inbox"          . ?i)
                                                     ("/cmpitg-at-gmail/top-todo"       . ?t)
                                                     ("/cmpitg-at-gmail/top-delegated"  . ?d)
@@ -1857,6 +1865,7 @@ E.g.
                                :default-headers "BCC: cmpitg@gmail.com, Duong.Nguyen2@metropolia.fi"
                                :smtp-server "smtp.metropolia.fi:587"
                                :signature-file "/m/mail/signature_hd-at-mamk.txt"
+                               :sent-folder "/hd-at-mamk/sent"
                                :maildir-shortcuts '(("/hd-at-mamk/Inbox"          . ?i)
                                                     ("/hd-at-mamk/Drafts"         . ?r)))))
 
