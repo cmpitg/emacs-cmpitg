@@ -327,9 +327,27 @@
                         (setq venv-location (or (getenv "WORKON_HOME")
                                                 "/m/virtual-envs/"))))
 
+			;; Doesn't work
+			;; (defun electric-indent-ignore-python (char)
+			;;   "Ignore electric indentation for python-mode"
+			;;   (if (equal major-mode 'python-mode)
+			;; 	  'no-indent
+			;; 	nil))
+			;; (add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+
             ;; https://www.emacswiki.org/emacs/IndentingPython
-            (add-hook 'python-mode-hook (lambda ()
-                                          (setq-default indent-tabs-mode t)))
+            (add-hook 'python-mode-hook
+					  (lambda ()
+						(setq-default indent-tabs-mode t)
+						(setq electric-indent-chars (delq ?, electric-indent-chars))
+						(setq electric-indent-inhibit t)
+						(~bind-key-with-prefix "e r" 'python-shell-send-region
+											   :keymap python-mode-map)
+						;; (~bind-key-with-prefix "." 'my/python-jump-to-definition
+						;; 					   :keymap python-mode-map)
+						;; (~bind-key-with-prefix "," 'my/python-jump-back
+						;; 					   :keymap python-mode-map)
+						))
 
             ;; (setq python-shell-interpreter "ipython"
             ;;       python-shell-interpreter-args ""
