@@ -116,6 +116,12 @@
 ;; Experimental
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Adjust indentation based on current file
+(use-package dtrt-indent
+  :ensure t
+  :config (progn
+			(dtrt-indent-mode 1)))
+
 (use-package sublimity
   :ensure t
   :disabled t
