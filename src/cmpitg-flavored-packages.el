@@ -338,7 +338,6 @@
             ;; https://www.emacswiki.org/emacs/IndentingPython
             (add-hook 'python-mode-hook
 					  (lambda ()
-						(setq-default indent-tabs-mode t)
 						(setq electric-indent-chars (delq ?, electric-indent-chars))
 						(setq electric-indent-inhibit t)
 						(~bind-key-with-prefix "e r" 'python-shell-send-region
@@ -849,13 +848,14 @@
 (use-package smart-tabs-mode
   :ensure t
   :init (progn
-          (smart-tabs-insinuate 'c 'javascript 'python)
+          ;; (smart-tabs-insinuate 'c 'javascript 'python)
           (setq-default tab-width 4)
-          (add-hook 'python-mode-hook
-                    (lambda ()
-                      (setq indent-tabs-mode t)
-                      (setq tab-width (default-value 'tab-width))
-                      (setq whitespace-style '(trailing empty))))))
+          ;; (add-hook 'python-mode-hook
+          ;;           (lambda ()
+          ;;             (setq indent-tabs-mode t)
+          ;;             (setq tab-width (default-value 'tab-width))
+          ;;             (setq whitespace-style '(trailing empty))))
+          ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
