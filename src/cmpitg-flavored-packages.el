@@ -327,26 +327,26 @@
                         (setq venv-location (or (getenv "WORKON_HOME")
                                                 "/m/virtual-envs/"))))
 
-			;; Doesn't work
-			;; (defun electric-indent-ignore-python (char)
-			;;   "Ignore electric indentation for python-mode"
-			;;   (if (equal major-mode 'python-mode)
-			;; 	  'no-indent
-			;; 	nil))
-			;; (add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+            ;; Doesn't work
+            ;; (defun electric-indent-ignore-python (char)
+            ;;   "Ignore electric indentation for python-mode"
+            ;;   (if (equal major-mode 'python-mode)
+            ;;    'no-indent
+            ;;  nil))
+            ;; (add-hook 'electric-indent-functions 'electric-indent-ignore-python)
 
             ;; https://www.emacswiki.org/emacs/IndentingPython
             (add-hook 'python-mode-hook
-					  (lambda ()
-						(setq electric-indent-chars (delq ?, electric-indent-chars))
-						(setq electric-indent-inhibit t)
-						(~bind-key-with-prefix "e r" 'python-shell-send-region
-											   :keymap python-mode-map)
-						;; (~bind-key-with-prefix "." 'my/python-jump-to-definition
-						;; 					   :keymap python-mode-map)
-						;; (~bind-key-with-prefix "," 'my/python-jump-back
-						;; 					   :keymap python-mode-map)
-						))))
+                      (lambda ()
+                        (setq electric-indent-chars (delq ?, electric-indent-chars))
+                        (setq electric-indent-inhibit t)
+                        (~bind-key-with-prefix "e r" 'python-shell-send-region
+                                               :keymap python-mode-map)
+                        ;; (~bind-key-with-prefix "." 'my/python-jump-to-definition
+                        ;;                     :keymap python-mode-map)
+                        ;; (~bind-key-with-prefix "," 'my/python-jump-back
+                        ;;                     :keymap python-mode-map)
+                        ))))
 
 ;;
 ;; Company mode support in Jedi is weak
@@ -474,13 +474,11 @@
   :mode "\\.js\\'"
   :interpreter "node"
   :config (progn
-            (add-hook 'js-mode-hook 'js2-minor-mode)
             ;; (~auto-load-mode '("\\.js\\'") 'js2-mode)
-            ;; (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+            (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
-            ;; (add-hook 'html-mode-hook '~auto-reload-firefox-after-save-hook)
-            ;; (add-hook 'css-mode-hook '~auto-reload-firefox-after-save-hook)
-            ))
+            (~auto-load-mode '("\\.jsx?\\'") 'js2-jsx-mode)
+            (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell development
