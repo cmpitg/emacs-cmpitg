@@ -1649,7 +1649,7 @@ directory."
 ;;   ./configure
 ;;   make
 ;; * /m/mail
-;; * ~/.authinfo
+;; * ~/.authinfo.gpg
 ;;
 ;;
 ;; Check if Mu is working
@@ -1799,10 +1799,13 @@ E.g.
       (setq smtpmail-smtp-service          587)
       (setq smtpmail-starttls-credentials  '(("smtp.gmail.com" 587 nil nil)))
       (setq smtpmail-debug-info            t)
+      (setq smtpmail-debug-verb            t)
       (setq starttls-gnutls-program        "/usr/bin/gnutls-cli")
       (setq starttls-extra-arguments       nil)
       (setq starttls-use-gnutls            t)
-      (setq smtpmail-auth-credentials      "~/.authinfo")
+      (setq smtpmail-auth-credentials      "~/.authinfo.gpg")
+      (setq auth-sources                   '("~/.authinfo.gpg"))
+
 
       (setq mu4e-headers-skip-duplicates t)
 
