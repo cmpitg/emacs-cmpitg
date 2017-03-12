@@ -904,11 +904,11 @@
 ;; Manipulating Firefox/Thunderbird
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(el-get-install 'moz-repl)
-(use-package moz
-  :config (progn
-            (add-hook 'javascript-mode-hook '-setup-moz-javascript)
-            (add-hook 'js3-mode-hook        '-setup-moz-javascript)))
+;; (el-get-install 'moz-repl)
+;; (use-package moz
+;;   :config (progn
+;;             (add-hook 'javascript-mode-hook '-setup-moz-javascript)
+;;             (add-hook 'js3-mode-hook        '-setup-moz-javascript)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Display trailing whitespace
