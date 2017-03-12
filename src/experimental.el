@@ -120,7 +120,7 @@
 (use-package dtrt-indent
   :ensure t
   :config (progn
-			(dtrt-indent-mode 1)))
+            (dtrt-indent-mode 1)))
 
 (use-package sublimity
   :ensure t
@@ -1810,7 +1810,7 @@ E.g.
       (setq mu4e-headers-skip-duplicates t)
 
       ;; Save messages to Sent Messages, Gmail/IMAP doesn't take care of this
-	  ;; as the docs say
+      ;; as the docs say
       ;; (setq mu4e-sent-messages-behavior 'delete)
       (setq mu4e-sent-messages-behavior 'sent)
 
