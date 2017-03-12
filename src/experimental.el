@@ -1784,8 +1784,9 @@ E.g.
                                   (:to . 25)
                                   (:subject)))
 
+      ;; If changed, restart mu4e
       (setq mu4e-update-interval 180)
-      (setq mu4e-update-interval nil)
+      ;; (setq mu4e-update-interval nil)
 
       (setq mu4e-sent-folder   "/sent"
             mu4e-drafts-folder "/draft"
