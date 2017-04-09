@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -15,118 +15,35 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Important global values
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Load init-basic
+(load (concat (file-name-directory (or (buffer-file-name)
+                                       load-file-name))
+              "init-basic"))
 
-(defconst *config-dir* (file-name-directory (or (buffer-file-name)
-                                                load-file-name))
-  "Default configuration directory.")
-
-(defvar *snippet-dir*
-  (file-name-as-directory
-   (concat (file-name-as-directory *config-dir*) "snippets"))
-  "Default snippet directory.")
-
-(defvar *scratch-dir*
-  (file-name-as-directory
-   (concat (file-name-as-directory *config-dir*) "scratch"))
-  "Default path to Scratch directory.")
-
-(add-to-list 'load-path *config-dir*)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Specialized Emacs - Mail browser, ...
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'cl)
-
-(defun ~value-from-symbol (symbol)
-  "Returns the value that `symbol' hold if it's bound, or `nil'
-  otherwise."
-  (if (boundp symbol)
-      (symbol-value symbol)
-    nil))
-
-;; Prior to Emacs 25, `reverse' doesn't receive string argument
-(defun _reverse-string (str)
-  "Reverse a string."
-  (apply #'string (reverse (string-to-list str))))
-
-(defvar *emacs-as-tool*
-  (loop for x in process-environment
-        when (and (string-prefix-p "EMACS_ENABLED_" x nil)
-                  (string-prefix-p "1=" (_reverse-string x)))
-        return (let ((x (substring x (length "EMACS_ENABLED_"))))
-                 (intern (concat ":" (replace-regexp-in-string
-                                      "_"
-                                      "-"
-                                      (downcase
-                                       (substring x
-                                                  0 (- (length x)
-                                                       (length "1="))))))))))
-
-(defvar *emacs-server-port*
-  (string-to-int (or (getenv "EMACS_PORT") "9999")))
-
-(defun ~emacs-as ()
-  "Return `:mail', `:notes', :file-browser or `nil' when Emacs is
-running as mail browser, note taker, or ... just Emacs the text editor."
-  *emacs-as-tool*)
-
-(defun ~specialized-emacs?? ()
-  "Check if Emacs is running in specialized mode (mail browser,
-note taker, ...)"
-  (~emacs-as))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Config helpers
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(eval-when-compile
- (defun ~get-config (&rest paths)
-   "Returns path to a config file or directory."
-   (apply 'concat *config-dir* paths))
-
- (defun ~get-library-full-path (library-name)
-   "Return the full path to a library."
-   (save-excursion
-     (find-library library-name)
-     (let ((file-path (or (expand-file-name buffer-file-name)
-                          "")))
-       (kill-buffer)
-       file-path))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Minimal config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(if (string= "1" (getenv "EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR"))
-    (setq debug-on-error t)
-   (setq debug-on-error nil))
-
-(require 'ee:functions                (~get-config "functions.el"))
-
-;; Load machine-specific-init settings if existed
-(~load-files "~/.emacs-machine-specific-init.el"
-             (~get-config "machine-specific-init.el"))
-
-(require 'ee:load-package-manager     (~get-config "load-package-manager.el"))
-(require 'ee:load-essential-packages  (~get-config "load-essential-packages.el"))
-(require 'ee:custom-core              (~get-config "custom-core.el"))
-(require 'ee:config-environment       (~get-config "environment.el"))
-(require 'ee:keybindings              (~get-config "keybindings.el"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; My config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'ee:cmpitg-flavored-packages
-         (~get-config "cmpitg-flavored-packages.el"))
+(require 'ee:functions-project      (~get-config "functions-project"))
+(require 'ee:functions-mail         (~get-config "functions-mail"))
+(require 'ee:functions-tag          (~get-config "functions-tag"))
+(require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
+(require 'ee:config-literate-prog   (~get-config "config-literate-prog"))
+(require 'ee:config-cmpitg-ux       (~get-config "config-cmpitg-ux"))
+(require 'ee:config-cmpitg-packages (~get-config "config-cmpitg-packages"))
+(require 'ee:keybindings-cmpitg     (~get-config "keybindings-cmpitg"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
-  (~load-files (~get-config "experimental.el")))
+  (~load-files (~get-config "experimental")))
+
+;; For file manager only
+;; (require 'ee:config-sunrise (~get-config "config-sunrise"))
+
+;; For mail only
+;; (require 'ee:config-mail (~get-config "config-mail"))
+
+;; Load last
+(require 'ee:config-final (~get-config "config-final"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Machine/user-specific config
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Load machine-specific settings if existed
-(~load-files "~/.emacs-machine-specific.el"
-             (~get-config "machine-specific.el"))
+(~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
