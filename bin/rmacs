@@ -8,6 +8,11 @@ Usage: rmacs [rmacs-options] <command> [options] [arguments] ...
 
 Rmacs is a Re-enforced eMacs.
 
+By default, Rmacs with load 'init.el' in directory '../src/' (following the
+symlink).  This file is Rmacs's base init file and its path could be
+customized by pointing the environment variable BASE_INIT to the corresponding
+location.
+
 'command' denotes the main functionality of how Rmacs is used.  'command' is
 one of the following:
 
@@ -67,7 +72,7 @@ fi
 
 command_=""
 port_=""
-base_init_="/m/src/emacs-cmpitg/src/init.el"
+base_init_="${BASE_INIT:-$(dirname $(readlink -f $0))/../src/init.el}"
 init_=""
 verbose_="0"
 tmpdir_="${TMPDIR:-/tmp/${USER}}"
