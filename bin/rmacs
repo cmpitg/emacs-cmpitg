@@ -160,6 +160,7 @@ if [[ $(server_running_p ${port_}) = "0" ]]; then
 	case "${command_}" in
 		mail)
 			export EMACS_ENABLED_MAIL=1
+			base_init_="${base_init_/init.el/init-mail.el}"
 			;;
 		notes)
 			export EMACS_ENABLED_NOTES=1
