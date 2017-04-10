@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,23 +16,6 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; GPG interface
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Visit anything.gpg and it will encrypt it when you save the buffer.
-;;
-;; To prevent EPG from prompting for a key every time you save a file, put the
-;; following at the top of your file:
-;;
-;;    -*- epa-file-encrypt-to: ("your@email.address") -*-
-;;
-
-(use-package epa-file
-  :ensure epa
-  :config (progn
-            (epa-file-enable)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Version control systems: Mercurial and Git
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -43,10 +26,10 @@
 (use-package magit
   :ensure t
   :commands (magit-status ~get-scm magit-get-top-dir)
-  :config (progn
-            (setf magit-push-always-verify 'pp)
-            ;; (setf git-commit-check-style-conventions nil)
-            (setf git-commit-finish-query-functions nil)))
+  :init (progn
+          (setf magit-push-always-verify 'pp)
+          ;; (setf git-commit-check-style-conventions nil)
+          (setf git-commit-finish-query-functions nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP request library
@@ -138,6 +121,14 @@
 ;; (use-package quack)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Shell mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'sh-mode-hook (lambda ()
+                          (setq indent-tabs-mode t
+                                sh-basic-offset 4)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Erlang development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -206,75 +197,101 @@
   (progn
     (use-package cider
       :ensure cider
-      :config (progn
-                ;; https://github.com/clojure-emacs/helm-cider
-                (use-package helm-cider
-                  :ensure t
-                  :config (helm-cider-mode 1))
+      :config
+      (progn
+        ;; https://github.com/clojure-emacs/helm-cider
+        (use-package helm-cider
+          :ensure t
+          :config (helm-cider-mode 1))
 
-                (use-package clojure-cheatsheet
-                  :ensure t)
+        (use-package clojure-cheatsheet
+          :ensure t)
 
-                (use-package clojurescript-mode
-                  :ensure t)
+        (use-package clojurescript-mode
+          :ensure t)
 
-                (use-package midje-mode
-                  :ensure t
-                  :diminish midje-mode)
+        (use-package midje-mode
+          :ensure t
+          :diminish midje-mode)
 
-                ;; (add-hook 'clojure-mode-hook 'cider-mode)
-                (add-hook 'clojure-mode-hook '~load-paredit-mode)
-                (add-hook 'clojure-mode-hook 'midje-mode)
+        ;; (add-hook 'clojure-mode-hook 'cider-mode)
+        (add-hook 'clojure-mode-hook '~load-paredit-mode)
+        (add-hook 'clojure-mode-hook 'midje-mode)
 
-                ;; Only display eldoc for current function/macro, not current symbol
-                (setq cider-eldoc-display-for-symbol-at-point nil)
-                (add-hook 'cider-mode-hook 'eldoc-mode)
+        ;; Only display eldoc for current function/macro, not current symbol
+        (setq cider-eldoc-display-for-symbol-at-point nil)
+        (add-hook 'cider-mode-hook 'eldoc-mode)
 
-                (add-hook 'cider-repl-mode-hook '~load-paredit-mode)
+        (add-hook 'cider-repl-mode-hook '~load-paredit-mode)
 
-                ;; ;; Moving inside subword
-                (add-hook 'cider-repl-mode-hook 'subword-mode)
+        ;; ;; Moving inside subword
+        (add-hook 'cider-repl-mode-hook 'subword-mode)
 
-                ;; Hide *nrepl-connection* and *nrepl-server*
-                (setq nrepl-hide-special-buffers t)
-                ;; Prevent the auto-display of the REPL buffer in a separate window after
-                ;; connection is established
-                ;; (setq cider-repl-pop-to-buffer-on-connect nil)
-                (setq cider-repl-pop-to-buffer-on-connect t)
-                (setq cider-popup-stacktraces nil)
-                ;; Enable error buffer popping also in the REPL
-                (setq cider-repl-popup-stacktraces t)
+        ;; Hide *nrepl-connection* and *nrepl-server*
+        (setq nrepl-hide-special-buffers t)
+        ;; Prevent the auto-display of the REPL buffer in a separate window after
+        ;; connection is established
+        ;; (setq cider-repl-pop-to-buffer-on-connect nil)
+        (setq cider-repl-pop-to-buffer-on-connect t)
+        (setq cider-popup-stacktraces nil)
+        ;; Enable error buffer popping also in the REPL
+        (setq cider-repl-popup-stacktraces t)
 
-                (setq nrepl-buffer-name-separator "-")
-                (setq nrepl-buffer-name-show-port t)
+        (setq nrepl-buffer-name-separator "-")
+        (setq nrepl-buffer-name-show-port t)
 
-                (setq cider-repl-history-size 9999)
+        (setq cider-repl-history-size 9999)
 
-                ;; Clojure docs lookup
-                (use-package cider-grimoire)
+        ;; Clojure docs lookup
+        (use-package cider-grimoire)
 
-                (use-package clj-refactor
-                  :ensure t
-                  :config
-                  (progn
-                    (defun my/clojure-refactor-hooking ()
-                      (clj-refactor-mode 1)
-                      (yas-minor-mode 1)
-                      (cljr-add-keybindings-with-prefix "C-c C-l"))
+        (use-package clj-refactor
+          :ensure t
+          :config
+          (progn
+            (defun my/clojure-refactor-hooking ()
+              (clj-refactor-mode 1)
+              (yas-minor-mode 1)
+              (cljr-add-keybindings-with-prefix "C-c C-l"))
 
-                    (add-hook 'clojure-mode-hook #'my/clojure-refactor-hooking)))
+            (add-hook 'clojure-mode-hook #'my/clojure-refactor-hooking)))
 
-                (define-clojure-indent
-                  (defroutes 'defun)
-                  (GET 2)
-                  (POST 2)
-                  (PUT 2)
-                  (DELETE 2)
-                  (HEAD 2)
-                  (ANY 2)
-                  (context 2)
-                  (tabular '(2 1))
-                  (are '(2 1)))))))
+        (define-clojure-indent
+          (defroutes 'defun)
+          (GET 2)
+          (POST 2)
+          (PUT 2)
+          (DELETE 2)
+          (HEAD 2)
+          (ANY 2)
+          (context 2)
+          (tabular '(2 1))
+          (are '(2 1)))
+        
+        (defun ~cider-eval (&optional expr)
+          "Eval an expression in Cider REPL."
+          (interactive)
+          (let ((expr (cond ((not (~string-empty? expr))
+                             expr)
+                            (t
+                             (~read-string "Expression: "))))
+                (cider-buffer (->> (buffer-list)
+                                   (-filter (lambda (buffer)
+                                              (string-match-p "\\*cider-repl.*"
+                                                              (buffer-name buffer))))
+                                   first)))
+            (unless (null cider-buffer)
+              (set-buffer cider-buffer)
+              (goto-char (point-max))
+              (insert expr)
+              (cider-repl-return)
+              (~popup-buffer (buffer-name cider-buffer)))))
+
+        (defun ~cider-compile-file-and-run-main ()
+          "Compile current file with Cider and run the `-main' function."
+          (interactive)
+          (call-interactively 'cider-load-current-buffer)
+          (~cider-eval "(-main)"))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ruby development
@@ -481,6 +498,15 @@
             (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; CSS-related
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package scss-mode
+  :mode "\\.scss\\$"
+  :commands scss-mode
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -507,30 +533,10 @@
   :mode "\\.toml\\'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ibus bridge
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Deprecated.  The new iBus 1.5 is totally broken, rendering this useless
-;;
-
-;; (load-file (~get-config "local-packages/ibus.el/ibus-dev.el"))
-;; (use-package ibus
-;;   :commands ibus-mode
-;;   :config (progn
-;;             ;; Use C-SPC for Set Mark command
-;;             (ibus-define-common-key ?\C-\s nil)
-;;             ;; Use C-/ for Undo command
-;;             (ibus-define-common-key ?\C-/ nil)
-;;             ;; Change cursor color depending on IBus status
-;;             (setq ibus-cursor-color '("red" "blue" "limegreen"))
-;;             (setq ibus-agent-file-name
-;;                   (~get-config "local-packages/ibus.el/ibus-el-agent"))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(unless (~specialized-emacs??)
+(unless (~specialized-emacs?)
   (use-package save-visited-files
     :ensure t
     :config (progn
@@ -666,42 +672,119 @@
               (exec-path-from-shell-initialize))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Erlang Elixir
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package alchemist
+;;   :ensure alchemist
+;;   :init (progn
+;;           (~auto-load-mode '("\\.ex$" "\\.exs$") 'alchemist-mode)
+
+;;           ;; Don't ask to save changes before running tests
+;;           (setq alchemist-test-ask-about-save nil)
+
+;;           ;; Display compilation output
+;;           (setq alchemist-test-display-compilation-output t)))
+
+(use-package elixir-mode
+  :ensure t)
+
+;; (use-package erlang-start
+;;   :ensure erlang)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Common Lisp development
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package slime
+  :ensure t
+  :commands common-lisp-mode
+  :init
+  (progn
+    ;; Better indentation, see http://www.emacswiki.org/emacs/IndentingLisp
+    (put 'if 'common-lisp-indent-function 2)
+    (put 'define-command 'common-lisp-indent-function 2)
+    (put 'if-let 'common-lisp-indent-function 2)
+    (put 'defcmd 'common-lisp-indent-function 2)
+    (put 'define-test 'common-lisp-indent-function 1))
+  :config
+  (progn
+    (defun ~slime-connect-default ()
+      "Connects to default Slime process."
+      (interactive)
+      (slime-connect "localhost" 4005))
+
+    (defun ~cl/eval-open ()
+      "Evaluates current expression with Slime and move to the
+next line."
+      (interactive)
+      (ignore-errors
+        (call-interactively '~paredit-up-all)
+        (call-interactively 'slime-eval-last-expression)
+        (next-line)))
+
+    (put 'if 'common-lisp-indent-function 2)
+
+    (add-hook 'inferior-lisp-mode-hook
+              (lambda ()
+                (inferior-slime-mode t)
+                (~load-paredit-mode)
+                (eldoc-mode 1)))
+
+    (font-lock-add-keywords 'lisp-mode
+                            '(("->" . font-lock-keyword-face)
+                              ("->>" . font-lock-keyword-face)))
+
+    (setq inferior-lisp-program *sbcl-bin-path*
+          slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
+
+    ;; https://github.com/anwyn/slime-company
+    (with-eval-after-load "company"
+      (use-package slime-company
+        :ensure t)
+
+      (slime-setup '(slime-fancy slime-company))
+      ;; (bind-key "C-n" 'company-select-next company-active-map)
+      ;; (bind-key "C-p" 'company-select-previous company-active-map)
+      ;; (bind-key "C-d" 'company-show-doc-buffer company-active-map)
+      ;; (bind-key "M-." 'company-show-location company-active-map)
+      )
+
+    (load (concat *quicklisp-path* "slime-helper.el"))
+    (load (concat *quicklisp-path* "clhs-use-local.el") t)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Golang
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/dominikh/go-mode.el
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package go-mode-autoloads
+  :ensure go-mode
+  :mode "\\.go\\'"
+  :defer t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CoffeeScript mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package coffee-mode
   :ensure t
   :mode "\\.coffee\\'"
+  :defer t
   :init (progn
-          (setq whitespace-action '(auto-cleanup))
-          (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
+          ;; (setq whitespace-action '(auto-cleanup))
+          ;; (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
           (custom-set-variables '(coffee-tab-width 2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Quickly copy stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/zonuexe/emacs-copyit
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package copyit
   :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tmux interaction
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/syohex/emacs-emamux
-
-(use-package emamux
-  :ensure t
-  :commands (emamux:send-command emamux:send-region))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Vimdiff implementation - More intuitive than Ediff
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/justbur/emacs-vdiff
-
-(use-package vdiff
-  :ensure t
-  :commands vdiff-files)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Just-work jump-to-definition
@@ -730,88 +813,6 @@
              '(shell-pop-universal-key "<S-f9>"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Evil mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package evil
-  :ensure t
-  :config (progn
-            (use-package evil-paredit
-              :ensure t
-              :config (progn
-                        (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
-                        (add-hook 'lisp-mode-hook 'evil-paredit-mode)
-                        (add-hook 'clojure-mode-hook 'evil-paredit-mode)
-                        (add-hook 'scheme-mode-hook 'evil-paredit-mode)))
-
-            (use-package evil-surround
-              :ensure t
-              :config (progn
-                        (global-evil-surround-mode 1)))
-
-            (evil-mode 1)
-            (bind-key [mouse-2] nil evil-normal-state-map)
-            (bind-key [mouse-2] nil evil-visual-state-map)
-            (bind-key [mouse-2] nil evil-insert-state-map)
-
-            ;; (define-key evil-motion-state-map [down-mouse-1] 'evil-mouse-drag-region)
-            ;; (lookup-key evil-motion-state-map [down-mouse-1])
-            ;; (lookup-key evil-normal-state-map [down-mouse-1])
-            ;; (lookup-key evil-visual-state-map [down-mouse-1])
-
-            ;; (delete 'multi-term-mode evil-insert-state-modes)
-            ;; (delete 'term-mode evil-insert-state-modes)
-            (eval-after-load 'evil-vars
-              '(progn
-                 (evil-set-initial-state 'term-mode 'emacs)
-                 (evil-set-initial-state 'multi-term-mode 'emacs)
-                 (evil-set-initial-state 'ansi-term-mode 'emacs)
-                 (evil-set-initial-state 'magit-log-edit-mode 'emacs)
-                 (evil-set-initial-state 'magit-popup-mode 'emacs)
-                 (evil-set-initial-state 'neotree-mode 'emacs)
-                 (evil-set-initial-state 'dired-mode 'emacs)
-                 (evil-set-initial-state 'nav-mode 'emacs)
-                 (evil-set-initial-state 'grep-mode 'emacs)
-                 (evil-set-initial-state 'bs-mode 'emacs)
-                 (evil-set-initial-state 'cider-repl-mode 'emacs)
-                 (evil-set-initial-state 'cider-popup-buffer-mode 'emacs)
-                 (evil-set-initial-state 'help-mode 'emacs)
-                 (evil-set-initial-state 'ibuffer-mode 'normal)))
-
-            (setq evil-emacs-state-cursor 'bar)
-            (setq-default cursor-type 'hbar)
-            (setq-default cursor-type 'bar)
-
-            (define-key evil-insert-state-map "\C-y" 'yank)
-            (define-key evil-insert-state-map "\C-o" '~open-line)
-            (define-key evil-insert-state-map "\C-w" 'kill-region)
-            (define-key evil-insert-state-map "\C-k"
-              (lambda ()
-                (interactive)
-                (if (member* mode-name '("Emacs-Lisp" "Lisp") :test 'equalp)
-                    (call-interactively 'paredit-kill)
-                  (call-interactively 'kill-line))))
-
-            ;; * to search forward, # to search backward
-            (use-package evil-visualstar
-              :ensure t
-              :init (progn
-                      (global-evil-visualstar-mode)
-                      ;; (setq evil-visualstar/persistent nil)
-                      ))
-
-            ;; Better jumper with C-i and C-o
-            (use-package evil-jumper
-              :ensure t
-              :init (progn
-                      (evil-jumper-mode t)))
-
-            ;; Doesn't work
-            ;; (evil-set-initial-state 'lisp-mode 'emacs)
-            ;; (evil-set-initial-state 'emacs-lisp-mode 'emacs)
-            ))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Rc shell mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -824,6 +825,15 @@
 
 (use-package nginx-mode
   :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Dockerfile mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package dockerfile-mode
+  :ensure t
+  :commands dockerfile-mode
+  :mode "Dockerfile\\'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mixing tabs and spaces
@@ -845,4 +855,5 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(provide 'ee:cmpitg-flavored-packages)
+(message "Finish loading cmpitg-specific package")
+(provide 'ee:config-cmpitg-packages)

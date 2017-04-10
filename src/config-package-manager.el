@@ -48,10 +48,6 @@
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 (el-get 'sync)
 
-(let ((local-package-dir (~get-config "local-packages/")))
-  (dolist (package-dir (directory-files local-package-dir))
-    (add-to-list 'load-path (~get-config local-package-dir package-dir))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; use-package
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -68,7 +64,14 @@
 ;; Local packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(dolist (pkg (directory-files (~get-config "local-packages/")))
+(dolist (pkg (let ((local-packages-dir (~get-config "local-packages/")))
+               (if (file-exists-p local-packages-dir)
+                   (directory-files local-packages-dir)
+                 '())))
   (add-to-list 'load-path (~get-config "local-packages/" pkg)))
 
-(provide 'ee:load-package-manager)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(message "Finish loading config-package-manager")
+(provide 'ee:config-package-manager)
