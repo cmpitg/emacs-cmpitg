@@ -79,9 +79,19 @@
 ;; (use-package powerline)
 
 ;; https://github.com/milkypostman/powerline
+;; (use-package powerline
+;;   :ensure t
+;;   :init (powerline-default-theme))
+
+;; https://github.com/Dewdrops/powerline
+(eval-and-compile
+  (defun cmpitg/powerline-load-path ()
+    (~get-config "local-packages/drewdrops-powerline")))
+
 (use-package powerline
-  :ensure t
-  :init (powerline-default-theme))
+  :load-path (lambda () (list (cmpitg/powerline-load-path)))
+  :config (progn
+            (powerline-default-theme)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better popup window management
