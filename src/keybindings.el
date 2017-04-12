@@ -163,7 +163,7 @@
 
 (bind-key "s-w" 'whitespace-cleanup)
 
-(bind-key "s-&" 'join-with-next-line)
+(bind-key "s-&" '~join-with-next-line)
 (bind-key "s-; ; ;" '~insert-full-line-comment)
 
 ;; Multiple cursors
