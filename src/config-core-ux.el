@@ -144,7 +144,7 @@
 ;; Vertical split
 ;; (setq split-width-threshold nil)
 ;; Horizontal split
-(setq split-width-threshold 1)
+;; (setq split-width-threshold 1)
 
 ;;; Blink cursor
 ;; (blink-cursor-mode t)
