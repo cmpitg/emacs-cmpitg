@@ -15,6 +15,27 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+(defun* ~previous-line+ (&optional (n-lines 5))
+  "Scrolls up `n-lines'"
+  (interactive)
+  (previous-line n-lines))
+
+(defun* ~next-line+ (&optional (n-lines 5))
+  "Scrolls down `n-lines'"
+  (interactive)
+  (next-line n-lines))
+
+(with-eval-after-load "helm"
+  (defun* ~helm-previous-line+ (&optional (n-lines 5))
+    "Scrolls up `n-lines' in Helm mode"
+    (interactive)
+    (helm-previous-line n-lines))
+
+  (defun* ~helm-next-line+ (&optional (n-lines 5))
+    "Scrolls down `n-lines' in Helm mode"
+    (interactive)
+    (helm-next-line n-lines)))
+
 (defun ~current-char ()
   "Return the string representing the character at the current
 cursor position."

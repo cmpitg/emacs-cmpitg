@@ -47,8 +47,8 @@
 (bind-key "s-d" '~move-to-beginning-of-line)
 (bind-key "s-D" 'move-end-of-line)
 
-(bind-key "M-s-c" '(lambda nil (interactive) (previous-line 5)))
-(bind-key "M-s-t" '(lambda nil (interactive) (next-line 5)))
+(bind-key "M-s-c" '~previous-line+)
+(bind-key "M-s-t" '~next-line+)
 (bind-key "s-H" 'beginning-of-buffer)
 (bind-key "s-N" 'end-of-buffer)
 
@@ -99,8 +99,10 @@
   (bind-key "C-c l (" '~parenthesize-last-sexp paredit-mode-map))
 
 (with-eval-after-load "helm"
-  (bind-key "s-t" 'helm-next-line      helm-map)
-  (bind-key "s-c" 'helm-previous-line  helm-map))
+  (bind-key "s-t" 'helm-next-line helm-map)
+  (bind-key "s-c" 'helm-previous-line helm-map)
+  (bind-key "M-s-t" '~helm-next-line+ helm-map)
+  (bind-key "M-s-c" '~helm-previous-line+ helm-map))
 
 (with-eval-after-load "swoop"
   (bind-key "s-t" 'swoop-action-goto-line-next swoop-map)
