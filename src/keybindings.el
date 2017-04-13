@@ -16,7 +16,7 @@
 ;;
 
 ;;;
-;;; For programmer Drovak layout
+;;; For programmer Dvorak layout
 ;;;
 
 ;; <menu> key is convenient, so we get rid of its default

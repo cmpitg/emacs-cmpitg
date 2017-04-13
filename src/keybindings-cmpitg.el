@@ -16,7 +16,7 @@
 ;;
 
 ;;;
-;;; For programmer Drovak layout
+;;; For programmer Dvorak layout
 ;;;
 
 (bind-key "<C-return>" '~emacs-lisp/eval-then-next emacs-lisp-mode-map)
