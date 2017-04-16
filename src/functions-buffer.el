@@ -196,7 +196,7 @@ first occurrence of a pattern.  E.g.
           (function   (funcall action path))
           (string     (toolbox:open-with path action))
           (otherwise  (message-box (format "Invalid program %s" action))))
-        (return)))))
+        path))))
 
 (defun toolbox:open-with (file cmd)
   "Opens file with a command line.  File name is quoted
