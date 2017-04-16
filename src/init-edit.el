@@ -20,14 +20,23 @@
                                        load-file-name))
               "init"))
 
+(require 'ee:functions-project      (~get-config "functions-project"))
 (require 'ee:functions-mail         (~get-config "functions-mail"))
+(require 'ee:functions-tag          (~get-config "functions-tag"))
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
+(require 'ee:config-literate-prog   (~get-config "config-literate-prog"))
 (require 'ee:config-cmpitg-ux       (~get-config "config-cmpitg-ux"))
+(require 'ee:config-cmpitg-packages (~get-config "config-cmpitg-packages"))
 (require 'ee:keybindings-cmpitg     (~get-config "keybindings-cmpitg"))
-(require 'ee:config-mail            (~get-config "config-mail"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
+
+;; For file manager only
+;; (require 'ee:config-sunrise (~get-config "config-sunrise"))
+
+;; For mail only
+;; (require 'ee:config-mail (~get-config "config-mail"))
 
 ;; Load last
 (require 'ee:config-final (~get-config "config-final"))
@@ -38,7 +47,3 @@
 
 ;; Load machine-specific settings if existed
 (~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(message "Finish loading Emacs mail")

@@ -7,9 +7,6 @@
 [submodule "src/local-packages/wand"]
 	path = src/local-packages/wand
 	url = git@github.com:cmpitg/wand.git
-[submodule "src/local-packages/emnode"]
-	path = src/local-packages/emnode
-	url = git@github.com:cmpitg/emnode.git
 [submodule "src/local-packages/drewdrops-powerline"]
 	path = src/local-packages/drewdrops-powerline
 	url = https://github.com/Dewdrops/powerline.git
