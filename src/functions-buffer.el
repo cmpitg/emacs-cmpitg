@@ -737,13 +737,23 @@ prefix arg (`C-u') to force deletion if it is."
   "Activate my personal horizontal split layout."
   (interactive)
   (~layout/default)
-  (split-window-horizontally))
+  (split-window-horizontally)
+  (call-interactively 'other-window)
+  (next-buffer)
+  (while (null (buffer-file-name (current-buffer)))
+    (next-buffer))
+  (call-interactively 'other-window))
 
 (defun* ~layout/vsplit ()
   "Activate my personal vertically split layout."
   (interactive)
   (~layout/default)
-  (split-window-vertically))
+  (split-window-vertically)
+  (call-interactively 'other-window)
+  (next-buffer)
+  (while (null (buffer-file-name (current-buffer)))
+    (next-buffer))
+  (call-interactively 'other-window))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Aliases
