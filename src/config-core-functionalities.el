@@ -649,6 +649,9 @@
             (setq-default cursor-type 'hbar)
             (setq-default cursor-type 'bar)
 
+            ;; Better granularity for undo-tree
+            (setq evil-want-fine-undo t)
+
             (define-key evil-insert-state-map "\C-y" 'yank)
             (define-key evil-insert-state-map "\C-o" '~open-line)
             (define-key evil-insert-state-map "\C-w" 'kill-region)
