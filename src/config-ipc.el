@@ -16,53 +16,75 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Emacs server-based IPC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package server)
+
+(defun* ~start-emacs-server (&optional (name server-name))
+  (message "Setting Emacs server name to %s and starting" name)
+  (setf server-name name)
+  (server-start))
+
+(defun ~emacs-server-name ()
+  server-name)
+
+(defun* ~emacs-server-running? (&optional (name server-name))
+  (server-running-p name))
+
+(if (~emacs-server-running? (~emacs-server-name))
+    (message "Emacs server %s is already running, not starting another one"
+             (~emacs-server-name))
+  (~start-emacs-server))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP-based IPC with emnode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq *emnode-routes*
-      '(("^.*//eval/?"         . ~ipc-eval)
-        ("^.*//open/\\(.*\\)"  . ~ipc-open-file)
-        ("^.*//exec/\\(.*\\)"  . ~ipc-exec-file)))
+;; (setq *emnode-routes*
+;;       '(("^.*//eval/?"         . ~ipc-eval)
+;;         ("^.*//open/\\(.*\\)"  . ~ipc-open-file)
+;;         ("^.*//exec/\\(.*\\)"  . ~ipc-exec-file)))
 
-(defun ~ipc-eval (httpcon)
-  (let* ((expr (format "%s" (emnode:http-data httpcon))))
-    (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
-    (unless (~string-empty? (s-trim expr))
-      (emnode:http-end httpcon (or (ignore-errors (format "%s" (~add-bracket-and-eval expr)))
-                                   "")))))
+;; (defun ~ipc-eval (httpcon)
+;;   (let* ((expr (format "%s" (emnode:http-data httpcon))))
+;;     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
+;;     (unless (~string-empty? (s-trim expr))
+;;       (emnode:http-end httpcon (or (ignore-errors (format "%s" (~add-bracket-and-eval expr)))
+;;                                    "")))))
 
-(defun ~ipc-open-file (httpcon)
-  (let ((path (emnode:http-get-arg httpcon 1)))
-    (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
-    (emnode:http-end httpcon (format "Opening: %s\n" path))
-    (toolbox:open-file path :new-frame? (emnode-http-param httpcon "new-frame"))))
+;; (defun ~ipc-open-file (httpcon)
+;;   (let ((path (emnode:http-get-arg httpcon 1)))
+;;     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
+;;     (emnode:http-end httpcon (format "Opening: %s\n" path))
+;;     (toolbox:open-file path :new-frame? (emnode-http-param httpcon "new-frame"))))
 
-(defun ~ipc-exec-file (httpcon)
-  (let ((path (emnode:http-get-arg httpcon 1)))
-    (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
-    (emnode:http-end httpcon (format "Executing: %s" path))
-    (with-temp-buffer
-      (insert-file-contents path)
-      (eval-buffer))))
+;; (defun ~ipc-exec-file (httpcon)
+;;   (let ((path (emnode:http-get-arg httpcon 1)))
+;;     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
+;;     (emnode:http-end httpcon (format "Executing: %s" path))
+;;     (with-temp-buffer
+;;       (insert-file-contents path)
+;;       (eval-buffer))))
 
-;; $ curl 0:9999/eval/ -d 'message-box "Hello World"'
-;; $ curl 0:9999/eval -d '(message-box "Hello") (message-box "World")'
-;; $ curl 0:9999/open//m/src
-;; $ curl 0:9999/exec//tmp/tmp.el
+;; ;; $ curl 0:9999/eval/ -d 'message-box "Hello World"'
+;; ;; $ curl 0:9999/eval -d '(message-box "Hello") (message-box "World")'
+;; ;; $ curl 0:9999/open//m/src
+;; ;; $ curl 0:9999/exec//tmp/tmp.el
 
-(eval-and-compile
-  (defun cmpitg/emnode-load-path ()
-    (~get-config "local-packages/emnode")))
+;; (eval-and-compile
+;;   (defun cmpitg/emnode-load-path ()
+;;     (~get-config "local-packages/emnode")))
 
-(use-package emnode
-  :load-path (lambda () (list (cmpitg/emnode-load-path)))
-  :ensure elnode
-  :config
-  (progn
-    (setq emnode:*log-level* emnode:+log-none+)
-    (emnode:stop *emacs-server-port*)
-    (ignore-errors
-      (emnode:start-server *emnode-routes* :port *emacs-server-port*))))
+;; (use-package emnode
+;;   :load-path (lambda () (list (cmpitg/emnode-load-path)))
+;;   :ensure elnode
+;;   :config
+;;   (progn
+;;     (setq emnode:*log-level* emnode:+log-none+)
+;;     (emnode:stop *emacs-server-port*)
+;;     (ignore-errors
+;;       (emnode:start-server *emnode-routes* :port *emacs-server-port*))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

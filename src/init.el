@@ -57,18 +57,21 @@ otherwise."
   "Reverse a string."
   (apply #'string (reverse (string-to-list str))))
 
-(defvar *emacs-as-tool*
-  (loop for x in process-environment
-        when (and (string-prefix-p "EMACS_ENABLED_" x nil)
-                  (string-prefix-p "1=" (_reverse-string x)))
-        return (let ((x (substring x (length "EMACS_ENABLED_"))))
-                 (intern (concat ":" (replace-regexp-in-string
-                                      "_"
-                                      "-"
-                                      (downcase
-                                       (substring x
-                                                  0 (- (length x)
-                                                       (length "1="))))))))))
+;; (defvar *emacs-as-tool*
+;;   (loop for x in process-environment
+;;         when (and (string-prefix-p "EMACS_ENABLED_" x nil)
+;;                   (string-prefix-p "1=" (_reverse-string x)))
+;;         return (let ((x (substring x (length "EMACS_ENABLED_"))))
+;;                  (intern (concat ":" (replace-regexp-in-string
+;;                                       "_"
+;;                                       "-"
+;;                                       (downcase
+;;                                        (substring x
+;;                                                   0 (- (length x)
+;;                                                        (length "1="))))))))))
+
+(defvar *emacs-as-tool* nil
+  "Determine which shape Emacs is running as.")
 
 (defvar *emacs-server-port*
   (string-to-int (or (getenv "EMACS_PORT") "9999")))
