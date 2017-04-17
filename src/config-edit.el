@@ -323,14 +323,11 @@
 ;; Recent files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; FIXME
-
-(unless (~specialized-emacs?)
-  (use-package recentf
-    :ensure t
-    :init (progn
-            (recentf-mode 1)
-            (setq recentf-max-menu-items 128))))
+(use-package recentf
+  :ensure t
+  :init (progn
+          (recentf-mode 1)
+          (setq recentf-max-menu-items 128)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
