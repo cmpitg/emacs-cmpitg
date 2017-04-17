@@ -1,4 +1,3 @@
-
 ;;
 ;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
 ;;
@@ -47,8 +46,8 @@
 (require 'cl)
 
 (defun ~value-from-symbol (symbol)
-  "Returns the value that `symbol' hold if it's bound, or `nil'
-  otherwise."
+  "Return the value that `symbol' hold if it's bound, or `nil'
+otherwise."
   (if (boundp symbol)
       (symbol-value symbol)
     nil))
