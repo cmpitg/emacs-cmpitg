@@ -652,13 +652,7 @@
               :init (progn
                       (global-evil-visualstar-mode)
                       ;; (setq evil-visualstar/persistent nil)
-                      ))
-
-            ;; Better jumper with C-i and C-o
-            (use-package evil-jumper
-              :ensure t
-              :init (progn
-                      (evil-jumper-mode t)))))
+                      ))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Pattern-based command execution
