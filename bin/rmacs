@@ -4,41 +4,51 @@ export GPG_TTY=$(tty)
 
 if [[ "${1}" = "--help" ]]; then
 	cat <<EOF
-Usage: rmacs [rmacs-options] <command> [options] [arguments] ...
+Usage: rmacs [rmacs-options] <command> [arguments] ...
 
-Rmacs is a Re-enforced eMacs.
+Rmacs is a Re-enforced eMacs, shaping Emacs into one of the supported tools
+(called 'shapes') specified below.
 
-By default, Rmacs with load 'init.el' in directory '../src/' (following the
-symlink).  This file is Rmacs's base init file and its path could be
-customized by pointing the environment variable BASE_INIT to the corresponding
-location.
+'command' is one of the following:
 
-'command' denotes the main functionality of how Rmacs is used.  'command' is
-one of the following:
+  edit   :: Run Rmacs as text editor
+  mail   :: Run Rmacs as mail browser
+  note   :: Run Rmacs as note taker
+  file   :: Run Rmacs as file manager
+  start  :: Run a minimal Rmacs without additional configuration
+  eval   :: Evals an arbitrary Emacs Lisp expression
 
-  edit   :: Text editor
-  mail   :: Mail browser
-  notes  :: Note taker
-  file   :: File manager
-  eval   :: Evals an Emacs Lisp expression instead of starting application
+Rmacs works by loading an init file from the Rmacs init directory denoted by
+the environment variable RMACS_INIT_DIR.
 
-One or more Rmacs options might be specificied:
+Rmacs starts an Emacs server with 'server-start' if not started.
 
-  --port <port-number>  :: An HTTP port number on which the Emacs server is
-                           listened.
-  --base-init <path>    :: The main Emacs Lisp init file.
-  --init <path>         :: An additional Emacs Lisp init file.
-  --verbose             :: Prints command, options, and arguments.
+One or more Rmacs options might be specificied before 'command':
 
-If '--port' is not specified, by default,
-  text editor uses port 9999
-  mail browser uses port 9998
-  note taker uses port 9997
-  file taker uses port 9996
+  --name <server-name>  :: A unique name used by Emacs server, for
+                           interprocess communication.
+  --no-wait             :: Don't wait for the Rmacs session to complete,
+                           return immediately.
+  --new-frame           :: Create a new frame.
+  --verbose             :: Print command, options, and arguments.
 
-Possible options for edit:
+  --init-dir <dir>      :: Alternative base init directory.  Not in use if
+                           the server is already started or if 'command' is
+                           'start'.
+  --init <path>         :: Additional init file, loaded after loading base
+                           init.  Not in use if the server is already started.
 
-  --new-frame   :: Create a new frame.
+If '--name' is not specified:
+
+  text editor uses server name 'edit'
+  mail browser uses server name 'mail'
+  note taker uses server name 'note'
+  file taker uses server name 'file'
+  otherwise, server name is set to 'nil'
+
+The load of custom inits are supported.  Rmacs will load
+~/.emacs-machine-specific-init before and ~/.emacs-machine-specific after
+loading Rmacs configuration.
 
 Examples:
 
@@ -52,16 +62,20 @@ Examples:
     Opens a file, jumps to the first line containing a specific pattern.
 
   rmacs mail
-    Opens mail browser.
+    Runs Rmacs as mail browser.
 
-  rmacs notes
-    Opens note utility.
+  rmacs note
+    Runs Rmacs as note taker.
 
   rmacs file
-    Opens file browser.
+    Runs Rmacs as file browser.
+
+  rmacs minimal
+    Runs a minimal Rmacs configuration.
 
   rmacs eval <expression>
     Evals an Emacs Lisp expression.
+
 EOF
 	exit 0
 fi
@@ -71,28 +85,37 @@ fi
 ##############################################################################
 
 command_=""
-port_=""
-base_init_="${BASE_INIT:-$(dirname $(readlink -f $0))/../src/init.el}"
+emacs_as_=""
+name_=""
+no_wait_="false"
+new_frame_="false"
+rmacs_init_dir_="${RMACS_INIT_DIR:-}"
 init_=""
-verbose_="0"
+verbose_="false"
 tmpdir_="${TMPDIR:-/tmp/${USER}}"
 
 while [[ "${1}" == --* ]]; do
 	case "${1}" in
-		--port)
-			port_="${2}"
+		--name)
+			name_="${2}"
 			shift
 			;;
 		--init)
 			init_="${2}"
 			shift
 			;;
-		--base-init)
-			base_init_="${2}"
+		--init-dir)
+			rmacs_init_dir_="${2}"
 			shift
 			;;
+		--no-wait)
+			no_wait_=true
+			;;
+		--new-frame)
+			new_frame_=true
+			;;
 		--verbose)
-			verbose_=1
+			verbose_=true
 			;;
 		*)
 			echo Invalid options "${1}". >&2
@@ -104,22 +127,18 @@ done
 case "${1}" in
 	edit|eval)
 		command_="${1}"
-		port_=${port_:-9999}
 		;;
 	mail)
 		command_=mail
-		port_=${port_:-9998}
 		;;
-	notes)
-		command_=notes
-		port_=${port_:-9997}
+	note)
+		command_=note
 		;;
 	file)
 		command_=file
-		port_=${port_:-9996}
 		;;
 	"")
-		echo Missing command.  See Remacs --help for usage. >&2
+		echo Missing command.  See rmacs --help for usage. >&2
 		exit 1
 		;;
 	*)
@@ -129,13 +148,47 @@ case "${1}" in
 esac
 shift
 
-if [[ "${verbose_}" = "1" ]]; then
+if [[ -z "${name_}" ]]; then
+	name_=${command_}
+fi
+
+if [[ "${command_}" = "edit" ]]; then
+	emacs_as_="nil"
+else
+	emacs_as_=":${command_}"
+fi
+
+rmacs_init_="${rmacs_init_dir_}/init-${command_}.el"
+
+##############################################################################
+# emacsclient options
+##############################################################################
+
+socket_path_="/tmp/emacs${UID}/${name_}"
+emacsclient_options_="${EMACS_CLIENT_OPTIONS}"
+
+if [[ "${no_wait_}" = "true" ]]; then
+	emacsclient_options_="${emacsclient_options_} --no-wait"
+fi
+if [[ "${new_frame_}" = "true" ]]; then
+	emacsclient_options_="${emacsclient_options_} --create-frame"
+fi
+
+##############################################################################
+
+if [[ "${verbose_}" = "true" ]]; then
 	echo Command: ${command_}
-	echo Port: ${port_}
-	echo Base init: ${base_init_}
+	echo Server name: ${name_}
+	echo Socket path: ${socket_path_}
+	echo No wait: ${no_wait_}
+	echo New frame when running: ${new_frame_}
+	echo Rmacs init directory: ${rmacs_init_dir_}
+	echo Rmacs init file: ${rmacs_init_}
 	if ! [[ "${init_}" = "" ]]; then
 		echo Init: ${init_}
 	fi
+	echo Additional Emacs client options: ${emacsclient_options_}
+	echo "Variable *emacs-as-tool*: ${emacs_as_}"
 fi
 
 ##############################################################################
@@ -143,11 +196,17 @@ fi
 ##############################################################################
 
 server_running_p() {
-	(curl 0:${1} &>/dev/null) && echo 1 || echo 0
+	local eval_result_=$(emacsclient --socket-name ${socket_path_} \
+	                                 --quiet --eval '(+ 1 1)' 2>/dev/null)
+	if [[ "${eval_result_}" = "2" ]]; then
+		echo true
+	else
+		echo false
+	fi
 }
 
-wait_until_port_open() {
-	while [[ $(server_running_p ${1}) = "0" ]]; do
+wait_until_server_is_running() {
+	while [[ $(server_running_p) = "false" ]]; do
 		sleep 1
 	done
 }
@@ -156,70 +215,61 @@ wait_until_port_open() {
 # Main
 ##############################################################################
 
-if [[ $(server_running_p ${port_}) = "0" ]]; then
-	case "${command_}" in
-		mail)
-			export EMACS_ENABLED_MAIL=1
-			base_init_="${base_init_/init.el/init-mail.el}"
-			;;
-		notes)
-			export EMACS_ENABLED_NOTES=1
-			;;
-		file)
-			export EMACS_ENABLED_FILE_BROWSER=1
-			;;
-	esac
+if [[ $(server_running_p) = "false" ]]; then
+	if [[ "${verbose_}" = "true" ]]; then
+		echo Server ${name_} is not running.  Starting...
+	fi
 
-	export EMACS_PORT=${port_}
-
-	# Start the server
-	if [[ "${init_}" = "" ]]; then
+	if [[ -z "${init_}" ]]; then
 		nohup emacs -Q \
-			--load "${base_init_}" \
-			>"${tmpdir_}/emacs-${port_}.out" \
-			2>"${tmpdir_}/emacs-${port_}.err" &
+			  --eval "(setq *emacs-as-tool* ${emacs_as_})" \
+			  --eval '(setq server-name "'${name_}'")' \
+			  --eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
+			  --load "${rmacs_init_}" \
+			  >"${tmpdir_}/emacs-${name_}.out" \
+			  2>"${tmpdir_}/emacs-${name_}.err" &
 	else
 		nohup emacs -Q \
-			--load "${base_init_}" \
-			--load "${init_}" \
-			>"${tmpdir_}/emacs-${port_}" \
-			2>"${tmpdir_}/emacs-${port_}.err" &
+			  --eval "(setq *emacs-as-tool* ${emacs_as_})" \
+			  --eval '(setq server-name "'${name_}'")' \
+			  --eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
+			  --load "${rmacs_init_}" \
+			  --load "${init_}" \
+			  >"${tmpdir_}/emacs-${name_}.out" \
+			  2>"${tmpdir_}/emacs-${name_}.err" &
 	fi
 fi
 
-wait_until_port_open "${port_}"
+wait_until_server_is_running
 
 case "${command_}" in
 	eval)
-		if [[ "${1}" = "" ]]; then
+		if [[ -z "${1}" ]]; then
 			echo No expression to eval. >&2
-			exit 1
+			exit 2
 		fi
 
-		curl "0:${port_}/eval/" -d "$@"
+		emacsclient --quiet \
+					--socket-name "${socket_path_}" \
+					${emacsclient_options_} \
+					--eval "$@"
 		;;
-	edit)
-		new_frame_="false"
-		case "${1}" in
-			--new-frame)
-				new_frame_="true"
-				shift
-				;;
-		esac
-
+	edit|minimal)
 		if [[ "${1}" == /* ]]; then
 			path_="$@"
-		elif ! [[ "${1}" = "" ]]; then
+		elif ! [[ -z "${1}" ]]; then
 			path_="${PWD}/$@"
 		fi
-
-		if [[ "${new_frame_}" == "true" ]]; then
-			curl "0:${port_}/open/${path_}?new-frame=true"
-		else
-			curl "0:${port_}/open/${path_}"
+		
+		if ! [[ -z "${path_}" ]]; then
+			emacsclient --quiet \
+						--socket-name "${socket_path_}" \
+						${emacsclient_options_} \
+						"${path_}"
+			# --eval '(toolbox:open-file "'${path_}'")'
 		fi
 		;;
 	file)
-		# TODO: Open file with file browser
+		# TODO: Open directory with file browser
 		;;
 esac

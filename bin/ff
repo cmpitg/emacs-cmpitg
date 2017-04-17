@@ -1,3 +1,5 @@
 #!/bin/bash
 
-rmacs edit "$@"
+export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg/src}
+
+rmacs --no-wait edit "$@"
