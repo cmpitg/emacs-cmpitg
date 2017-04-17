@@ -119,7 +119,6 @@
 ;; (bind-key "<f7>" 'project-explorer)
 ;; (bind-key "<f7>" 'neotree-toggle)
 (bind-key "<M-f11>" 'helm-all-mark-rings)
-(bind-key "<S-f11>" 'history-goto-history)
 
 ;;
 ;; Buffer
@@ -145,6 +144,11 @@
 (bind-key "s-B" '~switch-to-last-buffer)
 (bind-key "<S-f8>" 'helm-bookmarks)
 (bind-key "<f8>" 'helm-mini)
+
+(bind-key "C-;" 'point-pos-previous)
+(bind-key "C-," 'point-pos-next)
+(bind-key "<C-f2>" 'point-pos-save)
+(bind-key "<C-S-f2>" 'point-pos-delete)
 
 (bind-key "C-x C-n" '~new-buffer)
 (with-eval-after-load "vdiff-mode"

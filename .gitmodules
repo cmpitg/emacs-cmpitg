@@ -10,3 +10,6 @@
 [submodule "src/local-packages/drewdrops-powerline"]
 	path = src/local-packages/drewdrops-powerline
 	url = https://github.com/Dewdrops/powerline.git
+[submodule "src/local-packages/point-pos.el"]
+	path = src/local-packages/point-pos.el
+	url = git@github.com:cmpitg/point-pos.el.git
