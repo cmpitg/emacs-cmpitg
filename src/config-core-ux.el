@@ -201,7 +201,7 @@
 
 (use-package linum
   :init (progn
-          (global-linum-mode 1)
+          (global-linum-mode -1)
           (setq linum-format "%d ")))
 
 ;; Don't use font lock by default
