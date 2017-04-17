@@ -396,7 +396,9 @@
 
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
-              (~bind-key-with-prefix-local "h f" '~emacs-lisp/help-function))))
+              (~bind-key-with-prefix-local "h f" 'describe-function)
+              (~bind-key-with-prefix-local "h v" 'describe-variable)
+              (~bind-key-with-prefix-local "h ." 'find-function))))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
 
