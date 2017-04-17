@@ -251,17 +251,26 @@
 
 ;; (setq frame-title-format
 ;;       '(multiple-frames "%b" ("@" system-name )))
-(let ((emacs-as (--> (or (~emacs-as) :emacs)
-                     (symbol-name it)
-                     (substring it 1)
-                     (intern it)
-                     (symbol-name it)
-                     (capitalize it))))
-  (setq-default frame-title-format `(,emacs-as ,(format " @ :%s" *emacs-server-port*)
-                                               " \u262f "
-                                               (buffer-file-name "%f"
-                                                                 (dired-directory dired-directory "%b")))))
+;; (let ((emacs-as (--> (or (~emacs-as) :emacs)
+;;                      (symbol-name it)
+;;                      (substring it 1)
+;;                      (intern it)
+;;                      (symbol-name it)
+;;                      (capitalize it))))
+;;   (setq-default frame-title-format `(,emacs-as ,(format " @ %s" (or *emacs-as-tool*
+;;                                                                     :edit))
+;;                                                " \u262f "
+;;                                                (buffer-file-name "%f"
+;;                                                                  (dired-directory dired-directory "%b")))))
 
+(let ((title-format `("Rmacs"
+                      ,(format " @ %s" (or *emacs-as-tool*
+                                           :edit))
+                      " \u262f "
+                      (buffer-file-name "%f"
+                                        (dired-directory dired-directory "%b")))))
+  (setq-default frame-title-format title-format)
+  (setq frame-title-format title-format))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Indentation
