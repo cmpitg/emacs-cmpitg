@@ -179,7 +179,8 @@ first occurrence of a pattern.  E.g.
              (goto-line pattern))
             (t
              (beginning-of-buffer)
-             (re-search-forward pattern))))))
+             (re-search-forward pattern))))
+    path))
 
 (defun* toolbox:open-file (path &key (new-frame? nil))
   "Opens path and open with external program if necessary."
@@ -192,11 +193,10 @@ first occurrence of a pattern.  E.g.
     (let ((regexp (car regexp&action))
           (action (cdr regexp&action)))
       (when (s-matches-p regexp path)
-        (typecase action
-          (function   (funcall action path))
-          (string     (toolbox:open-with path action))
-          (otherwise  (message-box (format "Invalid program %s" action))))
-        path))))
+        (return (typecase action
+                  (function   (funcall action path))
+                  (string     (toolbox:open-with path action))
+                  (otherwise  (message-box (format "Invalid program %s" action)))))))))
 
 (defun toolbox:open-with (file cmd)
   "Opens file with a command line.  File name is quoted
