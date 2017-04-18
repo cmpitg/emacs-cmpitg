@@ -20,6 +20,7 @@
                                        load-file-name))
               "init"))
 
+(require 'ee:functions-project      (~get-config "functions-project"))
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
 (require 'ee:config-cmpitg-ux       (~get-config "config-cmpitg-ux"))
 (require 'ee:config-cmpitg-packages (~get-config "config-cmpitg-packages"))
