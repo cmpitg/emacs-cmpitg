@@ -234,10 +234,6 @@
 (bind-key "C-7" '~layout/vsplit)
 (bind-key "C-5" '~layout/hsplit)
 
-;; Undo & redo window layout
-(~bind-key-with-prefix "w h" 'winner-undo)
-(~bind-key-with-prefix "w n" 'winner-redo)
-
 ;;
 ;; Misc
 ;;
@@ -366,6 +362,12 @@
   (~bind-key-with-prefix "o w" '~one-window)
   (~bind-key-with-prefix "w s v" '~window/split-vertically)
   (~bind-key-with-prefix "w s s" '~window/split-horizontally)
+  ;; Undo & redo window layout
+  (~bind-key-with-prefix "w h" 'winner-undo)
+  (~bind-key-with-prefix "w n" 'winner-redo)
+
+  ;; Display
+  (~bind-key-with-prefix "d l" '~display/toggle-linum)
 
   ;; Git
   (~bind-key-with-prefix "g s" '~git/status)
@@ -424,6 +426,8 @@
 
 (defalias '~git/status 'magit-status)
 (defalias '~file/browse 'neotree-toggle)
+
+(defalias '~display/toggle-linum 'linum-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Use with eletric RET
