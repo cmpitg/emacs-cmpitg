@@ -222,21 +222,21 @@ if [[ $(server_running_p) = "false" ]]; then
 
 	if [[ -z "${init_}" ]]; then
 		nohup emacs -Q \
-			  --eval "(setq *emacs-as-tool* ${emacs_as_})" \
-			  --eval '(setq server-name "'${name_}'")' \
-			  --eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
-			  --load "${rmacs_init_}" \
-			  >"${tmpdir_}/emacs-${name_}.out" \
-			  2>"${tmpdir_}/emacs-${name_}.err" &
+			--eval "(setq *emacs-as-tool* ${emacs_as_})" \
+			--eval '(setq server-name "'${name_}'")' \
+			--eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
+			--load "${rmacs_init_}" \
+			>"${tmpdir_}/emacs-${name_}.out" \
+			2>"${tmpdir_}/emacs-${name_}.err" &
 	else
 		nohup emacs -Q \
-			  --eval "(setq *emacs-as-tool* ${emacs_as_})" \
-			  --eval '(setq server-name "'${name_}'")' \
-			  --eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
-			  --load "${rmacs_init_}" \
-			  --load "${init_}" \
-			  >"${tmpdir_}/emacs-${name_}.out" \
-			  2>"${tmpdir_}/emacs-${name_}.err" &
+			--eval "(setq *emacs-as-tool* ${emacs_as_})" \
+			--eval '(setq server-name "'${name_}'")' \
+			--eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
+			--load "${rmacs_init_}" \
+			--load "${init_}" \
+			>"${tmpdir_}/emacs-${name_}.out" \
+			2>"${tmpdir_}/emacs-${name_}.err" &
 	fi
 fi
 
@@ -250,9 +250,9 @@ case "${command_}" in
 		fi
 
 		emacsclient --quiet \
-					--socket-name "${socket_path_}" \
-					${emacsclient_options_} \
-					--eval "$@"
+			--socket-name "${socket_path_}" \
+			${emacsclient_options_} \
+			--eval "$@"
 		;;
 	edit|minimal)
 		if [[ "${1}" == /* ]]; then
@@ -260,7 +260,7 @@ case "${command_}" in
 		elif ! [[ -z "${1}" ]]; then
 			path_="${PWD}/$@"
 		fi
-		
+
 		if ! [[ -z "${path_}" ]]; then
 			emacsclient --quiet \
 						--socket-name "${socket_path_}" \
