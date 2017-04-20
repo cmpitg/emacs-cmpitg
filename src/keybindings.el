@@ -271,6 +271,7 @@
 ;; (bind-key "<f10>" 'helm-ag-project-root)
 (bind-key "<f10>" 'helm-do-ag-project-root)
 (bind-key "<C-f10>" 'helm-do-ag)
+(bind-key "<M-f10>" 'helm-resume)
 ;; (bind-key "<C-f10>" 'ack)
 
 (bind-key "M-/" 'hippie-expand)
