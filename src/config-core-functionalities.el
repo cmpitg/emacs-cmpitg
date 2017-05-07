@@ -656,6 +656,7 @@
             (define-key evil-insert-state-map "\C-y" 'yank)
             (define-key evil-insert-state-map "\C-o" '~open-line)
             (define-key evil-insert-state-map "\C-w" 'kill-region)
+            (define-key evil-insert-state-map "\C-a" '~move-to-beginning-of-line)
             (define-key evil-insert-state-map "\C-k"
               (lambda ()
                 (interactive)
