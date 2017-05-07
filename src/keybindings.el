@@ -172,6 +172,8 @@
 (bind-key "s-&" '~join-with-next-line)
 (bind-key "s-; ; ;" '~insert-full-line-comment)
 
+(bind-key "M-Q" '~unfill-paragraph)
+
 ;; Multiple cursors
 
 (bind-key "s-+" 'mc/edit-lines)
