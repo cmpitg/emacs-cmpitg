@@ -643,6 +643,7 @@
               (evil-set-initial-state 'cider-repl-mode 'emacs)
               (evil-set-initial-state 'cider-popup-buffer-mode 'emacs)
               (evil-set-initial-state 'help-mode 'emacs)
+              (evil-set-initial-state 'compilation-mode 'emacs)
               (evil-set-initial-state 'ibuffer-mode 'normal))
 
             (setq evil-emacs-state-cursor 'bar)
