@@ -155,9 +155,7 @@
   :ensure t
   :defer t
   :commands adoc-mode
-  :mode ("\\.adoc\\'" . adoc-mode)
-  :init (progn
-          (add-hook 'adoc-mode-hook 'auto-fill-mode)))
+  :mode ("\\.adoc\\'" . adoc-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better grep'ing with ag
@@ -233,7 +231,6 @@
             ;; (use-package markdown-mode+
             ;;   :ensure markdown-mode+)
 
-            (add-hook 'markdown-mode-hook 'auto-fill-mode)
             (custom-set-faces
              ;; Your init file should contain only one such instance.
              ;; If there is more than one, they won't work right.

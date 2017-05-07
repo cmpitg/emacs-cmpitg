@@ -511,9 +511,10 @@ If point is already there, move to the beginning of the line."
   (interactive)
 
   (let ((orig-point (point)))
-    (back-to-indentation)
+    (unless visual-line-mode
+      (back-to-indentation))
     (when (= orig-point (point))
-      (move-beginning-of-line nil))))
+      (beginning-of-visual-line nil))))
 
 (defun ~delete-line ()
   "Delete current line."
