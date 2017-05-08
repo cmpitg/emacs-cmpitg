@@ -158,7 +158,7 @@ else
 	emacs_as_=":${command_}"
 fi
 
-rmacs_init_="${rmacs_init_dir_}/init-${command_}.el"
+rmacs_init_="${rmacs_init_dir_}/src/init-${command_}.el"
 
 ##############################################################################
 # emacsclient options

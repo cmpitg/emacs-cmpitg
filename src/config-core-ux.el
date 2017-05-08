@@ -285,14 +285,34 @@
 (setq mouse-autoselect-window t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Wrap long lines
+;; Soft-wrap long lines
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; In text-related modes only, don't mess up with code
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(global-visual-line-mode 1)
+;;
+;; I have tried adaptive-wrap but didn't like it.  It gave false impression of
+;; how a line is actually wrapped.  The code doesn't handle different cases as
+;; nicely as visual-fill-column
+;;
 
-(ignore-errors
-  (diminish 'visual-line-mode)
-  (diminish 'global-visual-line-mode))
+;; https://github.com/joostkremers/visual-fill-column
+(use-package visual-fill-column
+  :ensure t
+  :init (progn
+          (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
+          ;; Correct the default split
+          (setf split-window-preferred-function #'visual-fill-column-split-window-sensibly)
+
+          (add-hook 'text-mode-hook (lambda ()
+                            (turn-on-visual-line-mode)
+                            (turn-on-visual-fill-column-mode)))))
+
+;; (ignore-errors
+;;   (diminish 'visual-line-mode)
+;;   (diminish 'global-visual-line-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Preventing window stealing by cancelling the role of other-window
