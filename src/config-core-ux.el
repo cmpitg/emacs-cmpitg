@@ -302,13 +302,23 @@
 (use-package visual-fill-column
   :ensure t
   :init (progn
+          (defun ~turn-on-visual-line ()
+            (interactive)
+            (turn-on-visual-line-mode)
+            (turn-on-visual-fill-column-mode)
+            (turn-off-auto-fill))
+
+          (defun ~turn-off-visual-line ()
+            (interactive)
+            (visual-line-mode -1)
+            (visual-fill-column-mode -1))
+
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
           ;; Correct the default split
           (setf split-window-preferred-function #'visual-fill-column-split-window-sensibly)
 
-          (add-hook 'text-mode-hook (lambda ()
-                            (turn-on-visual-line-mode)
-                            (turn-on-visual-fill-column-mode)))))
+          (add-hook 'markdown-mode-hook #'~turn-on-visual-line)
+          (add-hook 'adoc-mode-hook #'~turn-on-visual-line)))
 
 ;; (ignore-errors
 ;;   (diminish 'visual-line-mode)
