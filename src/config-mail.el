@@ -60,7 +60,7 @@ E.g.
                          :sent-folder \"/cmpitg-at-gmail/sent\"
                          :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"
                          :maildir-shortcuts '\(\"cmpitg-at-gmail/Inbox\" . ?i\)\)"
-  ;; Because Emacs uses dynamic binidng by default
+  ;; Because Emacs uses dynamic binding by default
   (lexical-let ((context-name context-name)
                 (full-name full-name)
                 (mail-address mail-address)
