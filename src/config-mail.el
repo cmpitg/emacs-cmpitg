@@ -108,6 +108,8 @@ E.g.
   (progn
     ;; TODO - Context menu
 
+    (add-hook 'mu4e-compose-mode-hook '~turn-on-soft-wrapping)
+
     ;; Use Helm instead of ido
     (use-package helm-mu
       :ensure t

@@ -302,13 +302,18 @@
 (use-package visual-fill-column
   :ensure t
   :init (progn
+          (defun ~turn-on-soft-wrapping ()
+            "Turns on soft-wrapping."
+            (interactive)
+            (turn-off-auto-fill)
+            (turn-on-visual-line-mode)
+            (turn-on-visual-fill-column-mode))
+
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
           ;; Correct the default split
           (setf split-window-preferred-function #'visual-fill-column-split-window-sensibly)
 
-          (add-hook 'text-mode-hook (lambda ()
-                            (turn-on-visual-line-mode)
-                            (turn-on-visual-fill-column-mode)))))
+          (add-hook 'text-mode-hook '~turn-on-soft-wrapping)))
 
 ;; (ignore-errors
 ;;   (diminish 'visual-line-mode)
