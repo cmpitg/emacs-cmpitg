@@ -236,6 +236,12 @@ horizontal split."
         (t
          (setq split-width-threshold *split-width-threshold-old*))))
 
+(defun ~adoc-make-bold ()
+  "Boldifies selection in adoc-mode."
+  (interactive)
+  (when (region-active-p)
+    (~surround "**" "**")))
+
 (defun ~move-to-compilation-buffer ()
   "Move to *compilation* buffer if it exists."
   (interactive)

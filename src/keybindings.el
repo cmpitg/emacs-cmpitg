@@ -310,10 +310,17 @@
                                                             (apropos (current-word))))
             (define-key emacs-lisp-mode-map (kbd "<S-f1>") 'find-function)))
 
+;; AsciiDoc
+
+(add-hook 'adoc-mode-hook
+          (lambda ()
+            (~bind-key-with-prefix-local "C-b" '~adoc-make-bold)))
+
 ;; Fix open-file command in Xiki
 
 (with-eval-after-load "el4r"
   (bind-key "C-o" '~open-line))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; With evil-mode
