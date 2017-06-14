@@ -113,10 +113,10 @@ active, insert `begin-string` and `end-string` and place the
 cursor in-between them."
   (interactive "sStart string: \nsEnd string: ")
   (cond
-   ((is-selecting?)
+   ((region-active-p)
     (save-excursion
-      (let ((start-point (selection-start))
-            (end-point   (selection-end)))
+      (let ((start-point (region-beginning))
+            (end-point   (region-end)))
         (goto-point start-point)
         (insert begin-string)
         (goto-point end-point)
