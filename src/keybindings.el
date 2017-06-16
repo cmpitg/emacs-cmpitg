@@ -145,7 +145,8 @@
 (bind-key "<S-f8>" 'helm-bookmarks)
 (bind-key "<f8>" 'helm-mini)
 
-(bind-key "<M-f3>" '~open-file-gui)
+(bind-key "<M-f3>" '~gui/open-file)
+(bind-key "C-x C-w" '~gui/save-as)
 
 (bind-key "C-;" 'point-pos-previous)
 (bind-key "C-," 'point-pos-next)
@@ -345,7 +346,7 @@
   (~bind-key-with-prefix "SPC" 'helm-M-x)
   (~bind-key-with-prefix "v p c" '~visit-experimental-config)
   (~bind-key-with-prefix "o p" '~open-project)
-  (~bind-key-with-prefix "o f" '~open-file-gui)
+  (~bind-key-with-prefix "o f" '~gui/open-file)
 
   ;; Buffer
   (~bind-key-with-prefix "s b" 'save-buffer)
