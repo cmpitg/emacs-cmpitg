@@ -145,6 +145,8 @@
 (bind-key "<S-f8>" 'helm-bookmarks)
 (bind-key "<f8>" 'helm-mini)
 
+(bind-key "<M-f3>" '~open-file-gui)
+
 (bind-key "C-;" 'point-pos-previous)
 (bind-key "C-," 'point-pos-next)
 (bind-key "<C-f2>" 'point-pos-save)
@@ -321,7 +323,6 @@
 (with-eval-after-load "el4r"
   (bind-key "C-o" '~open-line))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; With evil-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -344,7 +345,7 @@
   (~bind-key-with-prefix "SPC" 'helm-M-x)
   (~bind-key-with-prefix "v p c" '~visit-experimental-config)
   (~bind-key-with-prefix "o p" '~open-project)
-  (~bind-key-with-prefix "o f" '~open-file)
+  (~bind-key-with-prefix "o f" '~open-file-gui)
 
   ;; Buffer
   (~bind-key-with-prefix "s b" 'save-buffer)
