@@ -367,6 +367,11 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
          (s-join "")
          insert)))
 
+(defun ~open-file-gui ()
+  (interactive)
+  (let ((last-nonmenu-event nil))
+    (call-interactively 'find-file)))
+
 (defun ~open-file-if-existed (path)
   "Opens file if exists of displays a message notifying that the
 file does not exist."
