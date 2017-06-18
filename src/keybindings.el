@@ -407,7 +407,7 @@
   (bind-key "C-z" 'keyboard-quit evil-normal-state-map)
   (bind-key "C-z" 'keyboard-quit evil-visual-state-map)
   (bind-key "C-z" 'keyboard-quit evil-motion-state-map)
-  
+
   (add-hook 'lisp-mode-hook
             (lambda ()
               (~bind-key-with-prefix-local "h h" 'hyperspec-lookup)))
@@ -416,7 +416,13 @@
             (lambda ()
               (~bind-key-with-prefix-local "h f" 'describe-function)
               (~bind-key-with-prefix-local "h v" 'describe-variable)
-              (~bind-key-with-prefix-local "h ." 'find-function))))
+              (~bind-key-with-prefix-local "h ." 'find-function)))
+
+  (add-hook 'adoc-mode-hook
+            (lambda ()
+              (~bind-key-with-prefix-local "d r" '~asciidoc/render)
+              (~bind-key-with-prefix-local "d p" '~asciidoc/preview)
+              (~bind-key-with-prefix-local "d u" '~asciidoc/update-preview))))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
 

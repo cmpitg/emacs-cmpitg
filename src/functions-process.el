@@ -16,12 +16,14 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defun toolbox:run-process (cmd)
-  "Runs an external process asynchronously.  The process is not
-terminated when Emacs is.  `cmd' is executed via `bash -c'."
-  (call-process "bash"
+(defun* toolbox:run-process (cmd &key (async t))
+  "Runs an external process.  If `async' is non-`nil' The process
+is not terminated when Emacs is and the output is discarded;
+otherwise, both output from stdout and stderr are direceted to
+the \"*Messages*\" buffer. `cmd' is executed via `dash -c'."
+  (call-process "dash"
                 nil
-                0
+                (if async 0 "*Messages*")
                 nil
                 "-c"
                 cmd))
