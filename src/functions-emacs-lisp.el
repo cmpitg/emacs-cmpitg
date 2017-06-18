@@ -313,6 +313,10 @@ used.  Do nothing if server is already started."
                            (format "firefox --new-window '%s'" url)
                          (format "firefox '%s'" url))))
 
+(defun ~konqueror (path)
+  (interactive "MPath or URL: ")
+  (toolbox:run-process (format "konqueror '%s'" path)))
+
 (defun ~get-active-modes ()
   "Return the list of minor modes are enabled in the current
 buffer."
