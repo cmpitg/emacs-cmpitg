@@ -500,6 +500,45 @@ Example:
   (setq header-line-format mode-line-format mode-line-format nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; AsciiDoc
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~asciidoc/render (html-path)
+  "Renders current file with AsciiDoctor in HTML format."
+  (interactive "FHTML output path: ")
+  (let ((cmd (format "asciidoctor --out-file '%s' '%s'"
+                     html-path
+                     (~current-file-full-path))))
+    (toolbox:run-process cmd)
+    (message "'%s' has finished running" cmd)
+    (message "Check %s for output." html-path)))
+
+(defun ~asciidoc/preview ()
+  "Renders and previews current AsciiDoc file in HTML format with
+Konqueror."
+  (interactive)
+  (let ((html-path (~asciidoc/current-temporary-html-path)))
+    (~asciidoc/render html-path)
+    (~konqueror html-path)))
+
+(defun ~asciidoc/current-temporary-html-path ()
+  "Returns the HTML path corresponding to the current AsciiDoc
+buffer.  The path is stored in a buffer local variable named
+`asciidoc-html-path' and generated if not yet exists"
+  (let ((asciidoc-html-path/symbol (make-local-variable 'asciidoc-html-path)))
+    (unless (boundp asciidoc-html-path/symbol)
+      (set asciidoc-html-path/symbol (make-temp-file (f-filename (buffer-file-name))
+                                                     nil
+                                                     ".html")))
+    asciidoc-html-path))
+
+(defun ~asciidoc/update-preview ()
+  "Re-renders current AsciiDoc file for preview.  The browser
+needs manual refreshing."
+  (interactive)
+  (~asciidoc/render (~asciidoc/current-temporary-html-path)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GnuPG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
