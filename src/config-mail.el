@@ -264,7 +264,7 @@ E.g.
                              :default-headers "BCC: haduong.nguyen@buddify.io"
                              :smtp-server "smtp.zoho.com:587"
                              :signature-file "/m/mail/signature_hd-at-buddify.txt"
-                             :sent-folder "/hd-at-buddify/sent"c
+                             :sent-folder "/hd-at-buddify/sent"
                              :maildir-shortcuts '(("/hd-at-buddify/Inbox"          . ?i)
                                                   ("/hd-at-buddify/Drafts"         . ?r)))))
 
