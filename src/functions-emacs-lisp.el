@@ -51,7 +51,7 @@
   "Eval region then replace region with result."
   (interactive)
   (let ((value (~eval-string (get-selection))))
-    (kill-region (selection-start) (selection-end))
+    (kill-region (~selection-start) (~selection-end))
     (insert (format "%s" value))))
 
 (defun ~read-simplified-sexp-as-string (prompt)

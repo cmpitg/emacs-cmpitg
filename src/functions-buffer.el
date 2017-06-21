@@ -78,9 +78,9 @@ convenient wrapper of `join-line'."
 
 (defun ~current-selection ()
   "Return the current selected text."
-  (if (is-selecting?)
-    (buffer-substring (selection-start)
-                      (selection-end))
+  (if (region-active-p)
+    (buffer-substring (~selection-start)
+                      (~selection-end))
     ""))
 
 (defun ~parenthesize-last-sexp ()
@@ -518,7 +518,7 @@ E.g.
 (defun ~delete-selected-text ()
   "Delete the selected text, do nothing if none text is selected."
   (if (~is-selecting?)
-    (delete-region (selection-start) (selection-end))))
+    (delete-region (~selection-start) (~selection-end))))
 
 (defun ~replace-selection (&optional text)
   "Replace selection with text."
@@ -533,7 +533,7 @@ E.g.
   "Go to the start of current selection.  If selection is not active,
 do nothing."
   (if (~is-selecting?)
-    (goto-point (selection-start))))
+    (goto-point (~selection-start))))
 
 (defun ~move-to-beginning-of-line ()
   "Move point back to indentation of beginning of line.
@@ -566,7 +566,7 @@ If point is already there, move to the beginning of the line."
   "Go to the end of current selection.  If selection is not active,
 do nothing."
   (if (~is-selecting?)
-    (goto-point (selection-end))))
+    (goto-point (~selection-end))))
 
 (defun ~mark-line ()
   "Mark current line."
