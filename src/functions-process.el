@@ -56,9 +56,13 @@ returns output (+ error) as string."
     (shell-command command t nil)
     (buffer-string)))
 
-(defun ~exec-in-other-window (command)
+(defun ~exec-in-other-window (&optional command)
   "Execute in other window."
-  (interactive "MCommand: ")
+  (interactive)
+  (when (null command)
+    (if (region-active-p)
+        (setq command (~current-selection))
+      (setq command (read-shell-command "Command: "))))
   (shell-command command))
 
 (defun ~exec< (&optional command)
