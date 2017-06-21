@@ -107,6 +107,10 @@
               (helm-mode 1)
               (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
 
+              ;; Exiting minibuffer ASAP so that it won't cause problem when
+              ;; typing fast
+              (setq helm-exit-idle-delay 0)
+
               ;; The following call to helm-follow-mode is local and has no
               ;; effect.  Read its documentation for the possible effect.
               ;; (helm-follow-mode 1)
