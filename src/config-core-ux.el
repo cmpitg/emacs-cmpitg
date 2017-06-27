@@ -242,6 +242,7 @@
     ["Delete" delete-region (~is-selecting?)]
     ["--" ignore]
     ["Exec (other window)" ~exec-in-other-window (~is-selecting?)]
+    ["Exec in Tmux" emamux:send-region (~is-selecting?)]
     ["--" ignore]
     ["Undo" undo-tree-undo t]
     ["Redo" undo-tree-redo t]
