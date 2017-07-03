@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: pretty-print
+# key: pp
+# --
+pprint.pprint($0)
