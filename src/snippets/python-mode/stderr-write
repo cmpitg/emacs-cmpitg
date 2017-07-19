@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: stderr.write
+# key: errwr
+# --
+sys.stderr.write($0)
