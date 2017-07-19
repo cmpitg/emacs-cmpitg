@@ -369,8 +369,11 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
 
 (defun ~gui/open-file ()
   (interactive)
-  (let ((last-nonmenu-event nil))
-    (call-interactively 'find-file)))
+  (let ((path (s-trim
+               (format (~exec "zenity --file-selection --multiple --filename='%s/' 2>/dev/null")
+                       (pwd)))))
+    (unless (string-empty-p path)
+      (find-file path))))
 
 (defun ~gui/save-as ()
   (interactive)
