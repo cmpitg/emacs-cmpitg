@@ -13,3 +13,6 @@
 [submodule "src/local-packages/point-pos.el"]
 	path = src/local-packages/point-pos.el
 	url = git@github.com:cmpitg/point-pos.el.git
+[submodule "src/local-packages/fffs"]
+	path = src/local-packages/fffs
+	url = https://github.com/asjo/fffs.git

@@ -358,6 +358,7 @@
 
   ;; File
   (~bind-key-with-prefix "f o" '~gui/open-file)
+  (~bind-key-with-prefix "f f" 'find-file-from-selection)
   (~bind-key-with-prefix "f b" '~file/browse)
   (~bind-key-with-prefix "f c p" '~file/copy-path)
   (~bind-key-with-prefix "f c d" '~file/copy-directory)
