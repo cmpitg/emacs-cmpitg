@@ -23,6 +23,7 @@
 (require 'ee:functions-project      (~get-config "functions-project"))
 (require 'ee:functions-mail         (~get-config "functions-mail"))
 (require 'ee:functions-tag          (~get-config "functions-tag"))
+(require 'ee:functions-aws          (~get-config "functions-aws"))
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
 (require 'ee:config-literate-prog   (~get-config "config-literate-prog"))
 (require 'ee:config-cmpitg-ux       (~get-config "config-cmpitg-ux"))
