@@ -237,6 +237,9 @@
         ;; Enable error buffer popping also in the REPL
         (setq cider-repl-popup-stacktraces t)
 
+        ;; Default value: "repl -s -H :: wait"
+        (setq cider-boot-parameters "cider repl -s wait")
+
         (setq nrepl-buffer-name-separator "-")
         (setq nrepl-buffer-name-show-port t)
 
@@ -267,7 +270,7 @@
           (context 2)
           (tabular '(2 1))
           (are '(2 1)))
-        
+
         (defun ~cider-eval (&optional expr)
           "Eval an expression in Cider REPL."
           (interactive)
