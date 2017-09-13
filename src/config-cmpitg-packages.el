@@ -480,11 +480,12 @@
                       (switch-to-buffer (nth 0 p))
                       (goto-char (nth 1 p))))))
 
-          (defun my/elpy-mode-hook ()
-            (bind-key "C-c ." 'my/python-jump-to-definition)
-            (bind-key "C-c ," 'my/python-jump-back))
+          ;; (defun my/elpy-mode-hook ()
+          ;;   (bind-key "C-c ." 'my/python-jump-to-definition)
+          ;;   (bind-key "C-c ," 'my/python-jump-back))
 
-          (add-hook 'python-mode-hook 'my/elpy-mode-hook)))
+          ;; (add-hook 'python-mode-hook 'my/elpy-mode-hook)
+          ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JavaScript development

@@ -419,11 +419,21 @@
               (~bind-key-with-prefix-local "h v" 'describe-variable)
               (~bind-key-with-prefix-local "h ." 'find-function)))
 
-  (add-hook 'adoc-mode-hook
-            (lambda ()
-              (~bind-key-with-prefix-local "d r" '~asciidoc/render)
-              (~bind-key-with-prefix-local "d p" '~asciidoc/preview)
-              (~bind-key-with-prefix-local "d u" '~asciidoc/update-preview))))
+  (with-eval-after-load "elpy"
+    (~bind-key-with-prefix "d w" 'pyvenv-workon :keymap elpy-mode-map)
+    (~bind-key-with-prefix "d z" 'elpy-shell-switch-to-shell :keymap elpy-mode-map)
+    (~bind-key-with-prefix "d r" 'elpy-shell-send-region-or-buffer :keymap elpy-mode-map)
+    (~bind-key-with-prefix "d e" 'elpy-shell-send-current-statement :keymap elpy-mode-map)
+    (~bind-key-with-prefix "d ." 'my/python-jump-to-definition :keymap elpy-mode-map)
+    (~bind-key-with-prefix "d ," 'my/python-jump-back :keymap elpy-mode-map))
+
+  (with-eval-after-load "adoc-mode"
+    (~bind-key-with-prefix "d r" '~asciidoc/render :keymap adoc-mode-map)
+    (~bind-key-with-prefix "d p" '~asciidoc/preview :keymap adoc-mode-map)
+    (~bind-key-with-prefix "d u" '~asciidoc/update-preview :keymap adoc-mode-map))
+
+  (with-eval-after-load "cider"
+    (~bind-key-with-prefix "d r" 'cider-switch-to-repl-buffer :keymap cider-mode-map)))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
 
