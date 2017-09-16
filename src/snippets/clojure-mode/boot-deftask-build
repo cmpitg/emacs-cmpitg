@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: deftask-build - Boot build task
+# key: deftask-build
+# --
+(deftask build
+  "Build uberjar"
+  []
+  (comp (pom) (aot) (uber) (jar) (target)))

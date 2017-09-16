@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: deftask-dev - Boot dev task
+# key: deftask-dev
+# --
+(deftask dev []
+  "Adds development-only dependencies and sets default REPL namespace to 'user."
+  (set-env! :dependencies #(conj % '[integrant/repl "${1:0.2.0}"])
+            :source-paths #(conj % "dev/"))
+  (alter-var-root #'repl (constantly (partial repl :init-ns 'user)))
+  identity)
