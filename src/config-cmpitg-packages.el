@@ -271,6 +271,8 @@
           (tabular '(2 1))
           (are '(2 1)))
 
+        (defalias '~clojure/add-dependency 'cljr-add-project-dependency)
+
         (defun ~cider-eval (&optional expr)
           "Eval an expression in Cider REPL."
           (interactive)

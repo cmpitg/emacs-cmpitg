@@ -439,7 +439,8 @@
   (with-eval-after-load "cider"
     (add-hook 'cider-mode-hook
               #'(lambda ()
-                  (~bind-key-with-prefix-local "d z" 'cider-switch-to-repl-buffer :keymap cider-mode-map)))))
+                  (~bind-key-with-prefix-local "d z" 'cider-switch-to-repl-buffer :keymap cider-mode-map)
+                  (~bind-key-with-prefix-local "d a d" '~clojure/add-dependency :keymap cider-mode-map)))))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
 
