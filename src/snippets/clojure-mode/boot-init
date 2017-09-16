@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: boot-init - Init build.boot
+# key: boot-init
+# --
+(set-env! :dependencies '[[org.clojure/clojure "${1:1.8.0}"]
+                          [integrant "${2:0.6.1}"]]
+          :source-paths #{"src/"})
+
+(task-options! pom {:project '$3
+                    :version "${4:latest}"}
+               aot {:all true}
+               jar {:main '${3:$(s-concat yas-text ".core")}})
