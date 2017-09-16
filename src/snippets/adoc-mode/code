@@ -3,7 +3,7 @@
 # key: cb
 # group: adoc-mode
 # --
-[source${1:,lisp},linenums]
+[source${1:,sh}]
 ----
 $2
 ----
