@@ -310,8 +310,8 @@ used.  Do nothing if server is already started."
                                 "https://encrypted.google.com/")))))
   ;; (~send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url))
   (toolbox:run-process (if new-window?
-                           (format "firefox --new-window '%s'" url)
-                         (format "firefox '%s'" url))))
+                           (format "firefox-beta --new-window '%s'" url)
+                         (format "firefox-beta '%s'" url))))
 
 (defun ~konqueror (path)
   (interactive "MPath or URL: ")
