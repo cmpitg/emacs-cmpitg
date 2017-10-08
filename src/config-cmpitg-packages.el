@@ -272,6 +272,7 @@
           (are '(2 1)))
 
         (defalias '~clojure/add-dependency 'cljr-add-project-dependency)
+        (defalias '~clojure/add-require 'cljr-add-require-to-ns)
 
         (defun ~cider-eval (&optional expr)
           "Eval an expression in Cider REPL."
