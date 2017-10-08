@@ -519,7 +519,8 @@ Konqueror."
   (interactive)
   (let ((html-path (~asciidoc/current-temporary-html-path)))
     (~asciidoc/render html-path)
-    (~konqueror html-path)))
+    ;; (~konqueror html-path)
+    (~firefox html-path :new-window? t)))
 
 (defun ~asciidoc/current-temporary-html-path ()
   "Returns the HTML path corresponding to the current AsciiDoc
