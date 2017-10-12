@@ -26,12 +26,33 @@
   (progn
     (projectile-global-mode)
 
-    (add-to-list 'projectile-globally-ignored-directories "node_modules*")
-    (add-to-list 'projectile-globally-ignored-directories "*bower_components*")
-    (add-to-list 'projectile-globally-ignored-directories "bower_components")
-    (add-to-list 'projectile-globally-ignored-directories ".cache")
-    (add-to-list 'projectile-globally-ignored-files "*.pyc")
-    (add-to-list 'projectile-globally-ignored-files ".*pyc")
+    (setq ~project-ignored-patterns
+          (list (rx (0+ any) ".gz" eol)
+                (rx (0+ any) ".pyc" eol)
+                (rx (0+ any) ".jar" eol)
+                (rx (0+ any) ".tar.gz" eol)
+                (rx (0+ any) ".tgz" eol)
+                (rx (0+ any) ".zip" eol)
+                (rx (0+ any) ".pyc" eol)
+                "/node_modules/"
+                "/bower_components/"))
+
+    (defun ~projectile-ignored-patterns ()
+      (-concat ~project-ignored-patterns
+               (first (projectile-filtering-patterns))))
+
+    (defun ~projectile-ignored? (file)
+      (-any? #'(lambda (pattern)
+                 (string-match pattern file))
+             (~projectile-ignored-patterns)))
+
+    (defun ~print-files-advice-around (orig-fun &rest args)
+      (let* ((files (apply orig-fun args))
+             (filtered-with-regex (cl-remove-if #'~projectile-ignored? files)))
+        filtered-with-regex))
+
+    (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
+    ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
 
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
@@ -57,7 +78,8 @@
     (setq projectile-switch-project-action 'projectile-dired)
 
     ;; A bug in projectile ignore that doesn't ignore
-    (setq projectile-indexing-method 'native)))
+    ;; (setq projectile-indexing-method 'native)
+    ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Remote file processing with Tramp
