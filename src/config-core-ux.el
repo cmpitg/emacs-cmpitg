@@ -337,6 +337,24 @@
 ;;   (diminish 'global-visual-line-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Down mouse 1 should change evil to insert mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~mouse-1-evil-insert-mode-advice-around (orig-fun &rest args)
+  (interactive)
+  (let ((res (call-interactively orig-fun))
+        (old-point (point)))
+    (call-interactively 'evil-insert)
+    ;; After calling evil-insert, the cursor moves the beginning of the region
+    ;; so we need to set it back
+    (when (< (point) old-point)
+      (call-interactively 'exchange-point-and-mark))
+    res))
+
+(advice-add 'evil-mouse-drag-region :around #'~mouse-1-evil-insert-mode-advice-around)
+;; (advice-remove 'evil-mouse-drag-region #'~mouse-1-evil-insert-mode-advice-around)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Preventing window stealing by cancelling the role of other-window
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
