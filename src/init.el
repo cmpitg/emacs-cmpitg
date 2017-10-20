@@ -19,7 +19,7 @@
 
 (if (string= "1" (getenv "EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR"))
     (setq debug-on-error t)
-   (setq debug-on-error nil))
+  (setq debug-on-error nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Important global values
