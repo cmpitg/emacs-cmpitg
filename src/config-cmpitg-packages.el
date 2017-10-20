@@ -324,10 +324,10 @@
 ;; Delphi and Pascal development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package delphi
-  :commands delphi-mode
-  :config (progn
-            (~auto-load-mode '("\\.pas$" "\\.pp$") 'delphi-mode)))
+;; (use-package delphi-mode
+;;   :commands delphi-mode
+;;   :config (progn
+;;             (~auto-load-mode '("\\.pas$" "\\.pp$") 'delphi-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python development
