@@ -768,8 +768,8 @@ next line."
 
 (use-package go-mode-autoloads
   :ensure go-mode
-  :mode "\\.go\\'"
-  :defer t)
+  :disabled t
+  :mode "\\.go\\'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Rust
