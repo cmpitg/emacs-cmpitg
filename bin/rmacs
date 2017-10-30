@@ -11,12 +11,12 @@ Rmacs is a Re-enforced eMacs, shaping Emacs into one of the supported tools
 
 'command' is one of the following:
 
-  edit   :: Run Rmacs as text editor
-  mail   :: Run Rmacs as mail browser
-  note   :: Run Rmacs as note taker
-  file   :: Run Rmacs as file manager
-  start  :: Run a minimal Rmacs without additional configuration
-  eval   :: Evals an arbitrary Emacs Lisp expression
+  edit		:: Run Rmacs as text editor
+  mail		:: Run Rmacs as mail browser
+  note		:: Run Rmacs as note taker
+  file		:: Run Rmacs as file manager
+  minimal	:: Run a minimal Rmacs without additional configuration
+  eval		:: Evals an arbitrary Emacs Lisp expression
 
 Rmacs works by loading an init file from the Rmacs init directory denoted by
 the environment variable RMACS_INIT_DIR.
@@ -137,6 +137,9 @@ case "${1}" in
 	file)
 		command_=file
 		;;
+	minimal)
+		command_=minimal
+		;;
 	"")
 		echo Missing command.  See rmacs --help for usage. >&2
 		exit 1
@@ -158,7 +161,11 @@ else
 	emacs_as_=":${command_}"
 fi
 
-rmacs_init_="${rmacs_init_dir_}/src/init-${command_}.el"
+if [[ "${command_}" = "minimal" ]]; then
+	rmacs_init_="${rmacs_init_dir_}/src/init.el"
+else
+	rmacs_init_="${rmacs_init_dir_}/src/init-${command_}.el"
+fi
 
 ##############################################################################
 # emacsclient options
