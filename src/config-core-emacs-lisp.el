@@ -78,12 +78,14 @@
 ;; https://www.emacswiki.org/emacs/AutoAsyncByteCompile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (use-package auto-async-byte-compile
-;;   :ensure t
-;;   :init (progn
-;;           (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
-;;           ;; Don't display buffer after compilation is completed
-;;           (setq auto-async-byte-compile-display-function #'identity)))
+;; (byte-recompile-directory "/m/src/emacs-cmpitg/src/" 0)
+
+(use-package auto-async-byte-compile
+  :ensure t
+  :init (progn
+          (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+          ;; Don't display buffer after compilation is completed
+          (setq auto-async-byte-compile-display-function #'identity)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
