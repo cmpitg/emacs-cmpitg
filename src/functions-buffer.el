@@ -356,6 +356,9 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
     (set-visited-file-name (format "%s_%s"
                                    (s-trim (~exec "now-standardized"))
                                    (s-trim (~exec "uuidgen"))))
+    (setq-local local/delete-on-exit t)
+    (add-file-local-variable 'local/delete-on-exit t)
+    (beginning-of-buffer)
     (setq buffer-offer-save t)))
 
 (defun ~insert-full-line-comment ()

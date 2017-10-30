@@ -116,14 +116,18 @@ filesystem."
   (file-name-sans-extension (~current-file-name)))
 
 (defun ~delete-current-file ()
-  "Delete the file associated with the current buffer.
-Delete the current buffer too."
+  "Delete the file associated with the current buffer.  Delete
+the current buffer too."
   (interactive)
   (let ((current-file (~current-file-full-path)))
     (when (yes-or-no-p (concat "Delete file: " current-file))
+      ;; Prevent the following kill-buffer from recursively calling this function
+      (when (local-variable-p 'local/delete-on-exit)
+        (kill-local-variable 'local/delete-on-exit))
       (kill-buffer (current-buffer))
       (delete-file current-file)
       (message (concat "Deleted file: " current-file)))))
+(defalias '~delete-this-file '~delete-current-file)
 
 (defun ~open-current-file-as-admin ()
   "Open the current buffer as *nix root.

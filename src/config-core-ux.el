@@ -337,6 +337,19 @@
 ;;   (diminish 'global-visual-line-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Delete the corresponding file when killing buffer if needed
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~delete-file-when-killing-buffer ()
+  "Deletes current file when killing buffer if needed."
+  (interactive)
+  (when (and (local-variable-p 'local/delete-on-exit)
+             local/delete-on-exit)
+    (~delete-current-file)))
+
+(add-hook 'kill-buffer-hook #'~delete-file-when-killing-buffer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Down mouse 1 should change evil to insert mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
