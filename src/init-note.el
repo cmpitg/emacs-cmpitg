@@ -1,3 +1,5 @@
+;; -*- no-byte-compile: t -*-
+
 ;;
 ;; Copyright (C) 2017 Ha-Duong Nguyen (@cmpitg)
 ;;
