@@ -19,6 +19,8 @@
 ;; Must load last
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(kill-buffer "*scratch*")
+
 ;; (~add-load-path (~get-config "local-packages/acme-mouse"))
 ;; (require 'acme-mouse)
 
