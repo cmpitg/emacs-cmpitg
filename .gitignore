@@ -1,2 +1,3 @@
 /src/machine-specific.el
 /src/machine-specific-init.el
+*.elc
