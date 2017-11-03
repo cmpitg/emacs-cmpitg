@@ -24,11 +24,11 @@
 ;; (~add-load-path (~get-config "local-packages/acme-mouse"))
 ;; (require 'acme-mouse)
 
-(bind-key "<mouse-3>" '(lambda ()
-                         (interactive)
-                         (popup-menu (~right-click-menu))))
+(bind-key "<S-mouse-3>" '(lambda ()
+                           (interactive)
+                           (popup-menu (~right-click-menu))))
 
-(bind-key "<C-mouse-1>" '~exec|-select-output)
+(bind-key "<S-mouse-2>" '~exec|-select-output)
 (global-unset-key (kbd "<C-down-mouse-1>"))
 
 (bind-key "<mouse-2>" 'wand:execute)
