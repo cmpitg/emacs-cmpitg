@@ -682,12 +682,8 @@
 ;; Pattern-based command execution
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-and-compile
-  (defun cmpitg/wand-load-path ()
-    (~get-config "local-packages/wand")))
-
 (use-package wand
-  :load-path (lambda () (list (cmpitg/wand-load-path)))
+  :ensure t
   :config
   (progn
     (setq wand:*rules*
