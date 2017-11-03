@@ -686,6 +686,17 @@
   :ensure t
   :config
   (progn
+    (defun ~quick-action (text)
+      "Executes special action."
+      (interactive)
+      (cond ((~file-pattern? text)
+             (toolbox:open-file text))
+            ((and (derived-mode-p 'emacs-lisp-mode)
+                  (s-starts-with? "(" text))
+             (eval (read-from-string text)))
+            (t
+             (wand:eval-string text))))
+
     (setq wand:*rules*
           (list (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
@@ -723,30 +734,24 @@
                                   :capture :after
                                   :action (lambda (str)
                                             (~send-mail :to str)))
-                (wand:create-rule :match "\"[^\"]*\""
-                                  :capture "\"\\([^\"]*\\)\""
-                                  :action toolbox:open-file)
-                (wand:create-rule :match "'[^']*'"
-                                  :capture "'\\([^']*\\)'"
-                                  :action toolbox:open-file)
+                ;; (wand:create-rule :match "\"[^\"]*\""
+                ;;                   :capture "\"\\([^\"]*\\)\""
+                ;;                   :action (lambda (str)
+                ;;                             (interactive)
+                ;;                             (message-box "%s" str)
+                ;;                             (toolbox:open-file str)))
+                ;; (wand:create-rule :match "'[^']*'"
+                ;;                   :capture "'\\([^']*\\)'"
+                ;;                   :action toolbox:open-file)
                 (wand:create-rule :match ".*\\.html$"
                                   :capture :whole
                                   :action (lambda (path)
                                             (interactive)
                                             (toolbox:open-with path "web-browser-gui %s")))
-                (wand:create-rule :match ".*"
+                (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
-                                  :action
-                                  (lambda (str)
-                                    (interactive)
-                                    ;; (message-box "Here: %s -> %s" str (~file-pattern? str))
-                                    (cond ((~file-pattern? str)
-                                           (toolbox:open-file str))
-                                          ((and (eq 'lisp-mode major-mode)
-                                                (slime-connected-p))
-                                           (call-interactively 'slime-eval-region))
-                                          (t
-                                           (call-interactively 'wand:eval-string)))))))))
+                                  :skip-comment nil
+                                  :action ~quick-action)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Find file from X selection

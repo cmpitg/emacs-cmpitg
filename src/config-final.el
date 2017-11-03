@@ -31,8 +31,7 @@
 (bind-key "<C-mouse-1>" '~exec|-select-output)
 (global-unset-key (kbd "<C-down-mouse-1>"))
 
-(bind-key "<S-mouse-1>" 'wand:execute)
-(global-unset-key (kbd "<S-down-mouse-1>"))
+(bind-key "<mouse-2>" 'wand:execute)
 
 ;; (revert-all-buffers)
 
