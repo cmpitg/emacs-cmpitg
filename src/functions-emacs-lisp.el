@@ -33,12 +33,7 @@
 (defun ~eval-string (str)
   "Eval a string."
   (interactive "sString: ")
-  (with-temp-buffer
-    (insert "(progn \n")
-    (insert str)
-    (insert ")")
-    (end-of-buffer)
-    (call-interactively 'eval-last-sexp)))
+  (eval (first (read-from-string (concat "(progn " str ")")))))
 
 (defun ~eval-then-replace-last-exp ()
   "Eval region then replace last expression with result."
