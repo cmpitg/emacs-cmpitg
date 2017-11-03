@@ -213,8 +213,14 @@ server_running_p() {
 }
 
 wait_until_server_is_running() {
+	local retries_=25
 	while [[ $(server_running_p) = "false" ]]; do
 		sleep 1
+		retries_=$((retries_ - 1))
+		if [[ "${retries_}" = "0" ]]; then
+			echo "Got timeout when waiting for server to start..." >&2
+			exit 1
+		fi
 	done
 }
 
