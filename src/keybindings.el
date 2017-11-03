@@ -112,8 +112,7 @@
 ;; Other useful bindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(bind-key "C-x C-f" 'helm-find-files)
-(bind-key "C-x M-x" 'execute-extended-command)
+(bind-key "<M-f12>" 'execute-extended-command)
 
 (bind-key "<f11>" 'helm-show-kill-ring)
 ;; (bind-key "<f7>" 'project-explorer)
@@ -261,7 +260,6 @@
 (bind-key "s-; s-," '~activate-evil-local-mode)
 
 (bind-key "C-<menu> C-w" 'whitespace-mode)
-(bind-key "<C-menu> <C-return>" 'markdown-mode)
 
 (bind-key "s-z" '~open-current-file-as-admin)
 (bind-key "s-v" 'package-list-packages)
