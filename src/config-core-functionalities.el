@@ -693,7 +693,7 @@
              (toolbox:open-file text))
             ((and (derived-mode-p 'emacs-lisp-mode)
                   (s-starts-with? "(" text))
-             (eval (read-from-string text)))
+             (~eval-string text))
             (t
              (wand:eval-string text))))
 
