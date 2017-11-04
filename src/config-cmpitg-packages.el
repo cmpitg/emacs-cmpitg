@@ -543,11 +543,13 @@
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(unless (~specialized-emacs?)
-  (use-package save-visited-files
-    :ensure t
-    :config (progn
-              (turn-on-save-visited-files-mode))))
+(use-package save-visited-files
+  :ensure t
+  :config (progn
+            (when (~specialized-emacs?)
+              (setq save-visited-files-location
+                    (format "~/.emacs.d/emacs-visited-files.%s") (~emacs-as)))
+            (turn-on-save-visited-files-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
