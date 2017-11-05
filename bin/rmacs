@@ -161,11 +161,7 @@ else
 	emacs_as_=":${command_}"
 fi
 
-if [[ "${command_}" = "minimal" ]]; then
-	rmacs_init_="${rmacs_init_dir_}/src/init.el"
-else
-	rmacs_init_="${rmacs_init_dir_}/src/init-${command_}.el"
-fi
+rmacs_init_="${rmacs_init_dir_}/src/init-${command_}.el"
 
 ##############################################################################
 # emacsclient options
