@@ -220,12 +220,7 @@
 ;; Temporarily save & navigate between points
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-and-compile
-  (defun cmpitg/point-pos-load-path ()
-    (~get-config "local-packages/point-pos.el")))
-
-(use-package point-pos
-  :load-path (lambda () (list (cmpitg/point-pos-load-path))))
+(use-package point-pos)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Multiple cursors

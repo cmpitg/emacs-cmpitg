@@ -1,18 +1,9 @@
-[submodule "src/local-packages/acme-mouse"]
-	path = src/local-packages/acme-mouse
-	url = https://github.com/akrito/acme-mouse.git
 [submodule "src/local-packages/mu"]
 	path = src/local-packages/mu
 	url = git@github.com:cmpitg/mu.git
-[submodule "src/local-packages/wand"]
-	path = src/local-packages/wand
-	url = git@github.com:cmpitg/wand.git
 [submodule "src/local-packages/drewdrops-powerline"]
 	path = src/local-packages/drewdrops-powerline
 	url = https://github.com/Dewdrops/powerline.git
-[submodule "src/local-packages/point-pos.el"]
-	path = src/local-packages/point-pos.el
-	url = git@github.com:cmpitg/point-pos.el.git
 [submodule "src/local-packages/fffs"]
 	path = src/local-packages/fffs
 	url = https://github.com/asjo/fffs.git
