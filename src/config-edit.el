@@ -211,6 +211,7 @@
 ;;
 ;; Use for one-off searches (as the Helm buffer is not persistent)
 ;;
+
 (use-package helm-ag
   :ensure t)
 
