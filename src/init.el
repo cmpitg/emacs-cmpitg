@@ -92,30 +92,20 @@ note taker, ...)"
 ;; Config helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile
-  (defun ~get-config (&rest paths)
-    "Returns path to a config file or directory."
-    (apply 'concat *config-dir* paths))
- 
-  (defun ~load-files (&rest paths)
-    "Load Emacs Lisp source files when they exists."
-    (dolist (file-path paths)
-      (loop for possible-file-path in (list file-path
-                                            (concat file-path ".el")
-                                            (concat file-path ".elc"))
-            when (and (file-exists-p possible-file-path)
-                      (file-regular-p possible-file-path))
-            do (progn (load file-path)
-                      (return)))))
+(defun ~get-config (&rest paths)
+  "Returns path to a config file or directory."
+  (apply 'concat *config-dir* paths))
 
-  (defun ~get-library-full-path (library-name)
-    "Return the full path to a library."
-    (save-excursion
-      (find-library library-name)
-      (let ((file-path (or (expand-file-name buffer-file-name)
-                           "")))
-        (kill-buffer)
-        file-path))))
+(defun ~load-files (&rest paths)
+  "Load Emacs Lisp source files when they exists."
+  (dolist (file-path paths)
+    (loop for possible-file-path in (list file-path
+                                          (concat file-path ".el")
+                                          (concat file-path ".elc"))
+          when (and (file-exists-p possible-file-path)
+                    (file-regular-p possible-file-path))
+          do (progn (load file-path)
+                    (return)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Byte compile the configuration
