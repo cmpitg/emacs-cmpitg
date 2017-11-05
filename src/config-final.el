@@ -19,8 +19,11 @@
 ;; Must load last
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (~add-load-path (~get-config "local-packages/acme-mouse"))
-;; (require 'acme-mouse)
+(require 'acme-mouse)
+(define-globalized-minor-mode global-acme-mouse-mode
+  acme-mouse-mode
+  acme-mouse-mode)
+(global-acme-mouse-mode 1)
 
 (bind-key "<S-mouse-3>" '(lambda ()
                            (interactive)
