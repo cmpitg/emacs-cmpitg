@@ -23,10 +23,6 @@
 (bind-key "<C-return>" 'eval-last-sexp emacs-lisp-mode-map)
 (bind-key "<S-return>" 'eval-region emacs-lisp-mode-map)
 
-(add-hook 'slime-mode-hook
-          (lambda ()
-            (bind-key "<C-return>" '~cl/eval-open slime-mode-map)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finish loading cmpitg-specific keybindings")
