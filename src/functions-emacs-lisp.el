@@ -15,6 +15,20 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; Workaround to include the removed seq-map-indexed from the seq library
+(require 'seq)
+(unless (fboundp 'seq-map-indexed)
+  (defun seq-map-indexed (function sequence)
+    "Return the result of applying FUNCTION to each element of SEQUENCE.
+Unlike `seq-map', FUNCTION takes two arguments: the element of
+the sequence, and its index within the sequence."
+    (let ((index 0))
+      (seq-map (lambda (elt)
+                 (prog1
+                     (funcall function elt index)
+                   (setq index (1+ index))))
+               sequence))))
+
 (defun ~geiser-send-string (string)
   "Evaluate last sexp with Geiser and send it to the REPL."
   (interactive)
