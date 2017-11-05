@@ -187,14 +187,14 @@
               ;; (setq helm-ff-search-library-in-sexp t)
 
               ;; Some fuzzy matching option
-              (setq helm-M-x-fuzzy-match t)
-              (setq helm-buffers-fuzzy-matching t)
-              (setq helm-recentf-fuzzy-match t)
-              (setq helm-semantic-fuzzy-match t)
-              (setq helm-imenu-fuzzy-match t)
-              (setq helm-locate-fuzzy-match t)
-              (setq helm-apropos-fuzzy-match t)
-              (setq helm-lisp-fuzzy-completion t)
+              ;; (setq helm-M-x-fuzzy-match t)
+              ;; (setq helm-buffers-fuzzy-matching t)
+              ;; (setq helm-recentf-fuzzy-match t)
+              ;; (setq helm-semantic-fuzzy-match t)
+              ;; (setq helm-imenu-fuzzy-match t)
+              ;; (setq helm-locate-fuzzy-match t)
+              ;; (setq helm-apropos-fuzzy-match t)
+              ;; (setq helm-lisp-fuzzy-completion t)
 
               (setq helm-ff-file-name-history-use-recentf t))))
 
