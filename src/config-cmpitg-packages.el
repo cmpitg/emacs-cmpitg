@@ -548,7 +548,11 @@
   :config (progn
             (when (~specialized-emacs?)
               (setq save-visited-files-location
-                    (format "~/.emacs.d/emacs-visited-files.%s") (~emacs-as)))
+                    (format "~/.emacs.d/emacs-visited-files.%s"
+                            (replace-regexp-in-string ":" ""
+                                                      (symbol-name (~emacs-as)))))
+              (unless (file-exists-p save-visited-files-location)
+                (~write-to-file save-visited-files-location "")))
             (turn-on-save-visited-files-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
