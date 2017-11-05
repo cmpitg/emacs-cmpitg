@@ -157,6 +157,5 @@ Emacs as: %s
 (require 'ee:config-core-ux              (~get-config "config-core-ux"))
 (require 'ee:config-ipc                  (~get-config "config-ipc"))
 (require 'ee:keybindings                 (~get-config "keybindings"))
-(require 'ee:config-final                (~get-config "config-final"))
 
-(message "Finish loading basic, minimal functionalities")
+(message "Finish loading basic functionalities")
