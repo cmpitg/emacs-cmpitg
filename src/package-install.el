@@ -5,6 +5,6 @@
     (apply 'concat *config-dir* paths)))
 
 (require 'ee:config-package-manager (~get-config "config-package-manager"))
-
 (el-get-install 'acme-mouse)
+(package-install 'which-key)
 (package-install 'point-pos)
