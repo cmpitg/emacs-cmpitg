@@ -141,6 +141,15 @@ followed."
         (fiplr-find-file-in-directory (file-chase-links path) fiplr-ignored-globs))
     (message "You need `fiplr' package to use this function.")))
 
+(defun ~counsel-ag-default-project-root ()
+  "Calls `counsel-ag', taking project root by default and
+fallback to current directory if project root is not found."
+  (interactive)
+  (if current-prefix-arg
+      (call-interactively 'counsel-ag)
+    (counsel-ag nil (or (ignore-errors (projectile-project-root))
+                        default-directory))))
+
 (defun ~find-file-new-frame (path &optional wildcards)
   "Calls `find-file' in a new frame."
   (let ((frame (make-frame)))
