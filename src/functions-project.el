@@ -15,9 +15,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defun ~helm-projectile-find-files-at-dir (dir)
-  "Activate `helm-projectile-find-files', taking a specific
-directory as project root."
+(defun ~projectile-find-files-at-dir (dir)
+  "Activate `projectile-find-files', taking a specific directory
+as project root."
   ;; Ignore the obsolete, we do need the powerful dynamic binding capability
   ;; of flet that neither cl-flet nor cl-letf provides
   (flet ((projectile-project-root () dir)
@@ -27,11 +27,11 @@ directory as project root."
             (setq files (-mapcat #'projectile-dir-files
                                  (projectile-get-project-directories)))
             (projectile-sort-files files))))
-    (call-interactively 'helm-projectile-find-file)))
+    (call-interactively 'projectile-find-file)))
 
-(defun ~helm-find-files-current-dir ()
-  "Activate `helm-projectile-find-files', taking current
-directory as project root."
+(defun ~find-files-current-dir ()
+  "Activate `projectile-find-files', taking current directory as
+project root."
   (interactive)
   ;; Ignore the obsolete, we do need the powerful dynamic binding capability
   ;; of flet that neither cl-flet nor cl-letf provides
@@ -42,7 +42,7 @@ directory as project root."
             (setq files (-mapcat #'projectile-dir-files
                                  (projectile-get-project-directories)))
             (projectile-sort-files files))))
-    (call-interactively 'helm-projectile-find-file)))
+    (call-interactively 'projectile-find-file)))
 
 (defun* ~neotree (&optional (dir "."))
   "Activate neotree and make the window sticky."

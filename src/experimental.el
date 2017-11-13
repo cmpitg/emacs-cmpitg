@@ -172,8 +172,8 @@
 (defun* cmpitg:visit-notes ()
   "Visits my notes."
   (interactive)
-  (~helm-projectile-find-files-at-dir (or *notes-path*
-                                          "~/Docs/Notes")))
+  (~projectile-find-files-at-dir (or *notes-path*
+                                     "~/Docs/Notes")))
 
 (defun cmpitg:visit-todo ()
   "Visit my TODO list."

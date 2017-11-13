@@ -125,8 +125,8 @@
 
 (bind-key "<f2>" 'save-buffer)
 (bind-key "<f3>" 'helm-find-files)
-(bind-key "<S-f3>" 'helm-projectile-find-file)
-(bind-key "<C-f3>" '~helm-find-files-current-dir)
+(bind-key "<S-f3>" 'projectile-find-file)
+(bind-key "<C-f3>" '~find-files-current-dir)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
 (bind-key "<C-tab>" '~switch-to-last-buffer)
 (bind-key "s-\\" 'helm-semantic-or-imenu)
@@ -438,7 +438,8 @@
     (add-hook 'cider-mode-hook
               #'(lambda ()
                   (~bind-key-with-prefix-local "d z" 'cider-switch-to-repl-buffer :keymap cider-mode-map)
-                  (~bind-key-with-prefix-local "d a d" '~clojure/add-dependency :keymap cider-mode-map)))))
+                  (~bind-key-with-prefix-local "d a d" '~clojure/add-dependency :keymap cider-mode-map)
+                  (bind-key "<C-return>" 'cider-eval-last-sexp cider-mode-map)))))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
 
