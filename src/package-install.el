@@ -5,6 +5,15 @@
     (apply 'concat *config-dir* paths)))
 
 (require 'ee:config-package-manager (~get-config "config-package-manager"))
+
 (el-get-install 'acme-mouse)
-(package-install 'which-key)
-(package-install 'point-pos)
+
+(dolist (package '(which-key
+                   point-pos
+                   flx
+                   hydra
+                   counsel
+                   ivy
+                   ivy-hydra
+                   imenu-anywhere))
+  (package-install package))
