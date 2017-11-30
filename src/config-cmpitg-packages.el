@@ -199,11 +199,6 @@
       :ensure cider
       :config
       (progn
-        ;; https://github.com/clojure-emacs/helm-cider
-        (use-package helm-cider
-          :ensure t
-          :config (helm-cider-mode 1))
-
         (use-package clojure-cheatsheet
           :ensure t)
 
@@ -336,12 +331,6 @@
 (use-package python
   :config (progn
             (~auto-load-mode '("\\.py$") 'python-mode)
-
-            ;; Workaround: virtualenvwrapper.el needs to be loaded explicitly
-            (progn
-              (unless (package-installed-p 'virtualenvwrapper)
-                (package-install 'virtualenvwrapper))
-              (load-file (~get-library-full-path "virtualenvwrapper")))
 
             (use-package virtualenvwrapper
               :config (progn

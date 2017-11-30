@@ -82,7 +82,8 @@
 
 (bind-key "C-s" 'isearch-forward-regexp)
 (bind-key "C-r" 'isearch-backward-regexp)
-(bind-key "s-s" 'helm-occur)
+;; (bind-key "s-s" 'helm-occur)
+(bind-key "s-s" 'swiper)
 
 ;;; With other libraries
 
@@ -114,22 +115,25 @@
 
 (bind-key "<M-f12>" 'execute-extended-command)
 
-(bind-key "<f11>" 'helm-show-kill-ring)
+(bind-key "<f11>" 'counsel-yank-pop)
+;; (bind-key "<f11>" 'helm-show-kill-ring)
 ;; (bind-key "<f7>" 'project-explorer)
 ;; (bind-key "<f7>" 'neotree-toggle)
-(bind-key "<M-f11>" 'helm-all-mark-rings)
+;; (bind-key "<M-f11>" 'helm-all-mark-rings)
 
 ;;
 ;; Buffer
 ;;
 
 (bind-key "<f2>" 'save-buffer)
-(bind-key "<f3>" 'helm-find-files)
+;; (bind-key "<f3>" 'helm-find-files)
+(bind-key "<f3>" 'counsel-find-file)
 (bind-key "<S-f3>" 'projectile-find-file)
 (bind-key "<C-f3>" '~find-files-current-dir)
 (bind-key "C-<f9>" '~move-to-compilation-buffer)
 (bind-key "<C-tab>" '~switch-to-last-buffer)
-(bind-key "s-\\" 'helm-semantic-or-imenu)
+;; (bind-key "s-\\" 'helm-semantic-or-imenu)
+(bind-key "s-\\" 'counsel-imenu)
 
 (bind-key "<C-f4>" 'xah-close-current-buffer)
 (bind-key "<C-delete>" 'xah-close-current-buffer)
@@ -141,8 +145,10 @@
 
 (bind-key "C-x C-b" 'bs-show)
 (bind-key "s-B" '~switch-to-last-buffer)
-(bind-key "<S-f8>" 'helm-bookmarks)
-(bind-key "<f8>" 'helm-mini)
+;; (bind-key "<S-f8>" 'helm-bookmarks)
+;; (bind-key "<f8>" 'helm-mini)
+(bind-key "<f8>" 'ivy-switch-buffer)
+(bind-key "<S-f8>" 'counsel-bookmark)
 
 (bind-key "<M-f3>" '~gui/open-file)
 (bind-key "C-x C-w" '~gui/save-as)
@@ -224,7 +230,8 @@
      ;; S-f4 is always mapped to delete-window
      (global-set-key [remap icicle-kmacro] '~delete-window)))
 
-(bind-key "<f4>" 'helm-multi-swoop-all)
+;; (bind-key "<f4>" 'helm-multi-swoop-all)
+(bind-key "<f4>" 'swiper-all)
 (bind-key "C-7" 'split-window-vertically)
 (bind-key "C-5" 'split-window-horizontally)
 (bind-key "C-%" '~one-window)
@@ -272,15 +279,19 @@
 ;; (bind-key "<f10>" 'helm-do-grep-ag)
 ;; (bind-key "<f10>" 'helm-ag)
 ;; (bind-key "<f10>" 'helm-ag-project-root)
-(bind-key "<f10>" 'helm-do-ag-project-root)
-(bind-key "<C-f10>" 'helm-do-ag)
-(bind-key "<M-f10>" 'helm-resume)
+;; (bind-key "<f10>" 'helm-do-ag-project-root)
+;; (bind-key "<C-f10>" 'helm-do-ag)
+;; (bind-key "<M-f10>" 'helm-resume)
 ;; (bind-key "<C-f10>" 'ack)
+(bind-key "<f10>" 'counsel-ag)
+(bind-key "<M-f10>" 'ivy-resume)
+(bind-key "<S-f10>" '~counsel-ag-default-project-root)
 
 (bind-key "M-/" 'hippie-expand)
-(bind-key "M-C-/" 'helm-dabbrev)
+;; (bind-key "M-C-/" 'helm-dabbrev)
 
-(bind-key "<f12>" 'helm-M-x)
+;; (bind-key "<f12>" 'helm-M-x)
+(bind-key "<f12>" 'counsel-M-x)
 
 ;;
 ;; Places
@@ -327,6 +338,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (with-eval-after-load "evil"
+  (bind-key "C-P" 'ivy-imenu-anywhere evil-normal-state-map)
+  (bind-key "C-P" 'ivy-imenu-anywhere evil-insert-state-map)
+
   ;; Movement
   (~bind-key-with-prefix "<" 'beginning-of-buffer)
   (~bind-key-with-prefix ">" 'end-of-buffer)
@@ -338,10 +352,11 @@
   (~bind-key-with-prefix "." 'dumb-jump-go)
   (~bind-key-with-prefix "," 'dumb-jump-back)
   (~bind-key-with-prefix ";" 'dumb-jump-quick-look)
-  (~bind-key-with-prefix "\\" 'helm-semantic-or-imenu)
+  (~bind-key-with-prefix "\\" 'counsel-imenu)
+  ;; (~bind-key-with-prefix "\\" 'helm-semantic-or-imenu)
 
   ;; M-x
-  (~bind-key-with-prefix "SPC" 'helm-M-x)
+  (~bind-key-with-prefix "SPC" 'counsel-M-x)
   (~bind-key-with-prefix "v p c" '~visit-experimental-config)
   (~bind-key-with-prefix "o p" '~open-project)
   (~bind-key-with-prefix "o f" '~gui/open-file)
@@ -363,9 +378,6 @@
   (~bind-key-with-prefix "o a" '~neotree)
 
   (~bind-key-with-prefix "m f n" '~my/file-notes)
-
-  ;; Project
-  (~bind-key-with-prefix "p s b" 'helm-projectile-switch-to-buffer)
 
   ;; Window
   (~bind-key-with-prefix "w c" '~window/change)
@@ -439,6 +451,7 @@
               #'(lambda ()
                   (~bind-key-with-prefix-local "d z" 'cider-switch-to-repl-buffer :keymap cider-mode-map)
                   (~bind-key-with-prefix-local "d a d" '~clojure/add-dependency :keymap cider-mode-map)
+                  (~bind-key-with-prefix-local "d c" 'cider-repl-clear-buffer :keymap cider-repl-mode-map)
                   (bind-key "<C-return>" 'cider-eval-last-sexp cider-mode-map)))))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
@@ -447,8 +460,8 @@
 (defalias '~help-key 'describe-key)
 (defalias '~list-keybindings 'describe-personal-keybindings)
 
-(defalias '~project/open 'helm-projectile-switch-project)
-(defalias '~open-project 'helm-projectile-switch-project)
+(defalias '~project/open 'projectile-switch-project)
+(defalias '~open-project 'projectile-switch-project)
 (defalias '~open-file    'find-file)
 
 (defalias '~toolbox '~visit-toolbox)

@@ -67,20 +67,6 @@
     (setq projectile-git-command projectile-generic-command)
     (setq projectile-hg-command projectile-generic-command)))
 
-;; Integration with Helm completion framework
-(use-package helm-projectile
-  :ensure t
-  :config
-  (progn
-    (helm-projectile-on)
-    (setq projectile-completion-system 'helm)
-    (setq projectile-require-project-root t)
-    (setq projectile-switch-project-action 'projectile-dired)
-
-    ;; A bug in projectile ignore that doesn't ignore
-    ;; (setq projectile-indexing-method 'native)
-    ))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Remote file processing with Tramp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -178,42 +164,6 @@
   :defer t
   :commands adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Better grep'ing with ag
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; AckFull, wgrep, ack-and-a-half are all abandonware.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;
-;; Use interactively
-;;
-
-;; (load-file (~get-config "local-packages/ack-and-a-half/ack-and-a-half.el"))
-;; (use-package ack-and-a-half
-;;   :init (progn
-;;           ;; Fix Debian-based distros' executable file
-;;           (setq ack-and-a-half-executable (or (executable-find "ack-grep")
-;;                                               (executable-find "ack")))
-;;           ;; (setq ack-and-a-half-prompt-for-directory 'unless-guessed)
-;;           (setq ack-and-a-half-prompt-for-directory t)
-;;           (defalias 'ack 'ack-and-a-half)
-;;           (defalias 'ack-same 'ack-and-a-half-same)
-;;           (defalias 'ack-find-file 'ack-and-a-half-find-file)
-;;           (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
-
-;; (use-package ag
-;;   :ensure t)
-
-;; (use-package wgrep-ag
-;;   :ensure t)
-
-;;
-;; Use for one-off searches (as the Helm buffer is not persistent)
-;;
-
-(use-package helm-ag
-  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; w3m web browser

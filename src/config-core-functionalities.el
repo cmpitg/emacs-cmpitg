@@ -70,133 +70,74 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;
-;; Helm mode seems to be much more convenient than ido
+;; Smart completion - Because Helm is a clusterfuck
 ;;
 
-;; (use-package ido
-;;   :ensure ido
-;;   :config (progn
-;;             (ido-mode 1)
-;;             (ido-everywhere 1)
-;;             (use-package flx-ido
-;;               :config (progn
-;;                         (flx-ido-mode 1)
+(use-package counsel
+  :config (progn
+            (use-package ivy-hydra)
+            (use-package ivy-anywhere)
+            (ivy-mode 1)
 
-;;                         ;; disable ido faces to see flx highlights.
-;;                         (setq ido-use-faces nil)))
-;;             (use-package ido-vertical-mode
-;;               :ensure ido-vertical-mode
-;;               :config (ido-vertical-mode 1))))
+            ;; Include recentf and bookmarks when switching buffers
+            (setq ivy-use-virtual-buffers t)
+
+            ;; Show 15 items
+            (setq ivy-height 15)
+
+            ;; Don't count the candidates
+            (setq ivy-count-format "")
+
+            ;; Plain display style works and is greener
+            (setq ivy-display-style nil)
+
+            ;; Use Projectile with Ivy
+            (setq projectile-completion-system 'ivy)
+
+            (setq enable-recursive-minibuffers t)
+
+            (setq ivy-use-selectable-prompt t)
+
+            ;; Default matching
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
+            (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+            ;; (require 'flx)
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+
+            (with-eval-after-load "ivy"
+              (defun* ~ivy-next-line+ (&optional (n-lines 5))
+                (interactive)
+                (ivy-next-line n-lines))
+
+              (defun* ~ivy-prev-line+ (&optional (n-lines 5))
+                (interactive)
+                (ivy-previous-line n-lines))
+
+              (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+
+              ;; A Keybinding in minibuffer
+              (bind-keys :map ivy-minibuffer-map
+                         ("M-c" . ~ivy-prev-line+)
+                         ("M-t" . ~ivy-next-line+)
+                         ("C-m" . ivy-alt-done)
+                         ("<f3>" . ivy-occur)
+                         ("<s-return>" . ivy-dispatching-done)
+                         ("<C-return>" . ivy-immediate-done)
+                         ("<S-return>" . ivy-call)))))
+
+;; ? How to perform some action
+;; ? How to follow
+;; ? In find-file - how to change directory
+;; ? Integration with Company
 
 ;;
-;; helm-M-x should be better than smex
+;; http://oremacs.com/swiper/
 ;;
 
-;; (use-package smex
-;;   :ensure t
-;;   :init (progn
-;;           (smex-initialize)))
-
-(use-package helm-config
-  :ensure helm
-  :diminish helm-mode
-  :config
-  (use-package helm
-    :config (progn
-              (helm-mode 1)
-              (setq helm-boring-buffer-regexp-list '("\\*.+\\*"))
-
-              ;; Exiting minibuffer ASAP so that it won't cause problem when
-              ;; typing fast
-              (setq helm-exit-idle-delay 0)
-
-              ;; The following call to helm-follow-mode is local and has no
-              ;; effect.  Read its documentation for the possible effect.
-              ;; (helm-follow-mode 1)
-
-              ;;
-              ;; helm-follow currently comes with a cost that it opens every
-              ;; file user is selecting in the Helm buffer. Add this when
-              ;; you're absolutely sure you would open all files when visiting
-              ;; them.
-              ;;
-              ;; (add-hook 'helm-after-update-hook #'(lambda ()
-              ;;                                       (helm-follow-mode 1)))
-
-              ;; Follow mode
-              (eval-after-load "helm-multi-occur-1"
-                '(progn
-                   (helm-attrset 'follow 1 helm-source-moccur)))
-
-              (eval-after-load "helm-occur-from-isearch"
-                '(progn
-                   (helm-attrset 'follow 1 helm-source-occur)))
-
-              (eval-after-load "helm-occur"
-                '(progn
-                   (helm-attrset 'follow 1 helm-source-occur)))
-
-              ;; Stupid bug makes me comment this line, why????
-              (eval-after-load "helm-buffers-list"
-                '(progn
-                   (eval-after-load "helm-buffers"
-                     '(progn
-                        (helm-attrset 'follow
-                                      1
-                                      helm-source-buffers-list)))))
-
-              (eval-after-load "helm-bookmark"
-                '(progn
-                   (helm-attrset 'follow 1 helm-source-bookmarks)))
-
-              ;; Don't auto change-dir when find-file
-              (setq-default helm-ff-auto-update-initial-value nil)
-
-              ;; Fully enable fuzzy matching
-              (setq helm-mode-fuzzy-match t
-                    helm-completion-in-region-fuzzy-match t)
-
-              ;;
-              ;; Setting up Helm follow mode
-              ;;
-              ;; This is why I hate Helm developer:
-              ;; https://github.com/emacs-helm/helm/issues/530
-              ;;
-
-              (helm-occur-init-source)
-
-              (helm-attrset 'follow 1 helm-source-occur)
-              (helm-attrset 'follow 1 helm-source-regexp)
-              ;; (helm-attrset 'follow 1 helm-source-moccur)
-
-              (bind-key "<backtab>" 'helm-execute-persistent-action helm-map)
-              (bind-key "<f12>" 'helm-minibuffer-history minibuffer-local-map)
-              (bind-key "<S-f1>" 'helm-minibuffer-history minibuffer-local-map)
-
-              (when (executable-find "curl")
-                (setq helm-google-suggest-use-curl-p t))
-
-              ;; Open Helm buffer inside current window, do not disturb other
-              ;; window
-              (setq helm-split-window-in-side-p t)
-
-              ;; Make Helm items cycleable
-              ;; (setq helm-move-to-line-cycle-in-source t)
-
-              ;; Search for library in `require' and `declare-function'
-              ;; (setq helm-ff-search-library-in-sexp t)
-
-              ;; Some fuzzy matching option
-              ;; (setq helm-M-x-fuzzy-match t)
-              ;; (setq helm-buffers-fuzzy-matching t)
-              ;; (setq helm-recentf-fuzzy-match t)
-              ;; (setq helm-semantic-fuzzy-match t)
-              ;; (setq helm-imenu-fuzzy-match t)
-              ;; (setq helm-locate-fuzzy-match t)
-              ;; (setq helm-apropos-fuzzy-match t)
-              ;; (setq helm-lisp-fuzzy-completion t)
-
-              (setq helm-ff-file-name-history-use-recentf t))))
+(use-package counsel
+  :ensure t
+  :config (progn
+            (ivy-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; History utility
@@ -334,17 +275,6 @@
   :ensure wgrep-ack)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Browsable kill ring
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Got replaced by helm-show-kill-ring
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (use-package browse-kill-ring
-;;   :ensure t
-;;   :config (progn
-;;             (browse-kill-ring-default-keybindings)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Quick jumping
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -365,21 +295,6 @@
 ;; ace-jump with buffer switching
 (use-package ace-jump-buffer
   :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Buffer navigation with pattern matching and replacing
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Seems unstable, needs more evaluation
-;;
-;; Sun, 02 Apr 2017 17:06:21 +0300 - Still unstable
-;;
-
-;; (use-package swoop
-;;   :ensure t
-;;   :commands swoop
-;;   :init (use-package helm-swoop
-;;           :ensure t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Simple tabbar
@@ -474,13 +389,7 @@
                         ;; Do not trigger automatically
                         (setq company-quickhelp-delay nil)
                         (bind-key "M-h" 'company-quickhelp-manual-begin
-                                  company-active-map)))
-
-            (use-package helm-company
-              :ensure t
-              :config (progn
-                        (bind-key "M-RET" 'helm-company company-mode-map)
-                        (bind-key "M-RET" 'helm-company company-active-map)))))
+                                  company-active-map)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Highlighting phrase and expression when needed
@@ -633,6 +542,7 @@
               (evil-set-initial-state 'ansi-term-mode 'emacs)
               (evil-set-initial-state 'magit-log-edit-mode 'emacs)
               (evil-set-initial-state 'magit-popup-mode 'emacs)
+              (evil-set-initial-state 'magit-file-mode 'emacs)
               (evil-set-initial-state 'neotree-mode 'emacs)
               (evil-set-initial-state 'dired-mode 'emacs)
               (evil-set-initial-state 'nav-mode 'emacs)
@@ -644,6 +554,7 @@
               (evil-set-initial-state 'cider-temp-mode 'emacs)
               (evil-set-initial-state 'help-mode 'emacs)
               (evil-set-initial-state 'compilation-mode 'emacs)
+              (evil-set-initial-state 'ivy-occur-mode 'emacs)
               (evil-set-initial-state 'ibuffer-mode 'normal))
 
             (setq evil-emacs-state-cursor 'bar)

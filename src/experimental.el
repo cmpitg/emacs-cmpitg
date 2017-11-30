@@ -324,28 +324,28 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ~goto-sync-notes (arg)
-  "Mimick `helm-find-files' to jump to my `~/Dropbox/cmpitg/Notes`
-directory."
-  (interactive "P")
-  (let* ((hist          (and arg helm-ff-history (helm-find-files-history)))
-         (default-input (expand-file-name "~/Dropbox/cmpitg/Notes/"))
-         (input         (cond ((and (eq major-mode 'org-agenda-mode)
-                                    org-directory
-                                    (not default-input))
-                               (expand-file-name org-directory))
-                              ((and (eq major-mode 'dired-mode) default-input)
-                               (file-name-directory default-input))
-                              (default-input)
-                              (t (expand-file-name (helm-current-directory)))))
-         (presel        (helm-aif (or hist
-                                      (buffer-file-name (current-buffer))
-                                      (and (eq major-mode 'dired-mode)
-                                           default-input))
-                            (if helm-ff-transformer-show-only-basename
-                                (helm-basename it) it))))
-    (set-text-properties 0 (length input) nil input)
-    (helm-find-files-1 input presel)))
+;; (defun* ~goto-sync-notes (arg)
+;;   "Mimick `helm-find-files' to jump to my `~/Dropbox/cmpitg/Notes`
+;; directory."
+;;   (interactive "P")
+;;   (let* ((hist          (and arg helm-ff-history (helm-find-files-history)))
+;;          (default-input (expand-file-name "~/Dropbox/cmpitg/Notes/"))
+;;          (input         (cond ((and (eq major-mode 'org-agenda-mode)
+;;                                     org-directory
+;;                                     (not default-input))
+;;                                (expand-file-name org-directory))
+;;                               ((and (eq major-mode 'dired-mode) default-input)
+;;                                (file-name-directory default-input))
+;;                               (default-input)
+;;                               (t (expand-file-name (helm-current-directory)))))
+;;          (presel        (helm-aif (or hist
+;;                                       (buffer-file-name (current-buffer))
+;;                                       (and (eq major-mode 'dired-mode)
+;;                                            default-input))
+;;                             (if helm-ff-transformer-show-only-basename
+;;                                 (helm-basename it) it))))
+;;     (set-text-properties 0 (length input) nil input)
+;;     (helm-find-files-1 input presel)))
 
 (bind-key "s-; f f" '~goto-sync-notes)
 

@@ -17,6 +17,7 @@
 
 (defvar *shell-command-hist* '())
 
+;; TODO - Use counsel/ivy
 (defun ~eshell-history ()
   "Display eshell commands as with M-x.  The selected command is
 added to the current eshell buffer."
