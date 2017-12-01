@@ -5,6 +5,7 @@
     (apply 'concat *config-dir* paths)))
 
 (require 'ee:config-package-manager (~get-config "config-package-manager"))
+(el-get 'sync)
 
 (el-get-install 'acme-mouse)
 
