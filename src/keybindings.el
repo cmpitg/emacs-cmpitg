@@ -452,6 +452,8 @@
                   (~bind-key-with-prefix-local "d z" 'cider-switch-to-repl-buffer :keymap cider-mode-map)
                   (~bind-key-with-prefix-local "d a d" '~clojure/add-dependency :keymap cider-mode-map)
                   (~bind-key-with-prefix-local "d c" 'cider-repl-clear-buffer :keymap cider-repl-mode-map)
+                  (~bind-key-with-prefix-local "d ." 'cider-find-var :keymap cider-repl-mode-map)
+                  (~bind-key-with-prefix-local "d l a" 'cider-load-all-files :keymap cider-repl-mode-map)
                   (bind-key "<C-return>" 'cider-eval-last-sexp cider-mode-map)))))
 
 (defalias '~my/file-notes 'cmpitg:visit-notes)
