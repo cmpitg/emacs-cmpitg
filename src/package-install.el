@@ -25,5 +25,8 @@
                    ace-jump-mode
                    point-pos
                    multiple-cursors
-                   yasnippet))
+                   yasnippet
+                   smartparens
+                   dtrt-indent
+                   emamux))
   (package-install package))

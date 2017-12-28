@@ -370,18 +370,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package smartparens-config
-  :ensure smartparens
   :config (progn
-            (eval-after-load 'smartparens
-              '(progn
-                 ;; (defadvice smartparens-mode (around disable-autopairs-around (arg))
-                 ;;   "Disable autopairs mode if smartparens-mode is turned on."
-                 ;;   ad-do-it
-                 ;;   (autopair-mode 0))
-
-                 ;; (ad-activate 'smartparens-mode)
-
-                 (smartparens-global-mode)))))
+            (smartparens-global-mode)))
 
 (use-package paredit
   :ensure t
@@ -436,7 +426,6 @@
 
 ;; Adjust indentation based on current file
 (use-package dtrt-indent
-  :ensure t
   :config (progn
             (dtrt-indent-mode 1)))
 
@@ -447,7 +436,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package emamux
-  :ensure t
   :commands (emamux:send-command emamux:send-region))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
