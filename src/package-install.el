@@ -18,5 +18,6 @@
                    ivy-hydra
                    imenu-anywhere
                    async
-                   timp))
+                   timp
+                   ace-window))
   (package-install package))

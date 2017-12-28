@@ -46,9 +46,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Interactive menu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/abo-abo/hydra
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package mag-menu
-  :ensure t)
+(use-package hydra)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better way to switch to and swap windows
@@ -60,7 +61,6 @@
 ;;  :ensure t)
 
 (use-package ace-window
-  :ensure t
   :init (progn
           (setq aw-dispatch-alway t)
           (setq aw-keys '(?a ?h ?t ?s ?g ?r ?p ?l ?, ?. ?p))))
