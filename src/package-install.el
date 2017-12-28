@@ -21,6 +21,9 @@
                    async
                    timp
                    ace-window
+                   ace-jump-buffer
+                   ace-jump-mode
                    point-pos
-                   multiple-cursors))
+                   multiple-cursors
+                   yasnippet))
   (package-install package))

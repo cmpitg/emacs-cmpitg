@@ -263,7 +263,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ace-jump-mode
-  :ensure t
   :commands ace-jump-mode
   :config (progn
             (ace-jump-mode-enable-mark-sync)
@@ -277,32 +276,15 @@
 
 
 ;; ace-jump with buffer switching
-(use-package ace-jump-buffer
-  :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Simple tabbar
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (use-package tabbar-ruler
-;;   :ensure tabbar-ruler
-;;   :config (progn
-;;             (setq tabbar-ruler-global-tabbar t) ; If you want tabbar
-;;             ;; (setq tabbar-ruler-global-ruler t)     ; if you want a global ruler
-;;             ;; (setq tabbar-ruler-popup-menu t)       ; If you want a popup menu.
-;;             ;; (setq tabbar-ruler-popup-toolbar t)    ; If you want a popup toolbar
-;;             ;; (setq tabbar-ruler-popup-scrollbar t)) ; If you want to only show
-;;             ;;                                        ; the scroll bar when your
-;;             ;;                                        ; mouse is moving.
-;;             ))
+(use-package ace-jump-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Snippet mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load before auto complete
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package yasnippet
-  :ensure t
   :diminish yas-minor-mode
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
