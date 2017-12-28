@@ -16,5 +16,6 @@
                    counsel
                    ivy
                    ivy-hydra
-                   imenu-anywhere))
+                   imenu-anywhere
+                   async))
   (package-install package))
