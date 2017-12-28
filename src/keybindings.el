@@ -427,7 +427,8 @@
             (lambda ()
               (~bind-key-with-prefix-local "h f" 'describe-function)
               (~bind-key-with-prefix-local "h v" 'describe-variable)
-              (~bind-key-with-prefix-local "h ." 'find-function)))
+              (~bind-key-with-prefix-local "h ." 'find-function)
+              (~bind-key-with-prefix-local "h l" 'find-library)))
 
   (with-eval-after-load "elpy"
     (add-hook 'elpy-mode-hook
