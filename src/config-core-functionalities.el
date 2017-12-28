@@ -169,8 +169,7 @@
 ;; Multiple cursors
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package multiple-cursors
-  :ensure t)
+(use-package multiple-cursors)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Expand region
@@ -185,7 +184,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package eldoc
-  :ensure t
   :diminish eldoc-mode
   :config (progn
             (eldoc-add-command 'paredit-backward-delete
@@ -252,22 +250,6 @@
 (use-package uniquify
   :init (progn
           (setq uniquify-buffer-name-style 'forward)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Find file with fuzzy matching
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Helm is mature and advanced and serves the needs well.  Perhaps I'll come
-;; back to fiplr some time.
-;;
-
-;; (use-package fiplr
-;;   :ensure fiplr
-;;   :config (progn
-;;             (add-to-list 'fiplr-root-markers "README.md")
-;;             (add-to-list 'fiplr-root-markers "README.adoc")
-;;             (add-to-list 'fiplr-root-markers "README.txt")
-;;             (add-to-list 'fiplr-root-markers "README")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editable Ack

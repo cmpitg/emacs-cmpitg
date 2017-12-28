@@ -16,8 +16,11 @@
                    counsel
                    ivy
                    ivy-hydra
+                   counsel
                    imenu-anywhere
                    async
                    timp
-                   ace-window))
+                   ace-window
+                   point-pos
+                   multiple-cursors))
   (package-install package))
