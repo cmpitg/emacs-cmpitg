@@ -146,9 +146,7 @@ case "${1}" in
 esac
 shift
 
-if [[ -z "${name_}" ]]; then
-	name_=${command_}
-fi
+name_="${name_:-${command_}}"
 
 if [[ "${command_}" = "edit" ]]; then
 	emacs_as_="nil"
@@ -182,7 +180,7 @@ if [[ "${verbose_}" = "true" ]]; then
 	echo New frame when running: ${new_frame_}
 	echo Rmacs init directory: ${rmacs_init_dir_}
 	echo Rmacs init file: ${rmacs_init_}
-	if ! [[ "${init_}" = "" ]]; then
+	if [[ -n "${init_}" ]]; then
 		echo Init: ${init_}
 	fi
 	echo Additional Emacs client options: ${emacsclient_options_}
