@@ -14,7 +14,6 @@ Rmacs is a Re-enforced eMacs, shaping Emacs into one of the supported tools
   edit		:: Run Rmacs as text editor
   mail		:: Run Rmacs as mail browser
   note		:: Run Rmacs as note taker
-  file		:: Run Rmacs as file manager
   minimal	:: Run a minimal Rmacs without additional configuration
   eval		:: Evals an arbitrary Emacs Lisp expression
 
@@ -43,7 +42,6 @@ If '--name' is not specified:
   text editor uses server name 'edit'
   mail browser uses server name 'mail'
   note taker uses server name 'note'
-  file taker uses server name 'file'
   otherwise, server name is set to 'nil'
 
 The load of custom inits are supported.  Rmacs will load
@@ -133,9 +131,6 @@ case "${1}" in
 		;;
 	note)
 		command_=note
-		;;
-	file)
-		command_=file
 		;;
 	minimal)
 		command_=minimal
@@ -282,8 +277,5 @@ case "${command_}" in
 				${emacsclient_options_} \
 				$(expr ${real_path_})
 		fi
-		;;
-	file)
-		# TODO: Open directory with file browser
 		;;
 esac
