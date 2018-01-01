@@ -10,6 +10,7 @@
 (el-get-install 'acme-mouse)
 
 (dolist (package '(which-key
+                   paredit
                    point-pos
                    flx
                    hydra
@@ -28,5 +29,19 @@
                    yasnippet
                    smartparens
                    dtrt-indent
-                   emamux))
+                   emamux
+                   evil
+                   evil-visualstar
+                   evil-paredit
+                   evil-surround
+                   menu-bar+
+                   w3m
+                   adoc-mode
+                   wand
+                   markdown-mode
+                   yaml-mode
+                   json-mode
+                   json
+                   scroll-restore
+                   visual-fill-column))
   (package-install package))

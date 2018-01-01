@@ -35,9 +35,6 @@
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
 
-;; For file manager only
-;; (require 'ee:config-sunrise (~get-config "config-sunrise"))
-
 ;; Load last
 (require 'ee:config-final (~get-config "config-final"))
 

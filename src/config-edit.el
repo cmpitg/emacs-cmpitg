@@ -160,8 +160,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package adoc-mode
-  :ensure t
-  :defer t
   :commands adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode))
 
@@ -170,7 +168,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package w3m
-  :ensure t
   :commands w3m-browse-url
   :init (progn
           (setq browse-url-browser-function 'w3m-browse-url)))
@@ -179,15 +176,13 @@
 ;; Better menu bar
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package menu-bar+
-  :ensure t)
+(use-package menu-bar+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YAML
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package yaml-mode
-  :ensure t
   :commands yaml-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -195,7 +190,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
-  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -207,27 +201,29 @@
             (custom-set-faces
              ;; Your init file should contain only one such instance.
              ;; If there is more than one, they won't work right.
-             '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.7 :background "#ABCDEF"))))
-             '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
-             '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.3)))))))
+             '(markdown-header-face-1
+               ((t (:inherit markdown-header-face :height 1.7 :background "#ABCDEF"))))
+             '(markdown-header-face-2
+               ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
+             '(markdown-header-face-3
+               ((t (:inherit markdown-header-face :height 1.3)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; En/decoding JSON
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(el-get-install 'json-mode)
+;; (el-get-install 'json-mode)
 
 (use-package json-mode
-  :defer t
   :mode "\\.json\\'"
-  :init (progn
-          (eval-after-load "json-mode"
-            '(progn
-              (setq c-basic-offset 2)
-              (setq tab-width 2)))))
+  ;; :init (progn
+  ;;         (eval-after-load "json-mode"
+  ;;           '(progn
+  ;;             (setq c-basic-offset 2)
+  ;;             (setq tab-width 2))))
+  )
 
 (use-package json
-  :ensure t
   :defer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -294,7 +290,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package recentf
-  :ensure t
   :init (progn
           (recentf-mode 1)
           (setq recentf-max-menu-items 128)))

@@ -40,22 +40,27 @@
 (setq scroll-step 3)
 (setq scroll-conservatively 10000)
 
-;; Don't accelerate scrolling
-;; (setq mouse-wheel-progressive-speed nil)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Restore cursor position after scrolling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; http://elpa.gnu.org/packages/scroll-restore.html
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (setq redisplay-dont-pause t
-;;       scroll-margin 1
-;;       scroll-step 3
-;;       scroll-conservatively 10000
-;;       scroll-preserve-screen-position 1)
+(use-package scroll-restore
+  :config (progn
+            ;; Recenter when jumpting back
+            (setq scroll-restore-center t)
 
-;; (setq scroll-margin 1
-;;       ;; scroll-conservatively 0
-;;       scroll-conservatively 10000
-;;       scroll-up-aggressively 0.01
-;;       scroll-down-aggressively 0.01)
-;; (setq-default scroll-up-aggressively 0.01
-;;               scroll-down-aggressively 0.01)
+            ;; Allow scroll-restore to modify the cursor face
+            (setq scroll-restore-handle-cursor t)
+
+            ;; Make the cursor invisible while POINT is off-screen
+            (setq scroll-restore-cursor-type nil)
+
+            ;; Jump back to the original cursor position after scrolling
+            (setq scroll-restore-jump-back t)
+
+            (scroll-restore-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -81,7 +86,7 @@
 ;; Echo when trying to kill in a read-only buffer
 (setq kill-read-only-ok t)
 
-;; Always suggest-key-bindings
+;; Always suggest keybindings
 (setq suggest-key-bindings t)
 
 ;; More tolerable stack
@@ -91,7 +96,7 @@
 ;; Never change case when replacing
 (setq-default case-replace nil)
 
-;;; fill-column
+;; fill-column
 (setq-default fill-column 78)
 (set-fill-column 78)
 
@@ -185,10 +190,10 @@
 (setq-default case-fold-search t)
 (setq case-fold-search t)
 
-;; ignore case when reading a file name completion
+;; Ignore case when reading a file name completion
 (setq read-file-name-completion-ignore-case t)
 
-;; dim the ignored part of the file name
+;; Dim the ignored part of the file name
 (file-name-shadow-mode 1)
 
 ;; minibuffer window expands vertically as necessary to hold the text
@@ -305,7 +310,6 @@
 
 ;; https://github.com/joostkremers/visual-fill-column
 (use-package visual-fill-column
-  :ensure t
   :init (progn
           (defun ~turn-on-soft-wrapping ()
             "Turns on soft-wrapping."
@@ -366,11 +370,13 @@
       (call-interactively 'exchange-point-and-mark))
     res))
 
-(advice-add 'evil-mouse-drag-region :around #'~mouse-1-evil-insert-mode-advice-around)
-;; (advice-remove 'evil-mouse-drag-region #'~mouse-1-evil-insert-mode-advice-around)
+(advice-add 'evil-mouse-drag-region
+            :around #'~mouse-1-evil-insert-mode-advice-around)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Displaying available keybindings in pop up
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/justbur/emacs-which-key
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package which-key
@@ -379,12 +385,11 @@
             (which-key-setup-side-window-right-bottom)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Preventing window stealing by cancelling the role of other-window
+;; Preventing other windows from stealing the current window
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defadvice pop-to-buffer (before cancel-other-window first)
   (ad-set-arg 1 nil))
-
 (ad-activate 'pop-to-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -74,7 +74,7 @@ convenient wrapper of `join-line'."
 
 (defun ~is-selecting? ()
   "Determine if a selection is being held."
-  (region-active-p))
+  (use-region-p))
 
 (defun ~current-selection ()
   "Return the current selected text."
@@ -506,7 +506,7 @@ E.g.
   (keyboard-quit))
 
 (defun ~open-line (arg)
-  "Open line and move to the next line."
+  "Opens line and moves to the next line."
   (interactive "p")
   (end-of-line)
   (delete-horizontal-space)
@@ -515,7 +515,7 @@ E.g.
   (indent-according-to-mode))
 
 (defun ~open-line-before (arg)
-  "Open line and move to the previous line."
+  "Opens line and moves to the previous line."
   (interactive "p")
   (beginning-of-line)
   (open-line arg)
@@ -556,7 +556,6 @@ do nothing."
 Move point to the first non-whitespace character on this line.
 If point is already there, move to the beginning of the line."
   (interactive)
-
   (let ((orig-point (point)))
     (unless visual-line-mode
       (back-to-indentation))
@@ -584,7 +583,7 @@ do nothing."
     (goto-point (~selection-end))))
 
 (defun ~mark-line ()
-  "Mark current line."
+  "Marks current line."
   (interactive)
   (beginning-of-line)
   (push-mark (point) t t)
@@ -675,7 +674,7 @@ Source: http://stackoverflow.com/a/4717026/219881"
     (concat "Saved as script: " buffer-file-name))))
 
 (defun ~clean-up-tramp ()
-  "Close all tramp connections and buffers."
+  "Closes all tramp connections and buffers."
   (interactive)
   (tramp-cleanup-all-connections)
   (tramp-cleanup-all-buffers))
@@ -702,11 +701,11 @@ add."
                                 (otherwise 0)))))
 
 (defun ~load-paredit-mode ()
-  "Load paredit mode and disable autopair."
+  "Loads paredit mode and disable other pairing modes."
   (paredit-mode t)
-  (when (~is-function-defined? 'autopair-mode)
+  (when (fboundp 'autopair-mode)
     (autopair-mode 0))
-  (when (~is-function-defined? 'smartparens-mode)
+  (when (fboundp 'smartparens-mode)
     (smartparens-mode 0)))
 
 (defun ~activate-evil-local-mode ()

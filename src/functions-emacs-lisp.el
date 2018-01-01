@@ -45,7 +45,7 @@ the sequence, and its index within the sequence."
   (s-matches? regexp (thing-at-point 'line)))
 
 (defun ~eval-string (str)
-  "Eval a string."
+  "Evals a string."
   (interactive "sString: ")
   (eval (first (read-from-string (concat "(progn " str ")")))))
 
@@ -225,7 +225,7 @@ E.g.
 (defun* ~bind-key-with-prefix (key command &key
                                    (keymap global-map)
                                    (evil-keymap evil-normal-state-map))
-  "Bind key in `evil-normal-state-map' with prefix `SPC' and in
+  "Binds key in `evil-normal-state-map' with prefix `SPC' and in
 global mode map with prefix `s-SPC' at the same time."
   (interactive)
   (eval `(progn

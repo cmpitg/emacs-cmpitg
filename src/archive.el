@@ -220,3 +220,92 @@
 ;;             ;;                                        ; the scroll bar when your
 ;;             ;;                                        ; mouse is moving.
 ;;             ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Smooth scrolling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (setq redisplay-dont-pause t
+;;       scroll-margin 1
+;;       scroll-step 3
+;;       scroll-conservatively 10000
+;;       scroll-preserve-screen-position 1)
+
+;; (setq scroll-margin 1
+;;       ;; scroll-conservatively 0
+;;       scroll-conservatively 10000
+;;       scroll-up-aggressively 0.01
+;;       scroll-down-aggressively 0.01)
+;; (setq-default scroll-up-aggressively 0.01
+;;               scroll-down-aggressively 0.01)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; HTTP-based IPC with emnode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (setq *emnode-routes*
+;;       '(("^.*//eval/?"         . ~ipc-eval)
+;;         ("^.*//open/\\(.*\\)"  . ~ipc-open-file)
+;;         ("^.*//exec/\\(.*\\)"  . ~ipc-exec-file)))
+
+;; (defun ~ipc-eval (httpcon)
+;;   (let* ((expr (format "%s" (emnode:http-data httpcon))))
+;;     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
+;;     (unless (~string-empty? (s-trim expr))
+;;       (emnode:http-end httpcon (or (ignore-errors (format "%s" (~add-bracket-and-eval expr)))
+;;                                    "")))))
+
+;; (defun ~ipc-open-file (httpcon)
+;;   (let ((path (emnode:http-get-arg httpcon 1)))
+;;     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
+;;     (emnode:http-end httpcon (format "Opening: %s\n" path))
+;;     (toolbox:open-file path :new-frame? (emnode-http-param httpcon "new-frame"))))
+
+;; (defun ~ipc-exec-file (httpcon)
+;;   (let ((path (emnode:http-get-arg httpcon 1)))
+;;     (emnode:http-start httpcon 200 '("Content-Type" . "text/plain"))
+;;     (emnode:http-end httpcon (format "Executing: %s" path))
+;;     (with-temp-buffer
+;;       (insert-file-contents path)
+;;       (eval-buffer))))
+
+;; ;; $ curl 0:9999/eval/ -d 'message-box "Hello World"'
+;; ;; $ curl 0:9999/eval -d '(message-box "Hello") (message-box "World")'
+;; ;; $ curl 0:9999/open//m/src
+;; ;; $ curl 0:9999/exec//tmp/tmp.el
+
+;; (eval-and-compile
+;;   (defun cmpitg/emnode-load-path ()
+;;     (~get-config "local-packages/emnode")))
+
+;; (use-package emnode
+;;   :load-path (lambda () (list (cmpitg/emnode-load-path)))
+;;   :ensure elnode
+;;   :config
+;;   (progn
+;;     (setq emnode:*log-level* emnode:+log-none+)
+;;     (emnode:stop *emacs-server-port*)
+;;     (ignore-errors
+;;       (emnode:start-server *emnode-routes* :port *emacs-server-port*))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Keep region after copying
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Old way
+;; (defadvice kill-ring-save (after keep-transient-mark-active ())
+;;   "Overrides the deactivation of the mark."
+;;   (setq deactivate-mark nil))
+;; (ad-activate 'kill-ring-save)
+
+(defun ~advice/keep-transient-mark-active (orig-fun &rest args)
+  "Overrides the deactivation of the mark."
+  (setq deactivate-mark nil)
+  (apply orig-fun args)
+  (setq deactivate-mark nil))
+(advice-add 'kill-ring-save
+            :around #'~advice/keep-transient-mark-active)
+(advice-add 'evil-paredit-yank
+            :around #'~advice/keep-transient-mark-active)
+(advice-add 'evil-yank
+            :around #'~advice/keep-transient-mark-active)

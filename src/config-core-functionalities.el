@@ -76,9 +76,12 @@
 ;;
 
 (use-package counsel
+  :diminish ivy-mode
   :config (progn
-            (use-package ivy-hydra)
-            (use-package ivy-anywhere)
+            (require 'ivy-hydra)
+
+            (use-package imenu-anywhere)
+
             (ivy-mode 1)
 
             ;; Include recentf and bookmarks when switching buffers
@@ -374,7 +377,6 @@
             (smartparens-global-mode)))
 
 (use-package paredit
-  :ensure t
   :config (progn
             (defadvice paredit-mode (around disable-otherparenslib-around (arg))
               "Disable autopairs mode if paredit-mode is turned on."
@@ -455,10 +457,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package evil
-  :ensure t
   :config (progn
             (use-package evil-paredit
-              :ensure t
               :config (progn
                         (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
                         (add-hook 'lisp-mode-hook 'evil-paredit-mode)
@@ -466,7 +466,6 @@
                         (add-hook 'scheme-mode-hook 'evil-paredit-mode)))
 
             (use-package evil-surround
-              :ensure t
               :config (progn
                         (global-evil-surround-mode 1)))
 
@@ -523,18 +522,15 @@
 
             ;; * to search forward, # to search backward
             (use-package evil-visualstar
-              :ensure t
               :init (progn
                       (global-evil-visualstar-mode)
-                      ;; (setq evil-visualstar/persistent nil)
-                      ))))
+                      (setq evil-visualstar/persistent nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Pattern-based command execution
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package wand
-  :ensure t
   :config
   (progn
     (defun ~quick-action (text)
@@ -555,32 +551,18 @@
                 (wand:create-rule :match "\\$ "
                                   :capture :after
                                   :action ~popup-shell-command)
-                (wand:create-rule :match ">\\$ "
-                                  :capture :after
-                                  :action erun)
                 (wand:create-rule :match "> "
                                   :capture :after
                                   :action srun)
                 (wand:create-rule :match "https?://"
                                   :capture :whole
                                   :action ~firefox)
-                (wand:create-rule :match "web:"
-                                  :capture :after
-                                  :action (lambda (str)
-                                            (interactive)
-                                            (~firefox (format "file://%s" str))))
                 (wand:create-rule :match "file:"
                                   :capture :after
                                   :action toolbox:open-file)
                 (wand:create-rule :match "#> "
                                   :capture :after
                                   :action ~add-bracket-and-eval)
-                (wand:create-rule :match "gg:"
-                                  :capture :after
-                                  :action ~google)
-                (wand:create-rule :match "ff:"
-                                  :capture :after
-                                  :action ~send-to-mozrepl)
                 (wand:create-rule :match "mailto:"
                                   :capture :after
                                   :action (lambda (str)

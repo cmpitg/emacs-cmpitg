@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2016 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,16 +17,12 @@
 
 (require 'package)
 
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/"))
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("SC"   . "http://joseito.republika.pl/sunrise-commander/"))
+(dolist (package-archive '(("melpa-stable" . "https://stable.melpa.org/packages/")
+                           ("melpa" . "http://melpa.milkbox.net/packages/")
+                           ("marmalade" . "http://marmalade-repo.org/packages/")
+                           ("gnu" . "http://elpa.gnu.org/packages/")
+                           ("SC" . "http://joseito.republika.pl/sunrise-commander/")))
+  (add-to-list 'package-archives package-archive))
 
 (package-initialize)
 
@@ -53,14 +49,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; use-package
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/jwiegley/use-package
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
+;; To reduce load time
 (eval-when-compile
   (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)                ;; if you use any :bind variant
+(setq use-package-verbose t)
+(require 'diminish)
+(require 'bind-key)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Local packages
@@ -71,7 +71,6 @@
                    (directory-files local-packages-dir)
                  '())))
   (add-to-list 'load-path (~get-config "local-packages/" pkg)))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

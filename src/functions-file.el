@@ -116,8 +116,8 @@ filesystem."
   (file-name-sans-extension (~current-file-name)))
 
 (defun ~delete-current-file ()
-  "Delete the file associated with the current buffer.  Delete
-the current buffer too."
+  "Deletes the file associated with the current buffer and kills
+off the buffer."
   (interactive)
   (let ((current-file (~current-file-full-path)))
     (when (yes-or-no-p (concat "Delete file: " current-file))
