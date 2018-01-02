@@ -382,6 +382,7 @@
   ;; Undo & redo window layout
   (~bind-key-with-prefix "w h" 'winner-undo)
   (~bind-key-with-prefix "w n" 'winner-redo)
+  (~bind-key-with-prefix "q q" 'save-buffers-kill-emacs)
 
   ;; Display
   (~bind-key-with-prefix "d l" '~display/toggle-linum)
@@ -402,9 +403,6 @@
   ;; Help
   (~bind-key-with-prefix "h k" '~help-key)
   (~bind-key-with-prefix "l k b" '~list-keybindings)
-
-  ;; Google
-  (~bind-key-with-prefix "g o o" '~google)
 
   ;; With Return key
   (bind-key "RET n" 'cmpitg:visit-notes evil-normal-state-map)

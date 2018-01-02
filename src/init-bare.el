@@ -21,6 +21,23 @@
 ;; - s-x
 ;; - s-X
 
+;; TODO: Functions:
+;; - ~undo-kill-buffers
+;; - ~gui/open-file
+;; - ~gui/save-as
+;; - ~switch-to-scratch
+;; - ~new-buffer
+;; - ~find-file-current-dir
+;; - ~switch-to-last-buffer
+;; - e b eval-buffer
+;; - e e ~eval-current-expression
+;; - e r eval-region
+;; - e r (python-mode) python-shell-send-region
+;; - g s for Magit
+
+;; TODO: company mode
+;; TODO: Make backward/forward kill word deletes, not kills
+
 ;; Doc: local/delete-on-exit
 ;; Doc: RMACS_NO_MACHINE_INIT
 ;; Doc: shell-quote-argument when calling shell arguments
@@ -33,8 +50,6 @@
 ;; Doc: minor-mode-list & minor-mode-alist
 ;; Doc: exchange-point-and-mark after yanking to re-highlight region
 
-;; TODO: company mode
-;; TODO: point-pos binding
 
 ;; TODO: keybindings
 ;; er/mark-word
@@ -1281,7 +1296,7 @@ buffer, select it."
   ;;
   ;; Emacs Lisp
   ;;
-  
+
   (bind-key "<C-return>" '~eval-last-sexp-or-region emacs-lisp-mode-map)
   (bind-key "<M-return>" 'eval-defun emacs-lisp-mode-map)
   (~bind-key-with-prefix "h ." 'find-function emacs-lisp-mode-map)
