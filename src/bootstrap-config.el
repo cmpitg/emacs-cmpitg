@@ -39,18 +39,9 @@
    (concat (file-name-as-directory *config-dir*) "scratch"))
   "Default path to Scratch directory.")
 
-(add-to-list 'load-path *config-dir*)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Specialized Emacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~value-from-symbol (symbol)
-  "Return the value that `symbol' hold if it's bound, or `nil'
-otherwise."
-  (if (boundp symbol)
-      (symbol-value symbol)
-    nil))
 
 (defvar *emacs-as-tool* nil
   "Determine which shape Emacs is running as.")
@@ -98,8 +89,10 @@ Emacs as: %s
          (~emacs-as))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Machine-specific configuration
+;; On to configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path *config-dir*)
 
 (when (string= "1" (getenv "RMACS_NO_MACHINE_INIT"))
   (~load-files "~/.emacs-machine-specific-init"
