@@ -135,6 +135,9 @@ case "${1}" in
 	minimal)
 		command_=minimal
 		;;
+	bare)
+		command_=bare
+		;;
 	"")
 		echo Missing command.  See rmacs --help for usage. >&2
 		exit 1
@@ -256,7 +259,7 @@ case "${command_}" in
 			${emacsclient_options_} \
 			--eval "$@"
 		;;
-	edit|minimal)
+	edit|minimal|bare)
 		if [[ "${1}" == /* ]]; then
 			path_="$@"
 		elif ! [[ -z "${1}" ]]; then
