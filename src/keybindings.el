@@ -136,7 +136,7 @@
 (bind-key "s-\\" 'counsel-imenu)
 
 (bind-key "<C-f4>" 'xah-close-current-buffer)
-(bind-key "<C-delete>" 'xah-close-current-buffer)
+(bind-key "<C-delete>" 'delete-region)
 (bind-key "<menu> <menu>" 'other-window)
 (bind-key "C-S-t" 'xah-open-recently-closed)
 
@@ -151,7 +151,7 @@
 (bind-key "<S-f8>" 'counsel-bookmark)
 
 (bind-key "<M-f3>" '~gui/open-file)
-(bind-key "C-x C-w" '~gui/save-as)
+(bind-key "<S-f2>" '~gui/save-as)
 
 (bind-key "C-;" 'point-pos-previous)
 (bind-key "C-," 'point-pos-next)
@@ -241,15 +241,10 @@
 (bind-key "<M-S-up>" 'windmove-up)
 (bind-key "<M-S-down>" 'windmove-down)
 
-(bind-key "C-%" '~layout/default)
-(bind-key "C-7" '~layout/vsplit)
-(bind-key "C-5" '~layout/hsplit)
-
 ;;
 ;; Misc
 ;;
 
-(bind-key "C-M-_" 'redo)
 (bind-key "M-ESC" '~keyboard-quit)
 
 ;;
@@ -298,8 +293,7 @@
 ;;
 
 (bind-key "<S-f12>" '~visit-toolbox)
-(bind-key "C-<f1>" '~switch-to-scratch)
-(bind-key "<S-f2>" '~switch-to-scratch-common-lisp)
+(bind-key "<C-f1>" '~switch-to-scratch)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mode-specific
