@@ -12,6 +12,7 @@
 (dolist (package '(which-key
                    paredit
                    point-pos
+                   expand-region
                    flx
                    hydra
                    counsel
