@@ -72,7 +72,7 @@ running as mail browser, note taker, or ... just Emacs the text editor."
   (apply 'concat *config-dir* paths))
 
 (defun ~load-files (&rest paths)
-  "Loads Emacs Lisp source files when they exists."
+  "Loads Emacs Lisp source files when they exist."
   (dolist (file-path paths)
     (loop for possible-file-path in (list file-path
                                           (concat file-path ".el")

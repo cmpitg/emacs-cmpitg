@@ -97,7 +97,7 @@ note taker, ...)"
   (apply 'concat *config-dir* paths))
 
 (defun ~load-files (&rest paths)
-  "Load Emacs Lisp source files when they exists."
+  "Load Emacs Lisp source files when they exist."
   (dolist (file-path paths)
     (loop for possible-file-path in (list file-path
                                           (concat file-path ".el")
