@@ -371,10 +371,10 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
     (setq buffer-offer-save t)))
 
 (defun ~insert-full-line-comment ()
-  "Insert a 78-char line full of comment characters."
+  "Inserts a line full of comment characters until `fill-column' is reached."
   (interactive)
   (let ((comment (s-trim comment-start)))
-    (->> (loop for time from (current-column) upto 77 by (length comment)
+    (->> (loop for time from (current-column) upto (1- fill-column) by (length comment)
                collect comment)
          (s-join "")
          insert)))
