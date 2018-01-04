@@ -42,6 +42,7 @@
 ;; TODO: company mode
 ;; TODO: Make backward/forward kill word deletes, not kills
 
+;; Doc: http://oremacs.com/swiper/ → current word/line/symbol into minibuffer
 ;; Doc: local/delete-on-exit
 ;; Doc: RMACS_NO_MACHINE_INIT
 ;; Doc: shell-quote-argument when calling shell arguments

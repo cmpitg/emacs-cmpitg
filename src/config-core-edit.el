@@ -56,7 +56,53 @@
   "Also find all files within a list of files. This even works recursively."
   (if (listp filename)
       (loop for f in filename do (find-file f wildcards))
-      ad-do-it))
+    ad-do-it))
+
+;; Project management
+;; Ref: https://github.com/bbatsov/projectile
+(use-package projectile
+  :diminish projectile-mode
+  :config
+  (progn
+    (projectile-global-mode)
+
+    (setq ~project-ignored-patterns
+          (list (rx (0+ any) ".gz" eol)
+                (rx (0+ any) ".pyc" eol)
+                (rx (0+ any) ".jar" eol)
+                (rx (0+ any) ".tar.gz" eol)
+                (rx (0+ any) ".tgz" eol)
+                (rx (0+ any) ".zip" eol)
+                (rx (0+ any) ".pyc" eol)
+                "/node_modules/"
+                "/bower_components/"))
+
+    (defun ~projectile-ignored-patterns ()
+      (-concat ~project-ignored-patterns
+               (first (projectile-filtering-patterns))))
+
+    (defun ~projectile-ignored? (file)
+      (-any? #'(lambda (pattern)
+                 (string-match pattern file))
+             (~projectile-ignored-patterns)))
+
+    (defun ~print-files-advice-around (orig-fun &rest args)
+      (let* ((files (apply orig-fun args))
+             (filtered-with-regex (cl-remove-if #'~projectile-ignored? files)))
+        filtered-with-regex))
+
+    (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
+    ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
+
+    (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-find-dir-includes-top-level t)
+    (setq projectile-enable-caching t)
+    (setq projectile-indexing-method 'alien)
+
+    ;; Customize find file command via function
+    ;; projectile-get-ext-command
+    (setq projectile-git-command projectile-generic-command)
+    (setq projectile-hg-command projectile-generic-command)))
 
 ;; Smart completion framework
 ;; Ref: https://github.com/abo-abo/swiper

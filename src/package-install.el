@@ -11,6 +11,7 @@
 
 (dolist (package '(which-key
                    paredit
+                   projectile
                    point-pos
                    expand-region
                    flx
