@@ -36,6 +36,9 @@
                    evil-visualstar
                    evil-paredit
                    evil-surround
+                   treemacs
+                   treemacs-evil
+                   treemacs-projectile
                    menu-bar+
                    w3m
                    adoc-mode

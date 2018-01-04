@@ -131,7 +131,7 @@ project root."
               ("<s-return>" . ivy-dispatching-done)
               ("<C-return>" . ivy-immediate-done)
               ("<S-return>" . ivy-call))
-  :defer nil
+  :demand t
   :init (progn
           (require 'ivy-hydra)
 
@@ -139,6 +139,8 @@ project root."
           ;; Ref: https://github.com/vspinu/imenu-anywhere
           (require 'imenu-anywhere))
   :config (progn
+            (ivy-mode 1)
+
             ;; Include recentf and bookmarks when switching buffers
             (setq ivy-use-virtual-buffers t)
 
@@ -203,7 +205,6 @@ of binding to `evil-normal-state-map' it binds to
                                      :evil-keymap evil-normal-state-local-map))
 
             (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
-(ivy-mode 1)
 
 ;; Temporarily save points
 ;; Ref: https://github.com/alezost/point-pos.el
@@ -289,6 +290,7 @@ of binding to `evil-normal-state-map' it binds to
 ;; Vim mode
 ;; Ref: https://github.com/emacs-evil/evil
 (use-package evil
+  :demand t
   :bind (("M-ESC"     . '~keyboard-quit)
          :map evil-insert-state-map
          ("C-y"       . yank)
@@ -302,6 +304,8 @@ of binding to `evil-normal-state-map' it binds to
          :map evil-visual-state-map
          ("<mouse-2>" . nil))
   :config (progn
+            (evil-mode t)
+
             ;; Use insert mode by default
             (setq evil-default-state 'insert)
 
@@ -366,6 +370,26 @@ of binding to `evil-normal-state-map' it binds to
           lisp-mode
           clojure-mode
           scheme-mode) . evil-paredit-mode))
+
+;; File explorer
+;; Ref: https://github.com/Alexander-Miller/treemacs
+(use-package treemacs
+  :after (evil)
+  :demand t
+  :config
+  (progn
+    (require 'treemacs-evil)
+
+    (treemacs-follow-mode -1)
+    (treemacs-filewatch-mode -1)
+    ;; Collapse empty dirs into one when possible
+    (setq treemacs-collapse-dirs 3)
+    ;; Always find and focus on the current file when treemacs is built
+    (setq treemacs-follow-after-init t)))
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :demand t
+  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 
 ;; Pattern-based command execution
 ;; Ref: https://github.com/cmpitg/wand

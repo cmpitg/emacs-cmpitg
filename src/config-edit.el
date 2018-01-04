@@ -254,37 +254,55 @@
 ;;      (bind-key "SPC o a" 'nav-toggle evil-normal-state-map)))
 
 ;;
-;; Neotree might break tab completion in minibuffer
+;; Neotree is extremely buggy and under-maintained
 ;;
 ;; https://github.com/jaypei/emacs-neotree
 ;; https://www.emacswiki.org/emacs/NeoTree
 ;;
 
-(use-package neotree
-  :ensure t
+;; (use-package neotree
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     ;; (setq neo-theme 'icons)
+;;     (setq neo-theme 'arrow)
+
+;;     (add-hook 'neotree-mode-hook
+;;               (lambda ()
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)))
+
+;;     ;; If you use popwin, when NeoTree is open and successively a temporary
+;;     ;; buffer is opened with popwin, a new window with the NeoTree buffer is
+;;     ;; displayed side by side next to the first one (#50). This code will help
+;;     ;; you
+
+;;     ;; (when neo-persist-show
+;;     ;;   (add-hook 'popwin:before-popup-hook
+;;     ;;             (lambda () (setq neo-persist-show nil)))
+;;     ;;   (add-hook 'popwin:after-popup-hook
+;;     ;;             (lambda () (setq neo-persist-show t))))
+;;     ))
+
+
+(use-package treemacs
   :config
   (progn
-    ;; (setq neo-theme 'icons)
-    (setq neo-theme 'arrow)
-
-    (add-hook 'neotree-mode-hook
-              (lambda ()
-                (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-                (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
-                (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-                (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)))
-
-    ;; If you use popwin, when NeoTree is open and successively a temporary
-    ;; buffer is opened with popwin, a new window with the NeoTree buffer is
-    ;; displayed side by side next to the first one (#50). This code will help
-    ;; you
-
-    ;; (when neo-persist-show
-    ;;   (add-hook 'popwin:before-popup-hook
-    ;;             (lambda () (setq neo-persist-show nil)))
-    ;;   (add-hook 'popwin:after-popup-hook
-    ;;             (lambda () (setq neo-persist-show t))))
-    ))
+    (treemacs-follow-mode -1)
+    (treemacs-filewatch-mode -1)
+    ;; Collapse empty dirs into one when possible
+    (setq treemacs-collapse-dirs 3)
+    ;; Always find and focus on the current file when treemacs is built
+    (setq treemacs-follow-after-init t)))
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :demand t)
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :demand t
+  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Recent files

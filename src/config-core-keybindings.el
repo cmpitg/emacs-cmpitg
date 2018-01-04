@@ -81,6 +81,13 @@
   (bind-key "s-@" '~duplicate-line-or-region)
   (bind-key "s-; ; ;" '~insert-full-line-comment)
 
+
+  ;; Project management
+  (~bind-key-with-prefix "p t" 'treemacs-toggle)
+  (~bind-key-with-prefix "p o" 'treemacs)
+  (~bind-key-with-prefix "p p" 'treemacs-projectile)
+  (~bind-key-with-prefix "p f" 'treemacs-select-window)
+
   ;; Buffer management
   (bind-key "<C-tab>" '~switch-to-last-buffer)
   (bind-key "C-S-t" '~undo-killed-buffers)
