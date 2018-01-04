@@ -168,7 +168,6 @@
 ;; Text
 ;;
 
-(bind-key "<S-delete>" 'delete-region)
 (bind-key "s-@" '~duplicate-line-or-region)
 
 (bind-key "C-o" '~open-line)
@@ -349,8 +348,6 @@
   (~bind-key-with-prefix "f c p" '~file/copy-path)
   (~bind-key-with-prefix "f c d" '~file/copy-directory)
   (~bind-key-with-prefix "o a" '~neotree)
-
-  (~bind-key-with-prefix "m f n" '~my/file-notes)
 
   ;; Window
   (~bind-key-with-prefix "w c" '~window/change)
