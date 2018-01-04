@@ -26,7 +26,7 @@
 
 ;; List processing, use with care since it's generally slower than Emacs Lisp primitives
 ;; Ref: https://github.com/magnars/dash.el
-(require 'dash)
+;; (require 'dash)
 
 ;; File/filesystem library
 ;; Ref: https://github.com/rejeep/f.el
