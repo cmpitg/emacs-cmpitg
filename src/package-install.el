@@ -48,5 +48,8 @@
                    json-mode
                    json
                    scroll-restore
-                   visual-fill-column))
+                   visual-fill-column
+                   company
+                   company-quickhelp
+                   pos-tip))
   (package-install package))

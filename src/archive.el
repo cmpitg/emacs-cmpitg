@@ -309,3 +309,48 @@
             :around #'~advice/keep-transient-mark-active)
 (advice-add 'evil-yank
             :around #'~advice/keep-transient-mark-active)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto-completion
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Auto-complete mode: https://github.com/auto-complete/auto-complete
+;;
+;; Comparison:
+;;
+;; * https://github.com/company-mode/company-mode/issues/68
+;;
+;; * Company uses pop-tip, much more usable than pop-up.el which Auto-complete
+;;   is using.
+;;
+;; * Simpler to setup, "just-work", less edge cases
+;;
+;; * Simpler configuration
+;;
+;; * Well-thought APIs, backends and frontends are easy to write and integrate
+;;
+
+;; (use-package auto-complete
+;;   :diminish auto-complete-mode
+;;   :ensure t
+;;   :init (progn
+;;           (require 'auto-complete-config)
+;;           (ac-config-default)
+;;           (setq ac-sources
+;;                 '(ac-source-filename
+;;                   ac-source-functions
+;;                   ;; ac-source-yasnippet
+;;                   ac-source-variables
+;;                   ac-source-symbols
+;;                   ac-source-features
+;;                   ac-source-abbrev
+;;                   ac-source-words-in-same-mode-buffers
+;;                   ac-source-dictionary))
+
+;;           (auto-complete-mode 1)
+;;           (setq ac-fuzzy-enable t)
+
+;;           (add-hook 'ruby-mode-hook
+;;                     (lambda ()
+;;                       (add-to-list 'ac-sources 'ac-source-rsense-method)
+;;                       (add-to-list 'ac-sources 'ac-source-rsense-constant)))))

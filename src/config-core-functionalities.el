@@ -294,69 +294,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto completion framework
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Company mode: https://github.com/company-mode/company-mode
-;; Auto-complete mode: https://github.com/auto-complete/auto-complete
-;;
-;; Comparison:
-;;
-;; * https://github.com/company-mode/company-mode/issues/68
-;;
-;; * Company uses pop-tip, much more usable than pop-up.el which Auto-complete
-;;   is using.
-;;
-;; * Simpler to setup, "just-work", less edge cases
-;;
-;; * Simpler configuration
-;;
-;; * Well-thought APIs, backends and frontends are easy to write and integrate
-;;
-
-;; (use-package auto-complete
-;;   :diminish auto-complete-mode
-;;   :ensure t
-;;   :init (progn
-;;           (require 'auto-complete-config)
-;;           (ac-config-default)
-;;           (setq ac-sources
-;;                 '(ac-source-filename
-;;                   ac-source-functions
-;;                   ;; ac-source-yasnippet
-;;                   ac-source-variables
-;;                   ac-source-symbols
-;;                   ac-source-features
-;;                   ac-source-abbrev
-;;                   ac-source-words-in-same-mode-buffers
-;;                   ac-source-dictionary))
-
-;;           (auto-complete-mode 1)
-;;           (setq ac-fuzzy-enable t)
-
-;;           (add-hook 'ruby-mode-hook
-;;                     (lambda ()
-;;                       (add-to-list 'ac-sources 'ac-source-rsense-method)
-;;                       (add-to-list 'ac-sources 'ac-source-rsense-constant)))))
+;; https://github.com/company-mode/company-mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package company
-  :ensure t
   :diminish company-mode
+  :bind (:map company-mode-map
+         ("C-/" . company-complete))
+  :demand t
   :config (progn
             (global-company-mode 1)
-
-            (bind-key "C-/" 'company-complete company-mode-map)
-
-            (use-package pos-tip
-              :ensure t)
-
-            (use-package company-quickhelp
-              :ensure t
-              :config (progn
-                        (company-quickhelp-mode 1)
-
-                        ;; Do not trigger automatically
-                        (setq company-quickhelp-delay nil)
-                        (bind-key "M-h" 'company-quickhelp-manual-begin
-                                  company-active-map)))))
+            (require 'pos-tip)))
+(use-package company-quickhelp
+  :demand t
+  :bind (:map company-active-map
+         ("M-h" . company-quickhelp-manual-begin))
+  :config (progn
+            (company-quickhelp-mode 1)
+            ;; Do not trigger automatically
+            (setq company-quickhelp-delay nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Highlighting phrase and expression when needed
