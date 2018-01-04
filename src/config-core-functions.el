@@ -375,7 +375,8 @@ first occurrence of a pattern.  E.g.
 off the buffer."
   (interactive)
   (let ((current-file buffer-file-name))
-    (when (yes-or-no-p (concat "Delete file: " current-file))
+    (when (and (file-exists-p current-file)
+               (yes-or-no-p (concat "Delete file: " current-file)))
       ;; Prevent the following kill-buffer from recursively calling this
       ;; function
       (when (local-variable-p 'local/delete-on-exit)

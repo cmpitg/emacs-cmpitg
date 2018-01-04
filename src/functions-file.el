@@ -119,14 +119,17 @@ filesystem."
   "Deletes the file associated with the current buffer and kills
 off the buffer."
   (interactive)
-  (let ((current-file (~current-file-full-path)))
-    (when (yes-or-no-p (concat "Delete file: " current-file))
-      ;; Prevent the following kill-buffer from recursively calling this function
+  (let ((current-file buffer-file-name))
+    (when (and (file-exists-p current-file)
+               (yes-or-no-p (concat "Delete file: " current-file)))
+      ;; Prevent the following kill-buffer from recursively calling this
+      ;; function
       (when (local-variable-p 'local/delete-on-exit)
         (kill-local-variable 'local/delete-on-exit))
       (kill-buffer (current-buffer))
+
       (delete-file current-file)
-      (message (concat "Deleted file: " current-file)))))
+      (message "%s deleted" current-file))))
 (defalias '~delete-this-file '~delete-current-file)
 
 (defun ~open-current-file-as-admin ()
