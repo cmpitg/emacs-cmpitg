@@ -97,6 +97,7 @@
 
 ;; Subword should include camelCase notation
 (global-subword-mode 1)
+(diminish 'subword-mode)
 
 ;; Hide the toolbar
 (tool-bar-mode -1)

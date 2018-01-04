@@ -123,6 +123,7 @@
 
 ;; Subword should include camelCase notation
 (global-subword-mode 1)
+(diminish 'subword-mode)
 
 ;; Hide the toolbar
 (tool-bar-mode -1)
@@ -236,6 +237,9 @@
 
 ;; Clean up all Tramp remote connection before killing Emacs
 (add-hook 'kill-emacs-hook '~clean-up-tramp)
+
+;; Diminish auto-revert-mode in the mode line
+(diminish 'auto-revert-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Right click context menu
@@ -380,6 +384,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package which-key
+  :diminish which-key-mode
   :config (progn
             (which-key-mode)
             (which-key-setup-side-window-right-bottom)))

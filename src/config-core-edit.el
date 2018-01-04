@@ -425,9 +425,13 @@ of binding to `evil-normal-state-map' it binds to
 ;; Displaying available keybindings in pop up
 ;; Ref: https://github.com/justbur/emacs-which-key
 (use-package which-key
+  :diminish which-key-mode
   :config (progn
             (which-key-mode)
             (which-key-setup-side-window-right-bottom)))
+
+;; Diminish auto-revert-mode in the mode line
+(diminish 'auto-revert-mode)
 
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-exit . t))
