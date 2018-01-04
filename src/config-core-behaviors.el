@@ -173,10 +173,10 @@
   :diminish undo-tree-mode)
 
 ;; Make shebang-ed files executable
-(add-hook 'after-save-hook '~maybe-make-current-file-executable)
+(add-hook 'after-save-hook #'~maybe-make-current-file-executable)
 
 ;; Clean up all Tramp remote connection before killing Emacs
-(add-hook 'kill-emacs-hook '~clean-up-tramp)
+(add-hook 'kill-emacs-hook #'~clean-up-tramp)
 
 ;; Delete file when killing buffer if necessary
 (add-hook 'kill-buffer-hook #'~maybe-delete-file-when-killing-buffer)
