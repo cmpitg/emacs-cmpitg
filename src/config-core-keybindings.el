@@ -119,6 +119,7 @@
   ;;
 
   (bind-key "<C-f1>" '~switch-to-scratch)
+  (bind-key "<S-f1>" '~switch-to-messages-buffer)
   (bind-key "<f2>" 'save-buffer)
   (bind-key "<S-f2>" '~gui/save-as)
   (bind-key "<C-f2>" 'point-pos-save)

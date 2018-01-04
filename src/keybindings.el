@@ -294,6 +294,7 @@
 
 (bind-key "<S-f12>" '~visit-toolbox)
 (bind-key "<C-f1>" '~switch-to-scratch)
+(bind-key "<S-f1>" '~switch-to-messages-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mode-specific

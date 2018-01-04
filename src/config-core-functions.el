@@ -268,6 +268,13 @@ another window."
           (switch-to-buffer-other-window "scratch.el")
         (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
 
+(defun* ~switch-to-messages-buffer (&key (in-other-window t))
+  "Switches to the `*Messages*' buffer."
+  (interactive)
+  (if in-other-window
+      (switch-to-buffer-other-window "*Messages*")
+    (switch-to-buffer "*Messages*")))
+
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)

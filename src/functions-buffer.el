@@ -326,6 +326,13 @@ another window."
           (switch-to-buffer-other-window "scratch.el")
         (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
 
+(defun* ~switch-to-messages-buffer (&key (in-other-window t))
+  "Switches to the `*Messages*' buffer."
+  (interactive)
+  (if in-other-window
+      (switch-to-buffer-other-window "*Messages*")
+    (switch-to-buffer "*Messages*")))
+
 ;;; TODO
 (defun ~undo-kill-buffer (arg)
   "Re-open the last buffer killed.  With ARG, re-open the
