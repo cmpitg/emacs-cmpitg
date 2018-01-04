@@ -266,7 +266,9 @@ prefix arg (`C-u') to force deletion if it is."
 another window."
   (interactive)
   (let ((scratch-dir (or *scratch-dir* temporary-file-directory)))
-    (unless (string-equal "scratch.el" (file-name-nondirectory buffer-file-name))
+    (unless (string-equal "scratch.el"
+                          (or (file-name-nondirectory buffer-file-name)
+                              ""))
       (if (get-buffer "scratch.el")
           (switch-to-buffer-other-window "scratch.el")
         (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
