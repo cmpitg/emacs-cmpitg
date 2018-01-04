@@ -19,9 +19,9 @@
 ;;; For programmer Dvorak layout
 ;;;
 
-;; (bind-key "<C-return>" '~emacs-lisp/eval-then-next emacs-lisp-mode-map)
-(bind-key "<C-return>" 'eval-last-sexp emacs-lisp-mode-map)
-(bind-key "<S-return>" 'eval-region emacs-lisp-mode-map)
+(bind-key "<C-return>" '~eval-last-sexp-or-region emacs-lisp-mode-map)
+(bind-key "<M-return>" 'eval-defun emacs-lisp-mode-map)
+(bind-key "<S-return>" '~eval-current-sexp emacs-lisp-mode-map)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

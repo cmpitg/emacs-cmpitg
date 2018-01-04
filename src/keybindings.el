@@ -299,29 +299,6 @@
 ;; Mode-specific
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Common Lisp SLIME
-
-(add-hook 'slime-mode-hook
-          (lambda ()
-            (bind-key "C-\\" 'slime-selector)))
-
-;; Emacs Lisp
-
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (define-key emacs-lisp-mode-map (kbd "C-c C-r") 'eval-region)
-            (define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
-            (define-key emacs-lisp-mode-map (kbd "<f1>") '(lambda ()
-                                                            (interactive)
-                                                            (apropos (current-word))))
-            (define-key emacs-lisp-mode-map (kbd "<S-f1>") 'find-function)))
-
-;; AsciiDoc
-
-(add-hook 'adoc-mode-hook
-          (lambda ()
-            (~bind-key-with-prefix-local "C-b" '~adoc-make-bold)))
-
 ;; Fix open-file command in Xiki
 
 (with-eval-after-load "el4r"

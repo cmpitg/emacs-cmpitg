@@ -74,13 +74,19 @@ need its top-level brackets.  This function returns a string."
                           nil
                           'read-expression-history)))
 
-(defun ~emacs-lisp/eval-then-next ()
-  "Evaluates current expression and move to the next line."
+(defun ~eval-last-sexp-or-region ()
+  "Evals region if active, or evals last sexpr"
   (interactive)
-  (ignore-errors
-    (call-interactively '~paredit-up-all)
-    (call-interactively 'eval-last-sexp)
-    (next-line)))
+  (if (~is-selecting?)
+      (call-interactively 'eval-region)
+    (call-interactively 'eval-last-sexp)))
+
+(defun ~eval-current-sexp ()
+  "Evals the current enclosing sexp."
+  (interactive)
+  (call-interactively 'er/mark-outside-pairs)
+  (call-interactively 'eval-region)
+  (setq deactivate-mark t))
 
 (defun ~insert-into-emacs-lisp-docstring (string)
   "Interactive command.  Prompt and insert a string and escape it
