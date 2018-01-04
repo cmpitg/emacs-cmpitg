@@ -328,7 +328,6 @@
 
   ;; M-x
   (~bind-key-with-prefix "SPC" 'counsel-M-x)
-  (~bind-key-with-prefix "v p c" '~visit-experimental-config)
   (~bind-key-with-prefix "o p" '~open-project)
   (~bind-key-with-prefix "o f" '~gui/open-file)
 
@@ -340,18 +339,22 @@
   (~bind-key-with-prefix "p p" 'popwin:messages)
   (~bind-key-with-prefix "z" '~toggle-maximize-buffer)
   (~bind-key-with-prefix "m f" 'er/mark-defun)
+  (~bind-key-with-prefix "m e" 'er/mark-outside-pairs)
 
   ;; File
   (~bind-key-with-prefix "f o" '~gui/open-file)
-  (~bind-key-with-prefix "f f" 'find-file-from-selection)
-  (~bind-key-with-prefix "f b" '~file/browse)
   (~bind-key-with-prefix "f c p" '~file/copy-path)
   (~bind-key-with-prefix "f c d" '~file/copy-directory)
-  (~bind-key-with-prefix "o a" '~neotree)
+  (~bind-key-with-prefix "f d" '~delete-current-file)
+  (~bind-key-with-prefix "f r" '~rename-current-file)
+  (~bind-key-with-prefix "p t" 'treemacs-toggle)
+  (~bind-key-with-prefix "p o" 'treemacs)
+  (~bind-key-with-prefix "p p" 'treemacs-projectile)
+  (~bind-key-with-prefix "p f" 'treemacs-select-window)
 
   ;; Window
-  (~bind-key-with-prefix "w c" '~window/change)
-  (~bind-key-with-prefix "w w" 'ace-window)
+  (~bind-key-with-prefix "w w" 'other-window)
+  (~bind-key-with-prefix "w c" 'ace-window)
   (~bind-key-with-prefix "o w" '~one-window)
   (~bind-key-with-prefix "w s v" '~window/split-vertically)
   (~bind-key-with-prefix "w s s" '~window/split-horizontally)

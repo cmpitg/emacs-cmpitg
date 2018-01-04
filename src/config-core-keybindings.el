@@ -81,6 +81,9 @@
   (bind-key "s-@" '~duplicate-line-or-region)
   (bind-key "s-; ; ;" '~insert-full-line-comment)
 
+  ;; File management
+  (~bind-key-with-prefix "f d" '~delete-current-file)
+  (~bind-key-with-prefix "f r" '~rename-current-file)
 
   ;; Project management
   (~bind-key-with-prefix "p t" 'treemacs-toggle)
@@ -101,6 +104,8 @@
   (bind-key "C-%" '~one-window)
   (bind-key "C-7" 'split-window-vertically)
   (bind-key "C-5" 'split-window-horizontally)
+  (~bind-key-with-prefix "w w" 'other-window)
+  (~bind-key-with-prefix "w c" 'ace-window)
   (~bind-key-with-prefix "o w" '~one-window)
 
   ;; Marking
