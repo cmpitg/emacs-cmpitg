@@ -317,12 +317,14 @@ E.g.
   (find-file *snippet-dir*))
 
 (defun ~switch-to-scratch ()
-  "Switch to the scratch.el in `*scratch-dir*' directory."
+  "Switches to `scratch.el' in `*scratch-dir*' directory in
+another window."
   (interactive)
-  (unless (string-equal "scratch.el" (~current-buffer-name))
-    (if (get-buffer "scratch.el")
-        (switch-to-buffer-other-window "scratch.el")
-      (find-file-other-window (s-concat *scratch-dir* "scratch.el")))))
+  (let ((scratch-dir (or *scratch-dir* temporary-file-directory)))
+    (unless (string-equal "scratch.el" (file-name-nondirectory buffer-file-name))
+      (if (get-buffer "scratch.el")
+          (switch-to-buffer-other-window "scratch.el")
+        (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
 
 ;;; TODO
 (defun ~undo-kill-buffer (arg)

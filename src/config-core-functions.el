@@ -258,6 +258,16 @@ prefix arg (`C-u') to force deletion if it is."
   (interactive)
   (find-file (completing-read "File: " *recently-closed-file-list*)))
 
+(defun ~switch-to-scratch ()
+  "Switches to `scratch.el' in `*scratch-dir*' directory in
+another window."
+  (interactive)
+  (let ((scratch-dir (or *scratch-dir* temporary-file-directory)))
+    (unless (string-equal "scratch.el" (file-name-nondirectory buffer-file-name))
+      (if (get-buffer "scratch.el")
+          (switch-to-buffer-other-window "scratch.el")
+        (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
+
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
