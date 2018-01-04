@@ -18,6 +18,7 @@
 (require 'cl-lib)
 (require 'misc)
 (require 'thingatpt)
+(require 'subr-x)
 
 ;; String processing
 ;; Ref: https://github.com/magnars/s.el

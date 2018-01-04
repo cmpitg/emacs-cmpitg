@@ -22,6 +22,7 @@
 ;; - s-X
 
 ;; TODO: Functions:
+;; - save place in buffers
 ;; - toolbox:open (from Rmacs invocation) aliased
 ;; - ~undo-kill-buffers
 ;; - ~gui/open-file
@@ -53,7 +54,7 @@
 ;; Doc: use-package with :hook, :bind, ... will be loaded in a delayed manner
 ;; Doc: minor-mode-list & minor-mode-alist
 ;; Doc: exchange-point-and-mark after yanking to re-highlight region
-
+;; Doc: C-S-t and the implementation of ~undo-killed-buffers
 
 ;; TODO: keybindings
 ;; er/mark-word

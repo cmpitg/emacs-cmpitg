@@ -203,10 +203,10 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
   "Inserts a line full of comment characters until `fill-column' is reached."
   (interactive)
   (let ((comment (s-trim comment-start)))
-    (->> (loop for time from (current-column) upto (1- fill-column) by (length comment)
-               collect comment)
-         (s-join "")
-         insert)))
+    (thread-first (loop for time from (current-column) upto (1- fill-column) by (length comment)
+                        collect comment)
+      (string-join "")
+      insert)))
 
 (defun ~keyboard-quit ()
   "Escape the minibuffer or cancel region consistently using 'Control-g'.
@@ -243,6 +243,20 @@ prefix arg (`C-u') to force deletion if it is."
 ;;
 ;; File & buffer
 ;;
+
+(defvar *recently-closed-file-list* (list)
+  "List of recently closed files.")
+
+(defun ~track-closed-file ()
+  "Tracks the list of recently closed files."
+  (when-let (path buffer-file-name)
+    (delete path *recently-closed-file-list*)
+    (add-to-list '*recently-closed-file-list* path)))
+
+(defun ~undo-killed-buffers ()
+  "Undoes the kill of buffers."
+  (interactive)
+  (find-file (completing-read "File: " *recently-closed-file-list*)))
 
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary."
