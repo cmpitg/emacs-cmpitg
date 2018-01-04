@@ -94,6 +94,21 @@
     (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
     ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
 
+    (defun ~find-files-current-dir ()
+      "Activates `projectile-find-files', taking current directory as
+project root."
+      (interactive)
+      ;; Ignore the obsolete, we do need the powerful dynamic binding capability
+      ;; of flet that neither cl-flet nor cl-letf provides
+      (flet ((projectile-project-root () default-directory)
+             (projectile-current-project-files
+              ()
+              (let (files)
+                (setq files (-mapcat #'projectile-dir-files
+                                     (projectile-get-project-directories)))
+                (projectile-sort-files files))))
+        (call-interactively 'projectile-find-file)))
+
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
     (setq projectile-enable-caching t)

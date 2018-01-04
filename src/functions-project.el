@@ -30,7 +30,7 @@ as project root."
     (call-interactively 'projectile-find-file)))
 
 (defun ~find-files-current-dir ()
-  "Activate `projectile-find-files', taking current directory as
+  "Activates `projectile-find-files', taking current directory as
 project root."
   (interactive)
   ;; Ignore the obsolete, we do need the powerful dynamic binding capability
