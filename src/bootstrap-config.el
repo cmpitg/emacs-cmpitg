@@ -94,7 +94,7 @@ Emacs as: %s
 
 (add-to-list 'load-path *config-dir*)
 
-(when (string= "1" (getenv "RMACS_NO_MACHINE_INIT"))
+(unless (string= "1" (getenv "RMACS_NO_MACHINE_INIT"))
   (~load-files "~/.emacs-machine-specific-init"
                (~get-config "machine-specific-init")))
 
