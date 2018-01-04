@@ -745,15 +745,18 @@ add."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~one-window ()
-  "Delete all other non-dedicated windows."
+  "Deletes all other non-dedicated windows and makes current
+window the only window visible.  This function does nothing if
+the current window is a dedicated window."
   (interactive)
-  (mapcar #'(lambda (window)
-              (unless (window-dedicated-p window)
-                (delete-window window)))
-          (cdr (window-list))))
+  (unless (window-dedicated-p)
+    (mapcar #'(lambda (window)
+                (unless (window-dedicated-p window)
+                  (delete-window window)))
+            (cdr (window-list)))))
 
 (defun ~delete-window ()
-  "Delete current window if it's not sticky/dedicated.  Use
+  "Deletes current window if it's not sticky/dedicated.  Use
 prefix arg (`C-u') to force deletion if it is."
   (interactive)
   (or (and (not current-prefix-arg)
