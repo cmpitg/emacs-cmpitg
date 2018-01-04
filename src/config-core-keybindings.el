@@ -119,6 +119,7 @@
   (bind-key "<C-f2>" 'point-pos-save)
   (bind-key "<f3>" 'counsel-find-file)
   (bind-key "<C-f3>" '~find-files-current-dir)
+  (bind-key "<M-f3>" '~gui/open-file)
   (bind-key "<S-f3>" 'projectile-find-file)
   (bind-key "<C-f4>" 'kill-this-buffer)
   (bind-key "<S-f4>" '~delete-window)

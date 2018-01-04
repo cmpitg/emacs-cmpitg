@@ -274,6 +274,14 @@ prefix arg (`C-u') to force deletion if it is."
                   (string     (~open-with path action))
                   (otherwise  (message-box (format "Invalid program %s" action)))))))))
 
+(defun ~gui/open-file ()
+  (interactive)
+  (let ((path (s-trim
+               (~exec (format "zenity --file-selection --multiple --filename=%s/ 2>/dev/null"
+                              (shell-quote-argument default-directory))))))
+    (unless (string-empty-p path)
+      (find-file path))))
+
 (defun ~open-with (file cmd)
   "Opens file with a command line."
   (~run-process (format cmd file)))
