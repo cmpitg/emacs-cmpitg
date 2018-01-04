@@ -384,17 +384,23 @@ http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
 
 (defun ~gui/open-file ()
   (interactive)
-  (let ((path (s-trim
-               (~exec (format "zenity --file-selection --multiple --filename='%s/' 2>/dev/null"
-                              default-directory)))))
+  (let ((path (thread-first "zenity --file-selection --multiple --filename=%s 2>/dev/null"
+                (format (thread-first default-directory
+                          file-name-as-directory
+                          shell-quote-argument))
+                ~exec
+                string-trim)))
     (unless (string-empty-p path)
       (find-file path))))
 
 (defun ~gui/save-as ()
   (interactive)
-  (let ((path (s-trim
-               (~exec (format "zenity --file-selection --save --confirm-overwrite --filename='%s/' 2>/dev/null"
-                              default-directory)))))
+  (let ((path (thread-first "zenity --file-selection --save --confirm-overwrite --filename=%s 2>/dev/null"
+                (format (thread-first default-directory
+                          file-name-as-directory
+                          shell-quote-argument))
+                ~exec
+                string-trim)))
     (unless (string-empty-p path)
       (write-file path nil))))
 
