@@ -105,6 +105,7 @@
 
   (bind-key "<C-return>" '~eval-last-sexp-or-region emacs-lisp-mode-map)
   (bind-key "<M-return>" 'eval-defun emacs-lisp-mode-map)
+  (bind-key "<S-return>" '~eval-current-sexp emacs-lisp-mode-map)
   (bind-key "s-#" 'eval-expression)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()

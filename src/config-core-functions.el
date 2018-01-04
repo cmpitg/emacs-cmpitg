@@ -382,6 +382,13 @@ needed."
 ;; Emacs Lisp
 ;;
 
+(defun ~eval-current-sexp ()
+  "Evals the current enclosing sexp."
+  (interactive)
+  (call-interactively 'er/mark-outside-pairs)
+  (call-interactively 'eval-region)
+  (setq deactivate-mark t))
+
 (defun ~eval-string (str)
   "Evals a string."
   (interactive "sString: ")
