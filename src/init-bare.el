@@ -55,6 +55,9 @@
 ;; Doc: minor-mode-list & minor-mode-alist
 ;; Doc: exchange-point-and-mark after yanking to re-highlight region
 ;; Doc: C-S-t and the implementation of ~undo-killed-buffers
+;; Doc: projectile file operations
+;; Doc: treemacs
+;; Doc: Splitting & one window
 
 ;; TODO: keybindings
 ;; er/mark-word
