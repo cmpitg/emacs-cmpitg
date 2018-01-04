@@ -35,7 +35,6 @@
 ;; - e e ~eval-current-expression
 ;; - e r eval-region
 ;; - e r (python-mode) python-shell-send-region
-;; - g s for Magit
 ;; - ~join-with-next-line
 ;; - s-& ~join-with-next-line
 ;; - (bind-key "s-+" 'mc/edit-lines)
