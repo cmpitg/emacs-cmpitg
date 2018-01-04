@@ -84,6 +84,7 @@
   ;; Buffer management
   (bind-key "<C-tab>" '~switch-to-last-buffer)
   (bind-key "C-S-t" '~undo-killed-buffers)
+  (~bind-key-with-prefix "n n" '~new-buffer)
 
   ;; Semantic editting
   (bind-key "s-\\" 'counsel-imenu)

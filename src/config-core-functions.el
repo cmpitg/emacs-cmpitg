@@ -278,6 +278,25 @@ another window."
       (switch-to-buffer-other-window "*Messages*")
     (switch-to-buffer "*Messages*")))
 
+(defun ~new-buffer ()
+  "Opens a new empty buffer in `*scratch-dir*'.  The
+corresponding file name for the buffer is set to the current time
+and a UUID.  The buffer is save-able and will be deleted upon
+exiting unless the local variable `local/delete-on-exit' is set
+to `nil'."
+  (interactive)
+  (let ((buf (generate-new-buffer "untitled")))
+    (switch-to-buffer buf)
+    (funcall (and initial-major-mode))
+    (setq default-directory (or *scratch-dir* temporary-file-directory))
+    (set-visited-file-name (thread-first "%s_%s"
+                             (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec "uuidgen"))
+                             string-trim))
+    (setq-local local/delete-on-exit t)
+    (add-file-local-variable 'local/delete-on-exit t)
+    (beginning-of-buffer)
+    (setq buffer-offer-save t)))
+
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)

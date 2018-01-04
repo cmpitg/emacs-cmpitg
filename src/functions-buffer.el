@@ -355,19 +355,19 @@ nth-killed buffer."
          (car recently-killed-list)))))
 
 (defun ~new-buffer ()
-  "Open a new empty buffer.  Thanks Xah Lee for this function.
-Reference:
-http://ergoemacs.org/emacs/emacs_new_empty_buffer.html"
+  "Opens a new empty buffer in `*scratch-dir*'.  The
+corresponding file name for the buffer is set to the current time
+and a UUID.  The buffer is save-able and will be deleted upon
+exiting unless the local variable `local/delete-on-exit' is set
+to `nil'."
   (interactive)
   (let ((buf (generate-new-buffer "untitled")))
     (switch-to-buffer buf)
     (funcall (and initial-major-mode))
-    (setq default-directory (if (boundp '*scratch-dir*)
-                                *scratch-dir*
-                              "/m/scratch/"))
-    (set-visited-file-name (format "%s_%s"
-                                   (s-trim (~exec "now-standardized"))
-                                   (s-trim (~exec "uuidgen"))))
+    (setq default-directory (or *scratch-dir* temporary-file-directory))
+    (set-visited-file-name (thread-first "%s_%s"
+                             (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec "uuidgen"))
+                             string-trim))
     (setq-local local/delete-on-exit t)
     (add-file-local-variable 'local/delete-on-exit t)
     (beginning-of-buffer)
