@@ -258,6 +258,9 @@ prefix arg (`C-u') to force deletion if it is."
   (interactive)
   (find-file (completing-read "File: " *recently-closed-file-list*)))
 
+(defalias '~switch-to-last-buffer 'mode-line-other-buffer
+  "Switches to the most recently visited buffer.")
+
 (defun ~switch-to-scratch ()
   "Switches to `scratch.el' in `*scratch-dir*' directory in
 another window."

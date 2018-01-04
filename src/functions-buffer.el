@@ -272,14 +272,16 @@ horizontal split."
   (interactive)
   (kill-buffer (current-buffer)))
 
-(defun ~switch-to-last-buffer ()
-  "Switch to last buffer."
-  (interactive)
-  (let ((old-name (~current-buffer-name)))
-    (switch-to-buffer (other-buffer))
-    (while (or (s-starts-with? "*" (~current-buffer-name))
-               (s-equals? old-name (~current-buffer-name)))
-      (previous-buffer))))
+;; (defun ~switch-to-last-buffer ()
+;;   "Switch to last buffer."
+;;   (interactive)
+;;   (let ((old-name (~current-buffer-name)))
+;;     (switch-to-buffer (other-buffer))
+;;     (while (or (s-starts-with? "*" (~current-buffer-name))
+;;                (s-equals? old-name (~current-buffer-name)))
+;;       (previous-buffer))))
+(defalias '~switch-to-last-buffer 'mode-line-other-buffer
+  "Switches to the most recently visited buffer.")
 
 (defun ~last-sexp ()
   "Return the sexp right before the current cursor."
