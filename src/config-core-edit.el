@@ -49,8 +49,7 @@
 
 ;; Expand selection with one keybinding
 ;; Ref: https://github.com/magnars/expand-region.el
-(use-package expand-region
-  :commands er/expand-region)
+(require 'expand-region)
 
 ;; Enhanced find-file
 (defadvice find-file (around find-files activate)

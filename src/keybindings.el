@@ -362,6 +362,7 @@
   (~bind-key-with-prefix "n n" '~new-buffer)
   (~bind-key-with-prefix "p p" 'popwin:messages)
   (~bind-key-with-prefix "z" '~toggle-maximize-buffer)
+  (~bind-key-with-prefix "m f" 'er/mark-defun)
 
   ;; File
   (~bind-key-with-prefix "f o" '~gui/open-file)

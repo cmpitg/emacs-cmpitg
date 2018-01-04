@@ -95,12 +95,17 @@
   (bind-key "C-5" 'split-window-horizontally)
   (~bind-key-with-prefix "o w" '~one-window)
 
+  ;; Marking
+  (~bind-key-with-prefix "m e" 'er/mark-outside-pairs)
+  (~bind-key-with-prefix "m f" 'er/mark-defun)
+
   ;;
   ;; Emacs Lisp
   ;;
 
   (bind-key "<C-return>" '~eval-last-sexp-or-region emacs-lisp-mode-map)
   (bind-key "<M-return>" 'eval-defun emacs-lisp-mode-map)
+  (bind-key "s-#" 'eval-expression)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (~bind-key-with-prefix-local "h f" 'describe-function)
@@ -129,7 +134,7 @@
   (bind-key "<f12>" 'counsel-M-x)
 
   (bind-key "s-SPC s-SPC" 'exchange-point-and-mark)
-  (~bind-key-with-prefix "m e" 'er/mark-outside-pairs)
+
   (~bind-key-with-prefix "q q" 'save-buffers-kill-emacs))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
