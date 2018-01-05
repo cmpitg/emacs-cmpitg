@@ -296,7 +296,7 @@
 ;; Focus following mouse
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq mouse-autoselect-window t)
+;; (setq mouse-autoselect-window t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Soft-wrap long lines
@@ -326,6 +326,13 @@
             (interactive)
             (visual-line-mode -1)
             (visual-fill-column-mode -1))
+
+          (defun ~toggle-soft-wrapping ()
+            "Toggles on soft-wrapping mode."
+            (interactive)
+            (if visual-fill-column-mode
+                (~turn-off-soft-wrapping)
+              (~turn-on-soft-wrapping)))
 
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
           ;; Correct the default split

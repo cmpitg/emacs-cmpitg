@@ -108,6 +108,11 @@
   (~bind-key-with-prefix "w c" 'ace-window)
   (~bind-key-with-prefix "o w" '~one-window)
 
+  ;; Display
+  (~bind-key-with-prefix "s l" 'linum-mode)
+  (~bind-key-with-prefix "s w" '~toggle-soft-wrapping)
+  (~bind-key-with-prefix "s f" 'global-font-lock-mode)
+
   ;; Marking
   (~bind-key-with-prefix "m e" 'er/mark-outside-pairs)
   (~bind-key-with-prefix "m f" 'er/mark-defun)

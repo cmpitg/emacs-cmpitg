@@ -186,7 +186,7 @@
 (add-hook 'kill-buffer-hook #'~track-closed-file)
 
 ;; Focus follows mouse
-(setq mouse-autoselect-window t)
+;; (setq mouse-autoselect-window t)
 
 ;; Set frame title
 (let ((title-format
@@ -204,6 +204,26 @@
 (use-package visual-fill-column
   :init (progn
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
+
+          (defun ~turn-on-soft-wrapping ()
+            "Turns on soft-wrapping."
+            (interactive)
+            (turn-off-auto-fill)
+            (turn-on-visual-line-mode)
+            (turn-on-visual-fill-column-mode))
+
+          (defun ~turn-off-soft-wrapping ()
+            "Turns off soft-wrapping."
+            (interactive)
+            (visual-line-mode -1)
+            (visual-fill-column-mode -1))
+
+          (defun ~toggle-soft-wrapping ()
+            "Toggles on soft-wrapping mode."
+            (interactive)
+            (if visual-fill-column-mode
+                (~turn-off-soft-wrapping)
+              (~turn-on-soft-wrapping)))
 
           ;; Correct the default split
           (setf split-window-preferred-function

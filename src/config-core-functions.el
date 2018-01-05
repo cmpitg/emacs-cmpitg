@@ -55,23 +55,6 @@
   (x-get-selection 'SECONDARY))
 
 ;;
-;; Text wrapping
-;;
-
-(defun ~turn-on-soft-wrapping ()
-  "Turns on soft-wrapping."
-  (interactive)
-  (turn-off-auto-fill)
-  (turn-on-visual-line-mode)
-  (turn-on-visual-fill-column-mode))
-
-(defun ~turn-off-soft-wrapping ()
-  "Turns off soft-wrapping."
-  (interactive)
-  (visual-line-mode -1)
-  (visual-fill-column-mode -1))
-
-;;
 ;; Editing
 ;;
 

@@ -332,8 +332,6 @@
   (~bind-key-with-prefix "o f" '~gui/open-file)
 
   ;; Buffer
-  (~bind-key-with-prefix "s b" 'save-buffer)
-  (~bind-key-with-prefix "l b" '~list-buffers)
   (~bind-key-with-prefix "r b" 'revert-buffer)
   (~bind-key-with-prefix "n n" '~new-buffer)
   (~bind-key-with-prefix "p p" 'popwin:messages)
@@ -364,7 +362,9 @@
   (~bind-key-with-prefix "q q" 'save-buffers-kill-emacs)
 
   ;; Display
-  (~bind-key-with-prefix "d l" '~display/toggle-linum)
+  (~bind-key-with-prefix "s l" 'linum-mode)
+  (~bind-key-with-prefix "s w" '~toggle-soft-wrapping)
+  (~bind-key-with-prefix "s f" 'global-font-lock-mode)
 
   ;; Git
   (~bind-key-with-prefix "g s" '~git/status)
