@@ -84,8 +84,10 @@ need its top-level brackets.  This function returns a string."
 (defun ~eval-current-sexp ()
   "Evals the current enclosing sexp."
   (interactive)
-  (call-interactively 'er/mark-outside-pairs)
-  (call-interactively 'eval-region)
+  (let ((current-point (point)))
+    (call-interactively 'er/mark-outside-pairs)
+    (call-interactively 'eval-region)
+    (goto-char current-point))
   (setq deactivate-mark t))
 
 (defun ~insert-into-emacs-lisp-docstring (string)
