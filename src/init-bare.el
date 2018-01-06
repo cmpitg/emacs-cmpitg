@@ -81,8 +81,6 @@
 ;; er/mark-outer-tag
 
 ;; TODO - Think about C-x C-c C-v should work as expected
-;; TODO: temp file
-;; TODO: GUI open file
 ;; TODO: Current directory
 ;; TODO: Set current project directory of all visited files
 ;; TODO: Make point-pos open up closed file

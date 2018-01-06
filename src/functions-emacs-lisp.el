@@ -49,23 +49,19 @@ the sequence, and its index within the sequence."
   (interactive "sString: ")
   (eval (first (read-from-string (concat "(progn " str ")")))))
 
-(defun ~eval-then-replace-last-exp ()
-  "Eval region then replace last expression with result."
+(defun ~eval-then-replace-region-or-last-sexp ()
+  "Evals then replaces region or last sexp with result."
   (interactive)
-  (let ((value (eval (preceding-sexp))))
-    (kill-sexp -1)
-    (insert (format "%s" value))))
-
-(defun ~eval-then-replace ()
-  "Eval region then replace region with result."
-  (interactive)
-  (let ((value (~eval-string (get-selection))))
-    (kill-region (~selection-start) (~selection-end))
+  (let ((value (~eval-last-sexp-or-region)))
+    (if (~is-selecting?)
+        (delete-region (region-beginning) (region-end))
+      (kill-sexp -1))
     (insert (format "%s" value))))
 
 (defun ~read-simplified-sexp-as-string (prompt)
-  "Read a sexp from minibuffer with completion.  The sexp doesn't
-need its top-level brackets.  This function returns a string."
+  "Reads a sexp from minibuffer with completion.  The sexp
+doesn't need its top-level brackets.  This function returns a
+string."
   (interactive)
   (let ((minibuffer-completing-symbol t))
     (read-from-minibuffer prompt
@@ -74,11 +70,19 @@ need its top-level brackets.  This function returns a string."
                           nil
                           'read-expression-history)))
 
-(defun ~eval-last-sexp-or-region ()
-  "Evals region if active, or evals last sexpr"
+(defun* ~eval-region ()
+  "Evals region and returns value."
   (interactive)
   (if (~is-selecting?)
-      (call-interactively 'eval-region)
+      (thread-first (buffer-substring (region-beginning) (region-end))
+        ~eval-string)
+    (error "No region to eval")))
+
+(defun ~eval-last-sexp-or-region ()
+  "Evals region if active, or evals last sexpr."
+  (interactive)
+  (if (~is-selecting?)
+      (call-interactively '~eval-region)
     (call-interactively 'eval-last-sexp)))
 
 (defun ~eval-current-sexp ()
@@ -86,9 +90,11 @@ need its top-level brackets.  This function returns a string."
   (interactive)
   (let ((current-point (point)))
     (call-interactively 'er/mark-outside-pairs)
-    (call-interactively 'eval-region)
-    (goto-char current-point))
-  (setq deactivate-mark t))
+    (let ((res (call-interactively '~eval-region)))
+      (prin1 res)
+      (goto-char current-point)
+      (setq deactivate-mark t)
+      res)))
 
 (defun ~insert-into-emacs-lisp-docstring (string)
   "Interactive command.  Prompt and insert a string and escape it

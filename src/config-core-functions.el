@@ -411,26 +411,45 @@ needed."
 ;; Emacs Lisp
 ;;
 
-(defun ~eval-current-sexp ()
-  "Evals the current enclosing sexp."
-  (interactive)
-  (let ((current-point (point)))
-    (call-interactively 'er/mark-outside-pairs)
-    (call-interactively 'eval-region)
-    (goto-char current-point))
-  (setq deactivate-mark t))
-
 (defun ~eval-string (str)
   "Evals a string."
   (interactive "sString: ")
   (eval (first (read-from-string (concat "(progn " str ")")))))
 
-(defun ~eval-last-sexp-or-region ()
-  "Evals region if active, or evals last sexpr"
+(defun* ~eval-region ()
+  "Evals region and returns value."
   (interactive)
   (if (~is-selecting?)
-      (call-interactively 'eval-region)
+      (thread-first (buffer-substring (region-beginning) (region-end))
+        ~eval-string)
+    (error "No region to eval")))
+
+(defun ~eval-current-sexp ()
+  "Evals the current enclosing sexp."
+  (interactive)
+  (let ((current-point (point)))
+    (call-interactively 'er/mark-outside-pairs)
+    (let ((res (call-interactively '~eval-region)))
+      (prin1 res)
+      (goto-char current-point)
+      (setq deactivate-mark t)
+      res)))
+
+(defun ~eval-last-sexp-or-region ()
+  "Evals region if active, or evals last sexpr."
+  (interactive)
+  (if (~is-selecting?)
+      (call-interactively '~eval-region)
     (call-interactively 'eval-last-sexp)))
+
+(defun ~eval-then-replace-region-or-last-sexp ()
+  "Evals then replaces region or last sexp with result."
+  (interactive)
+  (let ((value (~eval-last-sexp-or-region)))
+    (if (~is-selecting?)
+        (delete-region (region-beginning) (region-end))
+      (kill-sexp -1))
+    (insert (format "%s" value))))
 
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,

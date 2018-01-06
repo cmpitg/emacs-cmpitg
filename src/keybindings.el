@@ -208,14 +208,8 @@
 (bind-key "s-[" 'emamux:send-region)
 (bind-key "<s-backspace>" 'srun)
 
-(bind-key "<s-return>"      'switch-to-eshell-back-and-forth)
-(bind-key "<s-S-return>"    'cd-current-buffer-dir-and-switch-to-eshell)
-
-(bind-key "s-m" '~eval-then-replace-last-exp)
-(bind-key "s-b" '~eval-then-replace)
-
+(bind-key "s-m" '~eval-then-replace-region-or-last-sexp)
 (bind-key "s-#" 'eval-expression)
-
 
 ;;
 ;; Window
