@@ -42,6 +42,7 @@
 ;; TODO: company mode
 ;; TODO: Make backward/forward kill word deletes, not kills
 
+;; Doc: https://www.emacswiki.org/emacs/AlignCommands
 ;; Doc: one-buffer-per-window
 ;; Doc: http://oremacs.com/swiper/ → current word/line/symbol into minibuffer
 ;; Doc: local/delete-on-exit
@@ -80,8 +81,6 @@
 ;; er/mark-outer-tag
 
 ;; TODO - Think about C-x C-c C-v should work as expected
-;; TODO: Align mode
-;; TODO: Diminish WK, acme, and ,
 ;; TODO: temp file
 ;; TODO: GUI open file
 ;; TODO: Current directory

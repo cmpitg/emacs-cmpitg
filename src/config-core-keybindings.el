@@ -79,6 +79,7 @@
   (bind-key "s-w" 'whitespace-cleanup)
   (bind-key "s-=" 'er/expand-region)
   (bind-key "s-@" '~duplicate-line-or-region)
+  (bind-key "C-=" 'align-regexp)
   (bind-key "s-; ; ;" '~insert-full-line-comment)
 
   ;; File management
