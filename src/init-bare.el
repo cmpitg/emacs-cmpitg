@@ -42,6 +42,7 @@
 ;; TODO: company mode
 ;; TODO: Make backward/forward kill word deletes, not kills
 
+;; Doc: one-buffer-per-window
 ;; Doc: http://oremacs.com/swiper/ → current word/line/symbol into minibuffer
 ;; Doc: local/delete-on-exit
 ;; Doc: RMACS_NO_MACHINE_INIT
@@ -97,12 +98,13 @@
           "bootstrap-config.el")
   "Path to the Rmacs boostrap-config file.")
 
-(require 'rmacs:bootstrap-config        *bootstrap-config-path*)
-(require 'rmacs:config-package-manager  "config-package-manager-rewrite")
-(require 'rmacs:config-core-edit        "config-core-edit")
-(require 'rmacs:config-core-behaviors   "config-core-behaviors")
-(require 'rmacs:config-core-functions   "config-core-functions")
-(require 'rmacs:config-core-keybindings "config-core-keybindings")
-(require 'rmacs:config-ipc              "config-ipc-rewrite")
+(require 'rmacs:bootstrap-config              *bootstrap-config-path*)
+(require 'rmacs:config-package-manager        "config-package-manager-rewrite")
+(require 'rmacs:config-core-edit              "config-core-edit")
+(require 'rmacs:config-core-behaviors         "config-core-behaviors")
+(require 'rmacs:config-core-functions         "config-core-functions")
+(require 'rmacs:config-one-buffer-per-window  "config-one-buffer-per-window")
+(require 'rmacs:config-core-keybindings       "config-core-keybindings")
+(require 'rmacs:config-ipc                    "config-ipc-rewrite")
 
 (message "Done loading Rmacs bare")
