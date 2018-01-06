@@ -27,6 +27,7 @@
 (require 'ee:functions-tag          (~get-config "functions-tag"))
 (require 'ee:functions-aws          (~get-config "functions-aws"))
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
+(require 'rmacs:config-one-buffer-per-window  "config-one-buffer-per-window")
 (require 'ee:config-literate-prog   (~get-config "config-literate-prog"))
 (require 'ee:config-cmpitg-ux       (~get-config "config-cmpitg-ux"))
 (require 'ee:config-cmpitg-packages (~get-config "config-cmpitg-packages"))
