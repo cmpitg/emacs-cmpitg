@@ -30,7 +30,9 @@
 
 ;; Restore cursor position after scrolling
 ;; Ref: http://elpa.gnu.org/packages/scroll-restore.html
+;; FIXME: Buggy - Check and fix
 (use-package scroll-restore
+  :disabled t
   :config (progn
             ;; Recenter when jumpting back
             (setq scroll-restore-center t)

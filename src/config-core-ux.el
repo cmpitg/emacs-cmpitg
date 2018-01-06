@@ -47,6 +47,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package scroll-restore
+  :disabled t
   :config (progn
             ;; Recenter when jumpting back
             (setq scroll-restore-center t)
