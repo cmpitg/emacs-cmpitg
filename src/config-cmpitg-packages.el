@@ -531,17 +531,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Open last session
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/nflath/save-visited-files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package save-visited-files
-  :ensure t
   :config (progn
-            (when (~specialized-emacs?)
-              (setq save-visited-files-location
-                    (format "~/.emacs.d/emacs-visited-files.%s"
-                            (replace-regexp-in-string ":" ""
-                                                      (symbol-name (~emacs-as)))))
-              (unless (file-exists-p save-visited-files-location)
-                (~write-to-file save-visited-files-location "")))
+            ;; Each Emacs server has a different list of visited files
+            (setq save-visited-files-location
+                  (format "~/.emacs.d/emacs-visited-files.%s"
+                          (~emacs-server-name)))
+
+            (unless (file-exists-p save-visited-files-location)
+              (~write-to-file save-visited-files-location ""))
+
             (turn-on-save-visited-files-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
