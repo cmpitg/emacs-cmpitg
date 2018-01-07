@@ -44,14 +44,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar *emacs-as-tool* nil
-  "Determine which shape Emacs is running as.")
-
-(defvar *emacs-server-port*
-  (string-to-int (or (getenv "EMACS_PORT") "9999")))
+  "Which shape Emacs is running as.")
 
 (defun ~emacs-as ()
-  "Return `:mail', `:notes', :file-browser or `nil' when Emacs is
-running as mail browser, note taker, or ... just Emacs the text editor."
+  "Returns `:mail', `:notes', ... or `nil' when Emacs is running
+as mail browser, note taker, or just Emacs the text editor."
   *emacs-as-tool*)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -79,12 +76,10 @@ running as mail browser, note taker, or ... just Emacs the text editor."
 
 (message "
 %s
-HTTP server port: %s
 Invoke debugger when error: %s
 Emacs as: %s
 "
          (emacs-version)
-         *emacs-server-port*
          debug-on-error
          (~emacs-as))
 

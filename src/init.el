@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -75,9 +75,6 @@ otherwise."
 (defvar *emacs-as-tool* nil
   "Determine which shape Emacs is running as.")
 
-(defvar *emacs-server-port*
-  (string-to-int (or (getenv "EMACS_PORT") "9999")))
-
 (defun ~emacs-as ()
   "Return `:mail', `:notes', :file-browser or `nil' when Emacs is
 running as mail browser, note taker, or ... just Emacs the text editor."
@@ -120,12 +117,10 @@ note taker, ...)"
 
 (message "
 %s
-HTTP server port: %s
 Invoke debugger when error: %s
 Emacs as: %s
 "
          (emacs-version)
-         *emacs-server-port*
          debug-on-error
          (~emacs-as))
 
