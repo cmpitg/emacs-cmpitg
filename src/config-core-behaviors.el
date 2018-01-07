@@ -51,6 +51,10 @@
             (scroll-restore-mode -1)
             (scroll-restore-mode 1)))
 
+;; Save and restore current editing point when opening a file
+(use-package saveplace
+  :config (save-place-mode 1))
+
 ;; Disable Tramp autosave
 (setq tramp-auto-save-directory "/tmp/")
 

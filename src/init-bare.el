@@ -22,7 +22,6 @@
 ;; - s-X
 
 ;; TODO: Functions:
-;; - save place in buffers
 ;; - toolbox:open (from Rmacs invocation) aliased
 ;; - ~undo-kill-buffers
 ;; - ~gui/open-file
