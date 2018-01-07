@@ -474,6 +474,9 @@ of binding to `evil-normal-state-map' it binds to
             (which-key-mode)
             (which-key-setup-side-window-right-bottom)))
 
+;; By default, font-lock mode is off
+(global-font-lock-mode -1)
+
 ;; Diminish auto-revert-mode in the mode line
 (diminish 'auto-revert-mode)
 
