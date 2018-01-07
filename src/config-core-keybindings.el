@@ -65,6 +65,7 @@
   (bind-key "s-p" 'kill-word)
   (bind-key "s-." 'backward-kill-word)
   (bind-key "<C-delete>" 'delete-region)
+  (bind-key "x" 'delete-region evil-visual-state-map)
 
   ;; Text processing
   (bind-key "s--" 'comment-or-uncomment-region)

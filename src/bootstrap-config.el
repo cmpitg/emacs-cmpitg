@@ -27,7 +27,7 @@
 
 (defconst *config-dir* (file-name-directory (or (buffer-file-name)
                                                 load-file-name))
-  "Default configuration directory - the one containing this file")
+  "Default configuration directory - the one containing this file.")
 
 (defvar *snippet-dir*
   (file-name-as-directory
