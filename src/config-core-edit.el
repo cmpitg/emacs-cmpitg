@@ -15,41 +15,41 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(require 'cl-lib)
-(require 'misc)
-(require 'thingatpt)
-(require 'subr-x)
+(use-package cl-lib)
+(use-package misc)
+(use-package thingatpt)
+(use-package subr-x)
 
 ;; String processing
 ;; Ref: https://github.com/magnars/s.el
-(require 's)
+(use-package s)
 
 ;; List processing, use with care since it's generally slower than Emacs Lisp primitives
 ;; Ref: https://github.com/magnars/dash.el
-;; (require 'dash)
+;; (use-package dash)
 
 ;; File/filesystem library
 ;; Ref: https://github.com/rejeep/f.el
-(require 'f)
+(use-package f)
 
 ;; Async processing by spawning subordinate processes
 ;; Ref: https://github.com/jwiegley/emacs-async
-(require 'async)
+(use-package async)
 
 ;; Threading (Yay!)
 ;; Ref: https://github.com/mola-T/timp
-(require 'timp)
+(use-package timp)
 
 ;; Tramp for remote & sudo access
-(require 'tramp)
+(use-package tramp)
 
 ;; Interactive menu
 ;; Ref: https://github.com/abo-abo/hydra
-(require 'hydra)
+(use-package hydra)
 
 ;; Expand selection with one keybinding
 ;; Ref: https://github.com/magnars/expand-region.el
-(require 'expand-region)
+(use-package expand-region)
 
 ;; Enhanced find-file
 (defadvice find-file (around find-files activate)
@@ -133,11 +133,11 @@ project root."
               ("<S-return>" . ivy-call))
   :demand t
   :init (progn
-          (require 'ivy-hydra)
+          (use-package ivy-hydra)
 
           ;; Sublime-like C-p
           ;; Ref: https://github.com/vspinu/imenu-anywhere
-          (require 'imenu-anywhere))
+          (use-package imenu-anywhere))
   :config (progn
             (ivy-mode 1)
 
@@ -163,7 +163,7 @@ project root."
             ;; Default matching
             ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
             (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-            ;; (require 'flx)
+            ;; (use-package flx)
             ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
             (defun* ~ivy-next-line+ (&optional (n-lines 5))
@@ -208,11 +208,11 @@ of binding to `evil-normal-state-map' it binds to
 
 ;; Temporarily save points
 ;; Ref: https://github.com/alezost/point-pos.el
-(require 'point-pos)
+(use-package point-pos)
 
 ;; Multiple cursors
 ;; Ref: https://github.com/magnars/multiple-cursors.el
-(require 'multiple-cursors)
+(use-package multiple-cursors)
 
 ;; Live doc in echo area
 (use-package eldoc
@@ -378,14 +378,15 @@ of binding to `evil-normal-state-map' it binds to
   :demand t
   :config
   (progn
-    (require 'treemacs-evil)
-
     (treemacs-follow-mode -1)
     (treemacs-filewatch-mode -1)
     ;; Collapse empty dirs into one when possible
     (setq treemacs-collapse-dirs 3)
     ;; Always find and focus on the current file when treemacs is built
     (setq treemacs-follow-after-init t)))
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :demand t)
 (use-package treemacs-projectile
   :after (treemacs projectile)
   :demand t
@@ -449,7 +450,7 @@ of binding to `evil-normal-state-map' it binds to
   :demand t
   :config (progn
             (global-company-mode 1)
-            (require 'pos-tip)))
+            (use-package pos-tip)))
 (use-package company-quickhelp
   :demand t
   :bind (:map company-active-map

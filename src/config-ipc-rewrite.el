@@ -19,7 +19,7 @@
 ;; Emacs-server-based IPC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'server)
+(use-package server)
 
 (defun* ~start-emacs-server (&optional (name server-name))
   (message "Setting Emacs server name to %s and starting" name)
