@@ -10,6 +10,7 @@
 (el-get-install 'acme-mouse)
 
 (dolist (package '(which-key
+                   save-visited-files
                    paredit
                    projectile
                    point-pos
