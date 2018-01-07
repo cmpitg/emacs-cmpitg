@@ -249,6 +249,12 @@ prefix arg (`C-u') to force deletion if it is."
   (interactive)
   (find-file (completing-read "File: " *recently-closed-file-list*)))
 
+(defun ~write-to-file (filename content)
+  "Writes to a file."
+  (with-temp-buffer
+    (insert content)
+    (write-file filename)))
+
 (defalias '~switch-to-last-buffer 'mode-line-other-buffer
   "Switches to the most recently visited buffer.")
 

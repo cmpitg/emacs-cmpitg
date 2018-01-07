@@ -42,7 +42,7 @@
       (values path))))
 
 (defun ~write-to-file (filename content)
-  "Write string to file."
+  "Writes to a file."
   (with-temp-buffer
     (insert content)
     (write-file filename)))
