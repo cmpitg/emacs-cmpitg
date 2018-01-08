@@ -128,6 +128,23 @@ Emacs as: %s
 (require 'ee:functions-shell             (~get-config "functions-shell"))
 (require 'ee:config-core-ux              (~get-config "config-core-ux"))
 (require 'ee:config-ipc                  (~get-config "config-ipc"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Save minibuffer history across sessions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ref: https://www.emacswiki.org/emacs/SaveHist
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(savehist-mode 1)
+(setq savehist-file
+      (format "~/.emacs.d/history.%s"
+              (~emacs-server-name)))
+(dolist (var '(kill-ring
+               search-ring
+               regexp-search-ring))
+  (add-to-list 'savehist-additional-variables var))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (require 'ee:keybindings                 (~get-config "keybindings"))
 
 (message "Finish loading basic functionalities")

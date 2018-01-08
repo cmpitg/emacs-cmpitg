@@ -55,6 +55,17 @@
 ;; Ref: https://github.com/jacktasia/dumb-jump
 (use-package dumb-jump)
 
+;; Save minibuffer history across sessions
+;; Ref: https://www.emacswiki.org/emacs/SaveHist
+(savehist-mode 1)
+(setq savehist-file
+      (format "~/.emacs.d/history.%s"
+              (~emacs-server-name)))
+(dolist (var '(kill-ring
+               search-ring
+               regexp-search-ring))
+  (add-to-list 'savehist-additional-variables var))
+
 ;; Enhanced find-file
 (defadvice find-file (around find-files activate)
   "Also find all files within a list of files. This even works recursively."
