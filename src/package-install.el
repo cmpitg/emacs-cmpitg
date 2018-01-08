@@ -15,6 +15,7 @@
                    projectile
                    point-pos
                    expand-region
+                   dumb-jump
                    flx
                    hydra
                    counsel
