@@ -312,14 +312,15 @@
   (~bind-key-with-prefix "<" 'beginning-of-buffer)
   (~bind-key-with-prefix ">" 'end-of-buffer)
   (~bind-key-with-prefix "j" 'ace-jump-mode)
-  (~bind-key-with-prefix "s-n" 'windmove-right)
-  (~bind-key-with-prefix "s-h" 'windmove-left)
-  (~bind-key-with-prefix "s-c" 'windmove-up)
-  (~bind-key-with-prefix "s-t" 'windmove-down)
   (~bind-key-with-prefix "." 'dumb-jump-go)
   (~bind-key-with-prefix "," 'dumb-jump-back)
   (~bind-key-with-prefix ";" 'dumb-jump-quick-look)
   (~bind-key-with-prefix "\\" 'counsel-imenu)
+  (bind-key "s-C" 'sp-backward-up)
+  (bind-key "s-T" 'sp-forward-up)
+  (bind-key "M-s" 'sp-splice-sexp)
+  (bind-key "M-S" 'sp-split-sexp)
+
   ;; (~bind-key-with-prefix "\\" 'helm-semantic-or-imenu)
 
   ;; M-x

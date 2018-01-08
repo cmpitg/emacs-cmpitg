@@ -50,16 +50,16 @@ of text."
     (fill-paragraph nil region)))
 
 (defun ~current-char ()
-  "Return the string representing the character at the current
+  "Returns the string representing the character at the current
 cursor position."
   (~get-text (point) (+ 1 (point))))
 
 (defun ~peek-char ()
-  "Peek next character, return the string representing it.."
+  "Peeks next character, return the string representing it.."
   (~get-text (+ 1 (point)) (+ 2 (point))))
 
 (defun ~join-with-next-line ()
-  "Join next line with the current line.  This is just a
+  "Joins next line with the current line.  This is just a
 convenient wrapper of `join-line'."
   (interactive)
   (join-line -1))

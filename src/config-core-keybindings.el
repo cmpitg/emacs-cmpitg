@@ -81,7 +81,15 @@
   (bind-key "s-=" 'er/expand-region)
   (bind-key "s-@" '~duplicate-line-or-region)
   (bind-key "C-=" 'align-regexp)
+  (bind-key "s-&" '~join-with-next-line)
+  (bind-key "s-C" 'sp-backward-up)
+  (bind-key "s-T" 'sp-forward-up)
+  (bind-key "M-s" 'sp-splice-sexp)
+  (bind-key "M-S" 'sp-split-sexp)
   (bind-key "s-; ; ;" '~insert-full-line-comment)
+  (~bind-key-with-prefix "." 'dumb-jump-go)
+  (~bind-key-with-prefix "," 'dumb-jump-back)
+  (~bind-key-with-prefix ";" 'dumb-jump-quick-look)
 
   ;; File management
   (~bind-key-with-prefix "f d" '~delete-current-file)
@@ -159,6 +167,7 @@
   (bind-key "<f12>" 'counsel-M-x)
 
   (bind-key "s-SPC s-SPC" 'exchange-point-and-mark)
+  (~bind-key-with-prefix "SPC" 'counsel-M-x)
 
   (~bind-key-with-prefix "q q" 'save-buffers-kill-emacs))
 

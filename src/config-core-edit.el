@@ -51,6 +51,10 @@
 ;; Ref: https://github.com/magnars/expand-region.el
 (use-package expand-region)
 
+;; Just-work jump-to-definition
+;; Ref: https://github.com/jacktasia/dumb-jump
+(use-package dumb-jump)
+
 ;; Enhanced find-file
 (defadvice find-file (around find-files activate)
   "Also find all files within a list of files. This even works recursively."

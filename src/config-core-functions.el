@@ -58,6 +58,12 @@
 ;; Editing
 ;;
 
+(defun ~join-with-next-line ()
+  "Joins next line with the current line.  This is just a
+convenient wrapper of `join-line'."
+  (interactive)
+  (join-line -1))
+
 (defun ~open-line (arg)
   "Opens line and moves to the next line."
   (interactive "p")
