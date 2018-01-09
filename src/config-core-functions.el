@@ -255,6 +255,9 @@ prefix arg (`C-u') to force deletion if it is."
   (interactive)
   (find-file (completing-read "File: " *recently-closed-file-list*)))
 
+(defalias '~switch-buffer 'ivy-switch-buffer
+  "Switches to a buffer and focus the corresponding window & frame.")
+
 (defun ~write-to-file (filename content)
   "Writes to a file."
   (with-temp-buffer

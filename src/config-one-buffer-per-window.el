@@ -15,12 +15,10 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; TODO: DOC me
 (defun* ~is-buffer-visible? (buffer-or-name)
   "Determines if a buffer is current visible."
   (not (null (get-buffer-window buffer-or-name 0))))
 
-;; TODO: DOC me
 (defun* ~count-buffer-appearances (buffer-or-name)
   "Counts the number of windows where a buffer appearances."
   (length (get-buffer-window-list buffer-or-name nil 0)))
@@ -49,22 +47,6 @@ does not yet exist, create it."
   (call-interactively 'other-window)
   (call-interactively '~switch-to-blank-buffer))
 
-(defun ~switch-buffer ()
-  "Switches to another buffer that is not current visible.  This
-function is based on the implementation of `ivy-switch-buffer'."
-  (interactive)
-  (let ((this-command 'ivy-switch-buffer))
-    (ivy-read "Switch to buffer: " 'internal-complete-buffer
-              :matcher #'ivy--switch-buffer-matcher
-              :preselect (buffer-name (other-buffer (current-buffer)))
-              :action #'ivy--switch-buffer-action
-              :predicate #'(lambda (buffer-cons)
-                             (let ((buffer (cdr buffer-cons)))
-                               (and (not (~is-buffer-visible? buffer))
-                                    (not (~is-blank-buffer? buffer)))))
-              :keymap ivy-switch-buffer-map
-              :caller 'ivy-switch-buffer)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hooks & advices
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,7 +56,6 @@ function is based on the implementation of `ivy-switch-buffer'."
 ;; the target buffer is already visible.
 ;;
 
-;; FIXME: Think more - If the current buffer is visible, keep trying until it's not
 (defun ~advice/switch-to-blank-when-buffer-is-visible (orig-fun &rest args)
   "Switches to the blank buffer if the current buffer is already
 visible."
@@ -84,45 +65,49 @@ visible."
              (> (~count-buffer-appearances buffer) 1))
         (switch-to-buffer (~get-blank-buffer))
       buffer)))
+
 (advice-add 'switch-to-prev-buffer
             :around #'~advice/switch-to-blank-when-buffer-is-visible)
 
 ;;
-;; Filter out visible buffers when calling buffer list
+;; Filter out the blank buffer when calling buffer list.
 ;;
 
-(defun ~advice/filter-out-visible-buffers (orig-fun &rest args)
-  "Filters out visible buffers."
-  (remove-if #'~is-buffer-visible? (apply orig-fun args)))
+(defun ~advice/filter-out-blank-buffer (orig-fun &rest args)
+  "Filters out the blank buffer."
+  (remove-if #'~is-blank-buffer? (apply orig-fun args)))
 
-(defun ~advice/filter-out-visible-buffers-for-window-prev-buffers (orig-fun &rest args)
-  "Filters out visible buffers."
+(defun ~advice/filter-out-blank-buffer-for-window-prev-buffers (orig-fun &rest args)
+  "Filters out the blank buffer."
   (remove-if #'(lambda (x)
-                 (~is-buffer-visible? (first x)))
+                 (~is-blank-buffer? (first x)))
              (apply orig-fun args)))
 
 (advice-add 'buffer-list
-            :around #'~advice/filter-out-visible-buffers)
+            :around #'~advice/filter-out-blank-buffer)
 (advice-add 'window-next-buffers
-            :around #'~advice/filter-out-visible-buffers)
+            :around #'~advice/filter-out-blank-buffer)
 (advice-add 'window-prev-buffers
-            :around #'~advice/filter-out-visible-buffers-for-window-prev-buffers)
+            :around #'~advice/filter-out-blank-buffer-for-window-prev-buffers)
 
 ;;
-;; Prevent switch-to-buffer from switching to a visible buffer except the
-;; blank buffer.
+;; switch-to-buffer should focus the corresponding frame & window instead of
+;; switching to the target buffer.
+;;
 
-(defun ~advice/prevent-switching-to-a-visible-buffer (orig-fun buffer-or-name &rest args)
+(defun ~advice/change-focus-if-buffer-is-already-visible (orig-fun buffer-or-name &rest args)
   "Prevents switching to an already visible buffer unless it's
 the blank buffer."
-  (let ((buffer (get-buffer buffer-or-name)))
-    (if (and (not (~is-blank-buffer? buffer))
-             (~is-buffer-visible? buffer))
-        (error "Cannot switch to %s as it is currently visible." buffer)
-      (apply orig-fun buffer args))))
+  (if (and (not (~is-blank-buffer? buffer-or-name))
+           (~is-buffer-visible? buffer-or-name))
+      (let* ((window (get-buffer-window buffer-or-name t))
+             (frame (window-frame window)))
+        (select-frame-set-input-focus frame)
+        (select-window window))
+    (apply orig-fun buffer-or-name args)))
 
 (advice-add 'switch-to-buffer
-            :around #'~advice/prevent-switching-to-a-visible-buffer)
+            :around #'~advice/change-focus-if-buffer-is-already-visible)
 
 ;;
 ;; Make sure after splitting window or creating a new frame, the blank buffer
@@ -135,6 +120,10 @@ the blank buffer."
             #'~switch-to-blank-buffer-other-window)
 (add-hook 'after-make-frame-functions
           #'~switch-to-blank-buffer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Setting up & tearing down
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
