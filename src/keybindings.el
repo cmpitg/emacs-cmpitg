@@ -350,6 +350,7 @@
   ;; Window
   (~bind-key-with-prefix "w w" 'other-window)
   (~bind-key-with-prefix "w c" 'ace-window)
+  (~bind-key-with-prefix "w s" 'ace-swap-window)
   (~bind-key-with-prefix "o w" '~one-window)
   (~bind-key-with-prefix "w s v" '~window/split-vertically)
   (~bind-key-with-prefix "w s s" '~window/split-horizontally)

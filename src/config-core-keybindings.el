@@ -111,13 +111,14 @@
   (bind-key "s-\\" 'counsel-imenu)
   (~bind-key-evil "C-p" 'ivy-imenu-anywhere)
 
-  ;; Window
+  ;; Window management
   (bind-key "C-%" '~one-window)
   (bind-key "C-7" 'split-window-vertically)
   (bind-key "C-5" 'split-window-horizontally)
   (~bind-key-with-prefix "n f " 'make-frame)
   (~bind-key-with-prefix "w w" 'other-window)
   (~bind-key-with-prefix "w c" 'ace-window)
+  (~bind-key-with-prefix "w s" 'ace-swap-window)
   (~bind-key-with-prefix "o w" '~one-window)
 
   ;; Display
