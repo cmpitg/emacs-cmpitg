@@ -51,6 +51,10 @@
 ;; Ref: https://github.com/magnars/expand-region.el
 (use-package expand-region)
 
+;; Pairs management
+;; Ref: https://github.com/cute-jumper/embrace.el
+(use-package embrace)
+
 ;; Just-work jump-to-definition
 ;; Ref: https://github.com/jacktasia/dumb-jump
 (use-package dumb-jump)

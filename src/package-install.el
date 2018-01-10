@@ -16,6 +16,7 @@
                    point-pos
                    expand-region
                    dumb-jump
+                   embrace
                    flx
                    hydra
                    counsel

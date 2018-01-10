@@ -307,6 +307,7 @@
   (bind-key "C-P" 'ivy-imenu-anywhere evil-insert-state-map)
 
   (bind-key "x" 'delete-region evil-visual-state-map)
+  (~bind-key-with-prefix "c s" 'embrace-commander)
 
   ;; Movement
   (~bind-key-with-prefix "<" 'beginning-of-buffer)

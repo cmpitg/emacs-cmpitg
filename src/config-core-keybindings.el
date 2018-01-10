@@ -87,6 +87,7 @@
   (bind-key "M-s" 'sp-splice-sexp)
   (bind-key "M-S" 'sp-split-sexp)
   (bind-key "s-; ; ;" '~insert-full-line-comment)
+  (~bind-key-with-prefix "c s" 'embrace-commander)
   (~bind-key-with-prefix "." 'dumb-jump-go)
   (~bind-key-with-prefix "," 'dumb-jump-back)
   (~bind-key-with-prefix ";" 'dumb-jump-quick-look)
