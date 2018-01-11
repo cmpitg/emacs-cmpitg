@@ -186,15 +186,8 @@
 (bind-key "s-+" 'mc/edit-lines)
 (bind-key "C-#" 'mc/mark-next-like-this)
 (bind-key "C-!" 'mc/mark-previous-like-this)
-(bind-key "C-c C-." 'mc/mark-all-like-this)
-
-(bind-key "s-k" 'ace-jump-mode)
-(bind-key "s-j" 'ace-jump-buffer)
-(bind-key "s-J" 'ace-jump-buffer-other-window)
-(bind-key "C-x SPC" 'ace-jump-mode-pop-mark)
 
 (bind-key "s-=" 'er/expand-region)
-(bind-key "M-z" 'zap-up-to-char)
 
 ;;
 ;; Executing
