@@ -92,6 +92,11 @@
   (~bind-key-with-prefix "," 'dumb-jump-back)
   (~bind-key-with-prefix ";" 'dumb-jump-quick-look)
 
+  ;; Grep'ing
+  (bind-key "<f10>" 'counsel-ag)
+  (bind-key "<M-f10>" 'ivy-resume)
+  (bind-key "<S-f10>" '~counsel-ag-default-project-root)
+
   ;; File management
   (~bind-key-with-prefix "f d" '~delete-current-file)
   (~bind-key-with-prefix "f r" '~rename-current-file)

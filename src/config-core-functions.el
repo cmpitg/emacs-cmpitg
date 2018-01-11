@@ -422,6 +422,15 @@ needed."
   (tramp-cleanup-all-connections)
   (tramp-cleanup-all-buffers))
 
+(defun ~counsel-ag-default-project-root ()
+  "Calls `counsel-ag', taking project root by default and
+fallback to current directory if project root is not found."
+  (interactive)
+  (if current-prefix-arg
+      (call-interactively 'counsel-ag)
+    (counsel-ag nil (or (ignore-errors (projectile-project-root))
+                        default-directory))))
+
 ;;
 ;; Emacs Lisp
 ;;
