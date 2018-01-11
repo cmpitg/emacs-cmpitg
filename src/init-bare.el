@@ -23,19 +23,10 @@
 
 ;; TODO: Functions:
 ;; - toolbox:open (from Rmacs invocation) aliased
-;; - ~undo-kill-buffers
-;; - ~gui/open-file
-;; - ~gui/save-as
-;; - ~switch-to-scratch
-;; - ~new-buffer
-;; - ~find-file-current-dir
-;; - ~switch-to-last-buffer
 ;; - e b eval-buffer
 ;; - e e ~eval-current-expression
 ;; - e r eval-region
 ;; - e r (python-mode) python-shell-send-region
-;; - ~join-with-next-line
-;; - s-& ~join-with-next-line
 ;; - (bind-key "s-+" 'mc/edit-lines)
 
 ;; TODO: company mode
