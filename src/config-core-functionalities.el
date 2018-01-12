@@ -483,6 +483,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package wand
+  :load-path "/m/src/wand/"
   :config
   (progn
     (defun ~open-or-eval (&optional text)
@@ -529,19 +530,6 @@ interactively, `text' is taken as the current region."
                                   :capture :whole
                                   :skip-comment nil
                                   :action ~open-or-eval)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Find file from X selection
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/asjo/fffs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(eval-and-compile
-  (defun cmpitg/fffs-load-path ()
-    (~get-config "local-packages/fffs")))
-
-(use-package find-file-from-selection
-  :load-path (lambda () (list (cmpitg/fffs-load-path))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Multiple scratch buffers
