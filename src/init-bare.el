@@ -21,6 +21,15 @@
 ;; - s-x
 ;; - s-X
 
+;; TODO: mode-line-format
+
+;; TODO: BUG - swiper-all → losing focus when swiping
+
+;; TODO: Manual testing scenario
+
+;; TODO: *exec* in combination with the header-line
+;; TODO: header-line → double-right-clicking to edit
+
 ;; TODO: Functions:
 ;; - toolbox:open (from Rmacs invocation) aliased
 ;; - e b eval-buffer
@@ -32,6 +41,8 @@
 ;; TODO: company mode
 ;; TODO: Make backward/forward kill word deletes, not kills
 
+;; Doc: internal-temp-output-buffer-show
+;; Doc: Explain the implementation of *exec* functions
 ;; Doc: https://www.emacswiki.org/emacs/AlignCommands
 ;; Doc: one-buffer-per-window
 ;; Doc: http://oremacs.com/swiper/ → current word/line/symbol into minibuffer
@@ -92,6 +103,7 @@
 (require 'rmacs:config-core-behaviors         "config-core-behaviors")
 (require 'rmacs:config-core-functions         "config-core-functions")
 (require 'rmacs:config-one-buffer-per-window  "config-one-buffer-per-window")
+(require 'rmacs:config-header-line            "config-header-line")
 (require 'rmacs:config-core-keybindings       "config-core-keybindings")
 
 (message "Done loading Rmacs bare")
