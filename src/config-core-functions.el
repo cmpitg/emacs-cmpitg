@@ -53,7 +53,9 @@
     ""))
 
 (defun ~get-secondary-selection ()
-  "Gets the secondary selection (by default, activated with `M-Mouse-1')."
+  "Gets the secondary selection (activated with `M-Mouse-1' by
+default)."
+  (interactive)
   (x-get-selection 'SECONDARY))
 
 ;;
