@@ -335,8 +335,8 @@ E.g.
 another window."
   (interactive)
   (let ((scratch-dir (or *scratch-dir* temporary-file-directory)))
-    (unless (string-equal "scratch.el"
-                          (file-name-nondirectory (or buffer-file-name "")))
+    (unless (string= "scratch.el"
+                     (file-name-nondirectory (or buffer-file-name "")))
       (if (get-buffer "scratch.el")
           (switch-to-buffer-other-window "scratch.el")
         (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
@@ -488,7 +488,7 @@ E.g.
                                 (next-item (if needs-cap
                                                (capitalize item)
                                              item)))
-                           (if (string-equal "-" item)
+                           (if (string= "-" item)
                                (list res t)
                              (list (format "%s%s" res next-item)
                                    nil))))
@@ -908,9 +908,9 @@ user buffer."
             ;; save buffers that are not associated with files)
             (when (and (buffer-modified-p)
                        (not ξemacs-buff-p)
-                       (not (string-equal major-mode "dired-mode"))
+                       (not (string= major-mode "dired-mode"))
                        (if (equal (buffer-file-name) nil)
-                           (if (string-equal "" (save-restriction (widen) (buffer-string))) nil t)
+                           (if (string= "" (save-restriction (widen) (buffer-string))) nil t)
                          t))
               (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
                   (save-buffer)
@@ -935,7 +935,7 @@ user buffer."
             (when (string-match "^*" (buffer-name))
               (next-buffer)
               (let ((i 0))
-                (while (and (string-equal "*" (substring (buffer-name) 0 1)) (< i 20))
+                (while (and (string= "*" (substring (buffer-name) 0 1)) (< i 20))
                   (setq i (1+ i)) (next-buffer)))))))))
 
 (defun xah-open-last-closed ()
