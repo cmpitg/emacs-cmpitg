@@ -225,6 +225,11 @@ first occurrence of a pattern.  E.g.
 automatically quoted."
   (toolbox:run-process (format cmd file)))
 
+(defun ~open-with (path program)
+  "Opens path with `program'.  The `path' path is quoted
+automatically."
+  (~run-process (format program (shell-quote-argument path))))
+
 (defun toolbox:execute-and-replace ()
   "Execute command on selection using `wand:execute' then replace
 selection with command output."

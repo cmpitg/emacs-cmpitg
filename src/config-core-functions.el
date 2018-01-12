@@ -373,6 +373,11 @@ to `nil'."
   "Opens file with a command line."
   (~run-process (format cmd file)))
 
+(defun ~open-with (path program)
+  "Opens path with `program'.  The `path' path is quoted
+automatically."
+  (~run-process (format program (shell-quote-argument path))))
+
 (defun ~find-file-new-frame (path &optional wildcards)
   "Calls `find-file' in a new frame."
   (let ((frame (make-frame)))
