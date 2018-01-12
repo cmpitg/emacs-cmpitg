@@ -485,54 +485,46 @@
 (use-package wand
   :config
   (progn
-    (defun ~open-or-eval (text)
-      "Executes special action."
+    (defun ~open-or-eval (&optional text)
+      "Executes quick action on a piece of text.  If called
+interactively, `text' is taken as the current region."
       (interactive)
-      (cond ((~file-pattern? text)
-             (toolbox:open-file text))
-            ((and (derived-mode-p 'emacs-lisp-mode)
-                  (s-starts-with? "(" text))
-             (~eval-string text))
-            (t
-             (wand:eval-string text))))
+      (let ((text (if (null text)
+                      (buffer-substring (region-beginning) (region-end))
+                    text)))
+        (cond ((~file-pattern? text)
+               (~smart-open-file text))
+              ((and (derived-mode-p 'emacs-lisp-mode)
+                    (s-starts-with? "(" text))
+               (~eval-string text))
+              (t
+               (wand:eval-string text)))))
 
     (setq wand:*rules*
-          (list (wand:create-rule :match "----\n[^ ]* +"
+          (list (wand:create-rule :match "|"
+                                  :capture :after
+                                  :skip-comment nil
+                                  :action ~exec|)
+                (wand:create-rule :match "<"
+                                  :capture :after
+                                  :skip-comment t
+                                  :action ~exec<)
+                (wand:create-rule :match ">"
+                                  :capture :after
+                                  :skip-comment t
+                                  :action ~exec>)
+                (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action ~current-snippet->file)
-                (wand:create-rule :match "\\$ "
-                                  :capture :after
-                                  :action ~popup-shell-command)
-                (wand:create-rule :match "> "
-                                  :capture :after
-                                  :action srun)
                 (wand:create-rule :match "https?://"
                                   :capture :whole
-                                  :action ~firefox)
-                (wand:create-rule :match "file:"
-                                  :capture :after
-                                  :action toolbox:open-file)
-                (wand:create-rule :match "#> "
-                                  :capture :after
-                                  :action ~add-bracket-and-eval)
-                (wand:create-rule :match "mailto:"
-                                  :capture :after
-                                  :action (lambda (str)
-                                            (~send-mail :to str)))
-                ;; (wand:create-rule :match "\"[^\"]*\""
-                ;;                   :capture "\"\\([^\"]*\\)\""
-                ;;                   :action (lambda (str)
-                ;;                             (interactive)
-                ;;                             (message-box "%s" str)
-                ;;                             (toolbox:open-file str)))
-                ;; (wand:create-rule :match "'[^']*'"
-                ;;                   :capture "'\\([^']*\\)'"
-                ;;                   :action toolbox:open-file)
+                                  :action ~web-browse-gui)
                 (wand:create-rule :match ".*\\.html$"
                                   :capture :whole
-                                  :action (lambda (path)
-                                            (interactive)
-                                            (toolbox:open-with path "web-browser-gui %s")))
+                                  :action ~web-browse-gui)
+                (wand:create-rule :match "file:"
+                                  :capture :after
+                                  :action ~smart-open-file)
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
                                   :skip-comment nil

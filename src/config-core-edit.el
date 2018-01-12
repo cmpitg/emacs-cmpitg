@@ -456,7 +456,6 @@ interactively, `text' is taken as the current region."
                 (wand:create-rule :match "file:"
                                   :capture :after
                                   :action ~smart-open-file)
-
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
                                   :skip-comment nil
