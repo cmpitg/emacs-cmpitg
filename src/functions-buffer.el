@@ -518,20 +518,6 @@ E.g.
   (interactive)
   (find-file "toolbox.el"))
 
-(defun ~clone-file ()
-  "Clone current file into a buffer."
-  (interactive)
-  (copy-to-register 'clone
-                    (save-excursion
-                      (beginning-of-buffer)
-                      (point))
-                    (save-excursion
-                      (end-of-buffer)
-                      (point)))
-  (call-interactively 'multi-scratch-new)
-  (insert-register 'clone)
-  (keyboard-quit))
-
 (defun ~open-line (arg)
   "Opens line and moves to the next line."
   (interactive "p")
