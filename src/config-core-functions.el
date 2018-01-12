@@ -262,6 +262,11 @@ prefix arg (`C-u') to force deletion if it is."
 (defalias '~switch-buffer 'ivy-switch-buffer
   "Switches to a buffer and focus the corresponding window & frame.")
 
+(defun ~get-buffer-content (buffer-or-name)
+  "Gets the content of a buffer."
+  (with-current-buffer buffer-or-name
+    (buffer-string)))
+
 (defun ~write-to-file (filename content)
   "Writes to a file."
   (with-temp-buffer

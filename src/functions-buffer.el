@@ -355,6 +355,11 @@ nth-killed buffer."
      (if arg (nth arg recently-killed-list)
          (car recently-killed-list)))))
 
+(defun ~get-buffer-content (buffer-or-name)
+  "Gets the content of a buffer."
+  (with-current-buffer buffer-or-name
+    (buffer-string)))
+
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
 corresponding file name for the buffer is set to the current time
