@@ -336,9 +336,9 @@ to `nil'."
   (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
                                      *open-with-regexps*
                                    (list))
-                                 (list '(".*" . (lambda (path)
+                                 (list `(".*" . (lambda (path)
                                                   (~open-file-specialized path
-                                                                          :new-frame? new-frame?))))))
+                                                                          :new-frame? ,new-frame?))))))
     (let ((regexp (car regexp&action))
           (action (cdr regexp&action)))
       (when (s-matches-p regexp path)
