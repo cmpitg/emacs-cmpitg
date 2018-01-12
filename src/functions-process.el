@@ -28,6 +28,37 @@ the \"*Messages*\" buffer. `cmd' is executed via `dash -c'."
                 "-c"
                 cmd))
 
+(defun* ~run-process (command &key (async t))
+  "Runs an external process.  If `async' is non-`nil' the process
+is not terminated when Emacs exits and the output is discarded;
+otherwise, both output from stdout and stderr are direceted to
+the buffer naming after `command'.  `command' is executed via the
+current user shell, define by the `SHELL' environment variable."
+  (let ((current-shell (getenv "SHELL"))
+        (process-name command))
+    (if async
+        (async-start-process process-name
+                             current-shell
+                             #'(lambda (process)
+                                 (let ((output (~get-process-output process)))
+                                   (with-current-buffer (get-buffer-create process-name)
+                                     (insert output))))
+                             "-c"
+                             command)
+      (call-process current-shell
+
+                    ;; Taking no input
+                    nil
+
+                    ;; Output buffer
+                    process-name
+
+                    ;; Don't display output buffer
+                    nil
+
+                    ;; Arguments
+                    "-c" command))))
+
 (defun ~geiser-repl-process ()
   "Return the process behind current Geiser REPL."
   (let ((repl-buffer (get-buffer "* Racket REPL *")))
@@ -35,101 +66,115 @@ the \"*Messages*\" buffer. `cmd' is executed via `dash -c'."
       (get-buffer-process repl-buffer)
       nil)))
 
-(defun ~exec-with-input (command input-text)
-  "Executes a shell command with `input-text' piped to stdin and
-returns output (+ error) as string."
-  (interactive)
-  (with-temp-buffer
-    (insert input-text)
-    (shell-command-on-region (point-min)
-                             (point-max)
-                             command
-                             t
-                             t
-                             nil)
-    (buffer-string)))
-
 (defun ~exec (command)
-  "Execute a shell command then return its value as string."
+  "Executes a shell command then returns its value as string."
   (interactive "MCommand: ")
   (with-temp-buffer
     (shell-command command t nil)
     (buffer-string)))
 
-(defun ~exec-in-other-window (&optional command)
-  "Execute in other window."
-  (interactive)
-  (when (null command)
-    (if (region-active-p)
-        (setq command (~current-selection))
-      (setq command (read-shell-command "Command: "))))
-  (shell-command command))
+(defun* ~exec (command &key (on-region nil))
+  "Executes a shell command then returns its value as string."
+  (interactive "MCommand: ")
+  (if on-region
+      (progn
+        (let ((inhibit-message t))
+          (shell-command-on-region (region-beginning)
+                                   (region-end)
+                                   command
 
-(defun ~exec< (&optional command)
-  "Executes a shell command and pipes the output to the current
-buffer.  If there is an active secondary selection active, the
-command is the selection string; otherwise, it is read from the
-minibuffer.
+                                   ;; Output buffer name
+                                   command
 
-With prefix argument, always reads command from the minibuffer."
-  (interactive)
-  (let ((command (or command (~read-command-or-get-from-secondary-selection))))
-    (shell-command command t)))
+                                   ;; Don't replace current region
+                                   nil
 
-(defun ~exec| (&optional command)
-  "Executes a shell command and pipes the output to the current
-buffer.  If there is an active primary selection, it is piped as
-input to the command and the output from the command would
-replace the selection.  If there is an active secondary selection
-active, the command is the selection string; otherwise, it is
-read from the minibuffer."
-  (interactive)
-  (let ((command (or command
-                     (~read-command-or-get-from-secondary-selection))))
-    (if (~is-selecting?)
-        (shell-command-on-region (region-beginning)
-                                 (region-end)
-                                 command
-                                 t
-                                 t
-                                 nil)
-      (shell-command command t))))
+                                   ;; Error piped to output
+                                   nil))
+        (~get-buffer-content command))
+    (with-temp-buffer
+      (shell-command command t nil)
+      (buffer-string))))
+
+(defun* ~exec-pop-up (command)
+  "Executes a command & pops up a temporary buffer showing
+result.  The command is executed asynchronously in a shell which
+is determined by the `SHELL' environment variable."
+  (interactive "MCommand: ")
+  (let ((current-shell (getenv "SHELL"))
+        (process-name command))
+    (async-start-process process-name
+                         current-shell
+                         #'(lambda (process)
+                             (let ((output (~get-process-output process)))
+                               (~popup-message output
+                                               :buffer-name process-name)))
+                         "-c"
+                         command)))
+
+(defun* ~exec< (command)
+  "Executes a command and replaces the region with the output.
+This function also returns the exit code of the command.  The
+command is executed asynchronously in a shell which is determined
+by the `SHELL' environment variable."
+  (interactive "MCommand: ")
+  (let ((current-shell (getenv "SHELL"))
+        (process-name command)
+        (buffer (current-buffer)))
+    (async-start-process process-name
+                         current-shell
+                         #'(lambda (process)
+                             (let ((output (~get-process-output process)))
+                               (with-current-buffer buffer
+                                 (when (~is-selecting?)
+                                   (delete-region (region-beginning)
+                                                  (region-end)))
+                                 (push-mark)
+                                 (insert output))))
+                         "-c"
+                         command)))
 
 (defun ~exec> (&optional command)
-  "Executes a shell command and pipes the output a pop-up buffer
-named \"*Shell Output*\".  If there is an active secondary
-selection active, the command is the selection string; otherwise,
-it is read from the minibuffer."
-  (interactive)
-  (let ((command (or command
-                     (~read-command-or-get-from-secondary-selection))))
-    (get-buffer-create "*Shell Output*")
-    (with-current-buffer "*Shell Output*"
-      (insert (shell-command-to-string command)))
-    (~popup-buffer "*Shell Output*")))
+  "Executes a command, taking input from the current region,
+pops up a temporary buffer showing result, and returns the exit
+code of the command.  The command is executed synchronously in a
+shell which is determined by the `SHELL' environment variable."
+  (interactive "MCommand: ")
+  (prog1 (let ((inhibit-message t))
+           (shell-command-on-region (region-beginning)
+                                    (region-end)
+                                    command
 
-(defun ~exec|-select-output ()
-  "Calls `~exec|'.  After the output has been piped in to the
-buffer, select it."
-  (interactive)
-  (let ((marker-start (copy-marker (or (region-beginning) (point)) nil))
-        (marker-end (copy-marker (or (region-end) (point)) t)))
-    (call-interactively '~exec|)
-    (deactivate-mark t)
-    (set-mark marker-end)
-    (goto-char marker-start)
-    (setq deactivate-mark nil)))
+                                    ;; Output buffer name
+                                    command
 
-(defun ~exec<-select-output (&optional command)
-  "Calls `~exec<'.  After the output has been piped in to the
-buffer, select it."
-  (interactive)
-  (let ((marker-start (copy-marker (point) nil))
-        (marker-end (copy-marker (point) t)))
-    (call-interactively '~exec<)
-    (set-mark marker-end)
-    (goto-char marker-start)
-    (setq deactivate-mark nil)))
+                                    ;; Don't replace current region
+                                    nil
+
+                                    ;; Error piped to output
+                                    nil))
+    (~popup-buffer command)))
+
+(defun ~exec| (&optional command)
+  "Executes a command, taking input from the current region,
+and replaces the region with the output.  This function also
+returns the exit code of the command.  The command is executed
+synchronously in a shell which is determined by the `SHELL'
+environment variable."
+  (interactive "MCommand: ")
+  (let ((inhibit-message t))
+    (shell-command-on-region (region-beginning)
+                             (region-end)
+                             command
+
+                             ;; Output buffer name
+                             command
+
+                             ;; Don't replace current region
+                             t
+
+                             ;; Error piped to output
+                             nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Aliases
