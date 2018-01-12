@@ -309,6 +309,9 @@ E.g.
   (with-output-to-temp-buffer buffer-name
     (princ content)))
 
+(defalias '~popup-buffer 'internal-temp-output-buffer-show
+  "Pops up a buffer for temporary display.")
+
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
 corresponding file name for the buffer is set to the current time

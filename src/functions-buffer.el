@@ -312,6 +312,9 @@ E.g.
   (with-output-to-temp-buffer buffer-name
     (princ content)))
 
+(defalias '~popup-buffer 'internal-temp-output-buffer-show
+  "Pops up a buffer for temporary display.")
+
 (defun ~goto-snippets-dir ()
   "Go to personal snippets directory."
   (interactive)
