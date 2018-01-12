@@ -195,11 +195,11 @@
 
 (bind-key "<f9>" 'compile)
 (bind-key "s-a" '~exec|)
-(bind-key "s-A" '~exec>)
-;; (bind-key "s-a" '~exec<)
-;; (bind-key "s-A" '~popup-shell-command)
+(bind-key "s-A" '~exec<)
+(bind-key "M-a" '~exec>)
+(bind-key "<s-return>" 'wand:execute)
+(bind-key "<mouse-2>" 'wand:execute)
 (bind-key "s-[" 'emamux:send-region)
-(bind-key "<s-backspace>" 'srun)
 
 (bind-key "s-m" '~eval-then-replace-region-or-last-sexp)
 (bind-key "s-#" 'eval-expression)
@@ -346,8 +346,6 @@
   (~bind-key-with-prefix "w c" 'ace-window)
   (~bind-key-with-prefix "w s" 'ace-swap-window)
   (~bind-key-with-prefix "o w" '~one-window)
-  (~bind-key-with-prefix "w s v" '~window/split-vertically)
-  (~bind-key-with-prefix "w s s" '~window/split-horizontally)
   ;; Undo & redo window layout
   (~bind-key-with-prefix "w h" 'winner-undo)
   (~bind-key-with-prefix "w n" 'winner-redo)

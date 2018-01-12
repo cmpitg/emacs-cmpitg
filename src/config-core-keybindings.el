@@ -80,6 +80,8 @@
   (bind-key "s-w" 'whitespace-cleanup)
   (bind-key "s-=" 'er/expand-region)
   (bind-key "s-@" '~duplicate-line-or-region)
+  (bind-key "C-o" '~open-line)
+  (bind-key "C-S-o" '~open-line-before)
   (bind-key "C-=" 'align-regexp)
   (bind-key "s-&" '~join-with-next-line)
   (bind-key "s-C" 'sp-backward-up)
@@ -97,11 +99,6 @@
   (~bind-key-with-prefix "," 'dumb-jump-back)
   (~bind-key-with-prefix ";" 'dumb-jump-quick-look)
 
-  ;; Grep'ing
-  (bind-key "<f10>" 'counsel-ag)
-  (bind-key "<M-f10>" 'ivy-resume)
-  (bind-key "<S-f10>" '~counsel-ag-default-project-root)
-
   ;; File management
   (~bind-key-with-prefix "f d" '~delete-current-file)
   (~bind-key-with-prefix "f r" '~rename-current-file)
@@ -118,6 +115,13 @@
   (~bind-key-with-prefix "r b" 'revert-buffer)
   (~bind-key-with-prefix "n n" '~new-buffer)
 
+  ;; External commands
+  (bind-key "s-a" '~exec|)
+  (bind-key "s-A" '~exec<)
+  (bind-key "M-a" '~exec>)
+  (bind-key "<s-return>" 'wand:execute)
+  (bind-key "<mouse-2>" 'wand:execute)
+
   ;; Semantic editting
   (bind-key "s-\\" 'counsel-imenu)
   (~bind-key-evil "C-p" 'ivy-imenu-anywhere)
@@ -131,6 +135,10 @@
   (~bind-key-with-prefix "w c" 'ace-window)
   (~bind-key-with-prefix "w s" 'ace-swap-window)
   (~bind-key-with-prefix "o w" '~one-window)
+
+  ;; Header line
+  (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
+  (bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)
 
   ;; Display
   (~bind-key-with-prefix "s l" 'linum-mode)
@@ -171,10 +179,15 @@
   (bind-key "<C-f3>" '~find-files-current-dir)
   (bind-key "<M-f3>" '~gui/open-file)
   (bind-key "<S-f3>" 'projectile-find-file)
+  (bind-key "<f4>" 'swiper-all)
   (bind-key "<C-f4>" 'kill-this-buffer)
   (bind-key "<S-f4>" '~delete-window)
   (bind-key "<f8>" '~switch-buffer)
   (bind-key "<S-f8>" 'counsel-bookmark)
+  (bind-key "<f9>" 'compile)
+  (bind-key "<f10>" 'counsel-ag)
+  (bind-key "<M-f10>" 'ivy-resume)
+  (bind-key "<S-f10>" '~counsel-ag-default-project-root)
   (bind-key "<f11>" 'counsel-yank-pop)
   (bind-key "<f12>" 'counsel-M-x)
 
