@@ -485,7 +485,7 @@
 (use-package wand
   :config
   (progn
-    (defun ~quick-action (text)
+    (defun ~open-or-eval (text)
       "Executes special action."
       (interactive)
       (cond ((~file-pattern? text)
@@ -536,7 +536,7 @@
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
                                   :skip-comment nil
-                                  :action ~quick-action)))))
+                                  :action ~open-or-eval)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Find file from X selection
