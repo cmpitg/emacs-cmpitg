@@ -294,6 +294,21 @@ another window."
       (switch-to-buffer-other-window "*Messages*")
     (switch-to-buffer "*Messages*")))
 
+(defun* ~popup-message (content &key (buffer-name "*Temporary*"))
+  "Displays a popup window with `content' as its content and an
+optional `buffer-name' name.
+
+E.g.
+
+;; Display \"Hello World\" in a popup window.
+\(~popup-message \"Hello World\"\)
+
+;; Display \"Hola Mundo\" in a popup window, naming that window buffer \"*mundo*\"
+\(~popup-message \"Hello World\" :buffer-name \"*mundo*\"\)
+"
+  (with-output-to-temp-buffer buffer-name
+    (princ content)))
+
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
 corresponding file name for the buffer is set to the current time

@@ -298,17 +298,16 @@ horizontal split."
   comment-start)
 
 (defun* ~popup-message (content &key (buffer-name "*Temporary*"))
-  "Display a popup window with CONTENT as its content and an
-optional BUFFER-NAME name.  Require popwin extension.  Press ESC
-or C-g to close the window.
+  "Displays a popup window with `content' as its content and an
+optional `buffer-name' name.
 
 E.g.
 
 ;; Display \"Hello World\" in a popup window.
-\($popup-message \"Hello World\"\)
+\(~popup-message \"Hello World\"\)
 
 ;; Display \"Hola Mundo\" in a popup window, naming that window buffer \"*mundo*\"
-\($popup-message \"Hello World\" :buffer-name \"*mundo*\"\)
+\(~popup-message \"Hello World\" :buffer-name \"*mundo*\"\)
 "
   (with-output-to-temp-buffer buffer-name
     (princ content)))
