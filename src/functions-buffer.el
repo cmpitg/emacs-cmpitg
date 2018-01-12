@@ -240,6 +240,11 @@ selection with command output."
     (call-interactively 'kill-region)
     (insert output)))
 
+(defun ~web-browse-gui (uri)
+  "Calls a GUI browser on a URI."
+  (interactive "MURI: ")
+  (~open-with uri "web-browser-gui %s"))
+
 (defun ~toggle-split-method ()
   "Toggle default split method between vertical split and
 horizontal split."

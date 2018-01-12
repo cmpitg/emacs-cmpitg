@@ -369,9 +369,10 @@ to `nil'."
     (unless (string-empty-p path)
       (write-file path nil))))
 
-(defun ~open-with (file cmd)
-  "Opens file with a command line."
-  (~run-process (format cmd file)))
+(defun ~web-browse-gui (uri)
+  "Calls a GUI browser on a URI."
+  (interactive "MURI: ")
+  (~open-with uri "web-browser-gui %s"))
 
 (defun ~open-with (path program)
   "Opens path with `program'.  The `path' path is quoted
