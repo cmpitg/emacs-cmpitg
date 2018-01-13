@@ -1,5 +1,7 @@
 ;;
 ;; Copyright (C) 2017 Ha-Duong Nguyen (@cmpitg)
+
+;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -23,7 +25,7 @@
                      (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip' " header))))
     (--> (if from-path
              (~exec cmd)
-           (~exec-with-input cmd msg-or-path))
+           (~exec cmd :stdin msg-or-path))
          (replace-regexp-in-string "[ \t\n]*$" "" it))))
 
 (defun* ~get-mail-user-agent (msg-or-path &key (from-path nil))
@@ -38,12 +40,13 @@
 
 (defun* ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
-  (~exec (format "thunderbird-bin -compose \"to='%s',subject='%s'\",body=\"'%s'\""
-                 to
-                 subject
-                 body)))
+  (~run-process (format "thunderbird-bin -compose \"to='%s',subject='%s'\",body=\"'%s'\""
+                        to
+                        subject
+                        body)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finish loading mail processing functions")
-(provide 'ee:functions-mail)
+
+(provide 'rmacs:functions-mail)

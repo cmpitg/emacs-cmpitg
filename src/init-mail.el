@@ -22,7 +22,7 @@
                                        load-file-name))
               "init"))
 
-(require 'ee:functions-mail         (~get-config "functions-mail"))
+(require 'rmacs:functions-mail "functions-mail")
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
 (require 'ee:config-cmpitg-ux       (~get-config "config-cmpitg-ux"))
 (require 'ee:keybindings-cmpitg     (~get-config "keybindings-cmpitg"))
