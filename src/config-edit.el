@@ -1,5 +1,6 @@
-;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;;  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -15,313 +16,57 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Project management
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/bbatsov/projectile
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package projectile
-  :diminish projectile-mode
-  :config
-  (progn
-    (projectile-global-mode)
-
-    (setq ~project-ignored-patterns
-          (list (rx (0+ any) ".gz" eol)
-                (rx (0+ any) ".pyc" eol)
-                (rx (0+ any) ".jar" eol)
-                (rx (0+ any) ".tar.gz" eol)
-                (rx (0+ any) ".tgz" eol)
-                (rx (0+ any) ".zip" eol)
-                (rx (0+ any) ".pyc" eol)
-                "/node_modules/"
-                "/bower_components/"))
-
-    (defun ~projectile-ignored-patterns ()
-      (-concat ~project-ignored-patterns
-               (first (projectile-filtering-patterns))))
-
-    (defun ~projectile-ignored? (file)
-      (-any? #'(lambda (pattern)
-                 (string-match pattern file))
-             (~projectile-ignored-patterns)))
-
-    (defun ~print-files-advice-around (orig-fun &rest args)
-      (let* ((files (apply orig-fun args))
-             (filtered-with-regex (cl-remove-if #'~projectile-ignored? files)))
-        filtered-with-regex))
-
-    (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
-    ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
-
-    (setq projectile-switch-project-action 'projectile-dired)
-    (setq projectile-find-dir-includes-top-level t)
-    (setq projectile-enable-caching t)
-    (setq projectile-indexing-method 'alien)
-
-    ;; (setq projectile-switch-project-action 'projectile-dired)
-    ;; (setq projectile-switch-project-action 'projectile-find-dir)
-
-    ;; Customize find file command via function
-    ;; projectile-get-ext-command
-    (setq projectile-git-command projectile-generic-command)
-    (setq projectile-hg-command projectile-generic-command)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Remote file processing with Tramp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package tramp)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Cleanup mode-line
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;;
-;; Install from local
-;;
-;; https://github.com/jonathanchu/emacs-powerline
-;;
-
-;; (load-file (~get-config "local-packages/powerline/powerline.el"))
-;; (use-package powerline)
-
-;; https://github.com/milkypostman/powerline
-;; (use-package powerline
-;;   :ensure t
-;;   :init (powerline-default-theme))
-
-;; https://github.com/Dewdrops/powerline
-(eval-and-compile
-  (defun cmpitg/powerline-load-path ()
-    (~get-config "local-packages/drewdrops-powerline")))
-
-(use-package powerline
-  :load-path (lambda () (list (cmpitg/powerline-load-path)))
-  :config (progn
-            (powerline-default-theme)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Better popup window management
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/m2ym/popwin-el
-;; FIXME: Reevaluate
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (use-package popwin
-;;   :ensure t
-;;   :config (progn
-;;             (popwin-mode 1)
-;;             (setq anything-samewindow nil)
-
-;;             (dolist (el '(("\*anything*" :regexp t :height 25)
-;;                           ("*anything*" :height 20)
-;;                           (dired-mode :position top)
-;;                           "*Backtrace*"
-;;                           "*Shell Command Output*"
-;;                           (compilation-mode :noselect t)
-;;                           "*slime-apropos*"
-;;                           "*slime-macroexpansion*"
-;;                           "*slime-description*"
-;;                           ("*slime-compilation*" :noselect t)
-;;                           "*slime-xref*"
-;;                           (sldb-mode :stick t)
-;;                           slime-repl-mode
-;;                           slime-connection-list-mode
-;;                           "*vc-diff*"
-;;                           "*vc-change-log*"
-;;                           (" *undo-tree*" :width 0.3 :position right)
-;;                           ("^\*helm.+\*$" :regexp t :height 20)))
-;;               (push el popwin:special-display-config))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Support for tar
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package tar-mode
-  :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Pairs management
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Ref: https://github.com/cute-jumper/embrace.el
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package embrace)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Open with external program
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Load from local
-;;
-;; Seems to be abandoned.  We'll find another way to provide the openwith
-;; functionality.
-;;
-
-;; (use-package openwith
-;;   :config (progn
-;;             (openwith-mode t)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Asciidoc
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Ref: https://github.com/sensorflo/adoc-mode
+;;
 
 (use-package adoc-mode
-  :commands adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; w3m web browser
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package w3m
-  :commands w3m-browse-url
-  :init (progn
-          (setq browse-url-browser-function 'w3m-browse-url)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Better menu bar
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package menu-bar+)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; YAML
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Ref: https://www.emacswiki.org/emacs/YamlMode
+;;
 
-(use-package yaml-mode
-  :commands yaml-mode)
+(use-package yaml-mode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; Markdown
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Ref: https://jblevins.org/projects/markdown-mode/
+;;
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :config (progn
-            ;; (use-package markdown-mode+
-            ;;   :ensure markdown-mode+)
-
-            (custom-set-faces
-             ;; Your init file should contain only one such instance.
-             ;; If there is more than one, they won't work right.
-             '(markdown-header-face-1
-               ((t (:inherit markdown-header-face :height 1.7 :background "#ABCDEF"))))
-             '(markdown-header-face-2
-               ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
-             '(markdown-header-face-3
-               ((t (:inherit markdown-header-face :height 1.3)))))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; En/decoding JSON
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (el-get-install 'json-mode)
-
-(use-package json-mode
-  :mode "\\.json\\'"
-  ;; :init (progn
-  ;;         (eval-after-load "json-mode"
-  ;;           '(progn
-  ;;             (setq c-basic-offset 2)
-  ;;             (setq tab-width 2))))
-  )
-
-(use-package json
-  :defer t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Side-bar directory tree
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;
-;; https://github.com/sabof/project-explorer
-;;
-;; (use-package project-explorer
-;;   :ensure t)
-
-;;
-;; Nav is tested, good enough to go
-;;
-
-;; https://github.com/ancane/emacs-nav
-
-;; (use-package nav
-;;   :load-path "/m/src/emacs-nav"
-;;   :config (progn
-;;             (nav-disable-overeager-window-splitting)))
-;;           (progn
-
-;; (eval-after-load "evil-mode"
-;;   '(progn
-;;      (bind-key "SPC o a" 'nav-toggle evil-normal-state-map)))
-
-;;
-;; Neotree is extremely buggy and under-maintained
-;;
-;; https://github.com/jaypei/emacs-neotree
-;; https://www.emacswiki.org/emacs/NeoTree
-;;
-
-;; (use-package neotree
-;;   :ensure t
-;;   :config
-;;   (progn
-;;     ;; (setq neo-theme 'icons)
-;;     (setq neo-theme 'arrow)
-
-;;     (add-hook 'neotree-mode-hook
-;;               (lambda ()
-;;                 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-;;                 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
-;;                 (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-;;                 (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)))
-
-;;     ;; If you use popwin, when NeoTree is open and successively a temporary
-;;     ;; buffer is opened with popwin, a new window with the NeoTree buffer is
-;;     ;; displayed side by side next to the first one (#50). This code will help
-;;     ;; you
-
-;;     ;; (when neo-persist-show
-;;     ;;   (add-hook 'popwin:before-popup-hook
-;;     ;;             (lambda () (setq neo-persist-show nil)))
-;;     ;;   (add-hook 'popwin:after-popup-hook
-;;     ;;             (lambda () (setq neo-persist-show t))))
-;;     ))
-
-
-(use-package treemacs
   :config
   (progn
-    (treemacs-follow-mode -1)
-    (treemacs-filewatch-mode -1)
-    ;; Collapse empty dirs into one when possible
-    (setq treemacs-collapse-dirs 3)
-    ;; Always find and focus on the current file when treemacs is built
-    (setq treemacs-follow-after-init t)))
-(use-package treemacs-evil
-  :after (treemacs evil)
-  :demand t)
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :demand t
-  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
+    (custom-set-faces
+     ;; Your init file should contain only one such instance.
+     ;; If there is more than one, they won't work right.
+     '(markdown-header-face-1
+       ((t (:inherit markdown-header-face :height 1.7 :background "#ABCDEF"))))
+     '(markdown-header-face-2
+       ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
+     '(markdown-header-face-3
+       ((t (:inherit markdown-header-face :height 1.3)))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Recent files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; En/decoding JSON
+;;
+;; Ref: https://github.com/joshwnj/json-mode
+;;
 
-(use-package recentf
-  :init (progn
-          (recentf-mode 1)
-          (setq recentf-max-menu-items 128)))
+(use-package json-mode
+  :mode "\\.json\\'")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finish loading functionalities for editting")
-(provide 'ee:config-edit)
+(message "Finish configuring Rmacs for code & text editting")
+
+(provide 'rmacs:config-edit)

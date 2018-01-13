@@ -118,7 +118,6 @@ Emacs as: %s
 (require 'ee:config-package-manager      (~get-config "config-package-manager"))
 (require 'ee:config-core-emacs-lisp      (~get-config "config-core-emacs-lisp"))
 (require 'ee:config-core-functionalities (~get-config "config-core-functionalities"))
-(require 'ee:config-edit                 (~get-config "config-edit"))
 (require 'ee:functions-emacs-lisp        (~get-config "functions-emacs-lisp"))
 (require 'ee:functions-buffer            (~get-config "functions-buffer"))
 (require 'ee:functions-file              (~get-config "functions-file"))
@@ -127,7 +126,6 @@ Emacs as: %s
 (require 'ee:functions-string            (~get-config "functions-string"))
 (require 'ee:functions-shell             (~get-config "functions-shell"))
 (require 'ee:config-core-ux              (~get-config "config-core-ux"))
-(require 'ee:config-ipc                  (~get-config "config-ipc"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Save minibuffer history across sessions

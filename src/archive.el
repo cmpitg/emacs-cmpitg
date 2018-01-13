@@ -435,3 +435,129 @@ silently."
 ;;                          :foundry "unknown"
 ;;                          :family "Monaco"))))
 ;;  '(rst-level-1-face ((t (:embolden t))) t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Cleanup mode-line
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; Install from local
+;;
+;; https://github.com/jonathanchu/emacs-powerline
+;;
+
+;; (load-file (~get-config "local-packages/powerline/powerline.el"))
+;; (use-package powerline)
+
+;; https://github.com/milkypostman/powerline
+;; (use-package powerline
+;;   :ensure t
+;;   :init (powerline-default-theme))
+
+;; https://github.com/Dewdrops/powerline
+(eval-and-compile
+  (defun cmpitg/powerline-load-path ()
+    (~get-config "local-packages/drewdrops-powerline")))
+
+(use-package powerline
+  :load-path (lambda () (list (cmpitg/powerline-load-path)))
+  :config (progn
+            (powerline-default-theme)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Better popup window management
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/m2ym/popwin-el
+;; FIXME: Reevaluate
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package popwin
+;;   :ensure t
+;;   :config (progn
+;;             (popwin-mode 1)
+;;             (setq anything-samewindow nil)
+
+;;             (dolist (el '(("\*anything*" :regexp t :height 25)
+;;                           ("*anything*" :height 20)
+;;                           (dired-mode :position top)
+;;                           "*Backtrace*"
+;;                           "*Shell Command Output*"
+;;                           (compilation-mode :noselect t)
+;;                           "*slime-apropos*"
+;;                           "*slime-macroexpansion*"
+;;                           "*slime-description*"
+;;                           ("*slime-compilation*" :noselect t)
+;;                           "*slime-xref*"
+;;                           (sldb-mode :stick t)
+;;                           slime-repl-mode
+;;                           slime-connection-list-mode
+;;                           "*vc-diff*"
+;;                           "*vc-change-log*"
+;;                           (" *undo-tree*" :width 0.3 :position right)
+;;                           ("^\*helm.+\*$" :regexp t :height 20)))
+;;               (push el popwin:special-display-config))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Better menu bar
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package menu-bar+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Side-bar directory tree
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; https://github.com/sabof/project-explorer
+;;
+;; (use-package project-explorer
+;;   :ensure t)
+
+;;
+;; Nav is tested, good enough to go
+;;
+
+;; https://github.com/ancane/emacs-nav
+
+;; (use-package nav
+;;   :load-path "/m/src/emacs-nav"
+;;   :config (progn
+;;             (nav-disable-overeager-window-splitting)))
+;;           (progn
+
+;; (eval-after-load "evil-mode"
+;;   '(progn
+;;      (bind-key "SPC o a" 'nav-toggle evil-normal-state-map)))
+
+;;
+;; Neotree is extremely buggy and under-maintained
+;;
+;; https://github.com/jaypei/emacs-neotree
+;; https://www.emacswiki.org/emacs/NeoTree
+;;
+
+;; (use-package neotree
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     ;; (setq neo-theme 'icons)
+;;     (setq neo-theme 'arrow)
+
+;;     (add-hook 'neotree-mode-hook
+;;               (lambda ()
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+;;                 (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)))
+
+;;     ;; If you use popwin, when NeoTree is open and successively a temporary
+;;     ;; buffer is opened with popwin, a new window with the NeoTree buffer is
+;;     ;; displayed side by side next to the first one (#50). This code will help
+;;     ;; you
+
+;;     ;; (when neo-persist-show
+;;     ;;   (add-hook 'popwin:before-popup-hook
+;;     ;;             (lambda () (setq neo-persist-show nil)))
+;;     ;;   (add-hook 'popwin:after-popup-hook
+;;     ;;             (lambda () (setq neo-persist-show t))))
+;;     ))
