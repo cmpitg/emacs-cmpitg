@@ -1,5 +1,6 @@
-;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;;  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -19,25 +20,31 @@
 ;; Emacs-server-based IPC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'server)
+(use-package server)
 
 (defun* ~start-emacs-server (&optional (name server-name))
+  "Starts the Emacs server."
   (message "Setting Emacs server name to %s and starting" name)
   (setf server-name name)
   (server-start))
 
 (defun ~emacs-server-name ()
+  "Returns the current server name."
   server-name)
 
 (defun* ~emacs-server-running? (&optional (name server-name))
+  "Determines if there is an Emacs server with `server-name' name
+is currently running."
   (server-running-p name))
 
-(if (~emacs-server-running? (~emacs-server-name))
-    (message "Emacs server %s is already running, not starting another one"
-             (~emacs-server-name))
-  (~start-emacs-server))
+(eval-when-compile 
+  (if (~emacs-server-running? (~emacs-server-name))
+      (message "Emacs server %s is already running, not starting"
+               (~emacs-server-name))
+    (~start-emacs-server)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finish loading IPC capability")
-(provide 'ee:config-ipc)
+(message "Finish loading IPC capabilities")
+
+(provide 'rmacs:config-ipc)
