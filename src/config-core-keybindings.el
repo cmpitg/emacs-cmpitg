@@ -158,13 +158,12 @@
   (bind-key "<S-return>" '~eval-current-sexp emacs-lisp-mode-map)
   (bind-key "s-m" '~eval-then-replace-region-or-last-sexp)
   (bind-key "s-#" 'eval-expression)
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (~bind-key-with-prefix-local "h f" 'describe-function)
-              (~bind-key-with-prefix-local "h v" 'describe-variable)
-              (~bind-key-with-prefix-local "h k" 'describe-key)
-              (~bind-key-with-prefix-local "h ." 'find-function)
-              (~bind-key-with-prefix-local "h l" 'find-library)))
+
+  (~bind-key-with-prefix "h f" 'describe-function)
+  (~bind-key-with-prefix "h v" 'describe-variable)
+  (~bind-key-with-prefix "h k" 'describe-key)
+  (~bind-key-with-prefix "h ." 'find-function)
+  (~bind-key-with-prefix "h l" 'find-library)
 
   ;;
   ;; Function keys & other convenient bindings
