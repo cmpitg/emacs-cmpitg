@@ -143,6 +143,7 @@ Emacs as: %s
                search-ring
                regexp-search-ring))
   (add-to-list 'savehist-additional-variables var))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'ee:keybindings                 (~get-config "keybindings"))
