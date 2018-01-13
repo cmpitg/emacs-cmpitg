@@ -20,7 +20,7 @@
 ;; Load init-basic
 (load (concat (file-name-directory (or (buffer-file-name)
                                        load-file-name))
-              "init"))
+              "init-bare"))
 
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
 (require 'rmacs:config-themes       "config-themes")
