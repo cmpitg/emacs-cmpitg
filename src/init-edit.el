@@ -22,7 +22,7 @@
                                        load-file-name))
               "init-bare"))
 
-(require 'ee:functions-aws          (~get-config "functions-aws"))
+(require 'rmacs:functions-aws "functions-aws")
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
 (require 'rmacs:config-one-buffer-per-window  "config-one-buffer-per-window")
 (require 'ee:config-literate-prog   (~get-config "config-literate-prog"))
