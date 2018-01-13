@@ -32,6 +32,10 @@
 ;; Ref: https://github.com/rejeep/f.el
 (use-package f)
 
+;; Hashtable processing
+;; Ref: https://github.com/Wilfred/ht.el
+(use-package ht)
+
 ;; Async processing by spawning subordinate processes
 ;; Ref: https://github.com/jwiegley/emacs-async
 (use-package async)

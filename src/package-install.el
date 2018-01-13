@@ -9,7 +9,9 @@
 
 (el-get-install 'acme-mouse)
 
-(dolist (package '(which-key
+(dolist (package '(ht
+                   dash
+                   which-key
                    save-visited-files
                    paredit
                    projectile

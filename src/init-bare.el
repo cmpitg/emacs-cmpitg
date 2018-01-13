@@ -41,6 +41,7 @@
 ;; TODO: company mode
 ;; TODO: Make backward/forward kill word deletes, not kills
 
+;; Doc: To add a file variable to the prop line: add-file-local-variable-prop-line
 ;; Doc: internal-temp-output-buffer-show
 ;; Doc: Explain the implementation of *exec* functions
 ;; Doc: https://www.emacswiki.org/emacs/AlignCommands
@@ -89,6 +90,7 @@
 ;; TODO: toolbox:open
 ;; TODO: Migrate all old advice functions to the new advice mechanism as with :commands, so force-load might be necessary
 ;; TODO: Think about how testing should work
+;; TODO: config-literate-programming's TODOs
 
 (defvar *bootstrap-config-path*
   (concat (file-name-directory (or (buffer-file-name)

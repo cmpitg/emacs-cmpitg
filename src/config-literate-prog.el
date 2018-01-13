@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -31,37 +31,38 @@
 (put 'narrow-to-region 'disabled nil)
 
 (defvar *saved-major-mode-for-narrow* (ht))
-(defvar *language->mode-symbol* (ht ('racket-mode  'scheme-mode)))
+(defvar *language->mode-symbol* (ht ('racket-mode 'scheme-mode)))
 (defvar *narrowed-spaces* nil)
 
 (defun ~widen-narrowed-region ()
-  "Widen the narrowed region and reset major mode by saving and
+  "Widens the narrowed region and reset major mode by saving and
 reverting the buffer."
   (interactive)
   (save-excursion
     (beginning-of-buffer)
     (loop until (eobp)
-       do
-         (beginning-of-line)
-         (unless (~current-line-empty?)
-           (insert *narrowed-spaces*))
-         (forward-line 1)))
+          do
+          (beginning-of-line)
+          (unless (~current-line-empty?)
+            (insert *narrowed-spaces*))
+          (forward-line 1)))
   (setq *narrowed-spaces* nil)          ; Not narrowed anymore
   (widen)
   (call-interactively (ht-get *saved-major-mode-for-narrow* (buffer-file-name)))
   (recenter-top-bottom))
 
 (defun narrow-to-region-indirect (start end)
-  "Restrict editing in this buffer to the current region, indirectly."
+  "Restricts editing in this buffer to the current region,
+indirectly."
   (interactive "r")
   (deactivate-mark)
   (let ((buf (clone-indirect-buffer nil nil)))
     (with-current-buffer buf
       (narrow-to-region start end))
-      (switch-to-buffer buf)))
+    (switch-to-buffer buf)))
 
 (defun ~narrow-to-code-region-markdown ()
-  "Narrow to code region in Markdown mode.  Reindent."
+  "Narrows to code region in Markdown mode.  Reindents."
   (interactive)
   (save-excursion
     (let* ((begin-code-region (rx (0+ " ")
@@ -80,7 +81,7 @@ reverting the buffer."
                                                eol)
                                            line)
                              (match-string 1 line)
-                             "text"))))
+                           "text"))))
            (begin-point (save-excursion
                           (re-search-backward begin-code-region)
                           (next-line)
@@ -107,12 +108,11 @@ reverting the buffer."
       (save-excursion
         (beginning-of-buffer)
         (loop until (eobp)
-           do
-             (unless (~current-line-empty?)
-               (delete-forward-char n-spaces))
-             (forward-line 1)))
+              do
+              (unless (~current-line-empty?)
+                (delete-forward-char n-spaces))
+              (forward-line 1)))
 
-      ;; (message-box "Right here!")
       (let* ((language-mode-symbol (intern (s-concat language "-mode")))
              (mode-symbol          (cond ((~is-function-defined? language-mode-symbol)
                                           language-mode-symbol)
@@ -120,13 +120,10 @@ reverting the buffer."
                                           (ht-get *language->mode-symbol*
                                                   language-mode-symbol
                                                   'markdown-mode)))))
-        ;; (message-box "Found: %s; Mode: %s"
-        ;;              language-mode-symbol
-        ;;              mode-symbol)
         (funcall mode-symbol)))))
 
 (defun ~narrow-to-code-region-asciidoc ()
-  "Narrow to code region in Markdown mode.  Reindent."
+  "Narrows to code region in Markdown mode.  Reindents."
   (interactive)
   (save-excursion
     (let* ((begin-code-region (rx bol "----" eol))
@@ -174,7 +171,6 @@ reverting the buffer."
                 (delete-forward-char n-spaces))
               (forward-line 1)))
 
-      ;; (message-box "Right here!")
       (let* ((language-mode-symbol (intern (s-concat language "-mode")))
              (mode-symbol          (cond ((~is-function-defined? language-mode-symbol)
                                           language-mode-symbol)
@@ -182,15 +178,12 @@ reverting the buffer."
                                           (ht-get *language->mode-symbol*
                                                   language-mode-symbol
                                                   'markdown-mode)))))
-        ;; (message-box "Found: %s; Mode: %s"
-        ;;              language-mode-symbol
-        ;;              mode-symbol)
         (funcall mode-symbol)))))
 
 (defalias '~narrow-to-code-region '~narrow-to-code-region-asciidoc)
 
 (defun ~make-spaces (times)
-  "Return a string of `times' spaces."
+  "Returns a string of `times' spaces."
   (s-join "" (loop for i upto (1- times) collect " ")))
 
 (defun ~is-narrowed? ()
@@ -243,7 +236,7 @@ code block."
       (message "Saved to %s" file-path))))
 
 (defun lp:extract-file-path ()
-  "Extract file path from the first comment line."
+  "Extracts file path from the first comment line."
   (save-excursion
     (let* ((raw-line (cond ((~is-narrowed?)
                             (beginning-of-buffer)
@@ -310,13 +303,13 @@ code block."
   "Generates HTML from and to current directory."
   (interactive)
   (message "Generating HTML...")
-  (~exec-in-other-window "ulqui generate-html --from . --to generated-html/"))
+  (~exec-pop-up "ulqui generate-html --from . --to generated-html/"))
 
 (defun ulqui:generate-src-current-dir ()
   "Generates source code from and to current directory."
   (interactive)
   (message "Generating source...")
-  (~exec-in-other-window "ulqui generate-src --from . --to generated-src/"))
+  (~exec-pop-up "ulqui generate-src --from . --to generated-src/"))
 
 (defun ~cl/next-snippet ()
   "Jumps to the next `eval'-able AsciiDoc snippet."
@@ -377,4 +370,5 @@ is not inside a snippet."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finish loading literate programming facility")
-(provide 'ee:config-literate-prog)
+
+(provide 'rmacs:config-literate-prog)
