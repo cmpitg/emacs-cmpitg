@@ -28,7 +28,6 @@
 (require 'rmacs:config-literate-prog         "config-literate-prog")
 (require 'rmacs:config-themes                "config-themes")
 (require 'ee:config-cmpitg-packages          (~get-config "config-cmpitg-packages"))
-(require 'ee:keybindings-cmpitg              (~get-config "keybindings-cmpitg"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))

@@ -24,7 +24,6 @@
 
 (require 'rmacs:functions-mail      "functions-mail")
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
-(require 'ee:keybindings-cmpitg     (~get-config "keybindings-cmpitg"))
 (require 'rmacs:config-themes       "config-themes")
 (require 'ee:config-mail            (~get-config "config-mail"))
 
