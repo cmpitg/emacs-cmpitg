@@ -16,6 +16,7 @@
                    autumn-light-theme
                    tango-plus-theme
                    tommyh-theme
+                   plan9-theme
                    ht
                    dash
                    which-key

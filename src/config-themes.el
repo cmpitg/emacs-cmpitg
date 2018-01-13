@@ -34,7 +34,7 @@
 ;; Current
 ;; (require 'color-theme-acme-light)
 (color-theme-acme-light)
-;; (color-theme-textmate-modified)
+;; (load-theme 'plan9)
 ;; (color-theme-textmate-modified)
 ;; (load-theme 'afternoon t)
 
