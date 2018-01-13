@@ -19,18 +19,17 @@
 ;; Must load last
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'acme-mouse)
-(define-globalized-minor-mode global-acme-mouse-mode
-  acme-mouse-mode
-  acme-mouse-mode)
-(global-acme-mouse-mode 1)
+;; (require 'acme-mouse)
+;; (define-globalized-minor-mode global-acme-mouse-mode
+;;   acme-mouse-mode
+;;   acme-mouse-mode)
+;; (global-acme-mouse-mode 1)
 
 (bind-key "<S-mouse-3>" '(lambda ()
                            (interactive)
                            (popup-menu (~right-click-menu))))
 
-(bind-key "<S-mouse-2>" '~exec|-select-output)
-(unbind-key "<C-down-mouse-1>")
+;; (unbind-key "<C-down-mouse-1>")
 
 ;; (revert-all-buffers)
 
