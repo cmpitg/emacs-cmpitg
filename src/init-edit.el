@@ -26,7 +26,7 @@
 (require 'ee:functions-cmpitg                (~get-config "functions-cmpitg"))
 (require 'rmacs:config-one-buffer-per-window "config-one-buffer-per-window")
 (require 'rmacs:config-literate-prog         "config-literate-prog")
-(require 'ee:config-cmpitg-ux                (~get-config "config-cmpitg-ux"))
+(require 'rmacs:config-themes                "config-themes")
 (require 'ee:config-cmpitg-packages          (~get-config "config-cmpitg-packages"))
 (require 'ee:keybindings-cmpitg              (~get-config "keybindings-cmpitg"))
 

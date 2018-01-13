@@ -9,7 +9,14 @@
 
 (el-get-install 'acme-mouse)
 
-(dolist (package '(ht
+(dolist (package '(subatomic256-theme
+                   afternoon-theme
+                   monokai-theme
+                   solarized-theme
+                   autumn-light-theme
+                   tango-plus-theme
+                   tommyh-theme
+                   ht
                    dash
                    which-key
                    save-visited-files

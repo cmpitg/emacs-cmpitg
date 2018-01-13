@@ -399,3 +399,39 @@ silently."
     (find-tag-other-window tagname next-p regexp-p)
     (recenter 0)
     (select-window window)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Theming
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: Document me
+(dolist (symb '(use-package))
+  (put symb 'lisp-indent-function 1)
+  (put symb 'common-lisp-indent-function 1)
+  (font-lock-add-keywords 'emacs-lisp-mode
+                          `((,(~symbol->string symb) . font-lock-keyword-face))))
+
+;; (custom-set-variables
+;;  '(face-font-family-alternatives (quote (("Monaco" "Consolas" "Monospace")
+;;                                          ("Monaco" "Consolas" "CMU Typewriter Text" "fixed")
+;;                                          ("Geneva" "Sans Serif" "helv" "helvetica" "arial" "fixed")
+;;                                          ("helv" "helvetica" "arial" "fixed"))))
+;;  '(safe-local-variable-values (quote ((Syntax . ANSI-Common-Lisp) (Base . 10) (encoding . utf-8))))
+;;  '(show-paren-mode t)
+;;  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
+
+;; (custom-set-faces
+;;  '(default ((t (:inherit nil
+;;                          :stipple nil
+;;                          :inverse-video nil
+;;                          :box nil
+;;                          :strike-through nil
+;;                          :overline nil
+;;                          :underline nil
+;;                          :slant normal
+;;                          :weight normal
+;;                          :height 100
+;;                          :width normal
+;;                          :foundry "unknown"
+;;                          :family "Monaco"))))
+;;  '(rst-level-1-face ((t (:embolden t))) t))
