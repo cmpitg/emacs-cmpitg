@@ -28,6 +28,9 @@
 (setq scroll-step 3)
 (setq scroll-conservatively 10000)
 
+;; Use system font
+(setq font-use-system-font t)
+
 ;; Restore cursor position after scrolling
 ;; Ref: http://elpa.gnu.org/packages/scroll-restore.html
 ;; FIXME: Buggy - Check and fix
