@@ -22,7 +22,7 @@
                                        load-file-name))
               "init-bare"))
 
-(require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
+(require 'rmacs:functions-cmpitg    "functions-cmpitg")
 (require 'rmacs:config-themes       "config-themes")
 (require 'ee:config-cmpitg-packages (~get-config "config-cmpitg-packages"))
 

@@ -22,10 +22,10 @@
                                        load-file-name))
               "init"))
 
-(require 'rmacs:functions-mail      "functions-mail")
-(require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
-(require 'rmacs:config-themes       "config-themes")
-(require 'ee:config-mail            (~get-config "config-mail"))
+(require 'rmacs:functions-mail    "functions-mail")
+(require 'rmacs:functions-cmpitg  "functions-cmpitg")
+(require 'rmacs:config-themes     "config-themes")
+(require 'ee:config-mail          (~get-config "config-mail"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))

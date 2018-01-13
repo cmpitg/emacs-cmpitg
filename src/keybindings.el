@@ -281,6 +281,7 @@
 (bind-key "<S-f12>" '~visit-toolbox)
 (bind-key "<C-f1>" '~switch-to-scratch)
 (bind-key "<S-f1>" '~switch-to-messages-buffer)
+(~bind-key-with-prefix "v i" '~visit-init-bare)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mode-specific
@@ -360,9 +361,7 @@
   (~bind-key-with-prefix "g s" '~git/status)
 
   ;; Config
-  (~bind-key-with-prefix "c a" '~visit-package-config)
-  (~bind-key-with-prefix "c k" '~visit-keybindings)
-  (~bind-key-with-prefix "c p" '~visit-experimental-config)
+  (~bind-key-with-prefix "v i" '~visit-init-bare)
 
   ;; Toolbox
   (~bind-key-with-prefix "t b" '~toolbox)

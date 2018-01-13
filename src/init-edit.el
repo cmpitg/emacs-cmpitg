@@ -23,7 +23,7 @@
               "init-bare"))
 
 (require 'rmacs:functions-aws                "functions-aws")
-(require 'ee:functions-cmpitg                (~get-config "functions-cmpitg"))
+(require 'rmacs:functions-cmpitg             "functions-cmpitg")
 (require 'rmacs:config-one-buffer-per-window "config-one-buffer-per-window")
 (require 'rmacs:config-literate-prog         "config-literate-prog")
 (require 'rmacs:config-themes                "config-themes")

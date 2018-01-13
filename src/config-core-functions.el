@@ -202,12 +202,12 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
       insert)))
 
 (defun ~keyboard-quit ()
-  "Escape the minibuffer or cancel region consistently using 'Control-g'.
+  "Escapes the minibuffer or cancels region consistently using 'Control-g'.
 Normally if the minibuffer is active but we lost focus (say, we
 clicked away or set the cursor into another buffer) we can quit
-by pressing 'ESC' three times. This function handles it more
+by pressing 'ESC' three times.  This function handles it more
 conveniently, as it checks for the condition of not beign in the
-minibuffer but having it active. Otherwise simply doing the ESC
+minibuffer but having it active.  Otherwise simply doing the ESC
 or (keyboard-escape-quit) would brake whatever split of windows
 we might have in the frame."
   (interactive)
@@ -409,6 +409,17 @@ first occurrence of a pattern.  E.g.
              (beginning-of-buffer)
              (re-search-forward pattern))))
     path))
+
+(defun ~visit-init-bare ()
+  "Opens init-bare configuration for Rmacs."
+  (interactive)
+  (find-file (~get-config "init-bare.el")))
+
+(defun ~visit-toolbox ()
+  "Visits toolbox."
+  (interactive)
+  (find-file (or *toolbox-path*
+                 "/m/Toolbox/Toolbox.adoc")))
 
 (defun ~delete-current-file ()
   "Deletes the file associated with the current buffer and kills

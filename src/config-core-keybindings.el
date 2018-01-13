@@ -166,6 +166,12 @@
   (~bind-key-with-prefix "h l" 'find-library)
 
   ;;
+  ;; Configuration
+  ;;
+
+  (~bind-key-with-prefix "v i" '~visit-init-bare)
+
+  ;;
   ;; Function keys & other convenient bindings
   ;;
 
@@ -189,6 +195,7 @@
   (bind-key "<S-f10>" '~counsel-ag-default-project-root)
   (bind-key "<f11>" 'counsel-yank-pop)
   (bind-key "<f12>" 'counsel-M-x)
+  (bind-key "<S-f12>" '~visit-toolbox)
 
   (bind-key "s-SPC s-SPC" 'exchange-point-and-mark)
   (~bind-key-with-prefix "SPC" 'counsel-M-x)
