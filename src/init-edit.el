@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,13 +17,11 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; Load init-basic
+;; Load bare Rmacs
 (load (concat (file-name-directory (or (buffer-file-name)
                                        load-file-name))
-              "init"))
+              "init-bare"))
 
-(require 'ee:functions-project      (~get-config "functions-project"))
-(require 'ee:functions-mail         (~get-config "functions-mail"))
 (require 'ee:functions-tag          (~get-config "functions-tag"))
 (require 'ee:functions-aws          (~get-config "functions-aws"))
 (require 'ee:functions-cmpitg       (~get-config "functions-cmpitg"))
