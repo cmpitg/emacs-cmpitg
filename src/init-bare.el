@@ -22,6 +22,8 @@
 ;; - s-X
 
 ;; TODO: mode-line-format
+;; TODO: tmux integration with emamux
+;; TODO: Tiling manager - winner-mode?, something like i3
 
 ;; TODO: BUG - swiper-all → losing focus when swiping
 

@@ -20,61 +20,117 @@
 (use-package thingatpt)
 (use-package subr-x)
 
+;;
 ;; String processing
+;;
 ;; Ref: https://github.com/magnars/s.el
+;;
+
 (use-package s)
 
+;;
 ;; List processing, use with care since it's generally slower than Emacs Lisp primitives
+;;
 ;; Ref: https://github.com/magnars/dash.el
+;;
+
 ;; (use-package dash)
 
+;;
 ;; File/filesystem library
+;;
 ;; Ref: https://github.com/rejeep/f.el
+;;
+
 (use-package f)
 
+;;
 ;; Hashtable processing
+;;
 ;; Ref: https://github.com/Wilfred/ht.el
+;;
+
 (use-package ht)
 
+;;
 ;; Async processing by spawning subordinate processes
+;;
 ;; Ref: https://github.com/jwiegley/emacs-async
+;;
+
 (use-package async)
 
+;;
 ;; Threading (Yay!)
+;;
 ;; Ref: https://github.com/mola-T/timp
+;;
+
 (use-package timp)
 
+;;
 ;; Tramp for remote & sudo access
+;;
+
 (use-package tramp)
 
+;;
 ;; Interactive menu
+;;
 ;; Ref: https://github.com/abo-abo/hydra
+;;
+
+;;
+
 (use-package hydra)
 
+;;
 ;; Expand selection with one keybinding
+;;
 ;; Ref: https://github.com/magnars/expand-region.el
+;;
+
 (use-package expand-region)
 
+;;
 ;; Pairs management
+;;
 ;; Ref: https://github.com/cute-jumper/embrace.el
+;;
+
 (use-package embrace)
 
+;;
 ;; Just-work jump-to-definition
+;;
 ;; Ref: https://github.com/jacktasia/dumb-jump
+;;
+
 (use-package dumb-jump)
 
+;;
 ;; Asciidoc mode
+;;
 ;; Ref: https://github.com/sensorflo/adoc-mode
+;;
+
 (use-package adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode))
 (setq-default initial-major-mode 'adoc-mode)
 (setq-default major-mode 'adoc-mode)
 
+;;
 ;; grep command
+;;
+
 (setq grep-command "grep -i -nH -e ")
 
+;;
 ;; Save minibuffer history across sessions
+;;
 ;; Ref: https://www.emacswiki.org/emacs/SaveHist
+;;
+
 (savehist-mode 1)
 (setq savehist-file
       (format "~/.emacs.d/history.%s"
@@ -84,15 +140,22 @@
                regexp-search-ring))
   (add-to-list 'savehist-additional-variables var))
 
+;;
 ;; Enhanced find-file
+;;
+
 (defadvice find-file (around find-files activate)
   "Also find all files within a list of files. This even works recursively."
   (if (listp filename)
       (loop for f in filename do (find-file f wildcards))
     ad-do-it))
 
+;;
 ;; Project management
+;;
 ;; Ref: https://github.com/bbatsov/projectile
+;;
+
 (use-package projectile
   :diminish projectile-mode
   :config
@@ -152,8 +215,12 @@ project root."
     (setq projectile-git-command projectile-generic-command)
     (setq projectile-hg-command projectile-generic-command)))
 
+;;
 ;; Smart completion framework
+;;
 ;; Ref: https://github.com/abo-abo/swiper
+;;
+
 (use-package counsel
   :diminish ivy-mode
   :bind (:map ivy-minibuffer-map
@@ -239,12 +306,20 @@ of binding to `evil-normal-state-map' it binds to
 
             (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 
+;;
 ;; Temporarily save points
+;;
 ;; Ref: https://github.com/alezost/point-pos.el
+;;
+
 (use-package point-pos)
 
+;;
 ;; Multiple cursors
+;;
 ;; Ref: https://github.com/magnars/multiple-cursors.el
+;;
+
 (use-package multiple-cursors)
 
 ;; Live doc in echo area
@@ -255,18 +330,22 @@ of binding to `evil-normal-state-map' it binds to
           ielm-mode) . turn-on-eldoc-mode)
   :config (eldoc-add-command 'paredit-backward-delete 'paredit-close-round))
 
-;; Custom unique naming method
-(use-package uniquify
-  :init (setq uniquify-buffer-name-style 'forward))
-
+;;
 ;; Auto-pairing brackets
+;;
 ;; Ref: https://github.com/Fuco1/smartparens
+;;
+
 ;; Cheat sheet: M-x sp-cheat-sheet
 (use-package smartparens-config
   :config (smartparens-global-mode))
 
+;;
 ;; Bracket-based structured editing
+;;
 ;; Ref: https://www.emacswiki.org/emacs/ParEdit
+;;
+
 (use-package paredit
   :hook ((emacs-lisp-mode
           scheme-mode
@@ -315,13 +394,30 @@ of binding to `evil-normal-state-map' it binds to
               (ignore-errors
                 (loop do (paredit-forward-up))))))
 
+;;
 ;; Adjust indentation based on current file
+;;
 ;; Ref: https://github.com/jscheid/dtrt-indent
+;;
+
 (use-package dtrt-indent
   :config (dtrt-indent-mode 1))
 
+;;
+;; Tmux interaction
+;;
+;; https://github.com/syohex/emacs-emamux
+;;
+
+(use-package emamux
+  :commands (emamux:send-command emamux:send-region))
+
+;;
 ;; Vim mode
+;;
 ;; Ref: https://github.com/emacs-evil/evil
+;;
+
 (use-package evil
   :demand t
   :bind (("M-ESC"     . '~keyboard-quit)
@@ -404,8 +500,12 @@ of binding to `evil-normal-state-map' it binds to
           clojure-mode
           scheme-mode) . evil-paredit-mode))
 
+;;
 ;; File explorer
+;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs
+;;
+
 (use-package treemacs
   :after (evil)
   :demand t
@@ -425,8 +525,12 @@ of binding to `evil-normal-state-map' it binds to
   :demand t
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 
+;;
 ;; Pattern-based command execution
+;;
 ;; Ref: https://github.com/cmpitg/wand
+;;
+
 (use-package wand
   :config
   (progn
@@ -475,8 +579,26 @@ interactively, `text' is taken as the current region."
                                   :skip-comment nil
                                   :action ~open-or-eval)))))
 
+;;
+;; Snippet mode
+;;
+;; Ref: https://github.com/joaotavora/yasnippet
+;;
+;; Note: Load before auto complete
+;;
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :config (progn
+            (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
+            (yas-global-mode 1)))
+
+;;
 ;; Auto completion framework
+;;
 ;; Ref: https://github.com/company-mode/company-mode
+;;
+
 (use-package company
   :diminish company-mode
   :bind (:map company-mode-map
@@ -493,6 +615,17 @@ interactively, `text' is taken as the current region."
             (company-quickhelp-mode 1)
             ;; Do not trigger automatically
             (setq company-quickhelp-delay nil)))
+
+;;
+;; Better way to switch to and swap windows
+;;
+;; Ref: https://github.com/abo-abo/ace-window
+;;
+
+(use-package ace-window
+  :init (progn
+          (setq aw-dispatch-alway t)
+          (setq aw-keys '(?a ?h ?t ?s ?g ?r ?p ?l ?, ?. ?p))))
 
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-exit . t))

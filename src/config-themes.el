@@ -18,6 +18,14 @@
 ;;
 
 ;;
+;; Color theme
+;;
+;; Ref: https://www.emacswiki.org/emacs/ColorThemes
+;;
+
+(use-package color-theme)
+
+;;
 ;; Load all themes
 ;;
 

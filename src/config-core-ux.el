@@ -74,6 +74,10 @@
 
             (turn-on-save-visited-files-mode)))
 
+;; Custom unique naming method
+(use-package uniquify
+  :init (setq uniquify-buffer-name-style 'forward))
+
 ;; Disable Tramp autosave
 (setq tramp-auto-save-directory "/tmp/")
 
@@ -267,6 +271,13 @@
   :config (progn
             (which-key-mode)
             (which-key-setup-side-window-right-bottom)))
+
+
+;; Highlighting phrase and expression when needed
+;; Ref: https://www.emacswiki.org/emacs/HiLock
+
+(use-package hi-lock
+  :commands (highlight-phrase highlight-regexp))
 
 ;; Soft-wrapping long lines
 ;; Ref: https://github.com/joostkremers/visual-fill-column

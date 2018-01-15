@@ -592,3 +592,62 @@ silently."
 ;; how a line is actually wrapped.  The code doesn't handle different cases as
 ;; nicely as visual-fill-column
 ;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; History utility
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/boyw165/history
+;; Very buggy
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package history
+;;   :ensure t
+;;   :diminish history-mode
+;;   :config (progn
+;;             (setq history-history-max 256
+;;                   history-window-local-history nil)
+;;             (history-mode 1)
+
+;;             (bind-key "s-h" 'history-preview-prev-history history-map)
+;;             (bind-key "s-n" 'history-preview-next-history history-map)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Smoother scrolling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package smooth-scrolling
+  :disabled t
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Quick jumping
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package ace-jump-mode
+  :commands ace-jump-mode
+  :config (progn
+            (ace-jump-mode-enable-mark-sync)
+            ;; * Without prefix, ace-jump directs toward char
+            ;; * With 1 prefix, line
+            ;; * With 2 prefixes, word
+            (setq ace-jump-mode-submode-list
+                  '(ace-jump-char-mode
+                    ace-jump-line-mode
+                    ace-jump-word-mode))))
+
+
+;; ace-jump with buffer switching
+(use-package ace-jump-buffer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Layout management
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; Remembering & jumping back and forth between window layouts
+;; (configurations).  Ref: https://www.emacswiki.org/emacs/WinnerMode
+;;
+(use-package winner
+  :init (progn
+          (winner-mode 1)))
+

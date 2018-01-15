@@ -64,5 +64,12 @@
                    visual-fill-column
                    company
                    company-quickhelp
-                   pos-tip))
+                   pos-tip
+                   vimdiff
+                   epa
+                   dired+
+                   dired-single
+                   dired-details+
+                   color-theme
+                   yasnippet))
   (package-install package))

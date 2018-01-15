@@ -26,6 +26,24 @@
 (use-package yaml-mode)
 
 ;;
+;; En/decoding JSON
+;;
+;; Ref: https://github.com/joshwnj/json-mode
+;;
+
+(use-package json-mode
+  :mode "\\.json\\'")
+
+;;
+;; Vimdiff implementation - More intuitive than Ediff
+;;
+;; https://github.com/justbur/emacs-vdiff
+;;
+
+(use-package vdiff
+  :commands vdiff-files)
+
+;;
 ;; Markdown
 ;;
 ;; Ref: https://jblevins.org/projects/markdown-mode/
@@ -49,13 +67,37 @@
        ((t (:inherit markdown-header-face :height 1.3)))))))
 
 ;;
-;; En/decoding JSON
+;; GPG interface
 ;;
-;; Ref: https://github.com/joshwnj/json-mode
+;; Ref: https://www.emacswiki.org/emacs/EasyPG
+;;
+;; Visit anything.gpg and it will encrypt it when you save the buffer.
+;;
+;; To prevent EPG from prompting for a key every time you save a file, put the
+;; following at the top of your file:
+;;
+;;    -*- epa-file-encrypt-to: ("your@email.address") -*-
 ;;
 
-(use-package json-mode
-  :mode "\\.json\\'")
+(use-package epa-file
+  :config (epa-file-enable))
+
+;;
+;; Enhanced file management with Dired
+;;
+
+(use-package dired+
+  :init (progn
+          (setq dired-listing-switches "-lahF")
+          ;; Reuse current buffer when opening file/dir
+          (toggle-diredp-find-file-reuse-dir 1)))
+
+(use-package dired-single)
+
+(use-package dired-details+
+  :after (dired-single)
+  :config
+  (setq dired-listing-switches "-lhFgG --group-directories-first"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
