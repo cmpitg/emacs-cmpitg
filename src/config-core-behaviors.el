@@ -209,6 +209,7 @@
 ;; Track recently closed files
 (add-hook 'kill-buffer-hook #'~track-closed-file)
 
+;; FIXME
 ;; Focus follows mouse
 ;; (setq mouse-autoselect-window t)
 
@@ -222,6 +223,14 @@
                            (dired-directory dired-directory "%b")))))
   (setq-default frame-title-format title-format)
   (setq frame-title-format title-format))
+
+;; One buffer per window setup
+(require 'rmacs:config-one-buffer-per-window
+         "config-one-buffer-per-window")
+
+;; Header line as command palette
+(require 'rmacs:config-header-line
+         "config-header-line")
 
 ;; Soft-wrapping long lines
 ;; Ref: https://github.com/joostkremers/visual-fill-column
@@ -273,6 +282,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finished configuring core behaviors")
+(message "Finished configuring core UX")
 
-(provide 'rmacs:config-core-behaviors)
+(provide 'rmacs:config-core-ux)
