@@ -63,6 +63,16 @@
 ;; Ref: https://github.com/jacktasia/dumb-jump
 (use-package dumb-jump)
 
+;; Asciidoc mode
+;; Ref: https://github.com/sensorflo/adoc-mode
+(use-package adoc-mode
+  :mode ("\\.adoc\\'" . adoc-mode))
+(setq-default initial-major-mode 'adoc-mode)
+(setq-default major-mode 'adoc-mode)
+
+;; grep command
+(setq grep-command "grep -i -nH -e ")
+
 ;; Save minibuffer history across sessions
 ;; Ref: https://www.emacswiki.org/emacs/SaveHist
 (savehist-mode 1)
@@ -483,26 +493,6 @@ interactively, `text' is taken as the current region."
             (company-quickhelp-mode 1)
             ;; Do not trigger automatically
             (setq company-quickhelp-delay nil)))
-
-;; Managing recent files
-(use-package recentf
-  :init (progn
-          (recentf-mode 1)
-          (setq recentf-max-menu-items 128)))
-
-;; Displaying available keybindings in pop up
-;; Ref: https://github.com/justbur/emacs-which-key
-(use-package which-key
-  :diminish which-key-mode
-  :config (progn
-            (which-key-mode)
-            (which-key-setup-side-window-right-bottom)))
-
-;; By default, font-lock mode is off
-(global-font-lock-mode -1)
-
-;; Diminish auto-revert-mode in the mode line
-(diminish 'auto-revert-mode)
 
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-exit . t))

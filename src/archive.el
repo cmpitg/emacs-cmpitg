@@ -561,3 +561,34 @@ silently."
 ;;     ;;   (add-hook 'popwin:after-popup-hook
 ;;     ;;             (lambda () (setq neo-persist-show t))))
 ;;     ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Smooth scrolling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 3 lines at a time normally, 5 lines at a time with shift
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 5)))
+
+;; Don't accelerate scrolling
+(setq mouse-wheel-progressive-speed nil)
+
+;; Scroll window under mouse
+(setq mouse-wheel-follow-mouse 't)
+
+;; Keyboard scroll 3 lines at a time
+(setq scroll-step 3)
+(setq scroll-conservatively 10000)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Soft-wrap long lines
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; In text-related modes only, don't mess up with code
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; I have tried adaptive-wrap but didn't like it.  It gave false impression of
+;; how a line is actually wrapped.  The code doesn't handle different cases as
+;; nicely as visual-fill-column
+;;

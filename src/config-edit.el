@@ -17,15 +17,6 @@
 ;;
 
 ;;
-;; Asciidoc
-;;
-;; Ref: https://github.com/sensorflo/adoc-mode
-;;
-
-(use-package adoc-mode
-  :mode ("\\.adoc\\'" . adoc-mode))
-
-;;
 ;; YAML
 ;;
 ;; Ref: https://www.emacswiki.org/emacs/YamlMode

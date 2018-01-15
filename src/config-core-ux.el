@@ -1,7 +1,5 @@
-;; -*- no-byte-compile: t -*-
-
 ;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,16 +15,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defvar *electrify-return-match*
-  "[\]\)]"
-  ;; "[\]}\)\"]"
-  "If this regexp matches the text after the cursor, do an
-\"electric\" return.")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Smooth scrolling
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; 3 lines at a time normally, 5 lines at a time with shift
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 5)))
 
@@ -40,12 +28,12 @@
 (setq scroll-step 3)
 (setq scroll-conservatively 10000)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Restore cursor position after scrolling
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; http://elpa.gnu.org/packages/scroll-restore.html
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Use system font
+(setq font-use-system-font t)
 
+;; Restore cursor position after scrolling
+;; Ref: http://elpa.gnu.org/packages/scroll-restore.html
+;; FIXME: Buggy - Check and fix
 (use-package scroll-restore
   :disabled t
   :config (progn
@@ -61,28 +49,39 @@
             ;; Jump back to the original cursor position after scrolling
             (setq scroll-restore-jump-back t)
 
+            ;; Due to some reason the mode needs disabling and re-enabling to
+            ;; work
+            (scroll-restore-mode -1)
             (scroll-restore-mode 1)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Save and restore current editing point when opening a file
+(use-package saveplace
+  :config (save-place-mode 1))
+
+;; Open last session/visited files from the last session
+;; Ref: https://github.com/nflath/save-visited-files
+(use-package save-visited-files
+  :config (progn
+            ;; Each Emacs server has a different list of visited files
+            (setq save-visited-files-location
+                  (format "~/.emacs.d/emacs-visited-files.%s"
+                          (~emacs-server-name)))
+
+            (unless (file-exists-p save-visited-files-location)
+              (write-region "" nil save-visited-files-location))
+
+            (turn-on-save-visited-files-mode)))
 
 ;; Disable Tramp autosave
 (setq tramp-auto-save-directory "/tmp/")
 
-;; Default scratch-buffer mode
-;; (setq-default initial-major-mode 'emacs-lisp-mode)
-(setq-default initial-major-mode 'adoc-mode)
-(setq-default major-mode 'adoc-mode)
-
 ;; Don't let the cursor go into minibuffer prompt
-;;   http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
+;; Ref: http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
 (setq minibuffer-prompt-properties
-      (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
+      '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
 
 ;; Use the same clipboard with X
 (setq x-select-enable-clipboard t)
-
-;; Disable shift selection
-(setq shift-select-mode nil)
 
 ;; Echo when trying to kill in a read-only buffer
 (setq kill-read-only-ok t)
@@ -91,17 +90,17 @@
 (setq suggest-key-bindings t)
 
 ;; More tolerable stack
-(setq max-lisp-eval-depth 15000
-      max-specpdl-size    15000)
+(setq max-lisp-eval-depth 15000)
+(setq max-specpdl-size    15000)
 
-;; Never change case when replacing
+;; Don't change case when replacing
 (setq-default case-replace nil)
 
 ;; fill-column
 (setq-default fill-column 78)
 (set-fill-column 78)
 
-;; Set mark-ring-max
+;; Maximum number of ring items to store
 (setq mark-ring-max 512)
 
 ;; yes/no questions become y/n questions
@@ -129,17 +128,19 @@
 ;; Hide the toolbar
 (tool-bar-mode -1)
 
-;; 1 use mouse, so scroll bar comes in handy
-;; (scroll-bar-mode -1)
+;; Scroll bar comes in handy with mouse usage
 (scroll-bar-mode 1)
 (set-scroll-bar-mode 'left)
 
-;; (menu-bar-mode -1)
-(menu-bar-mode 1)
+;; No menu bar, more screen estate
+(menu-bar-mode -1)
+;; (menu-bar-mode 1)
 
-;; Display time
-;; (display-time)
+;; Don't display time
 (display-time-mode -1)
+
+;; Don't show the battery indicator
+(display-battery-mode -1)
 
 ;; Turn off welcome message
 (setq inhibit-startup-message t)
@@ -147,17 +148,14 @@
 ;; Display the size of the buffer
 (size-indication-mode 1)
 
-;; Show the battery indicator
-(display-battery-mode -1)
+;;; Don't blink the cursor
+(blink-cursor-mode -1)
 
+;; Window splitting preferences
 ;; Vertical split
 ;; (setq split-width-threshold nil)
 ;; Horizontal split
 ;; (setq split-width-threshold 1)
-
-;;; Blink cursor
-;; (blink-cursor-mode t)
-(blink-cursor-mode -1)
 
 ;; Change cursor type
 ;; (set-default 'cursor-type 'hbar)
@@ -166,15 +164,6 @@
 
 ;; Show matching parentheses
 (show-paren-mode 1)
-;; (show-paren-mode -1)
-;; (setq show-paren-delay 0)
-;; (setq show-paren-style 'expression)
-
-;; Set ispell-dictionary
-;; (ispell-change-dictionary "american")
-
-;; grep command
-(setq grep-command "grep -i -nH -e ")
 
 ;; Set printing type
 (setq ps-paper-type 'a4)
@@ -198,31 +187,22 @@
 ;; Dim the ignored part of the file name
 (file-name-shadow-mode 1)
 
-;; minibuffer window expands vertically as necessary to hold the text
+;; Minibuffer window expands vertically as necessary to hold the text
 ;; that you put in the minibuffer
 (setq resize-mini-windows t)
 
-;; Never change case when replacing
-(setq-default case-replace nil)
-
-;; Set the appropriate frame size
-;; (set-frame-size-according-to-resolution)
-
+;; Line numbering is off by default
 (use-package linum
   :init (progn
           (global-linum-mode -1)
           (setq linum-format "%d ")))
 
-;; Don't use font lock by default
+;; By default, font-lock mode is off
 (global-font-lock-mode -1)
 (setq font-lock-maximum-size nil)
-(add-hook 'adoc-mode-hook
-          (lambda ()
-            (font-lock-mode -1)))
 
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (font-lock-mode -1)))
+;; Diminish auto-revert-mode in the mode line
+(diminish 'auto-revert-mode)
 
 ;; Don't highlight the current line
 (hl-line-mode -1)
@@ -233,89 +213,65 @@
 ;; Always follow symlinks
 (setq vc-follow-symlinks t)
 
+;; Hide undo-tree from mode line
+(use-package undo-tree
+  :diminish undo-tree-mode)
+
 ;; Make shebang-ed files executable
-(add-hook 'after-save-hook '~make-executable)
+(add-hook 'after-save-hook #'~maybe-make-current-file-executable)
 
 ;; Clean up all Tramp remote connection before killing Emacs
-(add-hook 'kill-emacs-hook '~clean-up-tramp)
+(add-hook 'kill-emacs-hook #'~clean-up-tramp)
 
-;; Diminish auto-revert-mode in the mode line
-(diminish 'auto-revert-mode)
+;; Delete file when killing buffer if necessary
+(add-hook 'kill-buffer-hook #'~maybe-delete-file-when-killing-buffer)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Right click context menu
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Track recently closed files
+(add-hook 'kill-buffer-hook #'~track-closed-file)
 
-(defun ~right-click-menu ()
-  `(""
-    ["Cut" clipboard-kill-region (~is-selecting?)]
-    ["Copy" kill-ring-save (~is-selecting?)]
-    ["Paste" yank t]
-    ["Delete" delete-region (~is-selecting?)]
-    ["--" ignore]
-    ["Exec (other window)" ~exec-in-other-window (~is-selecting?)]
-    ["Exec in Tmux" emamux:send-region (~is-selecting?)]
-    ["--" ignore]
-    ["Undo" undo-tree-undo t]
-    ["Redo" undo-tree-redo t]
-    ["--" ignore]))
+;; FIXME
+;; Focus follows mouse
+;; (setq mouse-autoselect-window t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Frame title
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (setq frame-title-format
-;;       '(multiple-frames "%b" ("@" system-name )))
-;; (let ((emacs-as (--> (or (~emacs-as) :emacs)
-;;                      (symbol-name it)
-;;                      (substring it 1)
-;;                      (intern it)
-;;                      (symbol-name it)
-;;                      (capitalize it))))
-;;   (setq-default frame-title-format `(,emacs-as ,(format " @ %s" (or *emacs-as-tool*
-;;                                                                     :edit))
-;;                                                " \u262f "
-;;                                                (buffer-file-name "%f"
-;;                                                                  (dired-directory dired-directory "%b")))))
-
-(let ((title-format `("Rmacs"
-                      ,(format " @ %s" (or *emacs-as-tool*
-                                           :edit))
-                      " \u262f "
-                      (buffer-file-name "%f"
-                                        (dired-directory dired-directory "%b")))))
+;; Set frame title
+(let ((title-format
+       `("Rmacs"
+         ,(format " @ %s" (or *emacs-as-tool*
+                              :edit))
+         " \u262f "
+         (buffer-file-name "%f"
+                           (dired-directory dired-directory "%b")))))
   (setq-default frame-title-format title-format)
   (setq frame-title-format title-format))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Indentation
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; One buffer per window setup
+(require 'rmacs:config-one-buffer-per-window
+         "config-one-buffer-per-window")
 
-(setq css-indent-offset 2)
+;; Header line as command palette
+(require 'rmacs:config-header-line
+         "config-header-line")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Focus following mouse
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Managing recent files
+(use-package recentf
+  :init (progn
+          (recentf-mode 1)
+          (setq recentf-max-menu-items 128)))
 
-;; (setq mouse-autoselect-window t)
+;; Displaying available keybindings in pop up
+;; Ref: https://github.com/justbur/emacs-which-key
+(use-package which-key
+  :diminish which-key-mode
+  :config (progn
+            (which-key-mode)
+            (which-key-setup-side-window-right-bottom)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Soft-wrap long lines
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; In text-related modes only, don't mess up with code
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;
-;; I have tried adaptive-wrap but didn't like it.  It gave false impression of
-;; how a line is actually wrapped.  The code doesn't handle different cases as
-;; nicely as visual-fill-column
-;;
-
-;; https://github.com/joostkremers/visual-fill-column
+;; Soft-wrapping long lines
+;; Ref: https://github.com/joostkremers/visual-fill-column
 (use-package visual-fill-column
   :init (progn
+          (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
+
           (defun ~turn-on-soft-wrapping ()
             "Turns on soft-wrapping."
             (interactive)
@@ -324,6 +280,7 @@
             (turn-on-visual-fill-column-mode))
 
           (defun ~turn-off-soft-wrapping ()
+            "Turns off soft-wrapping."
             (interactive)
             (visual-line-mode -1)
             (visual-fill-column-mode -1))
@@ -335,77 +292,30 @@
                 (~turn-off-soft-wrapping)
               (~turn-on-soft-wrapping)))
 
-          (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
           ;; Correct the default split
-          (setf split-window-preferred-function #'visual-fill-column-split-window-sensibly)
+          (setf split-window-preferred-function
+                #'visual-fill-column-split-window-sensibly)
 
-          ;; Make movement keys work like they should
-          (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-          (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-          (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-          (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-          ;; Make horizontal movement cross lines
-          (setq-default evil-cross-lines t)
+          (with-eval-after-load "evil"
+            ;; Make movement keys work like they should
+            (define-key evil-normal-state-map
+              (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+            (define-key evil-normal-state-map
+              (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+            (define-key evil-motion-state-map
+              (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+            (define-key evil-motion-state-map
+              (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+            ;; Make horizontal movement cross lines
+            (setq-default evil-cross-lines t))))
 
-          (add-hook 'markdown-mode-hook #'~turn-on-soft-wrapping)
-          (add-hook 'adoc-mode-hook #'~turn-on-soft-wrapping)))
-
-;; (ignore-errors
-;;   (diminish 'visual-line-mode)
-;;   (diminish 'global-visual-line-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Delete the corresponding file when killing buffer if needed
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~delete-file-when-killing-buffer ()
-  "Deletes current file when killing buffer if needed."
-  (interactive)
-  (when (and (local-variable-p 'local/delete-on-exit)
-             local/delete-on-exit)
-    (~delete-current-file)))
-
-(add-hook 'kill-buffer-hook #'~delete-file-when-killing-buffer)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Down mouse 1 should change evil to insert mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~mouse-1-evil-insert-mode-advice-around (orig-fun &rest args)
-  (interactive)
-  (let ((res (call-interactively orig-fun))
-        (old-point (point)))
-    (call-interactively 'evil-insert)
-    ;; After calling evil-insert, the cursor moves the beginning of the region
-    ;; so we need to set it back
-    (when (< (point) old-point)
-      (call-interactively 'exchange-point-and-mark))
-    res))
-
-(advice-add 'evil-mouse-drag-region
-            :around #'~mouse-1-evil-insert-mode-advice-around)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Displaying available keybindings in pop up
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/justbur/emacs-which-key
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package which-key
-  :diminish which-key-mode
-  :config (progn
-            (which-key-mode)
-            (which-key-setup-side-window-right-bottom)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Preventing other windows from stealing the current window
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defadvice pop-to-buffer (before cancel-other-window first)
   (ad-set-arg 1 nil))
 (ad-activate 'pop-to-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finish loading essential UX customizations")
-(provide 'ee:config-core-ux)
+(message "Finished configuring core UX")
+
+(provide 'rmacs:config-core-ux)
