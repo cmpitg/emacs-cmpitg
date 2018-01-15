@@ -130,8 +130,9 @@
 (scroll-bar-mode 1)
 (set-scroll-bar-mode 'left)
 
-;; (menu-bar-mode -1)
-(menu-bar-mode 1)
+;; No menu bar, more screen estate
+(menu-bar-mode -1)
+;; (menu-bar-mode 1)
 
 ;; Display time
 ;; (display-time)
