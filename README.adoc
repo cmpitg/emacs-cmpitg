@@ -2,6 +2,8 @@
 
 TODO.  Stay tuned for more!
 
+Note: This documentation is super-outdated.
+
 * Emacs server with https://github.com/cmpitg/emnode[Emnode] -- better
   interaction: cleaner, wider tools, ...
 

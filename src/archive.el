@@ -651,3 +651,18 @@ silently."
   :init (progn
           (winner-mode 1)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto-compile .el
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://www.emacswiki.org/emacs/AutoAsyncByteCompile
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (byte-recompile-directory (~get-config) 0)
+
+;; (use-package auto-async-byte-compile
+;;   :ensure t
+;;   :disabled t
+;;   :init (progn
+;;           (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+;;           ;; Don't display buffer after compilation is completed
+;;           (setq auto-async-byte-compile-display-function #'identity)))

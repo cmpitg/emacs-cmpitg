@@ -34,7 +34,9 @@
 ;; Ref: https://github.com/magnars/dash.el
 ;;
 
-;; (use-package dash)
+(use-package dash
+  :disabled t
+  :config (dash-enable-font-lock))
 
 ;;
 ;; File/filesystem library

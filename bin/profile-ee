@@ -3,8 +3,7 @@
 TMP="tmp-profile-emacs.el"
 
 cat > $TMP <<EOF
-(setq profile-dotemacs-file "/m/src/emacs-cmpitg-rewrite/src/init.el")
-;; (setq profile-dotemacs-file "src/init.el")
+(setq profile-dotemacs-file "src/init-bare.el")
 (profile-dotemacs)
 EOF
 
