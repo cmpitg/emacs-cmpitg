@@ -17,10 +17,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; Load init-basic
 (load (concat (file-name-directory (or (buffer-file-name)
                                        load-file-name))
-              "init"))
+              "init-bare"))
 
 (require 'rmacs:functions-mail    "functions-mail")
 (require 'rmacs:functions-cmpitg  "functions-cmpitg")
@@ -29,9 +28,6 @@
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
-
-;; Load last
-(require 'ee:config-final (~get-config "config-final"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Machine/user-specific config

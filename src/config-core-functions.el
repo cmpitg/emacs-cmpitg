@@ -36,6 +36,11 @@
     ["Redo" undo-tree-redo t]
     ["--" ignore]))
 
+(defun ~popup-right-click-menu ()
+  "Pops up the right click menu."
+  (interactive)
+  (popup-menu (~right-click-menu)))
+
 ;;
 ;; Region: https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Region.html
 ;;
