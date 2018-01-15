@@ -1,5 +1,6 @@
 ;;  -*- lexical-binding: t; -*-
 
+;;
 ;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
