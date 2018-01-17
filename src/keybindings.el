@@ -249,9 +249,6 @@
 
 (bind-key "C-<menu> C-w" 'whitespace-mode)
 
-(bind-key "s-z" '~open-current-file-as-admin)
-(bind-key "s-v" 'package-list-packages)
-
 ;; (bind-key "M-x" 'execute-extended-command)
 ;; (bind-key "M-/" 'dabbrev-expand)
 

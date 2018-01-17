@@ -102,6 +102,7 @@
   ;; File management
   (~bind-key-with-prefix "f d" '~delete-current-file)
   (~bind-key-with-prefix "f r" '~rename-current-file)
+  (bind-key "s-z" #'~open-current-file-as-admin)
 
   ;; Project management
   (~bind-key-with-prefix "p t" 'treemacs-toggle)

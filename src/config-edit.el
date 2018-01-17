@@ -463,6 +463,20 @@
         (use-package clj-refactor
           :config
           (progn
+            (require 'seq)
+            ;; Workaround
+            (unless (fboundp 'seq-map-indexed)
+              (defun seq-map-indexed (function sequence)
+                "Return the result of applying FUNCTION to each element of SEQUENCE.
+Unlike `seq-map', FUNCTION takes two arguments: the element of
+the sequence, and its index within the sequence."
+                (let ((index 0))
+                  (seq-map (lambda (elt)
+                             (prog1
+                                 (funcall function elt index)
+                               (setq index (1+ index))))
+                           sequence))))
+
             (defun ~hook/clojure-refactor-mode ()
               (clj-refactor-mode 1)
               (yas-minor-mode 1))
@@ -510,6 +524,12 @@
 
 (use-package request
   :commands request)
+
+;;
+;; Keybindings
+;;
+
+(bind-key "s-v" #'package-list-packages)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

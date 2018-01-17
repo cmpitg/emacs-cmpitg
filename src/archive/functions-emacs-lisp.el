@@ -225,7 +225,7 @@ E.g.
            (byte-recompile-directory (expand-file-name dir) 0 nil)))))
 
 (defun ~alist-get (alist key)
-  "Return just the value associated with the key in an alist."
+  "Returns just the value associated with the key in an alist."
   (cdr (assoc key alist)))
 
 (defun ~get-library-full-path (library-name)
@@ -362,7 +362,7 @@ buffer."
   (manual-entry (current-word)))
 
 (defun ~parse-tramp-argument (connection-string)
-  "Return an alist with
+  "Returns an alist with
 
 * protocol
 * username

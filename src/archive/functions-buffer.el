@@ -953,7 +953,7 @@ user buffer."
           xah-recently-closed-buffers)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Some added functionalities to Hippie Expend
+;; Some added functionalities to Hippie Expand
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defadvice he-substitute-string (after he-paredit-fix)

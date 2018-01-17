@@ -278,6 +278,28 @@ prefix arg (`C-u') to force deletion if it is."
     (insert content)
     (write-file filename)))
 
+(defun ~read-file (path)
+  "Reads file and returns content as string."
+  (with-temp-buffer
+    (insert-file-contents path)
+    (buffer-string)))
+
+(defun ~rename-current-file (&optional new-name)
+  "Renames the current file."
+  (interactive "GNew name: ")
+  (let* ((new-name (expand-file-name new-name))
+         (name (buffer-name))
+         (filename (buffer-file-name)))
+    (if (not filename)
+        (error "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file name new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+
 (defalias '~switch-to-last-buffer 'mode-line-other-buffer
   "Switches to the most recently visited buffer.")
 
@@ -425,6 +447,106 @@ first occurrence of a pattern.  E.g.
   (interactive)
   (find-file (or *toolbox-path*
                  "/m/Toolbox/Toolbox.adoc")))
+
+(defun ~parse-tramp-argument (connection-string)
+  "Returns an alist with
+
+* protocol
+* username
+* host
+* port
+* path
+
+from a Tramp connection string.
+
+E.g.
+
+\(~parse-tramp-argument \"/ssh:cmpitg@192.168.1.4#3355:/etc/network/interfaces\"\)
+;; =>
+;; \(\(protocol . \"ssh\"\)
+;;  \(username . \"cmpitg\"\)
+;;  \(host . \"192.168.1.4\"\)
+;;  \(port . \"3355\"\)
+;;  \(path . \"/etc/network/interfaces\"\)\)
+
+\(~parse-tramp-argument \"/home/cmpitg/tmp/tmp.txt\"\)
+;; =>
+;; \(\(protocol . \"\"\)
+;;  \(username . \"cmpitg\"\)
+;;  \(host . \"localhost\"\)
+;;  \(port . \"\"\)
+;;  \(path . \"/home/cmpitg/tmp/tmp.txt\"\)\)
+"
+  (if (not (string-match "@" connection-string))
+      `((protocol . "")
+        (username . ,user-login-name)
+        (host     . "localhost")
+        (port     . "")
+        (path     . ,connection-string))
+    (cl-flet ((get-path (host-and-path)
+                        (if (string-match (rx (group "/" (1+ anything))) host-and-path)
+                            (match-string 1 host-and-path)
+                          "/tmp/"))
+              (get-port (host-and-path)
+                        (if (string-match (rx (1+ (not (any "\\")))
+                                              "#"
+                                              (group (1+ digit)))
+                                          host-and-path)
+                            (match-string 1 host-and-path)
+                          "22"))
+              (get-host (host-and-path)
+                        (if (string-match (rx bol
+                                              (group (1+ (not (any "#" ":")))))
+                                          host-and-path)
+                            (match-string 1 host-and-path)
+                          "localhost")))
+
+      (string-match "^/\\([^:]+\\):\\([^@]+\\)@\\(.*\\)$" connection-string)
+
+      (let* ((protocol      (match-string 1 connection-string))
+             (username      (match-string 2 connection-string))
+             (host-and-path (match-string 3 connection-string))
+
+             (host          (get-host host-and-path))
+             (port          (get-port host-and-path))
+             (path          (get-path host-and-path)))
+        `((protocol . ,protocol)
+          (username . ,username)
+          (host     . ,host)
+          (port     . ,port)
+          (path     . ,path))))))
+
+(defun ~open-current-file-as-admin ()
+  "Opens the current buffer as *nix root.
+This command works on `sudo` *nixes only."
+  (interactive)
+  (when buffer-file-name
+    (let* ((parsed-data (~parse-tramp-argument buffer-file-name))
+           (username  (alist-get 'username parsed-data))
+           (host      (alist-get 'host parsed-data))
+           (path      (alist-get 'path parsed-data))
+           (port      (alist-get 'port parsed-data)))
+      (find-alternate-file
+       (if (string-empty-p port)
+           (format "/sudo:root@%s:%s"
+                   host
+                   path)
+         ;; See Tramp's multiple hop
+         (progn
+           (message (format "/ssh:%s@%s#%s|sudo:%s#%s:%s"
+                            username
+                            host
+                            port
+                            host
+                            port
+                            path))
+           (format "/ssh:%s@%s#%s|sudo:%s#%s/%s"
+                   username
+                   host
+                   port
+                   host
+                   port
+                   path)))))))
 
 (defun ~delete-current-file ()
   "Deletes the file associated with the current buffer and kills
