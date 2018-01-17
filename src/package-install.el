@@ -102,6 +102,9 @@
                    edts-start
                    elixir-mode
                    alchemist
+                   gradle-mode
+                   groovy-mode
+                   jdee
                    clojure-mode
                    clojure-cheatsheet
                    clojurescript-mode
