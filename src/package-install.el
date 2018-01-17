@@ -1,10 +1,30 @@
+;; -*- no-byte-compile: t; lexical-binding: t; -*-
+
+;;
+;; Copyright (C) 2017-2018 Ha-Duong Nguyen (@cmpitg)
+;;
+;; This project is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation, either version 3 of the License, or (at your option)
+;; any later version.
+;;
+;; This project is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;; more details.
+;;
+;; You should have received a copy of the GNU General Public License along
+;; with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;
+
 (defun package-install:get-config (&rest paths)
   "Returns path to a config file or directory."
   (let ((config-dir (file-name-directory (or (buffer-file-name)
                                              load-file-name))))
     (apply 'concat *config-dir* paths)))
 
-(require 'ee:config-package-manager (~get-config "config-package-manager"))
+(require 'rmacs:config-package-manager
+         (package-install:get-config "config-package-manager"))
 (el-get 'sync)
 
 (el-get-install 'acme-mouse)

@@ -130,7 +130,7 @@
   "Path to the Rmacs boostrap-config file.")
 
 (require 'rmacs:bootstrap-config        *bootstrap-config-path*)
-(require 'rmacs:config-package-manager  "config-package-manager-rewrite")
+(require 'rmacs:config-package-manager  "config-package-manager")
 (require 'rmacs:config-ipc              "config-ipc")
 (require 'rmacs:config-core-edit        "config-core-edit")
 (require 'rmacs:config-core-ux          "config-core-ux")

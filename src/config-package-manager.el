@@ -21,7 +21,8 @@
                            ("melpa" . "http://melpa.milkbox.net/packages/")
                            ("marmalade" . "http://marmalade-repo.org/packages/")
                            ("gnu" . "http://elpa.gnu.org/packages/")
-                           ("SC" . "http://joseito.republika.pl/sunrise-commander/")))
+                           ("SC" . "http://joseito.republika.pl/sunrise-commander/")
+                           ("elpy" . "http://jorgenschaefer.github.io/packages/")))
   (add-to-list 'package-archives package-archive))
 
 (package-initialize)
@@ -30,9 +31,11 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; el-get
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Ref: https://github.com/dimitri/el-get
+;;
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
@@ -46,11 +49,11 @@
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 (el-get-bundle cmpitg/acme-mouse)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; use-package
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/jwiegley/use-package
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Ref: https://github.com/jwiegley/use-package
+;;
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -62,9 +65,9 @@
 (require 'diminish)
 (require 'bind-key)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; Local packages
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 (dolist (pkg (let ((local-packages-dir (~get-config "local-packages/")))
                (if (file-exists-p local-packages-dir)
@@ -74,5 +77,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finish loading config-package-manager")
-(provide 'ee:config-package-manager)
+(message "Finish configuring package manager")
+
+(provide 'rmacs:config-package-manager)
