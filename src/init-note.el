@@ -23,14 +23,9 @@
 
 (require 'rmacs:functions-cmpitg    "functions-cmpitg")
 (require 'rmacs:config-themes       "config-themes")
-(require 'ee:config-cmpitg-packages (~get-config "config-cmpitg-packages"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Machine/user-specific config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Load machine-specific settings if existed
 (~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))

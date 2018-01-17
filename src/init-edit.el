@@ -28,7 +28,6 @@
 (require 'rmacs:config-literate-prog         "config-literate-prog")
 (require 'rmacs:config-themes                "config-themes")
 (require 'rmacs:config-edit                  "config-edit")
-(require 'ee:config-cmpitg-packages          (~get-config "config-cmpitg-packages"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))

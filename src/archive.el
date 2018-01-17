@@ -666,3 +666,447 @@ silently."
 ;;           (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 ;;           ;; Don't display buffer after compilation is completed
 ;;           (setq auto-async-byte-compile-display-function #'identity)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pop in/pop out shell buffer easily
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/kyagi/shell-pop-el
+
+(use-package shell-pop
+  :ensure t
+  :config (progn
+            (custom-set-variables
+             '(shell-pop-universal-key "<S-f9>"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Window navigation with ease
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package windmove
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Quickly copy stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/zonuexe/emacs-copyit
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package copyit
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Eshell
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package eshell
+  :commands eshell
+  :init (progn
+          (use-package exec-path-from-shell
+            :ensure t)
+
+          ;; ElDoc in Eshell
+          (defadvice eldoc-current-symbol
+              (around eldoc-current-symbol activate)
+            ad-do-it
+            (if (and (not ad-return-value)
+                     (eq major-mode 'eshell-mode))
+                (save-excursion
+                  (goto-char eshell-last-output-end)
+                  (let ((esym (eshell-find-alias-function (current-word)))
+                        (sym (intern-soft (current-word))))
+                    (setq ad-return-value (or esym sym)))))))
+  :config (progn
+            (add-hook 'eshell-mode-hook 'eldoc-mode)
+
+            (setq eshell-prefer-lisp-functions t)
+
+            ;; Eshell smart mode
+            (require 'em-smart)
+            (setq eshell-where-to-jump 'begin)
+            (setq eshell-review-quick-commands nil)
+            (setq eshell-smart-space-goes-to-end t)
+
+            (setq eshell-aliases-file (~get-config "misc/eshell-aliases.el"))
+
+            ;; Beginning of command line, not line
+            (defun eshell-beginning-of-command-line ()
+              "Move to beginning of command line, not line."
+              (interactive)
+              (let ((p (point)))
+                (beginning-of-line)
+                (loop do (forward-char)
+                      until (equal (current-char) " "))
+                (forward-char)))
+
+            ;; Auto complete support
+            (defun ac-pcomplete ()
+              ;; eshell uses `insert-and-inherit' to insert a \t if no completion
+              ;; can be found, but this must not happen as auto-complete source
+              (flet ((insert-and-inherit (&rest args)))
+                ;; this code is stolen from `pcomplete' in pcomplete.el
+                (let* (tramp-mode ;; do not automatically complete remote stuff
+                       (pcomplete-stub)
+                       (pcomplete-show-list t) ;; inhibit patterns like * being deleted
+                       pcomplete-seen pcomplete-norm-func
+                       pcomplete-args pcomplete-last pcomplete-index
+                       (pcomplete-autolist pcomplete-autolist)
+                       (pcomplete-suffix-list pcomplete-suffix-list)
+                       (candidates (pcomplete-completions))
+                       (beg (pcomplete-begin))
+                       ;; note, buffer text and completion argument may be
+                       ;; different because the buffer text may bet transformed
+                       ;; before being completed (e.g. variables like $HOME may be
+                       ;; expanded)
+                       (buftext (buffer-substring beg (point)))
+                       (arg (nth pcomplete-index pcomplete-args)))
+                  ;; we auto-complete only if the stub is non-empty and matches
+                  ;; the end of the buffer text
+                  (when (and (not (zerop (length pcomplete-stub)))
+                             (or (string= pcomplete-stub ; Emacs 23
+                                          (substring buftext
+                                                     (max 0
+                                                          (- (length buftext)
+                                                             (length pcomplete-stub)))))
+                                 (string= pcomplete-stub ; Emacs 24
+                                          (substring arg
+                                                     (max 0
+                                                          (- (length arg)
+                                                             (length pcomplete-stub)))))))
+                    ;; Collect all possible completions for the stub. Note that
+                    ;; `candidates` may be a function, that's why we use
+                    ;; `all-completions`.
+                    (let* ((cnds (all-completions pcomplete-stub candidates))
+                           (bnds (completion-boundaries pcomplete-stub
+                                                        candidates
+                                                        nil
+                                                        ""))
+                           (skip (- (length pcomplete-stub) (car bnds))))
+                      ;; We replace the stub at the beginning of each candidate by
+                      ;; the real buffer content.
+                      (mapcar #'(lambda (cand) (concat buftext (substring cand skip)))
+                              cnds))))))
+
+            (defvar ac-source-pcomplete
+              '((candidates . ac-pcomplete)))
+
+            (eval-after-load 'auto-complete
+              '(progn
+                 (add-to-list 'ac-modes 'eshell-mode)))
+
+            (add-hook 'eshell-mode-hook
+                      (lambda ()
+                        (setq ac-sources '(ac-source-pcomplete))
+
+                        (add-to-list 'eshell-visual-commands "mc")
+                        (add-to-list 'eshell-visual-commands "ranger")
+                        (add-to-list 'eshell-visual-commands "git log")
+                        ;; (bind-key "s-d" 'eshell-beginning-of-command-line eshell-mode-map)
+                        (bind-key "s-d" 'eshell-bol            eshell-mode-map)
+                        (bind-key "s-C" 'eshell-previous-input eshell-mode-map)
+                        (bind-key "s-T" 'eshell-next-input     eshell-mode-map)
+                        (bind-key "<S-mouse-1>" '~insert-text-at-the-end
+                                  eshell-mode-map)))
+
+            (setq eshell-prompt-function
+                  (lambda ()
+                    (let* ((username (getenv "USER"))
+                           (hostname (getenv "HOST"))
+                           (time     (format-time-string "%Y/%m/%d %H:%M"))
+                           (pwd      (eshell/pwd)))
+                      (concat "--- " time " " username "@" hostname " " pwd " ---"
+                              "\n"
+                              "$ "))))
+
+            (setq eshell-prompt-regexp "^[#$] ")
+
+            ;; Read $PATH variable
+            (when (memq window-system '(mac ns x))
+              (exec-path-from-shell-initialize))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Shell mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'sh-mode-hook (lambda ()
+                          (setq indent-tabs-mode t
+                                sh-basic-offset 4)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Clojure
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~cider-eval (&optional expr)
+  "Evals an expression in Cider REPL."
+  (interactive)
+  (let ((expr (cond ((not (~string-empty? expr))
+                     expr)
+                    (t
+                     (~read-string "Expression: "))))
+        (cider-buffer (thread-last (buffer-list)
+                        (-filter (lambda (buffer)
+                                   (string-match-p "\\*cider-repl.*"
+                                                   (buffer-name buffer))))
+                        first)))
+    (unless (null cider-buffer)
+      (set-buffer cider-buffer)
+      (goto-char (point-max))
+      (insert expr)
+      (cider-repl-return)
+      (~popup-buffer (buffer-name cider-buffer)))))
+
+(defun ~cider-compile-file-and-run-main ()
+  "Compile current file with Cider and run the `-main' function."
+  (interactive)
+  (call-interactively 'cider-load-current-buffer)
+  (~cider-eval "(-main)"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python development
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package python
+  :config (progn
+            (~auto-load-mode '("\\.py$") 'python-mode)
+
+            (use-package virtualenvwrapper
+              :config (progn
+                        (venv-initialize-interactive-shells)
+                        (venv-initialize-eshell)
+                        (setq venv-location (or (getenv "WORKON_HOME")
+                                                "/m/virtual-envs/"))))
+
+            ;; Doesn't work
+            ;; (defun electric-indent-ignore-python (char)
+            ;;   "Ignore electric indentation for python-mode"
+            ;;   (if (equal major-mode 'python-mode)
+            ;;    'no-indent
+            ;;  nil))
+            ;; (add-hook 'electric-indent-functions 'electric-indent-ignore-python)
+
+            ;; https://www.emacswiki.org/emacs/IndentingPython
+            (add-hook 'python-mode-hook
+                      (lambda ()
+                        (setq electric-indent-chars (delq ?, electric-indent-chars))
+                        (setq electric-indent-inhibit t)
+                        (~bind-key-with-prefix "e r" 'python-shell-send-region
+                                               :keymap python-mode-map)
+                        ;; (~bind-key-with-prefix "." 'my/python-jump-to-definition
+                        ;;                     :keymap python-mode-map)
+                        ;; (~bind-key-with-prefix "," 'my/python-jump-back
+                        ;;                     :keymap python-mode-map)
+                        ))))
+
+;;
+;; Company mode support in Jedi is weak
+;;
+
+;; Use autocomplete mode
+;; (use-package jedi
+;;   :ensure t
+;;   :config (progn
+;;             (setq jedi:setup-keys nil)
+;;             (setq jedi:tooltip-method nil)
+;;             (setq jedi:complete-on-dot t)
+
+;;             (autoload 'jedi:setup "jedi" nil t)
+;;             (add-hook 'python-mode-hook 'jedi:setup)
+
+;;             (defvar jedi:goto-stack '())
+
+;;             (defun jedi:jump-to-definition ()
+;;               (interactive)
+;;               (add-to-list 'jedi:goto-stack
+;;                            (list (buffer-name) (point)))
+;;               (jedi:goto-definition))
+
+;;             (defun jedi:jump-back ()
+;;               (interactive)
+;;               (let ((p (pop jedi:goto-stack)))
+;;                 (if p (progn
+;;                         (switch-to-buffer (nth 0 p))
+;;                         (goto-char (nth 1 p))))))
+
+;;             (defun my/python-mode-hook ()
+;;               (add-to-list 'company-backends 'company-jedi))
+
+;;             (add-hook 'python-mode-hook 'my/python-mode-hook)
+
+;;             ;; (add-hook 'python-mode-hook
+;;             ;;           '(lambda ()
+;;             ;;              (local-set-key (kbd "C-.") 'jedi:jump-to-definition)
+;;             ;;              (local-set-key (kbd "C-,") 'jedi:jump-back)
+;;             ;;              (local-set-key (kbd "C-c d") 'jedi:show-doc)
+;;             ;;              (local-set-key (kbd "C-<tab>") 'jedi:complete)))
+;;             ))
+
+;; Use company-mode
+;; (use-package company-jedi
+;;   :ensure t
+;;   :config (progn
+;;             (defvar jedi:goto-stack '())
+
+;;             (defun jedi:jump-to-definition ()
+;;               (interactive)
+;;               (add-to-list 'jedi:goto-stack
+;;                            (list (buffer-name) (point)))
+;;               (jedi:goto-definition))
+
+;;             (defun jedi:jump-back ()
+;;               (interactive)
+;;               (let ((p (pop jedi:goto-stack)))
+;;                 (if p (progn
+;;                         (switch-to-buffer (nth 0 p))
+;;                         (goto-char (nth 1 p))))))
+
+;;             (defun my/python-mode-hook ()
+;;               (add-to-list 'company-backends 'company-jedi))
+
+;;             (add-hook 'python-mode-hook 'my/python-mode-hook)))
+
+;;
+;; Elpy seems to be a very strong contender
+;;
+;; http://elpy.readthedocs.io/en/latest/index.html
+;; Config with (elpy-config)
+;;
+;; Setup workflow:
+;; * Open a file in the project
+;; * Run (pyvenv-workon) and choose the appropriate virtual env
+;; * Run (elpy-config) and install necessary dependencies
+;;
+;; Beginning to work:
+;; * Run (pyvenv-workon)
+;; * Have fun
+;;
+
+(add-to-list 'package-archives
+             '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+
+(use-package elpy
+  :ensure elpy
+  :init (progn
+          (elpy-enable)
+
+          ;; I don't want to highlight indentation
+          (setq elpy-modules (remove 'elpy-module-highlight-indentation
+                                     elpy-modules))
+
+          (setq elpy-rpc-backend "jedi")
+
+          (defvar my/python-goto-stack (list))
+
+          (defun my/python-jump-to-definition ()
+            (interactive)
+            (add-to-list 'my/python-goto-stack
+                         (list (buffer-name) (point)))
+            (elpy-goto-definition))
+
+          (defun my/python-jump-back ()
+            (interactive)
+            (let ((p (pop my/python-goto-stack)))
+              (if p (progn
+                      (switch-to-buffer (nth 0 p))
+                      (goto-char (nth 1 p))))))
+
+          ;; (defun my/elpy-mode-hook ()
+          ;;   (bind-key "C-c ." 'my/python-jump-to-definition)
+          ;;   (bind-key "C-c ," 'my/python-jump-back))
+
+          ;; (add-hook 'python-mode-hook 'my/elpy-mode-hook)
+          ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ruby
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package rsense
+;;   :init (progn
+;;           (setq rsense-home (getenv "$RSENSE_HOME"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Scala development
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package scala-mode2
+  :ensure t
+  :commands scala-mode2
+  :init
+  (progn
+    (use-package sbt-mode
+      :ensure sbt-mode
+      :config
+      (progn
+        (add-hook 'sbt-mode-hook
+                  (lambda ()
+                    ;; compilation-skip-threshold tells the compilation minor-mode
+                    ;; which type of compiler output can be skipped. 1 = skip info
+                    ;; 2 = skip info and warnings.
+                    (setq compilation-skip-threshold 1)
+
+                    (bind-key "C-a" 'comint-bol sbt-mode-map)
+                    (bind-key "s-d" 'comint-bol sbt-mode-map)
+                    (bind-key "M-RET" 'comint-accumulate sbt-mode-map)))
+        (add-hook 'scala-mode-hook
+                  (lambda ()
+                    (bind-key "M-." 'sbt-find-definitions scala-mode-map)
+                    (bind-key "C-x '" 'sbt-run-previous-command scala-mode-map)))))))
+
+;;
+;; Scheme development
+;;
+
+;; Quack doc: http://www.neilvandyke.org/quack/quack.el
+;; Geiser doc: http://www.nongnu.org/geiser
+
+;; (use-package geiser
+;;   :disabled t
+;;   :config (progn
+;;             (setq geiser-default-implementation "racket")
+;;             (add-hook 'geiser-repl-mode-hook   '~load-paredit-mode)
+
+;;             ;; Auto-complete backend
+;;             (use-package ac-geiser
+;;               :init (progn
+;;                       (add-hook 'geiser-mode-hook        'ac-geiser-setup)
+;;                       (add-hook 'geiser-repl-mode-hook   'ac-geiser-setup)
+;;                       (eval-after-load 'auto-complete
+;;                         '(add-to-list 'ac-modes 'geiser-repl-mode))))
+
+;;             (eval-after-load 'geiser-mode
+;;               '(progn
+;;                 (dolist (sym '(λ
+;;                                ~>
+;;                                ~>>
+;;                                define-values
+;;                                get
+;;                                post
+;;                                put
+;;                                patch
+;;                                delete
+;;                                call-with-parameterization
+;;                                module+))
+;;                   (put sym 'scheme-indent-function 1)
+;;                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+
+;;                 (dolist (sym '(with-shell-commands))
+;;                   (put sym 'scheme-indent-function 0)
+;;                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+
+;;                 (dolist (sym '(module
+;;                                module*))
+;;                   (put sym 'scheme-indent-function 2)
+;;                   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
+
+;;                 (put '{ 'scheme-indent-function 0)
+;;                 (put (~string->symbol "[") 'scheme-indent-function 0)
+
+;;                 (defadvice geiser-eval-region (after send-region-to (&rest arg))
+;;                  ;; ad-do-it
+;;                  (let ((start (ad-get-arg 0))
+;;                        (end   (ad-get-arg 1)))
+;;                    (~geiser-send-string (~get-text start end))))
+
+;;                 ;; (ad-deactivate 'geiser-eval-region)
+;;                 (ad-activate 'geiser-eval-region)))))
+
+;; Load after Geiser
+;; (use-package quack)

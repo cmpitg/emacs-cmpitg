@@ -24,6 +24,34 @@
 ;; TODO: mode-line-format
 ;; TODO: tmux integration with emamux
 ;; TODO: Tiling manager - winner-mode?, something like i3
+;; TODO: See how https://github.com/joaotavora/sly could replace SLIME
+;; TODO: https://github.com/tjarvstrand/edts and Erlang integration
+;; TODO: https://wiki.haskell.org/Emacs#Scion for Haskell integration
+
+;; TODO: DOC - Python development
+;; Config with (elpy-config)
+;;
+;; Setup workflow:
+;; * Open a file in the project
+;; * Run (pyvenv-workon) and choose the appropriate virtual env
+;; * Run (elpy-config) and install necessary dependencies
+;;
+;; Beginning to work:
+;; * Run (pyvenv-workon)
+;; * Have fun
+
+;; (defun my/elpy-mode-hook ()
+;;   (bind-key "C-c ." '~python-jump-to-definition)
+;;   (bind-key "C-c ," '~python-jump-back))
+
+;; (add-hook 'python-mode-hook 'my/elpy-mode-hook)
+
+;; (~bind-key-with-prefix "e r" 'python-shell-send-region
+;;                        :keymap python-mode-map)
+;; ;; (~bind-key-with-prefix "." 'my/python-jump-to-definition
+;; ;;                     :keymap python-mode-map)
+;; ;; (~bind-key-with-prefix "," 'my/python-jump-back
+;; ;;                     :keymap python-mode-map)
 
 ;; TODO: BUG - swiper-all → losing focus when swiping
 

@@ -71,5 +71,31 @@
                    dired-single
                    dired-details+
                    color-theme
-                   yasnippet))
+                   yasnippet
+                   dockerfile-mode
+                   nginx-mode
+                   coffee-mode
+                   go-mode
+                   slime
+                   slime-company
+                   erlang
+                   edts-start
+                   elixir-mode
+                   alchemist
+                   clojure-mode
+                   clojure-cheatsheet
+                   clojurescript-mode
+                   midje-mode
+                   clj-refactor
+                   cider
+                   scss-mode
+                   js2-mode
+                   ruby-mode
+                   ruby-dev
+                   toml-mode
+                   haskell-mode
+                   request
+                   elpy
+                   monky
+                   magit))
   (package-install package))
