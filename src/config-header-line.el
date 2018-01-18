@@ -18,12 +18,14 @@
 ;;
 
 (defvar *header-line-separator*
-  "`"
+  "'"
   "Separator for the header line.")
 
 (setq-default header-line-format
               `(""
                 (:eval (if (buffer-file-name) (buffer-file-name) ""))
+                ,*header-line-separator*
+                "x"
                 ,*header-line-separator*
                 "+"))
 
@@ -35,6 +37,8 @@
     (cond ((string= buffer-file-name str)
            (kill-new str)
            (message "File path %s copied to clipboard" str))
+          ((string= "x" str)
+           (call-interactively 'kill-this-buffer))
           ((string= "+" str)
            (call-interactively '~header-line-add))
           ((string= *header-line-separator* str)
