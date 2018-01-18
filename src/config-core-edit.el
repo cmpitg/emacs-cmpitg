@@ -117,7 +117,47 @@
 ;;
 
 (use-package adoc-mode
-  :mode ("\\.adoc\\'" . adoc-mode))
+  :mode ("\\.adoc\\'" . adoc-mode)
+  :config
+  (progn
+    (defun ~asciidoc/render (html-path)
+      "Renders current file with AsciiDoctor in HTML format."
+      (interactive "FHTML output path: ")
+      (let ((cmd (format "asciidoctor --out-file %s %s"
+                         (shell-quote-argument html-path)
+                         (shell-quote-argument (~current-file-full-path)))))
+        (~run-process cmd)
+        (message "'%s' has finished running" cmd)
+        (message "Check %s for output" html-path)))
+
+    (defun ~asciidoc/preview ()
+      "Renders and previews current AsciiDoc file in HTML
+format."
+      (interactive)
+      (let ((html-path (~asciidoc/current-temporary-html-path)))
+        (~asciidoc/render html-path)
+        (~firefox html-path :new-window? t)))
+
+    (defun ~asciidoc/current-temporary-html-path ()
+      "Returns the HTML path corresponding to the current
+AsciiDoc buffer.  The path is stored in a buffer local variable
+named `asciidoc-html-path' and generated if not yet exists"
+      (let ((asciidoc-html-path/symbol (make-local-variable 'asciidoc-html-path)))
+        (unless (boundp asciidoc-html-path/symbol)
+          (set asciidoc-html-path/symbol (make-temp-file (f-filename (buffer-file-name))
+                                                         nil
+                                                         ".html")))
+        asciidoc-html-path))
+
+    (defun ~asciidoc/update-preview ()
+      "Re-renders current AsciiDoc file for preview.  The browser
+might need manual refreshing."
+      (interactive)
+      (~asciidoc/render (~asciidoc/current-temporary-html-path)))
+
+    (~bind-key-with-prefix "d r" #'~asciidoc/render :keymap adoc-mode-map)
+    (~bind-key-with-prefix "d p" #'~asciidoc/preview :keymap adoc-mode-map)
+    (~bind-key-with-prefix "d u" #'~asciidoc/update-preview :keymap adoc-mode-map)))
 (setq-default initial-major-mode 'adoc-mode)
 (setq-default major-mode 'adoc-mode)
 
@@ -287,24 +327,23 @@ project root."
                 (bind-key key func map)))
 
             (defun* ~bind-key-with-prefix (key command &key
-                                               (keymap global-map)
-                                               (evil-keymap evil-normal-state-map))
-              "Binds key in `evil-normal-state-map' with prefix
-`SPC' and in global mode map with prefix `s-SPC' at the same
-time."
+                                               (keymap global-map))
+              "Binds key in `evil-normal-state-map' and
+`evil-visual-state-map' with prefix `SPC' and in global mode map
+with prefix `s-SPC' at the same time."
               (interactive)
               (eval `(progn
                        (bind-key ,(format "s-SPC %s" key) command keymap)
-                       (bind-key ,(format "SPC %s" key) command evil-keymap))))
+                       (evil-define-key 'normal keymap (kbd ,(format "SPC %s" key)) command)
+                       (evil-define-key 'visual keymap (kbd ,(format "SPC %s" key)) command))))
 
             (defun* ~bind-key-with-prefix-local (key command &key (keymap global-map))
-              "Like `~bind-key-with-prefix', except that instead
-of binding to `evil-normal-state-map' it binds to
-`evil-normal-state-local-map'."
+              "Like `~bind-key-with-prefix', except that the binding is local."
               (interactive)
-              (~bind-key-with-prefix key command
-                                     :keymap keymap
-                                     :evil-keymap evil-normal-state-local-map))
+              (eval `(progn
+                       (bind-key ,(format "s-SPC %s" key) command keymap)
+                       (bind-key ,(format "SPC %s" key) command evil-normal-state-local-map)
+                       (bind-key ,(format "SPC %s" key) command evil-visual-state-local-map))))
 
             (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 

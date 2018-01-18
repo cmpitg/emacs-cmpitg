@@ -50,7 +50,18 @@
 ;;
 
 (use-package vdiff
-  :commands vdiff-files)
+  :config
+  (progn
+    (with-eval-after-load "evil"
+      (evil-define-key 'normal vdiff-mode-map "," vdiff-mode-prefix-map)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "]c" 'vdiff-next-hunk)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "[c" 'vdiff-previous-hunk)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zc" 'vdiff-close-fold)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zM" 'vdiff-close-all-folds)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zo" 'vdiff-open-fold)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zR" 'vdiff-open-all-folds)
+      (evil-define-minor-mode-key 'motion 'vdiff-mode "go" 'vdiff-receive-changes)
+      (evil-define-minor-mode-key 'motion 'vdiff-mode "gp" 'vdiff-send-changes))))
 
 ;;
 ;; Markdown
@@ -383,23 +394,28 @@
           (setq elpy-modules (remove 'elpy-module-highlight-indentation
                                      elpy-modules))
 
-          ;; Use Jedi completion back-end
+          ;; Completion back-end
           (setq elpy-rpc-backend "jedi")
 
           (defvar *~python-goto-stack* (list))
-
           (defun ~python-jump-to-definition ()
             (interactive)
             (add-to-list '*~python-goto-stack*
                          (list (buffer-name) (point)))
             (elpy-goto-definition))
-
           (defun ~python-jump-back ()
             (interactive)
             (let ((p (pop *~python-goto-stack*)))
-              (if p (progn
-                      (switch-to-buffer (nth 0 p))
-                      (goto-char (nth 1 p))))))))
+              (when p
+                (switch-to-buffer (nth 0 p))
+                (goto-char (nth 1 p)))))
+
+          (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
+          (~bind-key-with-prefix "d z"   #'elpy-shell-switch-to-shell        :keymap elpy-mode-map)
+          (~bind-key-with-prefix "d e r" #'elpy-shell-send-region-or-buffer  :keymap elpy-mode-map)
+          (~bind-key-with-prefix "d e e" #'elpy-shell-send-current-statement :keymap elpy-mode-map)
+          (~bind-key-with-prefix "d ."   #'~python-jump-to-definition        :keymap elpy-mode-map)
+          (~bind-key-with-prefix "d ,"   #'~python-jump-back                 :keymap elpy-mode-map)))
 
 ;;
 ;; Clojure development
@@ -410,93 +426,108 @@
 ;;
 
 (use-package clojure-mode
-  :mode "\\.clj\\'"
-  :config
+  :mode "\\.clj\\'")
+
+(use-package cider
+  :after clojure-mode
+  :init
   (progn
-    (use-package cider
-      :config
-      (progn
-        (use-package clojure-cheatsheet)
-
-        (use-package clojurescript-mode)
-
-        (use-package midje-mode
-          :diminish midje-mode)
-
-        ;; (add-hook 'clojure-mode-hook 'cider-mode)
-        (add-hook 'clojure-mode-hook '~load-paredit-mode)
-        (add-hook 'clojure-mode-hook 'midje-mode)
-
-        ;; Only display eldoc for current function/macro, not current symbol
-        (setq cider-eldoc-display-for-symbol-at-point nil)
-        (add-hook 'cider-mode-hook 'eldoc-mode)
-
-        (add-hook 'cider-repl-mode-hook '~load-paredit-mode)
-
-        ;; Moving inside subword
-        (add-hook 'cider-repl-mode-hook 'subword-mode)
-
-        ;; Hide *nrepl-connection* and *nrepl-server*
-        (setq nrepl-hide-special-buffers t)
-
-        ;; Prevent the auto-display of the REPL buffer in a separate window
-        ;; after connection is established
-        ;; (setq cider-repl-pop-to-buffer-on-connect nil)
-        (setq cider-repl-pop-to-buffer-on-connect t)
-
-        (setq cider-popup-stacktraces nil)
-
-        ;; Enable error buffer popping also in the REPL
-        (setq cider-repl-popup-stacktraces t)
-
-        ;; Default value: "repl -s -H :: wait"
-        (setq cider-boot-parameters "cider repl -s wait")
-
-        (setq nrepl-buffer-name-separator "-")
-        (setq nrepl-buffer-name-show-port t)
-
-        (setq cider-repl-history-size 9999)
-
-        ;; Clojure docs lookup
-        (use-package cider-grimoire)
-
-        (use-package clj-refactor
-          :config
-          (progn
-            (require 'seq)
-            ;; Workaround
-            (unless (fboundp 'seq-map-indexed)
-              (defun seq-map-indexed (function sequence)
-                "Return the result of applying FUNCTION to each element of SEQUENCE.
+    (require 'seq)
+    ;; Workaround
+    (unless (fboundp 'seq-map-indexed)
+      (defun seq-map-indexed (function sequence)
+        "Return the result of applying FUNCTION to each element of SEQUENCE.
 Unlike `seq-map', FUNCTION takes two arguments: the element of
 the sequence, and its index within the sequence."
-                (let ((index 0))
-                  (seq-map (lambda (elt)
-                             (prog1
-                                 (funcall function elt index)
-                               (setq index (1+ index))))
-                           sequence))))
+        (let ((index 0))
+          (seq-map (lambda (elt)
+                     (prog1
+                         (funcall function elt index)
+                       (setq index (1+ index))))
+                   sequence)))))
+  :config
+  (progn
+    ;; (add-hook 'clojure-mode-hook #'cider-mode)
+    (add-hook 'clojure-mode-hook #'paredit-mode)
+    (add-hook 'clojure-mode-hook #'midje-mode)
 
-            (defun ~hook/clojure-refactor-mode ()
-              (clj-refactor-mode 1)
-              (yas-minor-mode 1))
+    ;; Only display eldoc for current function/macro, not current symbol
+    (setq cider-eldoc-display-for-symbol-at-point nil)
+    (add-hook 'cider-mode-hook 'eldoc-mode)
 
-            (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
+    (add-hook 'cider-repl-mode-hook #'paredit-mode)
 
-        (define-clojure-indent
-          (defroutes 'defun)
-          (GET 2)
-          (POST 2)
-          (PUT 2)
-          (DELETE 2)
-          (HEAD 2)
-          (ANY 2)
-          (context 2)
-          (tabular '(2 1))
-          (are '(2 1)))
+    ;; Moving inside subword
+    (add-hook 'cider-repl-mode-hook #'subword-mode)
 
-        (defalias '~clojure/add-dependency 'cljr-add-project-dependency)
-        (defalias '~clojure/add-require 'cljr-add-require-to-ns)))))
+    ;; Hide *nrepl-connection* and *nrepl-server*
+    (setq nrepl-hide-special-buffers t)
+
+    ;; Prevent the auto-display of the REPL buffer in a separate window
+    ;; after connection is established
+    ;; (setq cider-repl-pop-to-buffer-on-connect nil)
+    (setq cider-repl-pop-to-buffer-on-connect t)
+
+    (setq cider-popup-stacktraces nil)
+
+    ;; Enable error buffer popping also in the REPL
+    (setq cider-repl-popup-stacktraces t)
+
+    ;; Default value: "repl -s -H :: wait"
+    (setq cider-boot-parameters "cider repl -s wait")
+
+    (setq nrepl-buffer-name-separator "-")
+    (setq nrepl-buffer-name-show-port t)
+
+    (setq cider-repl-history-size 9999)
+
+    (define-clojure-indent
+      (defroutes 'defun)
+      (GET 2)
+      (POST 2)
+      (PUT 2)
+      (DELETE 2)
+      (HEAD 2)
+      (ANY 2)
+      (context 2)
+      (tabular '(2 1))
+      (are '(2 1)))
+
+    (~bind-key-with-prefix "d z"   #'cider-switch-to-repl-buffer :keymap cider-mode-map)
+    (~bind-key-with-prefix "d a d" #'~clojure/add-dependency     :keymap cider-mode-map)
+    (~bind-key-with-prefix "d ."   #'cider-find-var              :keymap cider-mode-map)
+    (~bind-key-with-prefix "d l a" #'cider-load-all-files        :keymap cider-mode-map)
+    (~bind-key-with-prefix "d c"   #'cider-repl-clear-buffer     :keymap cider-repl-mode-map)
+    (~bind-key-with-prefix "d ."   #'cider-find-var              :keymap cider-repl-mode-map)
+    (~bind-key-with-prefix "d l a" #'cider-load-all-files        :keymap cider-repl-mode-map)
+    (bind-key "<C-return>" #'cider-eval-last-sexp cider-mode-map)
+    (bind-key "<S-return>" #'cider-eval-sexp-at-point cider-mode-map)))
+
+(use-package clojure-cheatsheet
+  :after cider)
+
+(use-package clojurescript-mode)
+
+(use-package midje-mode
+  :diminish midje-mode
+  :after cider)
+
+;; Clojure docs lookup
+(use-package cider-grimoire
+  :after cider)
+
+(use-package clj-refactor
+  :after cider
+  :config
+  (progn
+    (defalias '~clojure/add-dependency 'cljr-add-project-dependency)
+    (defalias '~clojure/add-require 'cljr-add-require-to-ns)
+
+    (defun ~hook/clojure-refactor-mode ()
+      (clj-refactor-mode 1)
+      (yas-minor-mode 1))
+
+    (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
 
 ;;
 ;; HTTP request library
