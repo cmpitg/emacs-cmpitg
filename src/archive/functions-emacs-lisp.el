@@ -322,19 +322,19 @@ used.  Do nothing if server is already started."
    (format "https://encrypted.google.com/search?q=%s" keyword)))
 
 (defun* ~firefox (url &key (new-window? nil))
-  "Open a URL in Firefox."
+  "Opens a URL in Firefox."
   (interactive
    (list (read-string "URL: " (cond
-                               ((is-selecting?)
-                                (get-selection))
+                               ((~is-selecting?)
+                                (~current-selection))
                                ((thing-at-point-url-at-point)
                                 (thing-at-point-url-at-point))
                                (t
                                 "https://encrypted.google.com/")))))
-  ;; (~send-to-mozrepl (format "switchToTabHavingURI('%s', true)" url))
-  (toolbox:run-process (if new-window?
-                           (format "firefox-beta --new-window '%s'" url)
-                         (format "firefox-beta '%s'" url))))
+  (let ((url (shell-quote-argument url)))
+   (~run-process (if new-window?
+                     (format "firefox-beta --new-window %s" url)
+                   (format "firefox-beta %s" url)))))
 
 (defun ~konqueror (path)
   (interactive "MPath or URL: ")
@@ -529,20 +529,18 @@ Example:
 (defun ~asciidoc/render (html-path)
   "Renders current file with AsciiDoctor in HTML format."
   (interactive "FHTML output path: ")
-  (let ((cmd (format "asciidoctor --out-file '%s' '%s'"
-                     html-path
-                     (~current-file-full-path))))
-    (toolbox:run-process cmd)
+  (let ((cmd (format "asciidoctor --out-file %s %s"
+                     (shell-quote-argument html-path)
+                     (shell-quote-argument (~current-file-full-path)))))
+    (~run-process cmd)
     (message "'%s' has finished running" cmd)
-    (message "Check %s for output." html-path)))
+    (message "Check %s for output" html-path)))
 
 (defun ~asciidoc/preview ()
-  "Renders and previews current AsciiDoc file in HTML format with
-Konqueror."
+  "Renders and previews current AsciiDoc file in HTML format."
   (interactive)
   (let ((html-path (~asciidoc/current-temporary-html-path)))
     (~asciidoc/render html-path)
-    ;; (~konqueror html-path)
     (~firefox html-path :new-window? t)))
 
 (defun ~asciidoc/current-temporary-html-path ()
@@ -558,7 +556,7 @@ buffer.  The path is stored in a buffer local variable named
 
 (defun ~asciidoc/update-preview ()
   "Re-renders current AsciiDoc file for preview.  The browser
-needs manual refreshing."
+might need manual refreshing."
   (interactive)
   (~asciidoc/render (~asciidoc/current-temporary-html-path)))
 

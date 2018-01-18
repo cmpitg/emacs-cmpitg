@@ -37,7 +37,7 @@ filesystem."
     (f-dir? text)))
 
 (defun ~current-dir ()
-  "Current directory."
+  "Current directory or `$HOME`."
   (or (file-name-directory (or load-file-name buffer-file-name ""))
       "~"))
 

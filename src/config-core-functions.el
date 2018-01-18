@@ -225,6 +225,36 @@ we might have in the frame."
 ;; Window
 ;;
 
+(defun ~toggle-sticky-window ()
+  "Toggles stickiness of the currently active window."
+  (interactive)
+  (let* ((window (get-buffer-window (current-buffer)))
+         (sticky? (window-dedicated-p window)))
+    (set-window-dedicated-p window (not sticky?))
+    (message (if (not sticky?)
+                 "Window '%s' is now sticky"
+               "Window '%s' is now normal")
+             (current-buffer))))
+
+(defun ~toggle-maximize-buffer ()
+  "Toggles maximization of current buffer."
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))
+
+(defun* ~scroll-other-window (&key (nlines 5))
+  "Scrolls the other window."
+  (interactive)
+  (scroll-other-window nlines))
+
+(defun* ~scroll-other-window-reverse (&key (nlines 5))
+  "Scrolls the other window in reverse direction."
+  (interactive)
+  (scroll-other-window (- nlines)))
+
 (defun ~one-window ()
   "Deletes all other non-dedicated windows and makes current
 window the only window visible.  This function does nothing if
@@ -266,6 +296,22 @@ prefix arg (`C-u') to force deletion if it is."
 
 (defalias '~switch-buffer 'ivy-switch-buffer
   "Switches to a buffer and focus the corresponding window & frame.")
+
+(defvar *electrify-return-match*
+  "[\]\)]"
+  ;; "[\]}\)\"]"
+  "If this regexp matches the text after the cursor, do an
+\"electric\" return.")
+(defun ~electrify-return-if-match (arg)
+  "If the text after the cursor matches `electrify-return-match'
+then opens and indents an empty line between the cursor and the
+text.  Moves the cursor to the new line."
+  (interactive "P")
+  (let ((case-fold-search nil))
+    (if (looking-at *electrify-return-match*)
+        (save-excursion (newline-and-indent)))
+    (newline arg)
+    (indent-according-to-mode)))
 
 (defun ~get-buffer-content (buffer-or-name)
   "Gets the content of a buffer."
@@ -320,6 +366,16 @@ another window."
   (if in-other-window
       (switch-to-buffer-other-window "*Messages*")
     (switch-to-buffer "*Messages*")))
+
+(defun ~unfill-paragraph (&optional region)
+  "Takes a multi-line paragraph and makes it into a single line
+of text.  See https://www.emacswiki.org/emacs/UnfillParagraph for
+reference."
+  (interactive (progn (barf-if-buffer-read-only) '(t)))
+  (let ((fill-column (point-max))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
 
 (defun* ~popup-message (content &key (buffer-name "*Temporary*"))
   "Displays a popup window with `content' as its content and an
@@ -602,6 +658,16 @@ fallback to current directory if project root is not found."
     (counsel-ag nil (or (ignore-errors (projectile-project-root))
                         default-directory))))
 
+(defun ~current-dir ()
+  "Current directory or `$HOME`."
+  (or (file-name-directory (or load-file-name buffer-file-name ""))
+      "~"))
+
+(defun ~current-file-full-path ()
+  "Full path to current file."
+  (or (expand-file-name buffer-file-name)
+      ""))
+
 ;;
 ;; Emacs Lisp
 ;;
@@ -662,6 +728,21 @@ minibuffer."
 ;; Processes
 ;;
 
+(defun* ~firefox (url &key (new-window? nil))
+  "Opens a URL in Firefox."
+  (interactive
+   (list (read-string "URL: " (cond
+                               ((~is-selecting?)
+                                (~current-selection))
+                               ((thing-at-point-url-at-point)
+                                (thing-at-point-url-at-point))
+                               (t
+                                "https://encrypted.google.com/")))))
+  (let ((url (shell-quote-argument url)))
+   (~run-process (if new-window?
+                     (format "firefox-beta --new-window %s" url)
+                   (format "firefox-beta %s" url)))))
+
 (defun ~get-process-output (process)
   "Gets the output for a managed process."
   (with-current-buffer (process-buffer process)
@@ -672,7 +753,9 @@ minibuffer."
 is not terminated when Emacs exits and the output is discarded;
 otherwise, both output from stdout and stderr are direceted to
 the buffer naming after `command'.  `command' is executed via the
-current user shell, define by the `SHELL' environment variable."
+current user shell, define by the `SHELL' environment variable.
+Note that `command' is not automatically quoted and should be
+quoted with `shell-quote-argument'."
   (let ((current-shell (getenv "SHELL"))
         (process-name command))
     (if async

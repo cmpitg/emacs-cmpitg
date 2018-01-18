@@ -36,19 +36,6 @@
     (interactive)
     (helm-next-line n-lines)))
 
-;;
-;; https://www.emacswiki.org/emacs/UnfillParagraph
-;;
-
-(defun ~unfill-paragraph (&optional region)
-  "Takes a multi-line paragraph and makes it into a single line
-of text."
-  (interactive (progn (barf-if-buffer-read-only) '(t)))
-  (let ((fill-column (point-max))
-        ;; This would override `fill-column' if it's an integer.
-        (emacs-lisp-docstring-fill-column t))
-    (fill-paragraph nil region)))
-
 (defun ~current-char ()
   "Returns the string representing the character at the current
 cursor position."
@@ -610,8 +597,8 @@ do nothing."
 
 (defun ~electrify-return-if-match (arg)
   "If the text after the cursor matches `electrify-return-match'
-then open and indent an empty line between the cursor and the
-text.  Move the cursor to the new line."
+then opens and indents an empty line between the cursor and the
+text.  Moves the cursor to the new line."
   (interactive "P")
   (let ((case-fold-search nil))
     (if (looking-at *electrify-return-match*)
@@ -626,10 +613,12 @@ text.  Move the cursor to the new line."
   (delete-horizontal-space))
 
 (defun* ~scroll-other-window (&key (nlines 5))
+  "Scrolls the other window."
   (interactive)
   (scroll-other-window nlines))
 
 (defun* ~scroll-other-window-reverse (&key (nlines 5))
+  "Scrolls the other window in reverse direction."
   (interactive)
   (scroll-other-window (- nlines)))
 
@@ -775,10 +764,9 @@ prefix arg (`C-u') to force deletion if it is."
       (delete-window (selected-window))))
 
 (defun ~toggle-sticky-window ()
-  "Toggle stickiness of the currently active window."
+  "Toggles stickiness of the currently active window."
   (interactive)
-
-  (let* ((window  (get-buffer-window (current-buffer)))
+  (let* ((window (get-buffer-window (current-buffer)))
          (sticky? (window-dedicated-p window)))
     (set-window-dedicated-p window (not sticky?))
     (message (if (not sticky?)

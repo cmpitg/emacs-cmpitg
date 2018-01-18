@@ -21,8 +21,6 @@
 (~load-files "~/.emacs-machine-specific-init"
              (~get-config "machine-specific-init"))
 
-(require 'ee:functions-file              (~get-config "functions-file"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'ee:keybindings                 (~get-config "keybindings"))

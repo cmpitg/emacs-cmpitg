@@ -46,6 +46,7 @@
                    point-pos
                    expand-region
                    dumb-jump
+                   vdiff
                    embrace
                    flx
                    hydra

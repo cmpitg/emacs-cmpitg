@@ -21,6 +21,7 @@
 ;; - s-x
 ;; - s-X
 
+;; TODO: rmacs --debug-on-error
 ;; TODO: mode-line-format
 ;; TODO: tmux integration with emamux
 ;; TODO: Tiling manager - winner-mode?, something like i3
@@ -40,18 +41,8 @@
 ;; * Run (pyvenv-workon)
 ;; * Have fun
 
-;; (defun my/elpy-mode-hook ()
-;;   (bind-key "C-c ." '~python-jump-to-definition)
-;;   (bind-key "C-c ," '~python-jump-back))
-
 ;; (add-hook 'python-mode-hook 'my/elpy-mode-hook)
-
-;; (~bind-key-with-prefix "e r" 'python-shell-send-region
-;;                        :keymap python-mode-map)
-;; ;; (~bind-key-with-prefix "." 'my/python-jump-to-definition
-;; ;;                     :keymap python-mode-map)
-;; ;; (~bind-key-with-prefix "," 'my/python-jump-back
-;; ;;                     :keymap python-mode-map)
+;; TODO: DOC - Python mode keybinding - Look under the Elpy configuration
 
 ;; TODO: BUG - swiper-all → losing focus when swiping
 

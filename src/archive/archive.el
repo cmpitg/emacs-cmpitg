@@ -1110,3 +1110,61 @@ silently."
 
 ;; Load after Geiser
 ;; (use-package quack)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; No longer used
+;; (use-package grizzl-read
+;;   :config (progn
+;;             (bind-key "s-c" 'grizzl-set-selection+1 *grizzl-keymap*)
+;;             (bind-key "s-t" 'grizzl-set-selection-1 *grizzl-keymap*)))
+
+(with-eval-after-load "helm"
+  (bind-key "s-t" 'helm-next-line helm-map)
+  (bind-key "s-c" 'helm-previous-line helm-map)
+  (bind-key "M-s-t" '~helm-next-line+ helm-map)
+  (bind-key "M-s-c" '~helm-previous-line+ helm-map))
+
+(with-eval-after-load "swoop"
+  (bind-key "s-t" 'swoop-action-goto-line-next swoop-map)
+  (bind-key "s-c" 'swoop-action-goto-line-prev swoop-map))
+
+;; (bind-key "<f11>" 'helm-show-kill-ring)
+;; (bind-key "<f7>" 'project-explorer)
+;; (bind-key "<f7>" 'neotree-toggle)
+;; (bind-key "<M-f11>" 'helm-all-mark-rings)
+
+;; (bind-key "s-\\" 'helm-semantic-or-imenu)
+
+(bind-key "s-B" '~switch-to-last-buffer)
+;; (bind-key "<S-f8>" 'helm-bookmarks)
+;; (bind-key "<f8>" 'helm-mini)
+(bind-key "<f8>" 'ivy-switch-buffer)
+(bind-key "<S-f8>" 'counsel-bookmark)
+
+(eval-after-load 'icicles-cmd1
+  '(progn
+     ;; S-f4 is always mapped to delete-window
+     (global-set-key [remap icicle-kmacro] '~delete-window)))
+
+;; helm-do-ag: Helm'ing while typing to search right away
+;; helm-ag: search first, then Helm'ing while typing to filter
+;; (bind-key "<f10>" 'helm-do-grep-ag)
+;; (bind-key "<f10>" 'helm-ag)
+;; (bind-key "<f10>" 'helm-ag-project-root)
+;; (bind-key "<f10>" 'helm-do-ag-project-root)
+;; (bind-key "<C-f10>" 'helm-do-ag)
+;; (bind-key "<M-f10>" 'helm-resume)
+;; (bind-key "<C-f10>" 'ack)
+
+;; Fix open-file command in Xiki
+
+(with-eval-after-load "el4r"
+  (bind-key "C-o" '~open-line))
+
+;; (~bind-key-with-prefix "\\" 'helm-semantic-or-imenu)
+(~bind-key-with-prefix "w h" 'winner-undo)
+(~bind-key-with-prefix "w n" 'winner-redo)
+ 
