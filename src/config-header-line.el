@@ -18,14 +18,20 @@
 ;;
 
 (defvar *header-line-separator*
-  "'"
+  " "
   "Separator for the header line.")
 
 (setq-default header-line-format
               `(""
+                "x"
+                ,*header-line-separator*
                 (:eval (if (buffer-file-name) (buffer-file-name) ""))
                 ,*header-line-separator*
-                "x"
+                "/"
+                ,*header-line-separator*
+                "col+"
+                ,*header-line-separator*
+                "row+"
                 ,*header-line-separator*
                 "+"))
 
@@ -39,6 +45,12 @@
            (message "File path %s copied to clipboard" str))
           ((string= "x" str)
            (call-interactively 'kill-this-buffer))
+          ((string= "/" str)
+           (call-interactively '~delete-window))
+          ((string= "col+" str)
+           (call-interactively 'split-window-horizontally))
+          ((string= "row+" str)
+           (call-interactively 'split-window-vertically))
           ((string= "+" str)
            (call-interactively '~header-line-add))
           ((string= *header-line-separator* str)
