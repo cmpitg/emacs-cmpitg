@@ -271,7 +271,7 @@ case "${command_}" in
 			real_path_=$(emacsclient --quiet \
 				--socket-name "${socket_path_}" \
 				--no-wait \
-				--eval '(toolbox:open-file "'${path_}'")' | sed 's/"//g')
+				--eval '(~smart-open-file "'${path_}'")' | sed 's/"//g')
 
 			emacsclient --quiet \
 				--socket-name "${socket_path_}" \
