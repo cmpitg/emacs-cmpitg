@@ -38,3 +38,5 @@
 
 ;; Load machine-specific settings if existed
 (~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
+
+(message "Finish loading Rmacs edit!")
