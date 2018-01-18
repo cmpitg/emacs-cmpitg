@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2017-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -268,9 +268,10 @@ E.g.
                              :maildir-shortcuts '(("/hd-at-buddify/Inbox"          . ?i)
                                                   ("/hd-at-buddify/Drafts"         . ?r)))))
 
-(bind-key "<M-f12>" 'mu4e)
+(bind-key "<M-f12>" #'mu4e)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finish configuring mail")
-(provide 'ee:config-mail)
+
+(provide 'rmacs:config-mail)

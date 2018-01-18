@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -24,18 +24,12 @@
 (require 'rmacs:functions-mail    "functions-mail")
 (require 'rmacs:functions-cmpitg  "functions-cmpitg")
 (require 'rmacs:config-themes     "config-themes")
-(require 'ee:config-mail          (~get-config "config-mail"))
+(require 'rmacs:config-mail       "config-mail")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Machine/user-specific config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Load machine-specific settings if existed
 (~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(message "Finish loading Emacs mail")
+(message "Finish loading Rmacs mail")
