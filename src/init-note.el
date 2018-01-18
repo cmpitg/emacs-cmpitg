@@ -29,3 +29,5 @@
 
 ;; Machine/user-specific config
 (~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
+
+(message "Finish loading Rmacs note!")
