@@ -61,7 +61,7 @@
   "Gets the secondary selection (activated with `M-Mouse-1' by
 default)."
   (interactive)
-  (x-get-selection 'SECONDARY))
+  (gui-get-selection 'SECONDARY))
 
 ;;
 ;; Editing
@@ -79,7 +79,7 @@ convenient wrapper of `join-line'."
   (end-of-line)
   (delete-horizontal-space)
   (open-line arg)
-  (next-line 1)
+  (forward-line 1)
   (indent-according-to-mode))
 
 (defun ~open-line-before (arg)
@@ -107,7 +107,7 @@ Source: http://stackoverflow.com/a/4717026/219881"
                       (if (< 0 (forward-line 1)) ; Go to beginning of next
                                         ; line, or make a new one
                           (newline))))))
-        (dotimes (i (abs (or n 1)))     ; Insert N times, or once if not
+        (dotimes (_ (abs (or n 1)))     ; Insert N times, or once if not
                                         ; specified
           (insert text))))
     (if use-region nil              ; Only if we're working with a line (not a
@@ -134,12 +134,12 @@ If point is already there, moves to the beginning of the line."
 (defun* ~previous-line+ (&optional (n-lines 5))
   "Scrolls up `n-lines'."
   (interactive)
-  (previous-line n-lines))
+  (forward-line (- n-lines)))
 
 (defun* ~next-line+ (&optional (n-lines 5))
   "Scrolls down `n-lines'."
   (interactive)
-  (next-line n-lines))
+  (forward-line n-lines))
 
 (defun ~mark-line ()
   "Marks current line."
@@ -191,7 +191,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
     (if matches
         (let* ((path (nth 1 matches))
                (pattern-or-number (nth 2 matches))
-               (number (string-to-int pattern-or-number)))
+               (number (string-to-number pattern-or-number)))
           (if (zerop number)
               (values path pattern-or-number)
             (values path number)))
@@ -409,9 +409,10 @@ to `nil'."
     (set-visited-file-name (thread-first "%s_%s"
                              (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec "uuidgen"))
                              string-trim))
-    (setq-local local/delete-on-exit t)
-    (add-file-local-variable 'local/delete-on-exit t)
-    (beginning-of-buffer)
+    (let ((var/symbol (make-local-variable 'local/delete-on-exit)))
+      (set var/symbol t)
+      (add-file-local-variable var/symbol t))
+    (goto-char (point-min))
     (setq buffer-offer-save t)))
 
 (defun* ~smart-open-file (path &key (new-frame? nil))
@@ -487,9 +488,9 @@ first occurrence of a pattern.  E.g.
       (find-file path))
     (when pattern
       (cond ((numberp pattern)
-             (goto-line pattern))
+             (forward-line pattern))
             (t
-             (beginning-of-buffer)
+             (goto-char (point-min))
              (re-search-forward pattern))))
     path))
 
@@ -624,7 +625,7 @@ off the buffer."
   "Deletes current file when killing buffer if needed."
   (interactive)
   (when (and (local-variable-p 'local/delete-on-exit)
-             local/delete-on-exit)
+             (buffer-local-value 'local/delete-on-exit (current-buffer)))
     (~delete-current-file)))
 
 (defun ~maybe-make-current-file-executable ()
