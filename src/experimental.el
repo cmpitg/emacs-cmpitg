@@ -24,6 +24,13 @@
         ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "u smplayer" ("-idx" file))
         ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
 
+(setq load-prefer-newer t)
+(use-package auto-compile
+  :config
+  (progn
+    (auto-compile-on-load-mode)
+    (auto-compile-on-save-mode)))
+
 ;;
 ;; Must be in machine-specific config
 ;;
