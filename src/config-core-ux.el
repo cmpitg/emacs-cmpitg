@@ -234,7 +234,8 @@
 
 ;; FIXME
 ;; Focus follows mouse
-;; (setq mouse-autoselect-window t)
+(setq mouse-autoselect-window t)
+(setq focus-follows-mouse t)
 
 ;; Set frame title
 (let ((title-format
