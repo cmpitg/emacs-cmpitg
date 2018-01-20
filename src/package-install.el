@@ -29,7 +29,8 @@
 
 (el-get-install 'acme-mouse)
 
-(dolist (package '(subatomic256-theme
+(dolist (package '(auto-compile
+                   subatomic256-theme
                    afternoon-theme
                    monokai-theme
                    solarized-theme
@@ -86,7 +87,7 @@
                    company
                    company-quickhelp
                    pos-tip
-                   vimdiff
+                   vdiff
                    epa
                    dired+
                    dired-single
@@ -100,7 +101,7 @@
                    slime
                    slime-company
                    erlang
-                   edts-start
+                   edts
                    elixir-mode
                    alchemist
                    gradle-mode
