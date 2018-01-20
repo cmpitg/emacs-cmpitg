@@ -23,9 +23,9 @@
 
 (setq-default header-line-format
               `(""
-                "x"
-                ,*header-line-separator*
                 (:eval (if (buffer-file-name) (buffer-file-name) ""))
+                ,*header-line-separator*
+                "x"
                 ,*header-line-separator*
                 "/"
                 ,*header-line-separator*
