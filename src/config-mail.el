@@ -36,7 +36,7 @@
   (defun cmpitg/mu4e-load-path ()
     (~get-config "local-packages/mu/mu4e")))
 
-(set-frame-font "Inconsolata" nil t)
+;; (set-frame-font "Inconsolata" nil t)
 
 (defun* cmpitg:add-mu4e-account (&key context-name
                                       full-name
