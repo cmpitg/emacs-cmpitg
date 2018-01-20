@@ -23,26 +23,26 @@
 
 (use-package server)
 
-(defun* ~start-emacs-server (&optional (name server-name))
-  "Starts the Emacs server."
-  (message "Setting Emacs server name to %s and starting" name)
-  (setf server-name name)
-  (server-start))
+(eval-and-compile
+  (defun* ~start-emacs-server (&optional (name server-name))
+    "Starts the Emacs server."
+    (message "Setting Emacs server name to %s and starting" name)
+    (setf server-name name)
+    (server-start))
 
-(defun ~emacs-server-name ()
-  "Returns the current server name."
-  server-name)
+  (defun ~emacs-server-name ()
+    "Returns the current server name."
+    server-name)
 
-(defun* ~emacs-server-running? (&optional (name server-name))
-  "Determines if there is an Emacs server with `server-name' name
+  (defun* ~emacs-server-running? (&optional (name server-name))
+    "Determines if there is an Emacs server with `server-name' name
 is currently running."
-  (server-running-p name))
+    (server-running-p name)))
 
-(eval-when-compile 
-  (if (~emacs-server-running? (~emacs-server-name))
-      (message "Emacs server %s is already running, not starting"
-               (~emacs-server-name))
-    (~start-emacs-server)))
+(if (~emacs-server-running? (~emacs-server-name))
+    (message "Emacs server %s is already running, not starting"
+             (~emacs-server-name))
+  (~start-emacs-server))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
