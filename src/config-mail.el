@@ -76,13 +76,7 @@ E.g.
                    (make-mu4e-context
                     :name context-name
                     :enter-func (lambda () (mu4e-message (format "Context: %s" context-name)))
-                    :match-func (lambda (msg)
-                                  ;; (and msg
-                                  ;;      (-reduce-from (lambda (res x)
-                                  ;;                      (or res (mu4e-message-contact-field-matches msg :to x)))
-                                  ;;                    nil
-                                  ;;                    match-recipients))
-                                  nil)
+                    :match-func (lambda (msg) nil)
                     :vars `((mu4e-reply-to-address . ,mail-address)
                             (user-mail-address . ,mail-address)
                             (user-full-name . ,full-name)
