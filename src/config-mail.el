@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;
 ;; Copyright (C) 2017-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
@@ -183,7 +185,6 @@ E.g.
     (setq smtpmail-auth-credentials      "~/.authinfo.gpg")
     (setq auth-sources                   '("~/.authinfo.gpg"))
 
-
     (setq mu4e-headers-skip-duplicates t)
 
     ;; Save messages to Sent Messages, Gmail/IMAP doesn't take care of this
@@ -205,8 +206,8 @@ E.g.
 
     (add-to-list 'mu4e-view-actions
                  '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-    (setq browse-url-browser-function (lambda (url &rest args)
-                                        (~firefox url :new-window? t)))
+    (setq browse-url-browser-function #'(lambda (url &rest args)
+                                          (~firefox url :new-window? t)))
 
     ;; Don't keep message buffers around
     (setq message-kill-buffer-on-exit t)
