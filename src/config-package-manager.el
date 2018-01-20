@@ -1,3 +1,5 @@
+;;  -*- lexical-binding: t; -*-
+
 ;;
 ;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
@@ -62,8 +64,10 @@
 (eval-when-compile
   (require 'use-package))
 (setq use-package-verbose t)
-(require 'diminish)
-(require 'bind-key)
+(use-package diminish
+  :demand t)
+(use-package bind-key
+  :demand t)
 
 ;;
 ;; Local packages
