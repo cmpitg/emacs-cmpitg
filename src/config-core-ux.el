@@ -87,7 +87,7 @@
       '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
 
 ;; Use the same clipboard with X
-(setq x-select-enable-clipboard t)
+(setq select-enable-clipboard t)
 
 ;; Echo when trying to kill in a read-only buffer
 (setq kill-read-only-ok t)
@@ -114,9 +114,6 @@
 
 ;; Backspace and Del delete selection, except in paredit-mode
 (delete-selection-mode 1)
-
-;; Set the default tab width
-(setq default-tab-width 4)
 
 ;; Set tab width
 (setq tab-width 4)
@@ -205,7 +202,7 @@
 
 ;; By default, font-lock mode is off
 (global-font-lock-mode -1)
-(setq font-lock-maximum-size nil)
+;; (setq font-lock-maximum-size nil)
 
 ;; Diminish auto-revert-mode in the mode line
 (diminish 'auto-revert-mode)
