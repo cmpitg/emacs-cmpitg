@@ -118,6 +118,7 @@
 
 (use-package adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode)
+  :after (f.el)
   :config
   (progn
     (defun ~asciidoc/render (html-path)
@@ -147,7 +148,7 @@ named `asciidoc-html-path' and generated if not yet exists"
           (set asciidoc-html-path/symbol (make-temp-file (f-filename (buffer-file-name))
                                                          nil
                                                          ".html")))
-        asciidoc-html-path))
+        (buffer-local-value 'asciidoc-html-path (current-buffer))))
 
     (defun ~asciidoc/update-preview ()
       "Re-renders current AsciiDoc file for preview.  The browser
@@ -202,7 +203,7 @@ might need manual refreshing."
   :diminish projectile-mode
   :config
   (progn
-    (projectile-global-mode)
+    (projectile-mode)
 
     (setq ~project-ignored-patterns
           (list (rx (0+ any) ".gz" eol)
@@ -212,17 +213,19 @@ might need manual refreshing."
                 (rx (0+ any) ".tgz" eol)
                 (rx (0+ any) ".zip" eol)
                 (rx (0+ any) ".pyc" eol)
+                (rx (0+ any) ".elc" eol)
                 "/node_modules/"
                 "/bower_components/"))
 
     (defun ~projectile-ignored-patterns ()
-      (-concat ~project-ignored-patterns
-               (first (projectile-filtering-patterns))))
+      "Collects all ignored patterns for Projectile."
+      (concatenate 'list ~project-ignored-patterns
+                   (first (projectile-filtering-patterns))))
 
-    (defun ~projectile-ignored? (file)
-      (-any? #'(lambda (pattern)
-                 (string-match pattern file))
-             (~projectile-ignored-patterns)))
+    (defun ~projectile-ignored? (path)
+      (cl-member-if #'(lambda (pattern)
+                        (string-match pattern path))
+                    (~projectile-ignored-patterns)))
 
     (defun ~print-files-advice-around (orig-fun &rest args)
       (let* ((files (apply orig-fun args))
@@ -238,13 +241,13 @@ project root."
       (interactive)
       ;; Ignore the obsolete, we do need the powerful dynamic binding capability
       ;; of flet that neither cl-flet nor cl-letf provides
-      (flet ((projectile-project-root () default-directory)
-             (projectile-current-project-files
-              ()
-              (let (files)
-                (setq files (-mapcat #'projectile-dir-files
-                                     (projectile-get-project-directories)))
-                (projectile-sort-files files))))
+      (cl-flet ((projectile-project-root () default-directory)
+                (projectile-current-project-files
+                 ()
+                 (let (files)
+                   (setq files (-mapcat #'projectile-dir-files
+                                        (projectile-get-project-directories)))
+                   (projectile-sort-files files))))
         (call-interactively 'projectile-find-file)))
 
     (setq projectile-switch-project-action 'projectile-dired)
@@ -368,7 +371,7 @@ with prefix `s-SPC' at the same time."
   :diminish eldoc-mode
   :hook ((emacs-lisp-mode
           lisp-interaction-mode
-          ielm-mode) . turn-on-eldoc-mode)
+          ielm-mode) . eldoc-mode)
   :config (eldoc-add-command 'paredit-backward-delete 'paredit-close-round))
 
 ;;
@@ -402,6 +405,7 @@ with prefix `s-SPC' at the same time."
          ("s-T" . paredit-forward-up)
          ("s-R" . paredit-forward)
          ("s-G" . paredit-backward))
+  :defines slime-repl-mode-map
   :config (progn
             (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
               (when (apply orig-fun args)
@@ -428,7 +432,7 @@ with prefix `s-SPC' at the same time."
               (define-key slime-repl-mode-map
                 (read-kbd-macro paredit-backward-delete-key) nil))
             (add-hook 'slime-repl-mode-hook
-                      'override-slime-repl-bindings-with-paredit)
+                      #'override-slime-repl-bindings-with-paredit)
 
             (defun ~paredit-up-all ()
               (interactive)
@@ -522,9 +526,9 @@ with prefix `s-SPC' at the same time."
                         :around #'~advice/mouse-1-evil-insert-mode)
 
             (defun ~evil-kill-line-or-sexpr ()
-              "Kills current line or sexpr using paredit in evil mode."
+              "Kills current line or sexp using Paredit in Evil mode."
               (interactive)
-              (if (member* mode-name '("Emacs-Lisp" "Lisp" "Clojure") :test 'equalp)
+              (if (cl-member mode-name '("Emacs-Lisp" "Lisp" "Clojure") :test 'equalp)
                   (call-interactively 'paredit-kill)
                 (call-interactively 'kill-line)))))
 (evil-mode 1)

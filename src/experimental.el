@@ -24,6 +24,12 @@
         ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "u smplayer" ("-idx" file))
         ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
 
+;;
+;; Auto-compile Emacs Lisp if already compiled
+;;
+;; Ref: https://github.com/emacscollective/auto-compile
+;;
+
 (setq load-prefer-newer t)
 (use-package auto-compile
   :config
