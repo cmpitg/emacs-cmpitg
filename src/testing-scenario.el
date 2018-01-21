@@ -1,6 +1,18 @@
 ;; -*- no-byte-compile: t; -*-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Temporary file
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; - Create a temporary file and save
+;; - Create a temporary file, save, then kill the buffer to see if the file is
+;;   deleted
+;; - Create a temporary file, save, close, open again, the kill the buffer to
+;;   see if the file is deleted
+;; - Create a temporary file, change the value of local/delete-on-exit to nil
+;;   save, reload, then kill the buffer to see if the file is not deleted
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Projectile
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
