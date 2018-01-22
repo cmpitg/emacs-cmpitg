@@ -61,7 +61,6 @@
                    ace-window
                    ace-jump-buffer
                    ace-jump-mode
-                   point-pos
                    multiple-cursors
                    yasnippet
                    smartparens
