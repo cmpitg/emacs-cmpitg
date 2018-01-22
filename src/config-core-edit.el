@@ -607,6 +607,10 @@ interactively, `text' is taken as the current region."
                                   :capture :after
                                   :skip-comment t
                                   :action ~exec>)
+                (wand:create-rule :match "!"
+                                  :capture :after
+                                  :skip-comment t
+                                  :action ~exec-pop-up)
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action ~current-snippet->file)
