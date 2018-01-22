@@ -952,7 +952,7 @@ user buffer."
     (forward-char)))
 
 (defun try-expand-flexible-abbrev (old)
-  "Try to complete word using flexible matching.
+  "Tries to complete word using flexible matching.
 
 Flexible matching works by taking the search string and then
 interspersing it with a regexp for any character. So, if you try
