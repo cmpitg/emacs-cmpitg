@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;
 ;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
 ;;
@@ -92,10 +94,11 @@
   (bind-key "M-Q" #'~unfill-paragraph)
   (bind-key "s-; ; ;" #'~insert-full-line-comment)
 
-  (bind-key "s-C" #'sp-backward-up)
-  (bind-key "s-T" #'sp-forward-up)
-  (bind-key "M-s" #'sp-splice-sexp)
-  (bind-key "M-S" #'sp-split-sexp)
+  (with-eval-after-load "smartparens"
+    (bind-key "s-C" #'sp-backward-up)
+    (bind-key "s-T" #'sp-forward-up)
+    (bind-key "M-s" #'sp-splice-sexp)
+    (bind-key "M-S" #'sp-split-sexp))
 
   (~bind-key-with-prefix "c s" #'embrace-commander)
   (~bind-key-with-prefix "." #'dumb-jump-go)
