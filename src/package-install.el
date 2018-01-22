@@ -38,6 +38,8 @@
                    tango-plus-theme
                    tommyh-theme
                    plan9-theme
+                   diminish
+                   use-package
                    ht
                    dash
                    which-key
