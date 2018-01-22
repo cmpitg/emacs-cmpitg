@@ -201,6 +201,7 @@
   (bind-key "<f2>" #'save-buffer)
   (bind-key "<S-f2>" #'~gui/save-as)
   (bind-key "<C-f2>" #'point-pos-save)
+  (bind-key "<C-S-f2>" #'point-pos-delete)
   (bind-key "<f3>" #'counsel-find-file)
   (bind-key "<C-f3>" #'~find-files-current-dir)
   (bind-key "<M-f3>" #'~gui/open-file)
