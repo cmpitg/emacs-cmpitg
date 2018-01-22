@@ -136,7 +136,8 @@
     (setf magit-push-always-verify 'pp)
     ;; (setf git-commit-check-style-conventions nil)
     (setf git-commit-finish-query-functions nil)
-    (~bind-key-with-prefix "g s" #'magit-status)))
+    (with-eval-after-load "evil"
+      (~bind-key-with-prefix "g s" #'magit-status))))
 
 ;;
 ;; Rc shell mode
