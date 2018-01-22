@@ -44,6 +44,18 @@
   :mode "\\.toml\\'")
 
 ;;
+;; Chruby
+;;
+;; Ref: https://github.com/plexus/chruby.el
+;;
+
+(use-package chruby
+  :config
+  (let ((ruby-version (format "ruby-%s"
+                              (or (getenv "HELLO") "2.4.1"))))
+    (chruby ruby-version)))
+
+;;
 ;; Vimdiff implementation - More intuitive than Ediff
 ;;
 ;; https://github.com/justbur/emacs-vdiff

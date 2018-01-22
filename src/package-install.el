@@ -67,6 +67,7 @@
                    smartparens
                    dtrt-indent
                    emamux
+                   chruby
                    evil
                    evil-visualstar
                    evil-paredit
