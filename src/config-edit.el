@@ -96,7 +96,11 @@
      '(markdown-header-face-2
        ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
      '(markdown-header-face-3
-       ((t (:inherit markdown-header-face :height 1.3)))))))
+       ((t (:inherit markdown-header-face :height 1.3)))))
+    
+    (add-hook 'markdown-mode-hook #'(lambda ()
+                                      (interactive)
+                                      (font-lock-mode -1)))))
 
 ;;
 ;; GPG interface
