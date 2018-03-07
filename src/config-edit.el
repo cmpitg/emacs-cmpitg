@@ -390,6 +390,19 @@
                   (setq electric-indent-inhibit t)))))
 
 ;;
+;; Ref: https://github.com/necaris/conda.el
+;; Environment (de)activation: conda-env-activate, conda-env-deactivate
+;;
+
+(use-package conda
+  :config
+  (progn
+    (conda-env-initialize-interactive-shells)
+    (conda-env-initialize-eshell)
+    (conda-env-autoactivate-mode -1)
+    (setq conda-anaconda-home *conda-home-path*)))
+
+;;
 ;; Ref: http://elpy.readthedocs.io/en/latest/index.html
 ;; Config with (elpy-config)
 ;;
@@ -404,6 +417,7 @@
 ;;
 
 (use-package elpy
+  :after conda
   :init (progn
           (elpy-enable)
 
@@ -426,8 +440,11 @@
               (when p
                 (switch-to-buffer (nth 0 p))
                 (goto-char (nth 1 p)))))
+          
+          (setenv "WORKON_HOME" "/m/opt/miniconda3/envs")
 
-          (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
+          ;; (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
+          (~bind-key-with-prefix "d w"   #'conda-env-activate                :keymap elpy-mode-map)
           (~bind-key-with-prefix "d z"   #'elpy-shell-switch-to-shell        :keymap elpy-mode-map)
           (~bind-key-with-prefix "d e r" #'elpy-shell-send-region-or-buffer  :keymap elpy-mode-map)
           (~bind-key-with-prefix "d e e" #'elpy-shell-send-current-statement :keymap elpy-mode-map)

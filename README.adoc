@@ -2,6 +2,16 @@
 
 TODO.  Stay tuned for more!
 
+(setq user-full-name "Ha-Duong Nguyen"
+      user-mail-address "cmpitg@gmail.com"
+      *toolbox-path* "/m/toolbox/Toolbox.adoc"
+      *saved-macro-path* ""
+      *scratch-dir* "/m/scratch/"
+      *sbcl-bin-path* ""
+      *quicklisp-path* (expand-file-name "~/quicklisp/")
+      *notes-path* ""
+      *conda-home-path* "/m/opt/miniconda3")
+
 Note: This documentation is super-outdated.
 
 * Emacs server with https://github.com/cmpitg/emnode[Emnode] -- better

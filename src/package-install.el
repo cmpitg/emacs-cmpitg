@@ -122,6 +122,7 @@
                    toml-mode
                    haskell-mode
                    request
+                   conda
                    elpy
                    monky
                    magit))
