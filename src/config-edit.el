@@ -97,7 +97,7 @@
        ((t (:inherit markdown-header-face :height 1.5 :background "green"))))
      '(markdown-header-face-3
        ((t (:inherit markdown-header-face :height 1.3)))))
-    
+
     (add-hook 'markdown-mode-hook #'(lambda ()
                                       (interactive)
                                       (font-lock-mode -1)))))
@@ -400,7 +400,13 @@
     (conda-env-initialize-interactive-shells)
     (conda-env-initialize-eshell)
     (conda-env-autoactivate-mode -1)
-    (setq conda-anaconda-home *conda-home-path*)))
+    (setq conda-anaconda-home *conda-home-path*)
+    
+    (let ((conda-bin (concat *conda-home-path* "/bin"))
+          (current-env-path (getenv "PATH")))
+      (unless (string-prefix-p conda-bin current-env-path)
+        (setenv "PATH" (concat conda-bin ":" current-env-path))
+        (exec-path-from-shell-copy-env "PATH")))))
 
 ;;
 ;; Ref: http://elpy.readthedocs.io/en/latest/index.html
@@ -440,8 +446,11 @@
               (when p
                 (switch-to-buffer (nth 0 p))
                 (goto-char (nth 1 p)))))
-          
+
           (setenv "WORKON_HOME" (concat *conda-home-path* "/envs"))
+          (setq elpy-rpc-python-command (concat *conda-home-path* "/bin/python"))
+
+          (elpy-use-ipython)
 
           ;; (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
           (~bind-key-with-prefix "d w"   #'conda-env-activate                :keymap elpy-mode-map)
