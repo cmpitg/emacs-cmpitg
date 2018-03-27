@@ -441,7 +441,7 @@
                 (switch-to-buffer (nth 0 p))
                 (goto-char (nth 1 p)))))
           
-          (setenv "WORKON_HOME" "/m/opt/miniconda3/envs")
+          (setenv "WORKON_HOME" (concat *conda-home-path* "/envs"))
 
           ;; (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
           (~bind-key-with-prefix "d w"   #'conda-env-activate                :keymap elpy-mode-map)
