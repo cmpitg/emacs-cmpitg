@@ -29,6 +29,8 @@
                 ,*header-line-separator*
                 "/"
                 ,*header-line-separator*
+                "git"
+                ,*header-line-separator*
                 "col+"
                 ,*header-line-separator*
                 "row+"
@@ -47,6 +49,8 @@
            (call-interactively 'kill-this-buffer))
           ((string= "/" str)
            (call-interactively '~delete-window))
+          ((string= "git" str)
+           (call-interactively 'magit-status))      
           ((string= "col+" str)
            (call-interactively 'split-window-horizontally))
           ((string= "row+" str)
