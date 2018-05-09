@@ -35,6 +35,8 @@
                 ,*header-line-separator*
                 "row+"
                 ,*header-line-separator*
+                "~"
+                ,*header-line-separator*
                 "+"))
 
 (defun ~header-line-execute (event)
@@ -55,6 +57,8 @@
            (call-interactively 'split-window-horizontally))
           ((string= "row+" str)
            (call-interactively 'split-window-vertically))
+          ((string= "~" str)
+           (call-interactively '~transpose-windows))
           ((string= "+" str)
            (call-interactively '~header-line-add))
           ((string= *header-line-separator* str)
