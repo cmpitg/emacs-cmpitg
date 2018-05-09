@@ -14,26 +14,6 @@ TODO.  Stay tuned for more!
 
 Note: This documentation is super-outdated.
 
-* Emacs server with https://github.com/cmpitg/emnode[Emnode] -- better
-  interaction: cleaner, wider tools, ...
-
-* By default:
-
-** The
-   https://www.gnu.org/software/emacs/manual/html_node/elisp/Error-Debugging.html[`toggle-debug-on-error`]
-   option is disabled.  To turn it on, set the environment variable
-   `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR` to `1`,
-   e.g. `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR=1 emacs-cmpitg`.
-
-** Emacs is loaded with my own experimental configuration
-   link:src/experimental.el[`experimental.el`].  To disable this feature, set
-   the environment variable `EMACS_NO_EXPERIMENTAL` to `1`,
-   e.g. `EMACS_NO_EXPERIMENTAL=1 emacs-cmpitg`.
-
-** If there is `.emacs-machine-specific.el` file in your home directory or
-   `machine-specific.el` in the `src/` directory of this repo, they will be
-   loaded.  Those files are meant to store machine-specific configuration.
-
 == How to run
 
 * Environment variables:
