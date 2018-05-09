@@ -155,6 +155,7 @@
   (~bind-key-with-prefix "w c" #'ace-window)
   (~bind-key-with-prefix "w s" #'ace-swap-window)
   (~bind-key-with-prefix "w o" #'~one-window)
+  (~bind-key-with-prefix "w t" #'~transpose-windows)
 
   ;; Header line
   (bind-key "<header-line> <mouse-3>" #'~header-line-execute)

@@ -276,6 +276,33 @@ prefix arg (`C-u') to force deletion if it is."
                     (current-buffer)))
       (delete-window (selected-window))))
 
+(defun ~transpose-windows ()
+  "Transposes the current window with the next one."
+  (interactive)
+  (when (window-dedicated-p (selected-window))
+    (error "Current window is dedicated, cannot transpose"))
+  (let ((windows (loop for window in (window-list)
+                       when (window-dedicated-p window)
+                       collect window)))
+    (let* ((current-window (selected-window))
+           (current-buffer (window-buffer))
+           (next-window (~get-next-non-dedicated-window current-window nil))
+           (next-buffer (window-buffer next-window)))
+      (set-window-buffer next-window current-buffer)
+      (set-window-buffer current-window next-buffer))))
+
+(defun* ~get-next-non-dedicated-window (&optional original-window next-window)
+  "Gets the next non-dedicated, non-minibuffer window."
+  (cond
+   ((equal original-window next-window)
+    original-window)
+   ((null next-window)
+    (~abc original-window (next-window original-window)))
+   ((window-dedicated-p next-window)
+    (~abc original-window (next-window next-window)))
+   (t
+    next-window)))
+
 ;;
 ;; File & buffer
 ;;
