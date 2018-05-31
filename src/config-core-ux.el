@@ -243,8 +243,8 @@
   (setq frame-title-format title-format))
 
 ;; One buffer per window setup
-(require 'rmacs:config-one-buffer-per-window
-         "config-one-buffer-per-window")
+;; (require 'rmacs:config-one-buffer-per-window
+;;          "config-one-buffer-per-window")
 
 ;; Header line as command palette
 (require 'rmacs:config-header-line
