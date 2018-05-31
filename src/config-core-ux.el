@@ -267,7 +267,6 @@
 
 ;; Highlighting phrase and expression when needed
 ;; Ref: https://www.emacswiki.org/emacs/HiLock
-
 (use-package hi-lock
   :commands (highlight-phrase highlight-regexp))
 
@@ -315,9 +314,9 @@
             (setq-default evil-cross-lines t))))
 
 ;; Preventing other windows from stealing the current window
-(defadvice pop-to-buffer (before cancel-other-window first)
-  (ad-set-arg 1 nil))
-(ad-activate 'pop-to-buffer)
+;; (defadvice pop-to-buffer (before cancel-other-window first)
+;;   (ad-set-arg 1 nil))
+;; (ad-activate 'pop-to-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

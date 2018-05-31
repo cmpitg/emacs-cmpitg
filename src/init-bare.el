@@ -123,9 +123,9 @@
 (require 'rmacs:bootstrap-config        *bootstrap-config-path*)
 (require 'rmacs:config-package-manager  "config-package-manager")
 (require 'rmacs:config-ipc              "config-ipc")
+(require 'rmacs:config-core-functions   "config-core-functions")
 (require 'rmacs:config-core-edit        "config-core-edit")
 (require 'rmacs:config-core-ux          "config-core-ux")
-(require 'rmacs:config-core-functions   "config-core-functions")
 (require 'rmacs:config-core-keybindings "config-core-keybindings")
 
 (message "Done loading Rmacs bare")
