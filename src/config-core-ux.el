@@ -194,12 +194,6 @@
 ;; that you put in the minibuffer
 (setq resize-mini-windows t)
 
-;; Line numbering is off by default
-(use-package linum
-  :init (progn
-          (global-linum-mode -1)
-          (setq linum-format "%d ")))
-
 ;; By default, font-lock mode is off
 (global-font-lock-mode -1)
 ;; (setq font-lock-maximum-size nil)
