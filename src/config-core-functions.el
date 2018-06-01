@@ -297,9 +297,9 @@ prefix arg (`C-u') to force deletion if it is."
    ((equal original-window next-window)
     original-window)
    ((null next-window)
-    (~abc original-window (next-window original-window)))
+    (~get-next-non-dedicated-window original-window (next-window original-window)))
    ((window-dedicated-p next-window)
-    (~abc original-window (next-window next-window)))
+    (~get-next-non-dedicated-window original-window (next-window next-window)))
    (t
     next-window)))
 
