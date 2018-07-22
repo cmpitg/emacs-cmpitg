@@ -264,7 +264,6 @@
             (which-key-mode)
             (which-key-setup-side-window-right-bottom)))
 
-
 ;; Highlighting phrase and expression when needed
 ;; Ref: https://www.emacswiki.org/emacs/HiLock
 (use-package hi-lock

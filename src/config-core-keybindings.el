@@ -116,8 +116,7 @@
   (bind-key "s-z" #'~open-current-file-as-admin)
 
   ;; Project management
-  (~bind-key-with-prefix "p t" #'treemacs-toggle)
-  (~bind-key-with-prefix "p o" #'treemacs)
+  (~bind-key-with-prefix "p t" #'treemacs)
   (~bind-key-with-prefix "p p" #'treemacs-projectile)
   (~bind-key-with-prefix "p f" #'treemacs-select-window)
   
@@ -134,7 +133,7 @@
   (bind-key "M-a" #'~exec>)
   (bind-key "s-[" #'emamux:send-region)
   (bind-key "<s-return>" #'wand:execute)
-  (bind-key "<mouse-2>" #'wand:execute)
+  (bind-key "<C-mouse-1>" #'wand:execute)
 
   ;; Semantic editting
   (bind-key "s-\\" #'counsel-imenu)
@@ -160,7 +159,7 @@
   ;; Header line
   (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
   (bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)
-  
+
   ;; Version management
   (~bind-key-with-prefix "g s" #'magit-status)
 
