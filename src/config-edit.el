@@ -430,7 +430,8 @@
           (setenv "WORKON_HOME" (concat *conda-home-path* "/envs"))
           (setq elpy-rpc-python-command (concat *conda-home-path* "/bin/python"))
 
-          (elpy-use-ipython)
+          (setq python-shell-interpreter "ipython")
+          (setq python-shell-interpreter-args "-i --simple-prompt")
 
           ;; (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
           (~bind-key-with-prefix "d w"   #'conda-env-activate                :keymap elpy-mode-map)
