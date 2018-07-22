@@ -120,7 +120,7 @@
   (~bind-key-with-prefix "p o" #'treemacs)
   (~bind-key-with-prefix "p p" #'treemacs-projectile)
   (~bind-key-with-prefix "p f" #'treemacs-select-window)
-
+  
   ;; Buffer management
   (bind-key "<C-tab>" #'~switch-to-last-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
@@ -160,6 +160,9 @@
   ;; Header line
   (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
   (bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)
+  
+  ;; Version management
+  (~bind-key-with-prefix "g s" #'magit-status)
 
   ;; Display
   (~bind-key-with-prefix "s l" #'linum-mode)

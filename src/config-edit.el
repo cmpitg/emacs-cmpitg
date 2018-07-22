@@ -136,26 +136,6 @@
   (setq dired-listing-switches "-lhFgG --group-directories-first"))
 
 ;;
-;; Version control systems: Mercurial and Git
-;;
-;; Ref: https://github.com/ananthakumaran/monky
-;; Ref: https://github.com/magit/magit
-;;
-
-(use-package monky
-  :commands monky-status)
-
-(use-package magit
-  :commands (magit-status magit-get-top-dir)
-  :init
-  (progn
-    (setf magit-push-always-verify 'pp)
-    ;; (setf git-commit-check-style-conventions nil)
-    (setf git-commit-finish-query-functions nil)
-    (with-eval-after-load "evil"
-      (~bind-key-with-prefix "g s" #'magit-status))))
-
-;;
 ;; Rc shell mode
 ;;
 ;; Ref: https://github.com/mrhmouse/rc-mode.el

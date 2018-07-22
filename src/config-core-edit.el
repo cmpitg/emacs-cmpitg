@@ -545,7 +545,25 @@ with prefix `s-SPC' at the same time."
           scheme-mode) . evil-paredit-mode))
 
 ;;
-;; File explorer
+;; Version control systems: Mercurial and Git
+;;
+;; Ref: https://github.com/ananthakumaran/monky
+;; Ref: https://github.com/magit/magit
+;;
+
+(use-package monky
+  :commands monky-status)
+
+(use-package magit
+  :commands (magit-status magit-get-top-dir)
+  :init
+  (progn
+    (setf magit-push-always-verify 'pp)
+    ;; (setf git-commit-check-style-conventions nil)
+    (setf git-commit-finish-query-functions nil)))
+
+;;
+;; File explorer and sidebar
 ;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs
 ;;
