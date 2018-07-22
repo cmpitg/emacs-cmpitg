@@ -110,7 +110,6 @@
                    groovy-mode
                    jdee
                    clojure-mode
-                   clojure-cheatsheet
                    clojurescript-mode
                    midje-mode
                    clj-refactor

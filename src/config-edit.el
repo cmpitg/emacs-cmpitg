@@ -526,9 +526,6 @@ the sequence, and its index within the sequence."
     (bind-key "<C-return>" #'cider-eval-last-sexp cider-mode-map)
     (bind-key "<S-return>" #'cider-eval-sexp-at-point cider-mode-map)))
 
-(use-package clojure-cheatsheet
-  :after cider)
-
 (use-package clojurescript-mode)
 
 (use-package midje-mode
