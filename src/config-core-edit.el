@@ -482,26 +482,26 @@ with prefix `s-SPC' at the same time."
             ;; Use insert mode by default
             (setq evil-default-state 'insert)
 
-            (with-eval-after-load "evil-vars"
-              (dolist (mode '(term-mode
-                              multi-term-mode
-                              ansi-term-mode
-                              magit-log-edit-mode
-                              magit-popup-mode
-                              magit-file-mode
-                              dired-mode
-                              nav-mode
-                              grep-mode
-                              bs-mode
-                              cider-repl-mode
-                              cider-popup-buffer-mode
-                              cider--debug-mode
-                              cider-temp-mode
-                              help-mode
-                              compilation-mode
-                              ivy-occur-mode))
-                (evil-set-initial-state mode 'emacs))
-              (evil-set-initial-state 'ibuffer-mode 'normal))
+            ;; (with-eval-after-load "evil-vars"
+            ;;   (dolist (mode '(term-mode
+            ;;                   multi-term-mode
+            ;;                   ansi-term-mode
+            ;;                   magit-log-edit-mode
+            ;;                   magit-popup-mode
+            ;;                   magit-file-mode
+            ;;                   dired-mode
+            ;;                   nav-mode
+            ;;                   grep-mode
+            ;;                   bs-mode
+            ;;                   cider-repl-mode
+            ;;                   cider-popup-buffer-mode
+            ;;                   cider--debug-mode
+            ;;                   cider-temp-mode
+            ;;                   help-mode
+            ;;                   compilation-mode
+            ;;                   ivy-occur-mode))
+            ;;     (evil-set-initial-state mode 'emacs))
+            ;;   (evil-set-initial-state 'ibuffer-mode 'normal))
 
             (setq evil-emacs-state-cursor 'bar)
             (setq-default cursor-type 'bar)
