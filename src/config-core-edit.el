@@ -489,7 +489,6 @@ with prefix `s-SPC' at the same time."
                               magit-log-edit-mode
                               magit-popup-mode
                               magit-file-mode
-                              neotree-mode
                               dired-mode
                               nav-mode
                               grep-mode
