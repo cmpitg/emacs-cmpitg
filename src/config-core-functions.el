@@ -255,7 +255,7 @@ we might have in the frame."
   (interactive)
   (scroll-other-window (- nlines)))
 
-(defun ~one-window ()
+(defun ~one-window.old ()
   "Deletes all other non-dedicated windows and makes current
 window the only window visible.  This function does nothing if
 the current window is a dedicated window."
@@ -265,6 +265,11 @@ the current window is a dedicated window."
                 (unless (window-dedicated-p window)
                   (delete-window window)))
             (cdr (window-list)))))
+
+(defalias '~one-window 'treemacs-delete-other-windows
+  "Deletes all other non-dedicated windows and makes current
+window the only window visible.  This function does nothing if
+the current window is a dedicated window.")
 
 (defun ~delete-window ()
   "Deletes current window if it's not sticky/dedicated.  Use
