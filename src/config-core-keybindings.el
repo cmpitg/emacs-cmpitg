@@ -116,8 +116,8 @@
   (bind-key "s-z" #'~open-current-file-as-admin)
 
   ;; Project management
-  (~bind-key-with-prefix "p t" #'treemacs)
-  (~bind-key-with-prefix "p p" #'treemacs-projectile)
+  (~bind-key-with-prefix "p p" #'treemacs)
+  (~bind-key-with-prefix "p o" #'treemacs-projectile)
   (~bind-key-with-prefix "p f" #'treemacs-select-window)
   
   ;; Buffer management
