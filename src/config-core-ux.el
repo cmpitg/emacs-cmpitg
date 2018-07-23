@@ -242,6 +242,10 @@
   (setq-default frame-title-format title-format)
   (setq frame-title-format title-format))
 
+;; To make the behavior of `display-buffer' consistent, do not allow it to
+;; create a new window
+(setq pop-up-windows nil)
+
 ;; One buffer per window setup
 ;; (require 'rmacs:config-one-buffer-per-window
 ;;          "config-one-buffer-per-window")
