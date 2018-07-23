@@ -15,6 +15,19 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Variables & parameters
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar *one-buffer-per-window-temporarily-disabled?* nil
+  "Dynamic variable used to determine if the
+one-buffer-per-window switching mechanism is temporarily
+disabled.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helpers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun* ~is-buffer-visible? (buffer-or-name)
   "Determines if a buffer is current visible."
   (not (null (get-buffer-window buffer-or-name 0))))
@@ -46,6 +59,12 @@ does not yet exist, create it."
   (interactive)
   (call-interactively 'other-window)
   (call-interactively '~switch-to-blank-buffer))
+
+(defun* ~disable-one-buffer-per-window-for (funcs)
+  "Disables one-buffer-per-window for certain functions."
+  (dolist (func funcs)
+    (advice-add func :around
+                #'~advice/disable-one-buffer-per-window)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hooks & advices
@@ -98,7 +117,8 @@ visible."
 (defun ~advice/change-focus-if-buffer-is-already-visible (orig-fun buffer-or-name &rest args)
   "Prevents switching to an already visible buffer unless it's
 the blank buffer."
-  (if (and (not (~is-blank-buffer? buffer-or-name))
+  (if (and (not *one-buffer-per-window-temporarily-disabled?*)
+           (not (~is-blank-buffer? buffer-or-name))
            (~is-buffer-visible? buffer-or-name))
       (let* ((window (get-buffer-window buffer-or-name t))
              (frame (window-frame window)))
@@ -108,6 +128,16 @@ the blank buffer."
 
 (advice-add 'switch-to-buffer
             :around #'~advice/change-focus-if-buffer-is-already-visible)
+
+;;
+;; Sometimes we would like to temporarily disable one-buffer-per-window
+;; behavior.
+;;
+
+(defun* ~advice/disable-one-buffer-per-window (orig-fun &rest args)
+  "Advice to temporarily disable one-buffer-per-window."
+  (let ((*one-buffer-per-window-temporarily-disabled?* t))
+    (apply orig-fun args)))
 
 ;;
 ;; Make sure after splitting window or creating a new frame, the blank buffer

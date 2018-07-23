@@ -305,6 +305,13 @@ project root."
 
             (setq ivy-use-selectable-prompt t)
 
+            ;; Disable one-buffer-per-window behavior when swiping
+            (with-eval-after-load 'rmacs:config-one-buffer-per-window
+              (~disable-one-buffer-per-window-for '(swiper-all
+                                                    swiper-all-query-replace
+                                                    swiper-multi
+                                                    swiper-query-replace)))
+
             ;; Default matching
             ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
             (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
