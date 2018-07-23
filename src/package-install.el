@@ -38,6 +38,7 @@
                    tango-plus-theme
                    tommyh-theme
                    plan9-theme
+                   ibuffer-sidebar
                    diminish
                    use-package
                    ht

@@ -316,6 +316,16 @@
             ;; Make horizontal movement cross lines
             (setq-default evil-cross-lines t))))
 
+;; Buffer list sidebar
+;; Ref: https://github.com/jojojames/ibuffer-sidebar
+(use-package ibuffer-sidebar
+  :bind ("<C-f8>" . ibuffer-sidebar-toggle-sidebar)
+  :commands (ibuffer-sidebar-toggle-sidebar)
+  :config
+  (progn
+    (setq ibuffer-sidebar-use-custom-font t)
+    (setq ibuffer-sidebar-display-alist '((side . right) (slot . 1)))))
+
 ;; Preventing other windows from stealing the current window
 ;; (defadvice pop-to-buffer (before cancel-other-window first)
 ;;   (ad-set-arg 1 nil))
