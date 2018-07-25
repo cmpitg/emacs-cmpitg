@@ -1,7 +1,9 @@
 = cmpitg's Emacs config
 
-TODO.  Stay tuned for more!
+This documentation is out-dated.
 
+[source,emacs-lisp]
+----
 (setq user-full-name "Ha-Duong Nguyen"
       user-mail-address "cmpitg@gmail.com"
       *toolbox-path* "/m/toolbox/Toolbox.adoc"
@@ -11,8 +13,29 @@ TODO.  Stay tuned for more!
       *quicklisp-path* (expand-file-name "~/quicklisp/")
       *notes-path* ""
       *conda-home-path* "/m/opt/miniconda3")
+----
 
-Note: This documentation is super-outdated.
+== Requirements
+
+* Emacs 26.1+
+* Python 3+
+* GNU Make 4.1+.  Supposedly any version of modern Make implementation could work but I haven't yet tested.
+
+== Installation
+
+* Installing dependencies:
++
+[source,sh]
+----
+make install-deps
+----
+
+* Installing Rmacs by symlinking the executable to `${HOME}/bin`:
++
+[source,sh]
+----
+make install-bin
+----
 
 == How to run
 
