@@ -319,7 +319,9 @@
 ;; Buffer list sidebar
 ;; Ref: https://github.com/jojojames/ibuffer-sidebar
 (use-package ibuffer-sidebar
-  :bind ("<C-f8>" . ibuffer-sidebar-toggle-sidebar)
+  :bind (("<C-f8>" . ibuffer-sidebar-toggle-sidebar)
+         :map ibuffer-name-map
+         ("<double-mouse-1>" . ibuffer-visit-buffer))
   :commands (ibuffer-sidebar-toggle-sidebar)
   :config
   (progn
