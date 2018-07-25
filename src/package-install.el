@@ -27,8 +27,10 @@
          (package-install:get-config "config-package-manager"))
 
 (el-get-bundle cmpitg/acme-mouse)
+(el-get-bundle djcb/mu)
 (el-get 'sync)
 (el-get-install 'acme-mouse)
+(el-get-install 'mu4e)
 
 (dolist (package '(auto-compile
                    subatomic256-theme

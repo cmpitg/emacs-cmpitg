@@ -1,3 +1,0 @@
-[submodule "src/local-packages/mu"]
-	path = src/local-packages/mu
-	url = git@github.com:cmpitg/mu.git

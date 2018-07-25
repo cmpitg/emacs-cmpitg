@@ -99,7 +99,6 @@ E.g.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package mu4e
-  :load-path (lambda () (list (cmpitg/mu4e-load-path)))
   :config
   (progn
     ;; TODO - Context menu
