@@ -20,6 +20,7 @@ This documentation is out-dated.
 * Emacs 26.1+
 * Python 3+
 * GNU Make 4.1+.  Supposedly any version of modern Make implementation could work but I haven't yet tested.
+* The `${HOME}/bin` directory exists, containing executables for the current user.
 
 == Installation
 
