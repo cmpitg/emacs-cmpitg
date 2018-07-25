@@ -25,8 +25,9 @@
 
 (require 'rmacs:config-package-manager
          (package-install:get-config "config-package-manager"))
-(el-get 'sync)
 
+(el-get-bundle cmpitg/acme-mouse)
+(el-get 'sync)
 (el-get-install 'acme-mouse)
 
 (dolist (package '(auto-compile
