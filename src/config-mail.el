@@ -250,17 +250,7 @@ E.g.
                              :signature-file "/m/mail/signature_hd-at-mamk.txt"
                              :sent-folder "/hd-at-mamk/sent"
                              :maildir-shortcuts '(("/hd-at-mamk/Inbox"          . ?i)
-                                                  ("/hd-at-mamk/Drafts"         . ?r)))
-    (cmpitg:add-mu4e-account :context-name "b-hd@buddify"
-                             :full-name "Ha-Duong Nguyen"
-                             :mail-address "haduong.nguyen@buddify.io"
-                             :match-recipients '("haduong.nguyen@buddify.io" "duong.nguyen@buddify.io")
-                             :default-headers "BCC: haduong.nguyen@buddify.io"
-                             :smtp-server "smtp.zoho.com:587"
-                             :signature-file "/m/mail/signature_hd-at-buddify.txt"
-                             :sent-folder "/hd-at-buddify/sent"
-                             :maildir-shortcuts '(("/hd-at-buddify/Inbox"          . ?i)
-                                                  ("/hd-at-buddify/Drafts"         . ?r)))))
+                                                  ("/hd-at-mamk/Drafts"         . ?r)))))
 
 (bind-key "<M-f12>" #'mu4e)
 
