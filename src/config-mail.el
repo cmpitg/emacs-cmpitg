@@ -35,70 +35,15 @@
 ;;
 
 (eval-and-compile
-  (defun cmpitg/mu4e-load-path ()
-    (~get-config "local-packages/mu/mu4e")))
-
-;; (set-frame-font "Inconsolata" nil t)
-
-(defun* cmpitg:add-mu4e-account (&key context-name
-                                      full-name
-                                      mail-address
-                                      match-recipients
-                                      default-headers
-                                      smtp-server
-                                      sent-folder
-                                      signature-file
-                                      maildir-shortcuts)
-  "Add a mu4e mail account.
-
-E.g.
-
-\(cmpitg:add-mu4e-account :context-name \"cmpitg@gmail\"
-                         :full-name \"Ha-Duong Nguyen\"
-                         :mail-address \"cmpitg@gmail.com\"
-                         :match-recipients '\(\"cmpitg.gmail.com\"\)
-                         :default-headers \"BCC: cmpitg@gmail.com\"
-                         :smtp-server \"smtp.gmail.com:587\"
-                         :sent-folder \"/cmpitg-at-gmail/sent\"
-                         :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"
-                         :maildir-shortcuts '\(\"cmpitg-at-gmail/Inbox\" . ?i\)\)"
-  ;; Because Emacs uses dynamic binding by default
-  (lexical-let ((context-name context-name)
-                (full-name full-name)
-                (mail-address mail-address)
-                (match-recipients match-recipients)
-                (default-headers default-headers)
-                (smtp-server smtp-server)
-                (sent-folder sent-folder)
-                (signature-file signature-file)
-                (maildir-shortcuts maildir-shortcuts))
-    (add-to-list 'mu4e-user-mail-address-list mail-address t)
-    (destructuring-bind (smtp-server smtp-port) (s-split ":" smtp-server)
-      (add-to-list 'mu4e-contexts
-                   (make-mu4e-context
-                    :name context-name
-                    :enter-func (lambda () (mu4e-message (format "Context: %s" context-name)))
-                    :match-func (lambda (msg) nil)
-                    :vars `((mu4e-reply-to-address . ,mail-address)
-                            (user-mail-address . ,mail-address)
-                            (user-full-name . ,full-name)
-                            (mail-default-headers . ,default-headers)
-                            (mu4e-compose-signature . ,(~read-file signature-file))
-                            (smtpmail-mail-address . ,mail-address)
-                            (smtpmail-default-smtp-server . ,smtp-server)
-                            (smtpmail-smtp-user . ,mail-address)
-                            (smtpmail-smtp-server . ,smtp-server)
-                            (smtpmail-smtp-service . ,smtp-port)
-                            (smtpmail-starttls-credentials . ((,smtp-server ,smtp-port ,mail-address nil)))
-                            (mu4e-sent-folder . ,sent-folder)
-                            (mu4e-maildir-shortcuts . ,maildir-shortcuts)))
-                   t))))
+  ;; (set-frame-font "Inconsolata" nil t)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Loading mu4e
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package mu4e
+  :demand t
   :config
   (progn
     ;; TODO - Context menu
@@ -213,6 +158,61 @@ E.g.
 
     (setq mu4e-user-mail-address-list (list))
     (setq mu4e-contexts (list))
+
+    (defun* cmpitg:add-mu4e-account (&key context-name
+                                          full-name
+                                          mail-address
+                                          match-recipients
+                                          default-headers
+                                          smtp-server
+                                          sent-folder
+                                          signature-file
+                                          maildir-shortcuts)
+      "Add a mu4e mail account.
+
+E.g.
+
+\(cmpitg:add-mu4e-account :context-name \"cmpitg@gmail\"
+                         :full-name \"Ha-Duong Nguyen\"
+                         :mail-address \"cmpitg@gmail.com\"
+                         :match-recipients '\(\"cmpitg.gmail.com\"\)
+                         :default-headers \"BCC: cmpitg@gmail.com\"
+                         :smtp-server \"smtp.gmail.com:587\"
+                         :sent-folder \"/cmpitg-at-gmail/sent\"
+                         :signature-file \"/m/mail/signature_cmpitg-at-gmail.txt\"
+                         :maildir-shortcuts '\(\"cmpitg-at-gmail/Inbox\" . ?i\)\)"
+      ;; Because Emacs uses dynamic binding by default
+      (lexical-let ((context-name context-name)
+                    (full-name full-name)
+                    (mail-address mail-address)
+                    (match-recipients match-recipients)
+                    (default-headers default-headers)
+                    (smtp-server smtp-server)
+                    (sent-folder sent-folder)
+                    (signature-file signature-file)
+                    (maildir-shortcuts maildir-shortcuts))
+        (add-to-list 'mu4e-user-mail-address-list mail-address t)
+        (destructuring-bind (smtp-server smtp-port) (s-split ":" smtp-server)
+          (add-to-list 'mu4e-contexts
+                       (make-mu4e-context
+                        :name context-name
+                        :enter-func (lambda () (mu4e-message (format "Context: %s" context-name)))
+                        :match-func (lambda (msg) nil)
+                        :vars `((mu4e-reply-to-address . ,mail-address)
+                                (user-mail-address . ,mail-address)
+                                (user-full-name . ,full-name)
+                                (mail-default-headers . ,default-headers)
+                                (mu4e-compose-signature . ,(~read-file signature-file))
+                                (smtpmail-mail-address . ,mail-address)
+                                (smtpmail-default-smtp-server . ,smtp-server)
+                                (smtpmail-smtp-user . ,mail-address)
+                                (smtpmail-smtp-server . ,smtp-server)
+                                (smtpmail-smtp-service . ,smtp-port)
+                                (smtpmail-starttls-credentials . ((,smtp-server ,smtp-port ,mail-address nil)))
+                                (mu4e-sent-folder . ,sent-folder)
+                                (mu4e-maildir-shortcuts . ,maildir-shortcuts)))
+                       t))))
+    
     (cmpitg:add-mu4e-account :context-name "cmpitg@gmail"
                              :full-name "Ha-Duong Nguyen"
                              :mail-address "cmpitg@gmail.com"
