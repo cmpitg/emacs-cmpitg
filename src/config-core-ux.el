@@ -17,6 +17,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; Always follow symlinks
+(setq vc-follow-symlinks t)
+
 ;; 3 lines at a time normally, 5 lines at a time with shift
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 5)))
 
@@ -206,9 +209,6 @@
 
 ;; Added functionality to hippie-expand
 (add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
-
-;; Always follow symlinks
-(setq vc-follow-symlinks t)
 
 ;; Hide undo-tree from mode line
 (use-package undo-tree
