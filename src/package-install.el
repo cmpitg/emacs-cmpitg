@@ -109,7 +109,6 @@
                    alchemist
                    gradle-mode
                    groovy-mode
-                   jdee
                    clojure-mode
                    clojurescript-mode
                    midje-mode

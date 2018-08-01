@@ -121,7 +121,7 @@
   "Path to the Rmacs boostrap-config file.")
 
 (require 'rmacs:bootstrap-config        *bootstrap-config-path*)
-(require 'rmacs:config-package-manager  "config-package-manager")
+(require 'rmacs:config-package-manager  "config-package-manager.new")
 (require 'rmacs:config-ipc              "config-ipc")
 (require 'rmacs:config-core-functions   "config-core-functions")
 (require 'rmacs:config-core-edit        "config-core-edit")
