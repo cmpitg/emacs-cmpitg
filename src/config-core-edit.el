@@ -649,7 +649,7 @@ interactively, `text' is taken as the current region."
                                   :action ~smart-open-file)
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
-                                  :skip-comment nil
+                                  :skip-comment t
                                   :action ~open-or-eval)))))
 
 ;;
