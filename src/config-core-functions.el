@@ -497,20 +497,23 @@ to `nil'."
     (setq buffer-offer-save t)))
 
 (defun* ~smart-open-file (path &key (new-frame? nil))
-  "Opens path and with external program if necessary."
-  (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
-                                     *open-with-regexps*
-                                   (list))
-                                 (list `(".*" . (lambda (path)
-                                                  (~open-file-specialized path
-                                                                          :new-frame? ,new-frame?))))))
-    (let ((regexp (car regexp&action))
-          (action (cdr regexp&action)))
-      (when (s-matches-p regexp path)
-        (return (typecase action
-                  (function   (funcall action path))
-                  (string     (~open-with path action))
-                  (otherwise  (message-box (format "Invalid program %s" action)))))))))
+  "Opens path and with external program if necessary.  `path' is
+expanded using `expand-file-name'.  Environment variables in
+`path' are not expanded and considered as part of the path."
+  (let ((path (expand-file-name path)))
+    (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
+                                       *open-with-regexps*
+                                     (list))
+                                   (list `(".*" . (lambda (path)
+                                                    (~open-file-specialized path
+                                                                            :new-frame? ,new-frame?))))))
+      (let ((regexp (car regexp&action))
+            (action (cdr regexp&action)))
+        (when (s-matches-p regexp path)
+          (return (typecase action
+                    (function   (funcall action path))
+                    (string     (~open-with path action))
+                    (otherwise  (message-box (format "Invalid program %s" action))))))))))
 
 (defun ~gui/open-file ()
   (interactive)
