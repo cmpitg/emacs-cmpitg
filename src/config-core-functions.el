@@ -498,8 +498,8 @@ to `nil'."
 
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary.  `path' is
-expanded using `expand-file-name'.  Environment variables in
-`path' are not expanded and considered as part of the path."
+expanded using `expand-file-name', then
+`substitute-in-file-name'."
   (let ((path (expand-file-name path)))
     (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
                                        *open-with-regexps*
