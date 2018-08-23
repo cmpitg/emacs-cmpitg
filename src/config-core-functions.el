@@ -222,7 +222,7 @@ we might have in the frame."
     (keyboard-quit)))
 
 ;;
-;; Window
+;; Window & Frame
 ;;
 
 (defun ~toggle-sticky-window ()
@@ -254,6 +254,16 @@ we might have in the frame."
   "Scrolls the other window in reverse direction."
   (interactive)
   (scroll-other-window (- nlines)))
+
+(defun* ~kill-buffer-frame (&optional (buffer (current-buffer)))
+  "Kills the a buffer along with its frame (if exists)."
+  (interactive)
+  (unless (null buffer)
+    (if-let (window (get-buffer-window buffer t))
+        (let ((frame (window-frame window)))
+          (kill-buffer buffer)
+          (delete-frame frame))
+      (kill-buffer buffer))))
 
 (defun ~one-window ()
   "Deletes all other non-dedicated windows and makes current
