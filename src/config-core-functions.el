@@ -255,7 +255,7 @@ we might have in the frame."
   (interactive)
   (scroll-other-window (- nlines)))
 
-(defun* ~kill-buffer-frame (&optional (buffer (current-buffer)))
+(defun* ~kill-buffer-and-frame (&optional (buffer (current-buffer)))
   "Kills the a buffer along with its frame (if exists)."
   (interactive)
   (unless (null buffer)
@@ -264,6 +264,20 @@ we might have in the frame."
           (kill-buffer buffer)
           (delete-frame frame))
       (kill-buffer buffer))))
+
+(defun* ~count-windows-without-sticky ()
+  "Counts the number of windows that are not sticky."
+  (loop for window being the windows
+        unless (window-dedicated-p window)
+        count window))
+
+(defun* ~kill-buffer-and-window (&optional (buffer (current-buffer)))
+  "Kills the a buffer along with its window (if exists)."
+  (interactive)
+  (unless (null buffer)
+    (if (= (~count-windows-without-sticky) 1)
+        (kill-buffer)
+      (kill-buffer-and-window))))
 
 (defun ~one-window ()
   "Deletes all other non-dedicated windows and makes current
