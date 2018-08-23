@@ -19,7 +19,10 @@
 
 (require 'package)
 
-(dolist (package-archive '(("melpa-stable" . "https://stable.melpa.org/packages/")
+(setq elpamr-default-output-directory "/m/src/local-elpa-mirror")
+
+(dolist (package-archive `(("local-elpa-mirror" . ,elpamr-default-output-directory)
+                           ("melpa-stable" . "https://stable.melpa.org/packages/")
                            ("melpa" . "http://melpa.milkbox.net/packages/")
                            ("marmalade" . "http://marmalade-repo.org/packages/")
                            ("gnu" . "http://elpa.gnu.org/packages/")

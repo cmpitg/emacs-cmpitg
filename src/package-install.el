@@ -125,5 +125,6 @@
                    conda
                    elpy
                    monky
-                   magit))
+                   magit
+                   elpa-mirror))
   (package-install package))
