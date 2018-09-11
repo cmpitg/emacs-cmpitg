@@ -222,6 +222,7 @@
 
 ;; Delete file when killing buffer if necessary
 (add-hook 'kill-buffer-hook #'~maybe-delete-file-when-killing-buffer)
+(add-hook 'kill-buffer-hook #'~maybe-delete-frame-when-killing-buffer)
 
 ;; Track recently closed files
 (add-hook 'kill-buffer-hook #'~track-closed-file)

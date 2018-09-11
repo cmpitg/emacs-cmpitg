@@ -277,7 +277,7 @@ code block."
   "Visit the snippet defined in current code block."
   (interactive)
   (let ((file-path (lp:extract-file-path)))
-    (find-file file-path)))
+    (~smart-open-file file-path)))
 
 ;; FIXME: Support different kinds of block delimeters
 (defun ~current-snippet->file (path)

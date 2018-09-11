@@ -702,6 +702,7 @@ interactively, `text' is taken as the current region."
 
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
+(add-to-list 'safe-local-variable-values '(local/delete-frame-on-close . t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

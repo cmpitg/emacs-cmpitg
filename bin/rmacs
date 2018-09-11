@@ -267,16 +267,14 @@ case "${command_}" in
 		fi
 
 		if ! [[ -z "${path_}" ]]; then
-			# WARNING: The sed command is a hack to unquote the return value
-			real_path_=$(emacsclient --quiet \
-				--socket-name "${socket_path_}" \
-				--no-wait \
-				--eval '(~smart-open-file "'${path_}'")' | sed 's/"//g')
-
 			emacsclient --quiet \
 				--socket-name "${socket_path_}" \
 				${emacsclient_options_} \
-				$(expr ${real_path_})
+				--eval '(prog1 (~smart-open-file "'${path_}'") (setq-local local/delete-frame-on-close t))'
 		fi
 		;;
 esac
+
+# Local Variables:
+# indent-tabs-mode: t
+# End:
