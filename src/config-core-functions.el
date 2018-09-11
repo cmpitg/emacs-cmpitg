@@ -524,7 +524,7 @@ E.g.
   "Opens a new empty buffer in `*scratch-dir*'.  The
 corresponding file name for the buffer is set to the current time
 and a UUID.  The buffer is save-able and will be deleted upon
-exiting unless the local variable `local/delete-on-exit' is set
+exiting unless the local variable `local/delete-on-close' is set
 to `nil'."
   (interactive)
   (let ((buf (generate-new-buffer "untitled")))
@@ -534,7 +534,7 @@ to `nil'."
     (set-visited-file-name (thread-first "%s_%s"
                              (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec "uuidgen"))
                              string-trim))
-    (let ((var/symbol (make-local-variable 'local/delete-on-exit)))
+    (let ((var/symbol (make-local-variable 'local/delete-on-close)))
       (set var/symbol t)
       (add-file-local-variable var/symbol t))
     (goto-char (point-min))
@@ -742,8 +742,8 @@ off the buffer."
                (yes-or-no-p (concat "Delete file: " current-file)))
       ;; Prevent the following kill-buffer from recursively calling this
       ;; function
-      (when (local-variable-p 'local/delete-on-exit)
-        (kill-local-variable 'local/delete-on-exit))
+      (when (local-variable-p 'local/delete-on-close)
+        (kill-local-variable 'local/delete-on-close))
       (kill-buffer (current-buffer))
 
       (delete-file current-file)
@@ -752,8 +752,8 @@ off the buffer."
 (defun ~maybe-delete-file-when-killing-buffer ()
   "Deletes current file when killing buffer if needed."
   (interactive)
-  (when (and (local-variable-p 'local/delete-on-exit)
-             (buffer-local-value 'local/delete-on-exit (current-buffer)))
+  (when (and (local-variable-p 'local/delete-on-close)
+             (buffer-local-value 'local/delete-on-close (current-buffer)))
     (~delete-current-file)))
 
 (defun ~maybe-make-current-file-executable ()

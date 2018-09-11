@@ -9,7 +9,7 @@
 ;;   deleted
 ;; - Create a temporary file, save, close, open again, the kill the buffer to
 ;;   see if the file is deleted
-;; - Create a temporary file, change the value of local/delete-on-exit to nil
+;; - Create a temporary file, change the value of local/delete-on-close to nil
 ;;   save, reload, then kill the buffer to see if the file is not deleted
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

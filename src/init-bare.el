@@ -69,7 +69,7 @@
 ;; Doc: https://www.emacswiki.org/emacs/AlignCommands
 ;; Doc: one-buffer-per-window
 ;; Doc: http://oremacs.com/swiper/ → current word/line/symbol into minibuffer
-;; Doc: local/delete-on-exit
+;; Doc: local/delete-on-close
 ;; Doc: RMACS_NO_MACHINE_INIT
 ;; Doc: shell-quote-argument when calling shell arguments
 ;; Doc: make executable when looking at shebang

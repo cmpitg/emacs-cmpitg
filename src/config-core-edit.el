@@ -701,7 +701,7 @@ interactively, `text' is taken as the current region."
           (setq aw-keys '(?a ?h ?t ?s ?g ?r ?p ?l ?, ?. ?p))))
 
 ;; Some safe local variables
-(add-to-list 'safe-local-variable-values '(local/delete-on-exit . t))
+(add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
