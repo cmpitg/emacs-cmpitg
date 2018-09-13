@@ -126,4 +126,5 @@
                    monky
                    magit
                    elpa-mirror))
-  (package-install package))
+  (unless (package-installed-p package)
+    (package-install package)))
