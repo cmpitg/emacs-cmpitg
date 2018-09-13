@@ -2,6 +2,8 @@
 
 This documentation is out-dated.
 
+TODO: Create a Make rule to generate the default configuration
+
 [source,emacs-lisp]
 ----
 (setq user-full-name "Ha-Duong Nguyen"
