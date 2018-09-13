@@ -502,6 +502,8 @@ reference."
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
 
+;; TODO - Should use ~popup-buffer, since the temp buffer might interfere with
+;; the current buffer?
 (defun* ~popup-message (content &key (buffer-name "*Temporary*"))
   "Displays a popup window with `content' as its content and an
 optional `buffer-name' name.
@@ -902,7 +904,9 @@ quoted with `shell-quote-argument'."
                                    (with-current-buffer (get-buffer-create process-name)
                                      (insert output))))
                              "-c"
-                             command)
+                             ;; Make sure the command doesn't fail, otherwise
+                             ;; the finish function never gets called
+                             (s-concat command "; true"))
       (call-process current-shell
 
                     ;; Taking no input
@@ -967,7 +971,10 @@ result.  The command is executed asynchronously in a shell which
 is determined by the `SHELL' environment variable."
   (interactive "MCommand: ")
   (let ((current-shell (getenv "SHELL"))
-        (process-name command))
+        (process-name command)
+        ;; Make sure the command doesn't fail, otherwise the finish function
+        ;; never gets called
+        (actual-command (s-concat command "; true")))
     (async-start-process process-name
                          current-shell
                          #'(lambda (process)
@@ -975,7 +982,7 @@ is determined by the `SHELL' environment variable."
                                (~popup-message output
                                                :buffer-name process-name)))
                          "-c"
-                         command)))
+                         actual-command)))
 
 (defun* ~exec< (command)
   "Executes a command and replaces the region with the output.
@@ -985,6 +992,9 @@ by the `SHELL' environment variable."
   (interactive "MCommand: ")
   (let ((current-shell (getenv "SHELL"))
         (process-name command)
+        ;; Make sure the command doesn't fail, otherwise the finish function
+        ;; never gets called
+        (actual-command (s-concat command "; true"))
         (buffer (current-buffer)))
     (async-start-process process-name
                          current-shell
@@ -997,7 +1007,7 @@ by the `SHELL' environment variable."
                                  (push-mark)
                                  (insert output))))
                          "-c"
-                         command)))
+                         actual-command)))
 
 (defun ~exec> (&optional command)
   "Executes a command, taking input from the current region,
