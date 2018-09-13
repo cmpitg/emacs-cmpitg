@@ -52,8 +52,9 @@
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 
-(el-get-bundle cmpitg/acme-mouse)
-(el-get-bundle djcb/mu)
+(el-get-bundle acme-mouse :type github :pkgname "cmpitg/acme-mouse")
+(el-get-bundle mu4e :type github :pkgname "djcb/mu")
+
 (el-get 'sync)
 
 ;;

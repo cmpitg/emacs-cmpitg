@@ -26,8 +26,8 @@
 (require 'rmacs:config-package-manager
          (package-install:get-config "config-package-manager"))
 
-(el-get-install 'acme-mouse)
-(el-get-install 'mu4e)
+;; (el-get-install 'acme-mouse)
+;; (el-get-install 'mu4e)
 
 (dolist (package '(auto-compile
                    subatomic256-theme
