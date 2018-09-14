@@ -482,6 +482,7 @@ with prefix `s-SPC' at the same time."
          ("<mouse-2>" . nil)
          :map evil-normal-state-map
          ("<mouse-2>" . nil)
+         ("u" . undo-tree-undo)
          :map evil-visual-state-map
          ("<mouse-2>" . nil))
   :config (progn
