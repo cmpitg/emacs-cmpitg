@@ -70,6 +70,7 @@
                    dtrt-indent
                    emamux
                    chruby
+                   exec-path-from-shell
                    evil
                    evil-visualstar
                    evil-paredit

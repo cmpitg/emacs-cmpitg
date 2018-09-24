@@ -375,6 +375,7 @@
 ;;
 
 (use-package conda
+  :after (exec-path-from-shell)
   :config
   (progn
     (conda-env-initialize-interactive-shells)
