@@ -533,9 +533,9 @@ the sequence, and its index within the sequence."
     (~bind-key-with-prefix "d ."     #'cider-find-var              :keymap cider-repl-mode-map)
     (~bind-key-with-prefix "d ,"     #'cider-pop-back              :keymap cider-repl-mode-map)
     (~bind-key-with-prefix "d f a"   #'cider-load-all-files        :keymap cider-repl-mode-map)
-    (bind-key "<C-return>" #'cider-eval-last-sexp     cider-mode-map)
-    (bind-key "<M-return>" #'cider-eval-defun         cider-mode-map)
-    (bind-key "<S-return>" #'cider-eval-sexp-at-point cider-mode-map)))
+    (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
+    (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
+    (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)))
 
 (use-package clojurescript-mode)
 
