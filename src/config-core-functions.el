@@ -633,7 +633,7 @@ first occurrence of a pattern.  E.g.
   "Visits toolbox."
   (interactive)
   (find-file (or *toolbox-path*
-                 "/m/Toolbox/Toolbox.adoc")))
+                 "/m/toolbox/Toolbox.adoc")))
 
 (defun ~parse-tramp-argument (connection-string)
   "Returns an alist with
