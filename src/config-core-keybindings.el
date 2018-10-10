@@ -60,6 +60,7 @@
   (bind-key "s-l" #'goto-line)
   (bind-key "C-," #'point-pos-next)
   (bind-key "C-;" #'point-pos-previous)
+  (bind-key "<M-f2>" #'point-pos-goto)
 
   ;; Deletion
   (bind-key "s-u" #'delete-char)
