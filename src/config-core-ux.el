@@ -317,6 +317,32 @@
             ;; Make horizontal movement cross lines
             (setq-default evil-cross-lines t))))
 
+;; Displaying eval result in an overlay after eval'ing
+;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
+
+(autoload 'cider--make-result-overlay "cider-overlays")
+
+(defun ~eval-with-overlay (value point)
+  "Displays the return of the `eval' in an overlay."
+  (cider--make-result-overlay (format "%S" value)
+    :where point
+    :duration 'command)
+  value)
+
+(advice-add #'eval-region :around
+            #'(lambda (fun beg end &rest args)
+                (~eval-with-overlay (apply fun beg end args) end)))
+
+(advice-add #'eval-last-sexp :filter-return
+            #'(lambda (arg)
+                (~eval-with-overlay arg (point))))
+
+(advice-add #'eval-defun :filter-return
+            #'(lambda (arg)
+                (~eval-with-overlay arg (save-excursion
+                                          (end-of-defun)
+                                          (point)))))
+
 ;; Buffer list sidebar
 ;; Ref: https://github.com/jojojames/ibuffer-sidebar
 (use-package ibuffer-sidebar
