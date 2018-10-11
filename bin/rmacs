@@ -65,9 +65,6 @@ Examples:
   rmacs note
     Runs Rmacs as note taker.
 
-  rmacs file
-    Runs Rmacs as file browser.
-
   rmacs minimal
     Runs a minimal Rmacs configuration.
 
