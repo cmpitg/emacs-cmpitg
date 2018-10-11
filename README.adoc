@@ -1,27 +1,29 @@
-= cmpitg's Emacs config
+= Rmacs - cmpitg's Emacs
 
-This documentation is out-dated.
+This documentation is a work in progress.  At this point in time please consult the source code (in `src/`) directly for in-depth documentation.
 
-TODO: Create a Make rule to generate the default configuration
+Emacs is considered an editor framework, providing building blocks to build editor and much more.  This repo contains my personal Emacs configuration, which, though heavily customized, could potentially be adopted to different users.  The idea is to use Emacs Lisp to push Emacs to its limit, morphing it to different shapes depending on the use cases.  Currently I'm running Emacs as:
 
-[source,emacs-lisp]
-----
-(setq user-full-name "Ha-Duong Nguyen"
-      user-mail-address "cmpitg@gmail.com"
-      *toolbox-path* "/m/toolbox/Toolbox.adoc"
-      *saved-macro-path* ""
-      *scratch-dir* "/m/scratch/"
-      *sbcl-bin-path* ""
-      *quicklisp-path* (expand-file-name "~/quicklisp/")
-      *notes-path* ""
-      *conda-home-path* "/m/opt/miniconda3")
-----
+* Basic text editor (with `rmacs minimal`),
+* Full-blown text editor with IDE-like features (with `rmacs edit`),
+* Email browser (with `rmacs mail`),
+* Note taker (with `rmacs notes`).
+
+== Architecture
+
+With the entrypoint being `rmacs` script, Rmacs could be run in different so-called *shapes*.  Each shape defines a use case for Rmacs to run:
+
+* Running a shape is essentially loading Emacs with a configuration set.  By default each shape loads the `minimal` configuration, then continues with specific configuration corresponding to its use case.
+
+* Each shape runs an https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html[Emacs server] behind the scene, denoted by a server `name` (which could be passed by specifying the `--name` command line argument) with the socket directory being `/tmp/emacs${UID}`.  Rmacs doesn't add any additional layer on top of the default IPC machanism provided by Emacs so `emacsclient` could be used to interact with the Emacs server.
+
+The `minimal` configuration contains some deliberate UX design that all of other shapes follow.  It tries to stay lean in a practical manner.
 
 == Requirements
 
 * Emacs 26.1+
 * Python 3+
-* GNU Make 4.1+.  Supposedly any version of modern Make implementation could work but I haven't yet tested.
+* GNU Make 4.1+.  Supposedly any version of modern Make implementation could work.
 * The `${HOME}/bin` directory exists, containing executables for the current user.
 
 == Installation
@@ -40,18 +42,16 @@ make install-deps
 make install-bin
 ----
 
-== How to run
+== Running
 
-* Environment variables:
-** `EMACS_PORT`
-** `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR`
-** `EMACS_NO_EXPERIMENTAL`
-** `EMACS_ENABLED_MAIL`
-** `EMACS_ENABLED_NOTES`
+For full documentation, run `rmacs --help`.
 
-* High-level entry point: `rmacs`
+=== Emacs as a basic text editor
 
-* Low-level entry point: `emacs-cmpitg`
+[source,sh]
+----
+rmacs minimal <path>
+----
 
 === Emacs as text editor
 
@@ -60,7 +60,7 @@ make install-bin
 rmacs edit <path>
 ----
 
-=== Emacs as mail browser (mu4e)
+=== Emacs as mail browser (with https://www.djcbsoftware.nl/code/mu/mu4e.html[mu4e])
 
 [source,sh]
 ----
@@ -74,17 +74,26 @@ rmacs mail
 rmacs notes
 ----
 
-== Python development workflow
+=== Communicating with a running Rmacs server
 
-=== Project setup
+[source,sh]
+----
+rmacs --name <server-name> eval <expression>
+----
+
+== Selective workflows with `rmacs edit`
+
+=== Python development
+
+==== Project setup
 
 Do this once for each new project:
 
 * Open a file in the project
-* `M-x pyvenv-workon` and choose the appropriate virtual env
+* `M-x pyvenv-workon` and choose the appropriate environment
 * `M-x elpy-config` and install necessary dependencies
 
-=== Working on an available project
+==== Working on an available project
 
 * `M-x pyvenv-workon`
 * Have fun

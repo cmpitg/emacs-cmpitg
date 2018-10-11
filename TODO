@@ -1,0 +1,16 @@
+* Environment variables:
+** `EMACS_PORT`
+** `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR`
+** `EMACS_NO_EXPERIMENTAL`
+** `EMACS_ENABLED_MAIL`
+** `EMACS_ENABLED_NOTES`
+
+* Notes about repo structure
+
+* Notes about `ff` and `ffn`
+
+* Notes about `rmacs note` & `rmacs mail`
+
+* Notes about some UX design choice
+
+* Notes about workflows with `rmacs edit` important keybindings, ...
