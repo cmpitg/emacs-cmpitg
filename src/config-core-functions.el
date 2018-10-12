@@ -787,14 +787,18 @@ needed."
   (tramp-cleanup-all-connections)
   (tramp-cleanup-all-buffers))
 
+(defun ~current-project-root ()
+  "Returns the current project root or current directory."
+  (or (ignore-errors (projectile-project-root))
+      default-directory))
+
 (defun ~counsel-ag-default-project-root ()
   "Calls `counsel-ag', taking project root by default and
 fallback to current directory if project root is not found."
   (interactive)
   (if current-prefix-arg
       (call-interactively 'counsel-ag)
-    (counsel-ag nil (or (ignore-errors (projectile-project-root))
-                        default-directory))))
+    (counsel-ag nil (~current-project-root))))
 
 (defun ~current-dir ()
   "Current directory or `$HOME`."
