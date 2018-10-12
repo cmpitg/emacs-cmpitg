@@ -38,6 +38,31 @@
     (auto-compile-on-save-mode)))
 
 ;;
+;; Eshell utilization
+;;
+
+(defun ~eshell-dir (dir)
+  "Starts Eshell in a directory.  If Eshell has already been
+started, change the directory."
+  (interactive "DDirectory: ")
+  (cond
+   ((get-buffer "*eshell*")
+    (with-current-buffer "*eshell*"
+      (cd dir)
+      (eshell-emit-prompt))
+    (switch-to-buffer "*eshell*"))
+   (t
+    (cd dir)
+    (eshell))))
+
+(defun ~eshell-current-project-dir ()
+  "Starts Eshell in the current project directory or the current directory."
+  (interactive)
+  (~eshell-dir (~current-project-root)))
+
+(bind-key "<M-insert>" '~eshell-current-project-dir)
+
+;;
 ;; Must be in machine-specific config
 ;;
 
