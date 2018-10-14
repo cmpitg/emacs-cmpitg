@@ -29,19 +29,6 @@
 ;; TODO: https://github.com/tjarvstrand/edts and Erlang integration
 ;; TODO: https://wiki.haskell.org/Emacs#Scion for Haskell integration
 
-;; TODO: DOC - Python development
-;; Config with (elpy-config)
-;;
-;; Setup workflow:
-;; * Open a file in the project
-;; * Run (pyvenv-workon) and choose the appropriate virtual env
-;; * Run (elpy-config) and install necessary dependencies
-;;
-;; Beginning to work:
-;; * Run (pyvenv-workon)
-;; * Have fun
-
-;; (add-hook 'python-mode-hook 'my/elpy-mode-hook)
 ;; TODO: DOC - Python mode keybinding - Look under the Elpy configuration
 
 ;; TODO: BUG - swiper-all → losing focus when swiping
