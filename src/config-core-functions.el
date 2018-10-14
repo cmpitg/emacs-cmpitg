@@ -363,7 +363,8 @@ prefix arg (`C-u') to force deletion if it is."
 (defun ~undo-killed-buffers ()
   "Undoes the kill of buffers."
   (interactive)
-  (find-file (completing-read "File: " *recently-closed-file-list*)))
+  (find-file (let ((ivy-sort-functions-alist nil))
+               (completing-read "File: " *recently-closed-file-list*))))
 
 (defalias '~switch-buffer 'ivy-switch-buffer
   "Switches to a buffer and focus the corresponding window & frame.")
