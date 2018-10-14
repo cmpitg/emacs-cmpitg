@@ -27,6 +27,11 @@ Jekyll."
         (replace-match (format "last_updated: %s"
                                (string-trim (~exec "date -R")))))))
 
+(defun ~format-json ()
+  "Formats current selection as JSON."
+  (interactive)
+  (~exec| "jq ."))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finish loading cmpitg-specific functions ")
