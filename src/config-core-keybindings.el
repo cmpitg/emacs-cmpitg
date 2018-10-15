@@ -179,9 +179,10 @@
   ;; Emacs Lisp
   ;;
 
-  (bind-key "<C-return>" #'~eval-last-sexp-or-region emacs-lisp-mode-map)
-  (bind-key "<M-return>" #'eval-defun                emacs-lisp-mode-map)
-  (bind-key "<S-return>" #'~eval-current-sexp        emacs-lisp-mode-map)
+  (bind-key "<C-return>"   #'~eval-last-sexp-or-region emacs-lisp-mode-map)
+  (bind-key "<M-return>"   #'eval-defun                emacs-lisp-mode-map)
+  (bind-key "<S-return>"   #'~eval-current-sexp        emacs-lisp-mode-map)
+  (bind-key "<C-S-return>" #'pp-eval-last-sexp         emacs-lisp-mode-map)
   (bind-key "s-m" #'~eval-then-replace-region-or-last-sexp)
   (bind-key "s-#" #'eval-expression)
 
