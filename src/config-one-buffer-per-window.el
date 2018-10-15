@@ -41,7 +41,8 @@ disabled.")
 does not yet exist, create it."
   (let ((buffer (get-buffer-create "*Blank*")))
     (with-current-buffer buffer
-      (read-only-mode 1))
+      (read-only-mode 1)
+      (emacs-lock-mode 'kill))
     buffer))
 
 (defun ~is-blank-buffer? (buffer-or-name)
