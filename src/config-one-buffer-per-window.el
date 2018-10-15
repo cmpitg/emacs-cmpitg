@@ -39,8 +39,10 @@ disabled.")
 (defun ~get-blank-buffer ()
   "Gets the one and only blank, read-only buffer.  If the buffer
 does not yet exist, create it."
-  (let ((buffer (get-buffer-create "*Blank*")))
+  (let ((dir (or default-directory (~current-dir)))
+        (buffer (get-buffer-create "*Blank*")))
     (with-current-buffer buffer
+      (setq-local default-directory dir)
       (read-only-mode 1)
       (emacs-lock-mode 'kill))
     buffer))
