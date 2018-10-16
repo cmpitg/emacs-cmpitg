@@ -87,7 +87,7 @@ started, change the directory."
 ;;       *quicklisp-path* ""    ; Directory, path to Quicklisp
 ;;       *notes-path* "")       ; Directory, containing notes
 
-(setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
+;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Alignment and indentation
