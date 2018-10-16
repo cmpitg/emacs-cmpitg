@@ -60,6 +60,18 @@ started, change the directory."
   (interactive)
   (~eshell-dir (~current-project-root)))
 
+(defun ~eshell-quit ()
+  "Quits Eshell when current command is empty."
+  (interactive)
+  (insert "exit")
+  (eshell-send-input))
+
+(require 'eshell)
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
+
 (bind-key "<M-insert>" '~eshell-current-project-dir)
 
 ;;
