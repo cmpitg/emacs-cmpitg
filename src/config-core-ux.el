@@ -329,15 +329,15 @@
     :duration 'command)
   value)
 
-(advice-add #'eval-region :around
+(advice-add 'eval-region :around
             #'(lambda (fun beg end &rest args)
                 (~eval-with-overlay (apply fun beg end args) end)))
 
-(advice-add #'eval-last-sexp :filter-return
+(advice-add 'eval-last-sexp :filter-return
             #'(lambda (arg)
                 (~eval-with-overlay arg (point))))
 
-(advice-add #'eval-defun :filter-return
+(advice-add 'eval-defun :filter-return
             #'(lambda (arg)
                 (~eval-with-overlay arg (save-excursion
                                           (end-of-defun)
