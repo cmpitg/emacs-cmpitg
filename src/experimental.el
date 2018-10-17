@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2017 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -18,14 +18,8 @@
 (setf *open-with-regexps*
       `(("\\.pdf" . "evince '%s'")))
 
-(setf openwith-associations
-      '(("\\.pdf\\'" "evince" (file))
-        ("\\.mp3\\'" "xmms" (file))
-        ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "u smplayer" ("-idx" file))
-        ("\\.\\(?:jp?g\\|png\\)\\'" "eog" (file))))
-
 ;;
-;; Auto-compile Emacs Lisp if already compiled
+;; Auto-compile Emacs Lisp unless already compiled
 ;;
 ;; Ref: https://github.com/emacscollective/auto-compile
 ;;
@@ -56,7 +50,8 @@ started, change the directory."
     (eshell))))
 
 (defun ~eshell-current-project-dir ()
-  "Starts Eshell in the current project directory or the current directory."
+  "Starts Eshell in the current project directory or the current
+directory."
   (interactive)
   (~eshell-dir (~current-project-root)))
 
@@ -74,19 +69,6 @@ started, change the directory."
 
 (bind-key "<M-insert>" '~eshell-current-project-dir)
 
-;;
-;; Must be in machine-specific config
-;;
-
-;; (setq user-full-name ""
-;;       user-mail-address ""
-;;       *toolbox-path* ""      ; File, Emacs toolbox
-;;       *saved-macro-path* ""  ; File, Emacs Lisp, for storing macros
-;;       *scratch-dir* ""       ; Directory, temporary files & buffers
-;;       *sbcl-bin-path* ""     ; File, path to SBCL executable
-;;       *quicklisp-path* ""    ; Directory, path to Quicklisp
-;;       *notes-path* "")       ; Directory, containing notes
-
 ;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -99,13 +81,6 @@ started, change the directory."
 ;;             (setq indent-tabs-mode t
 ;;                   sh-basic-offset 4)
 ;;             (add-to-list 'whitespace-style 'indentation::tab)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Experimental
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package restclient
-  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Experimenting with GC
@@ -134,18 +109,8 @@ started, change the directory."
 ;; File navigation
 ;;
 
-(bind-key "s-; f n" 'cmpitg:visit-notes)
 (bind-key "C-<home>" '~jekyll-add-last-updated)
 (bind-key "C-@" 'slime-switch-to-output-buffer)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Multi term
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (use-package multi-term
-;;   :ensure t
-;;   :config (progn
-;;             (setq multi-term-program "/bin/zsh")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; QML mode
@@ -216,22 +181,6 @@ started, change the directory."
 ;;             ;;                       (call-interactively 'other-window))
 ;;             ;;           racket-mode-map)
 ;;             (bind-key "C-M-x" 'racket-send-definition racket-mode-map)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun* cmpitg:visit-notes ()
-  "Visits my notes."
-  (interactive)
-  (~projectile-find-files-at-dir (or *notes-path*
-                                     "~/Docs/Notes")))
-
-(defun cmpitg:visit-todo ()
-  "Visit my TODO list."
-  (interactive)
-  (find-file (concat (file-name-as-directory *scratch-dir*)
-                     "TODO.org")))
-
-(bind-key "s-; s-;" 'cmpitg:visit-todo)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Menu bar
@@ -371,33 +320,6 @@ started, change the directory."
 ;; (make-menu-item [menu-bar toolbox xkcd]
 ;;                 :title "xkcd"
 ;;                 :action 'xkcd)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (defun* ~goto-sync-notes (arg)
-;;   "Mimick `helm-find-files' to jump to my `~/Dropbox/cmpitg/Notes`
-;; directory."
-;;   (interactive "P")
-;;   (let* ((hist          (and arg helm-ff-history (helm-find-files-history)))
-;;          (default-input (expand-file-name "~/Dropbox/cmpitg/Notes/"))
-;;          (input         (cond ((and (eq major-mode 'org-agenda-mode)
-;;                                     org-directory
-;;                                     (not default-input))
-;;                                (expand-file-name org-directory))
-;;                               ((and (eq major-mode 'dired-mode) default-input)
-;;                                (file-name-directory default-input))
-;;                               (default-input)
-;;                               (t (expand-file-name (helm-current-directory)))))
-;;          (presel        (helm-aif (or hist
-;;                                       (buffer-file-name (current-buffer))
-;;                                       (and (eq major-mode 'dired-mode)
-;;                                            default-input))
-;;                             (if helm-ff-transformer-show-only-basename
-;;                                 (helm-basename it) it))))
-;;     (set-text-properties 0 (length input) nil input)
-;;     (helm-find-files-1 input presel)))
-
-(bind-key "s-; f f" '~goto-sync-notes)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
