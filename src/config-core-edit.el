@@ -414,6 +414,10 @@ with prefix `s-SPC' at the same time."
          ("s-G" . paredit-backward))
   :defines slime-repl-mode-map
   :config (progn
+            ;; Always try to delete region first
+            (put 'paredit-forward-delete 'delete-selection 'supersede)
+            (put 'paredit-backward-delete 'delete-selection 'supersede)
+
             (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
               (when (apply orig-fun args)
                 (when (fboundp 'autopair-mode)
