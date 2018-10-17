@@ -16,3 +16,13 @@
 * Notes about workflows with `rmacs edit` important keybindings, ...
 
 * Notes about local ELPA
+
+* Notes on Ruby development & CHRUBY_VERSION environment variable
+
+* Notes on Clojure development
+** cider-connect
+** Jump to def and jump back
+** Eval last sexp/current sexp/last sexp
+** Eval and print
+** Eval and pretty printing
+** Debug: mark for debugging, setting break points, inspect, eval, step in/out/over, ...
