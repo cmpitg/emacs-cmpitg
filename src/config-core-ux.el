@@ -246,7 +246,6 @@
 ;; To make the behavior of `display-buffer' consistent, do not allow it to
 ;; split/create a new window by setting to `nil'
 ;; (setq pop-up-windows nil)
-(setq pop-up-windows t)
 
 ;; One buffer per window setup
 (require 'rmacs:config-one-buffer-per-window
