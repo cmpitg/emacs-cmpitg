@@ -77,7 +77,7 @@
 
 ;; User variables
 
-(defvar profile-dotemacs-file "/m/src/emacs-cmpitg-rewrite/src/init.el"
+(defvar profile-dotemacs-file (getenv "EMACS_INIT_TO_PROFILE")
   "File to be profiled.")
 
 (defvar profile-dotemacs-low-percentage 3
