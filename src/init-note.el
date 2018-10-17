@@ -24,6 +24,26 @@
 (require 'rmacs:functions-cmpitg    "functions-cmpitg")
 (require 'rmacs:config-themes       "config-themes")
 
+;; See config-edit for Treemacs config
+(use-package treemacs
+  :after (evil)
+  :demand t
+  :config
+  (progn
+    (treemacs-follow-mode -1)
+    (treemacs-filewatch-mode -1)
+    ;; Collapse empty dirs into one when possible
+    (setq treemacs-collapse-dirs 3)
+    ;; Always find and focus on the current file when treemacs is built
+    (setq treemacs-follow-after-init t)))
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :demand t)
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :demand t
+  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
+
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
 

@@ -571,31 +571,6 @@ with prefix `s-SPC' at the same time."
     (setf git-commit-finish-query-functions nil)))
 
 ;;
-;; File explorer and sidebar
-;;
-;; Ref: https://github.com/Alexander-Miller/treemacs
-;;
-
-(use-package treemacs
-  :after (evil)
-  :demand t
-  :config
-  (progn
-    (treemacs-follow-mode -1)
-    (treemacs-filewatch-mode -1)
-    ;; Collapse empty dirs into one when possible
-    (setq treemacs-collapse-dirs 3)
-    ;; Always find and focus on the current file when treemacs is built
-    (setq treemacs-follow-after-init t)))
-(use-package treemacs-evil
-  :after (treemacs evil)
-  :demand t)
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :demand t
-  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
-
-;;
 ;; Pattern-based command execution
 ;;
 ;; Ref: https://github.com/cmpitg/wand
