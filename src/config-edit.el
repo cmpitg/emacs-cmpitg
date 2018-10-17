@@ -76,8 +76,7 @@
 
 (use-package chruby
   :config
-  (let ((ruby-version (format "ruby-%s"
-                              (or (getenv "HELLO") "2.4.1"))))
+  (let ((ruby-version (or (getenv "CHRUBY_VERSION") "ruby-2.5.1")))
     (chruby ruby-version)))
 
 ;;
