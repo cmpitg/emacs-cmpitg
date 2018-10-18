@@ -355,6 +355,13 @@
     (setq ibuffer-sidebar-use-custom-font t)
     (setq ibuffer-sidebar-display-alist '((side . right) (slot . 1)))))
 
+;; Convenient display of buffer list, helpful when using mouse
+(setq ibuffer-formats '((mark modified read-only locked
+                              " "
+                              (name 50 -1 :left :elide)
+                              " "
+                              filename-and-process)))
+
 ;; Preventing other windows from stealing the current window
 ;; (defadvice pop-to-buffer (before cancel-other-window first)
 ;;   (ad-set-arg 1 nil))
