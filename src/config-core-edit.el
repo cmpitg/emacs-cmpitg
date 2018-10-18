@@ -312,11 +312,14 @@ project root."
                                                     swiper-multi
                                                     swiper-query-replace)))
 
+            (use-package flx)
             ;; Default matching
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
-            (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-            ;; (use-package flx)
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+            (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus) (t . ivy--regex-fuzzy)))
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)
+            ;;                               (t . ivy--regex-fuzzy)
+            ;;                               (t . ivy--regex-ignore-order)))
 
             (defun* ~ivy-next-line+ (&optional (n-lines 5))
               (interactive)
