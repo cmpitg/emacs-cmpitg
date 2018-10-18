@@ -255,6 +255,13 @@
 (require 'rmacs:config-header-line
          "config-header-line")
 
+;; Better display of header-line
+(set-face-attribute 'header-line nil
+                    :family "Roboto"
+                    :height 120
+                    :width 'condensed
+                    :weight 'bold)
+
 ;; Managing recent files
 (use-package recentf
   :init (progn
