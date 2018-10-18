@@ -29,13 +29,19 @@
                 ,*header-line-separator*
                 "/"
                 ,*header-line-separator*
+                "buffers"
+                ,*header-line-separator*
+                "⊞+"
+                ,*header-line-separator*
+                "⊞-"
+                ,*header-line-separator*
+                "➡+"
+                ,*header-line-separator*
+                "⬇+"
+                ,*header-line-separator*
+                "⇌"
+                ,*header-line-separator*
                 "git"
-                ,*header-line-separator*
-                "col+"
-                ,*header-line-separator*
-                "row+"
-                ,*header-line-separator*
-                "~"
                 ,*header-line-separator*
                 "+"))
 
@@ -51,16 +57,20 @@
            (call-interactively 'kill-this-buffer))
           ((string= "/" str)
            (call-interactively '~delete-window))
-          ((string= "git" str)
-           (call-interactively 'magit-status))      
-          ((string= "col+" str)
+          ((string= "buffers" str)
+           (call-interactively 'ibuffer))
+          ((string= "⊞+" str)
+           (call-interactively 'make-frame))
+          ((string= "➡+" str)
            (call-interactively 'split-window-horizontally))
-          ((string= "row+" str)
+          ((string= "⬇+" str)
            (call-interactively 'split-window-vertically))
-          ((string= "~" str)
+          ((string= "⇌" str)
            (call-interactively '~transpose-windows))
           ((string= "+" str)
            (call-interactively '~header-line-add))
+          ((string= "git" str)
+           (call-interactively 'magit-status))      
           ((string= *header-line-separator* str)
            nil)
           (t
