@@ -262,6 +262,33 @@
                     :width 'condensed
                     :weight 'bold)
 
+;; Mode line format
+(set-face-attribute 'mode-line nil
+                    :family "Go"
+                    :height 120
+                    :width 'condensed)
+(setq ~mode-line-simplified-position
+      `(line-number-mode
+        ((column-number-mode
+          (column-number-indicator-zero-based (10 #(" (%l,%c)" 0 8 nil))
+                                              (10 #(" (%l,%C)" 0 8 nil)))
+          (6 #(" L%l" 0 4 nil))))
+        ((column-number-mode
+          (column-number-indicator-zero-based (5 #(" C%c" 0 4 nil))
+                                              (5 #(" C%C" 0 4 nil)))))))
+(setq mode-line-format
+      `("%e" ;; Display out-of-mem error if there is
+        mode-line-client
+        mode-line-modified
+        mode-line-auto-compile
+        mode-line-remote
+        mode-line-frame-identification
+        mode-line-buffer-identification
+        ~mode-line-simplified-position
+        evil-mode-line-tag
+        mode-line-modes
+        mode-line-misc-info))
+
 ;; Managing recent files
 (use-package recentf
   :init (progn
