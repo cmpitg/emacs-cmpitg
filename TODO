@@ -1,3 +1,5 @@
+* Store header line settings in a declarative way → file
+
 * Environment variables:
 ** `EMACS_PORT`
 ** `EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR`
