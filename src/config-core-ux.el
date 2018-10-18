@@ -343,6 +343,13 @@
                                           (end-of-defun)
                                           (point)))))
 
+(advice-add '~eval-current-sexp :filter-return
+            #'(lambda (arg)
+                (~eval-with-overlay arg (save-excursion
+                                          (sp-forward-up)
+                                          (end-of-defun)
+                                          (point)))))
+
 ;; Buffer list sidebar
 ;; Ref: https://github.com/jojojames/ibuffer-sidebar
 (use-package ibuffer-sidebar
