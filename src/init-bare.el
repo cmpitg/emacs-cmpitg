@@ -22,7 +22,6 @@
 ;; - s-X
 
 ;; TODO: rmacs --debug-on-error
-;; TODO: mode-line-format
 ;; TODO: tmux integration with emamux
 ;; TODO: Tiling manager - winner-mode?, something like i3
 ;; TODO: See how https://github.com/joaotavora/sly could replace SLIME
