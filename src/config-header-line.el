@@ -21,9 +21,17 @@
   " "
   "Separator for the header line.")
 
+(defvar *header-line-max-path-length*
+  50
+  "Number of maximum characters to which the current
+`buffer-file-name' is truncated to.")
+
 (setq-default header-line-format
               `(""
-                (:eval (if (buffer-file-name) (buffer-file-name) ""))
+                (:eval (if (buffer-file-name)
+                           (~shorten-string buffer-file-name
+                                            *header-line-max-path-length*)
+                         ""))
                 ,*header-line-separator*
                 "x"
                 ,*header-line-separator*
@@ -50,9 +58,11 @@
   (let* ((e (event-end event))
          (obj (posn-object e))
          (str (first obj)))
-    (cond ((string= buffer-file-name str)
-           (kill-new str)
-           (message "File path %s copied to clipboard" str))
+    (cond ((string= (~shorten-string buffer-file-name
+                                     *header-line-max-path-length*)
+                    str)
+           (kill-new buffer-file-name)
+           (message "File path %s copied to clipboard" buffer-file-name))
           ((string= "x" str)
            (call-interactively 'kill-this-buffer))
           ((string= "/" str)

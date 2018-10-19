@@ -867,6 +867,17 @@ minibuffer."
       (~get-secondary-selection)
     (read-shell-command "Command: ")))
 
+(defun* ~shorten-string (str max-length &optional (ellipsis "..."))
+  "Shortens a string, making sure its length does not exceed
+`max-length' by truncating and prefixing it with `ellipsis' if
+necessary."
+  (let ((actual-length (length str)))
+    (if (> actual-length max-length)
+        (s-concat ellipsis (substring str (+ (- actual-length
+                                              max-length)
+                                             (length ellipsis))))
+      str)))
+
 ;;
 ;; Processes
 ;;
