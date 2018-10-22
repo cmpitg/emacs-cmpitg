@@ -505,7 +505,8 @@ reference."
 
 ;; TODO - Should use ~popup-buffer, since the temp buffer might interfere with
 ;; the current buffer?
-(defun* ~popup-message (content &key (buffer-name "*Temporary*"))
+(defun* ~popup-message (content &key (buffer-name "*Temporary*")
+                                (print-func #'princ))
   "Displays a popup window with `content' as its content and an
 optional `buffer-name' name.
 
@@ -518,7 +519,7 @@ E.g.
 \(~popup-message \"Hello World\" :buffer-name \"*mundo*\"\)
 "
   (with-output-to-temp-buffer buffer-name
-    (princ content)))
+    (funcall print-func content)))
 
 (defalias '~popup-buffer 'internal-temp-output-buffer-show
   "Pops up a buffer for temporary display.")
