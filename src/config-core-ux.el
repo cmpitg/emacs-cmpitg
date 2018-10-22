@@ -403,6 +403,14 @@
                               " "
                               filename-and-process)))
 
+;; Acme-mouse
+;; Ref: https://github.com/cmpitg/acme-mouse
+(use-package acme-mouse
+  :config
+  (progn
+    (acme-mouse-mode)
+    (global-acme-mouse-mode)))
+
 ;; Preventing other windows from stealing the current window
 ;; (defadvice pop-to-buffer (before cancel-other-window first)
 ;;   (ad-set-arg 1 nil))
