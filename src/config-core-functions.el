@@ -590,6 +590,11 @@ expanded using `expand-file-name', then
   (interactive "MURI: ")
   (~open-with uri "web-browser-gui %s"))
 
+(defun ~open-with-google-chrome (uri)
+  "Opens a URI with Google Chrome."
+  (interactive "MURI: ")
+  (~open-with uri "run-chrome %s"))
+
 (defun ~open-with (path program)
   "Opens path with `program'.  The `path' path is quoted
 automatically."

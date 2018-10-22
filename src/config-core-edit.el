@@ -621,6 +621,9 @@ interactively, `text' is taken as the current region."
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action ~current-snippet->file)
+                (wand:create-rule :match "chrome:"
+                                  :capture :after
+                                  :action ~open-with-google-chrome)
                 (wand:create-rule :match "https?://"
                                   :capture :whole
                                   :action ~web-browse-gui)
