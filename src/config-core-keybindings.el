@@ -134,6 +134,7 @@
   (bind-key "M-a" #'~exec>)
   (bind-key "s-[" #'emamux:send-region)
   (bind-key "<s-return>" #'wand:execute)
+  (bind-key "<C-down-mouse-1>" nil)
   (bind-key "<C-mouse-1>" #'wand:execute)
   (bind-key "<mouse-3>" #'~popup-right-click-menu)
 
