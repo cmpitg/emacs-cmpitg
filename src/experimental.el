@@ -72,6 +72,98 @@ directory."
 ;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Widget and rendering
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(eval-when-compile (require 'wid-edit))
+(require 'widget)
+
+(defun* ui:render-widgets (&key buffer func)
+  (interactive)
+  (let ((buffer (get-buffer-create buffer)))
+    (with-current-buffer buffer
+      (~clean-up-buffer)
+      (funcall func)
+      (use-local-map widget-keymap)
+      (widget-setup)
+      (goto-char (point-min))
+      (switch-to-buffer buffer))))
+
+(defun* ~clean-up-buffer (&key (buffer (current-buffer)))
+  (interactive)
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (kill-all-local-variables)
+      (remove-overlays))))
+
+(defun* ui:render-buffer (&key buffer func)
+  (interactive)
+  (let ((buffer (get-buffer-create buffer)))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (delete-all-overlays)
+        (fundamental-mode)
+        (setq truncate-lines nil)
+        (setq truncate-partial-width-windows nil)
+        (setq word-wrap t)
+        (setq line-spacing 0)
+        (setq left-fringe-width 8)
+        (setq right-fringe-width 8)
+        (funcall func)
+        (unless view-mode
+          (view-mode 1))
+        (goto-char (point-min))
+        (switch-to-buffer buffer)))))
+
+(defun ui:text/title (text title-style)
+  (propertize text 'face title-style))
+
+(defun ui:text/comment (text)
+  (propertize text 'face '(:inherit (variable-pitch font-lock-comment-face))))
+
+(defun ui:text/hline ()
+  (propertize "\n" 'display
+              `(space :align-to (- right (1)))
+              'face
+              '(:underline t)
+              'point-entered
+              'mb-kick-cursor))
+
+(defun* ui:text/insert-hline (&optional (trailing-lines t))
+  (insert (ui:text/hline))
+  (when trailing-lines
+    (insert "\n")))
+
+(defun* ui:text/insert-line (&optional (text "") (trailing-lines t))
+  (insert text)
+  (when trailing-lines
+    (insert "\n")))
+
+(defun* ui:text/insert-title (&optional (text "")
+                                        (title-style 'info-title-1)
+                                        (trailing-lines t))
+  (insert (ui:text/title text title-style))
+  (when trailing-lines
+    (insert "\n\n")))
+
+(defun* ui:text/insert-paragraph (&optional (text "") (trailing-lines t))
+  (insert text)
+  (when trailing-lines
+    (insert "\n\n")))
+
+(defun* ui:text/insert-comment (text &optional (trailing-lines t))
+  (insert (ui:text/comment text))
+  (when trailing-lines
+    (insert "\n\n")))
+
+(defmacro* ui:text/insert-section (title &rest body)
+  "Inserts a section with a title."
+  `(progn (ui:text/insert-title ,title 'info-title-4)
+          ,@body))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Alignment and indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
