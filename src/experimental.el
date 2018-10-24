@@ -181,6 +181,95 @@ application."
           ,@body))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Simple single-buffer directory browser
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun dir-browser:record-local-dir-history (path)
+  "Records directory visit history to a local variable named `local/dir-history'."
+  (let ((path (expand-file-name path)))
+    (setq-local local/dir-history
+                (thread-last (remove path local/dir-history)
+                  (cons path)))))
+
+(defun dir-browser:render-single-entry (base-path file)
+  "Renders a single file/directory entry."
+  (lexical-let* ((full-path (concat base-path file))
+                 (is-dir? (f-dir? full-path)))
+    (insert (propertize (if is-dir?
+                            (file-name-as-directory file)
+                          file)
+                        'keymap
+                        (let ((keymap (make-sparse-keymap))
+                              (is-dir? is-dir?))
+                          (bind-key "<mouse-3>"
+                                    #'(lambda ()
+                                        (interactive)
+                                        (if is-dir?
+                                            (dir-browser:render-dir full-path)
+                                          (~smart-open-file full-path)))
+                                    keymap)
+                          keymap)))
+    (insert "\n")))
+
+(defun dir-browser:render-current-path (path)
+  "Renders the current working and project directories."
+  (insert "Current path: ")
+  (insert-text-button path
+                      'keymap
+                      (let ((keymap (make-sparse-keymap)))
+                        (bind-key "<mouse-3>"
+                                  #'(lambda ()
+                                      (interactive)
+                                      (kill-new path)
+                                      (message "%s saved to clipboard" path))
+                                  keymap)
+                        keymap))
+  (insert "\n")
+  (insert "Project path: "
+          (propertize (~current-project-root)
+                      'keymap
+                      (let ((keymap (make-sparse-keymap)))
+                        (bind-key "<mouse-3>"
+                                  #'(lambda ()
+                                      (interactive)
+                                      (dir-browser:render-dir (~current-project-root)))
+                                  keymap)
+                        keymap)))
+  (insert "\n\n"))
+
+(defun dir-browser:render-dir (path)
+  "Renders the content of a directory."
+  (~clean-up-buffer :keep-local-vars t)
+
+  (let ((inhibit-read-only t)
+        (path (expand-file-name (file-name-as-directory path))))
+    (dir-browser:record-local-dir-history path)
+    (setq-local default-directory path)
+
+    (dir-browser:render-current-path path)
+
+    (dolist (file (directory-files path))
+      (dir-browser:render-single-entry path file))
+
+    (insert "\n")
+
+    (dolist (file local/dir-history)
+      (dir-browser:render-single-entry "" file)))
+  (acme-mouse-mode -1)
+  (evil-emacs-state))
+
+(defun dir-browser:render-dir-buffer (path)
+  "Renders a mouse-oriented buffer to browse files and directories."
+  (interactive "DDirectory: ")
+  (ui:render-buffer
+   :buffer "*dir-browser*"
+   :func
+   #'(lambda ()
+       (setq-local lexical-binding t)
+       (set (make-local-variable 'local/dir-history) (list))
+       (dir-browser:render-dir path))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Alignment and indentation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
