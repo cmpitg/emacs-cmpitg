@@ -78,7 +78,21 @@ directory."
 (eval-when-compile (require 'wid-edit))
 (require 'widget)
 
+(defun* ~clean-up-buffer (&key (buffer (current-buffer))
+                               (keep-local-vars nil))
+  "Cleans up buffer."
+  (interactive)
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (unless keep-local-vars
+        (kill-all-local-variables))
+      (remove-overlays))))
+
 (defun* ui:render-widgets (&key buffer func)
+  "Does book-keeping and handles the render of widgets in a
+buffer.  All the processing and insertions of widgets should be
+in `func'."
   (interactive)
   (let ((buffer (get-buffer-create buffer)))
     (with-current-buffer buffer
@@ -89,21 +103,16 @@ directory."
       (goto-char (point-min))
       (switch-to-buffer buffer))))
 
-(defun* ~clean-up-buffer (&key (buffer (current-buffer)))
-  (interactive)
-  (with-current-buffer buffer
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (kill-all-local-variables)
-      (remove-overlays))))
-
 (defun* ui:render-buffer (&key buffer func)
+  "Does book-keeping and handles the render of text in a buffer.
+All the processing and insertions of text should be in `func'.
+This function is useful when building text-based interactive
+application."
   (interactive)
   (let ((buffer (get-buffer-create buffer)))
     (with-current-buffer buffer
+      (~clean-up-buffer)
       (let ((inhibit-read-only t))
-        (erase-buffer)
-        (delete-all-overlays)
         (fundamental-mode)
         (setq truncate-lines nil)
         (setq truncate-partial-width-windows nil)
@@ -118,12 +127,15 @@ directory."
         (switch-to-buffer buffer)))))
 
 (defun ui:text/title (text title-style)
+  "Returns propertized text with title-like style."
   (propertize text 'face title-style))
 
 (defun ui:text/comment (text)
+  "Returns propertized text with comment-like style."
   (propertize text 'face '(:inherit (variable-pitch font-lock-comment-face))))
 
 (defun ui:text/hline ()
+  "Returns a horizontal hline."
   (propertize "\n" 'display
               `(space :align-to (- right (1)))
               'face
@@ -132,11 +144,13 @@ directory."
               'mb-kick-cursor))
 
 (defun* ui:text/insert-hline (&optional (trailing-lines t))
+  "Inserts a horizontal line."
   (insert (ui:text/hline))
   (when trailing-lines
     (insert "\n")))
 
 (defun* ui:text/insert-line (&optional (text "") (trailing-lines t))
+  "Inserts a line of text."
   (insert text)
   (when trailing-lines
     (insert "\n")))
@@ -144,22 +158,25 @@ directory."
 (defun* ui:text/insert-title (&optional (text "")
                                         (title-style 'info-title-1)
                                         (trailing-lines t))
+  "Inserts a title."
   (insert (ui:text/title text title-style))
   (when trailing-lines
     (insert "\n\n")))
 
 (defun* ui:text/insert-paragraph (&optional (text "") (trailing-lines t))
+  "Inserts a paragraph."
   (insert text)
   (when trailing-lines
     (insert "\n\n")))
 
 (defun* ui:text/insert-comment (text &optional (trailing-lines t))
+  "Inserts comment text."
   (insert (ui:text/comment text))
   (when trailing-lines
     (insert "\n\n")))
 
 (defmacro* ui:text/insert-section (title &rest body)
-  "Inserts a section with a title."
+  "Inserts a text section with a title."
   `(progn (ui:text/insert-title ,title 'info-title-4)
           ,@body))
 
