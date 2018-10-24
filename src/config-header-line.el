@@ -39,6 +39,8 @@
                 ,*header-line-separator*
                 "buffers"
                 ,*header-line-separator*
+                "⎘"
+                ,*header-line-separator*
                 "⊞+"
                 ,*header-line-separator*
                 "⊞-"
@@ -69,6 +71,8 @@
            (call-interactively '~delete-window))
           ((string= "buffers" str)
            (call-interactively 'ibuffer))
+          ((string= "⎘" str)
+           (call-interactively 'clipboard-kill-ring-save))
           ((string= "⊞+" str)
            (call-interactively 'make-frame))
           ((string= "➡+" str)
