@@ -22,7 +22,7 @@
   "Separator for the header line.")
 
 (defvar *header-line-max-path-length*
-  50
+  43
   "Number of maximum characters to which the current
 `buffer-file-name' is truncated to.")
 
