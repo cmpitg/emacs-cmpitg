@@ -48,8 +48,7 @@
 ;; Org-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package org-mode
-  :commands (org-agenda-mode org-mode)
+(use-package org
   :config
   (progn
     ;; Add timestamp when an item is done
@@ -61,7 +60,10 @@
     ;; No folding by default
     ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
     ;; Of per file: #+STARTUP: showeverything
-    (setq org-startup-folded nil)))
+    (setq org-startup-folded nil)
+    
+    (with-eval-after-load "evil"
+      (~bind-key-with-prefix "o a" #'org-agenda))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
