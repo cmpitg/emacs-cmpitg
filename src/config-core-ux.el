@@ -283,8 +283,8 @@
                 mode-line-auto-compile
                 mode-line-remote               ;; Indicates a remote buffer
                 mode-line-frame-identification ;; Describes current frame
-                mode-line-buffer-identification
                 ~mode-line-simplified-position ;; Show column & line numbers
+                mode-line-buffer-identification
                 (:eval evil-mode-line-tag)
                 mode-line-modes
                 mode-line-misc-info))
