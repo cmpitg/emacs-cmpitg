@@ -33,13 +33,17 @@
                                             *header-line-max-path-length*)
                          ""))
                 ,*header-line-separator*
+                "╳"
+                ,*header-line-separator*
                 "x"
+                ,*header-line-separator*
+                "B"
                 ,*header-line-separator*
                 "/"
                 ,*header-line-separator*
-                "buffers"
-                ,*header-line-separator*
                 "⎘"
+                ,*header-line-separator*
+                "✂"
                 ,*header-line-separator*
                 "⊞+"
                 ,*header-line-separator*
@@ -67,12 +71,16 @@
            (message "File path %s copied to clipboard" buffer-file-name))
           ((string= "x" str)
            (call-interactively 'kill-this-buffer))
-          ((string= "/" str)
+          ((string= "╳" str)
            (call-interactively '~delete-window))
-          ((string= "buffers" str)
+          ((string= "B" str)
            (call-interactively 'ibuffer))
+          ((string= "/" str)
+           (dir-browser:render-dir-buffer default-directory))
           ((string= "⎘" str)
            (call-interactively 'clipboard-kill-ring-save))
+          ((string= "✂" str)
+           (call-interactively 'yank))
           ((string= "⊞+" str)
            (call-interactively 'make-frame))
           ((string= "➡+" str)
