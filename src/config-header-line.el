@@ -80,7 +80,7 @@
           ((string= "⎘" str)
            (call-interactively 'clipboard-kill-ring-save))
           ((string= "✂" str)
-           (call-interactively 'yank))
+           (call-interactively 'kill-region))
           ((string= "⊞+" str)
            (call-interactively 'make-frame))
           ((string= "➡+" str)
