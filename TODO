@@ -35,4 +35,4 @@
 
 * Notes on using Ivy
 ** <f3> to investigate further
-** Mass editing
+** Mass editing with ivy-grep-change-to-wgrep-mode
