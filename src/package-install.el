@@ -126,6 +126,7 @@
                    elpy
                    monky
                    magit
-                   elpa-mirror))
+                   elpa-mirror
+                   wgrep))
   (unless (package-installed-p package)
     (package-install package)))
