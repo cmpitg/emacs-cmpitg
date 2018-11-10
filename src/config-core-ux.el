@@ -406,6 +406,20 @@
                               " "
                               filename-and-process)))
 
+;; Resize window
+;; Ref: https://github.com/dpsutton/resize-window
+(use-package resize-window
+  :demand t
+  :config
+  (progn
+    (setq resize-window-fine-argument 10)
+
+    (dolist (action (list (list ?n #'resize-window--enlarge-horizontally " Resize - horizontally" t)
+                          (list ?h #'resize-window--shrink-horizontally " Resize - shrink horizontally" t)
+                          (list ?t #'resize-window--enlarge-down " Resize - Expand down" t)
+                          (list ?c #'resize-window--enlarge-up " Resize - Expand up" t)))
+      (add-to-list 'resize-window-dispatch-alist action))))
+
 ;; Acme-mouse
 ;; Ref: https://github.com/cmpitg/acme-mouse
 (use-package acme-mouse

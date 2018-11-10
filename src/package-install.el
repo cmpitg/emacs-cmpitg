@@ -127,6 +127,7 @@
                    monky
                    magit
                    elpa-mirror
+                   resize-window
                    wgrep))
   (unless (package-installed-p package)
     (package-install package)))

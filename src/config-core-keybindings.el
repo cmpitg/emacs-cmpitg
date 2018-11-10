@@ -120,7 +120,7 @@
   (~bind-key-with-prefix "p p" #'treemacs)
   (~bind-key-with-prefix "p o" #'treemacs-projectile)
   (~bind-key-with-prefix "p f" #'treemacs-select-window)
-  
+
   ;; Buffer management
   (bind-key "<C-tab>" #'~switch-to-last-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
@@ -158,6 +158,8 @@
   (~bind-key-with-prefix "w s" #'ace-swap-window)
   (~bind-key-with-prefix "w o" #'~one-window)
   (~bind-key-with-prefix "w t" #'~transpose-windows)
+
+  (~bind-key-with-prefix "r" #'resize-window)
 
   ;; Header line
   (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
