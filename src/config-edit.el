@@ -547,6 +547,7 @@ the sequence, and its index within the sequence."
     (~bind-key-with-prefix "d d w"   #'cider-grimoire-web          :keymap cider-mode-map)
     (~bind-key-with-prefix "d d g"   #'cider-grimoire              :keymap cider-mode-map)
     (~bind-key-with-prefix "d d a"   #'cider-apropos               :keymap cider-mode-map)
+    (~bind-key-with-prefix "d n s e" #'cider-eval-ns-form          :keymap cider-mode-map)
     (~bind-key-with-prefix "d s r"   #'cider-switch-to-repl-buffer :keymap cider-mode-map)
     (~bind-key-with-prefix "d b l"   #'cider-load-buffer           :keymap cider-mode-map)
     (~bind-key-with-prefix "d f l"   #'cider-load-file             :keymap cider-mode-map)
