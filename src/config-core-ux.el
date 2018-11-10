@@ -135,8 +135,10 @@
 (tool-bar-mode -1)
 
 ;; Scroll bar comes in handy with mouse usage
-(scroll-bar-mode 1)
-(set-scroll-bar-mode 'left)
+;; (scroll-bar-mode 1)
+;; (set-scroll-bar-mode 'left)
+;; Not anymore
+(scroll-bar-mode -1)
 
 ;; No menu bar, more screen estate
 (menu-bar-mode -1)
