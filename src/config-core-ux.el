@@ -279,18 +279,20 @@
         ((column-number-mode
           (column-number-indicator-zero-based (5 #(" C%c" 0 4 nil))
                                               (5 #(" C%C" 0 4 nil)))))))
-(setq-default mode-line-format
-              `("%e"             ;; Displays out-of-mem error if there is
-                mode-line-client ;; Identifies an Emacsclient frame
-                mode-line-modified ;; Identifies if the current buffer is modified
-                mode-line-auto-compile
-                mode-line-remote               ;; Indicates a remote buffer
-                mode-line-frame-identification ;; Describes current frame
-                ~mode-line-simplified-position ;; Show column & line numbers
-                mode-line-buffer-identification
-                (:eval evil-mode-line-tag)
-                mode-line-modes
-                mode-line-misc-info))
+(setq ~mode-line-format
+      `("%e"               ;; Displays out-of-mem error if there is
+        mode-line-client   ;; Identifies an Emacsclient frame
+        mode-line-modified ;; Identifies if the current buffer is modified
+        mode-line-auto-compile
+        mode-line-remote               ;; Indicates a remote buffer
+        mode-line-frame-identification ;; Describes current frame
+        ~mode-line-simplified-position ;; Show column & line numbers
+        mode-line-buffer-identification
+        (:eval evil-mode-line-tag)
+        mode-line-modes
+        mode-line-misc-info))
+(setq-default mode-line-format ~mode-line-format)
+(setq mode-line-format ~mode-line-format)
 
 ;; Managing recent files
 (use-package recentf
