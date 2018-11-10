@@ -36,3 +36,7 @@
 * Notes on using Ivy
 ** <f3> to investigate further
 ** Mass editing with ivy-grep-change-to-wgrep-mode
+
+* Notes on: s-SPC & s-SPC to move between beginning & end of region/reactivate region
+
+* Notes on: moving to matching brackets with % in Evil
