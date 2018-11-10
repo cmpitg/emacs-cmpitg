@@ -21,8 +21,9 @@
                                        load-file-name))
               "init-bare"))
 
-(require 'rmacs:functions-cmpitg    "functions-cmpitg")
-(require 'rmacs:config-themes       "config-themes")
+(require 'rmacs:functions-cmpitg       "functions-cmpitg")
+(require 'rmacs:config-themes          "config-themes")
+(require 'rmacs:config-module-org-mode "config-module-org-mode")
 
 ;; See config-edit for Treemacs config
 (use-package treemacs

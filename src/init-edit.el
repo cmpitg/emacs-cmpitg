@@ -22,11 +22,12 @@
                                        load-file-name))
               "init-bare"))
 
-(require 'rmacs:functions-aws                "functions-aws")
-(require 'rmacs:functions-cmpitg             "functions-cmpitg")
-(require 'rmacs:config-literate-prog         "config-literate-prog")
-(require 'rmacs:config-themes                "config-themes")
-(require 'rmacs:config-edit                  "config-edit")
+(require 'rmacs:functions-aws          "functions-aws")
+(require 'rmacs:functions-cmpitg       "functions-cmpitg")
+(require 'rmacs:config-literate-prog   "config-literate-prog")
+(require 'rmacs:config-themes          "config-themes")
+(require 'rmacs:config-edit            "config-edit")
+(require 'rmacs:config-module-org-mode "config-module-org-mode")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))

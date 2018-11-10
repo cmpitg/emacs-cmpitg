@@ -414,29 +414,6 @@
     (acme-mouse-mode)
     (global-acme-mouse-mode)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package org
-  :after (evil)
-  :demand t
-  :config
-  (progn
-    ;; Add timestamp when an item is done
-    (setq org-log-done 'time)
-
-    (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
-                             (f-glob "*.org")))
-
-    ;; No folding by default
-    ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
-    ;; Of per file: #+STARTUP: showeverything
-    (setq org-startup-folded nil)
-
-    (with-eval-after-load "evil"
-      (~bind-key-with-prefix "o a" #'org-agenda))))
-
 ;; Preventing other windows from stealing the current window
 ;; (defadvice pop-to-buffer (before cancel-other-window first)
 ;;   (ad-set-arg 1 nil))
