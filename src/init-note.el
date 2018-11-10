@@ -45,27 +45,6 @@
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package org
-  :config
-  (progn
-    ;; Add timestamp when an item is done
-    (setq org-log-done 'time)
-
-    (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
-                             (f-glob "*.org")))
-
-    ;; No folding by default
-    ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
-    ;; Of per file: #+STARTUP: showeverything
-    (setq org-startup-folded nil)
-    
-    (with-eval-after-load "evil"
-      (~bind-key-with-prefix "o a" #'org-agenda))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
