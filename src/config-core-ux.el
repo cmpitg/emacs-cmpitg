@@ -419,6 +419,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org
+  :after (evil)
+  :demand t
   :config
   (progn
     ;; Add timestamp when an item is done
