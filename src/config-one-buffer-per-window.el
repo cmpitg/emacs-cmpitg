@@ -69,6 +69,11 @@ does not yet exist, create it."
     (advice-add func :around
                 #'~advice/disable-one-buffer-per-window)))
 
+(defun* ~enable-one-buffer-per-window-for (funcs)
+  "Enables one-buffer-per-window for certain functions."
+  (dolist (func funcs)
+    (advice-remove func #'~advice/disable-one-buffer-per-window)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hooks & advices
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
