@@ -287,6 +287,21 @@ The buffered used for input uses `prompt' as it title and
       (set-window-dedicated-p (selected-window) t))
     current-buffer))
 
+(defun* ~toggle-toolbox (&key (path *toolbox-path*) (side 'left) (size 70))
+  "Toggles toolbox file.  The path to the toolbox file is passed
+on using the `path' argument.  The toolbox window is sticky,
+appears on the `side', and using `size' as its width."
+  (interactive)
+  (let ((toolbox-buffer-name (file-name-nondirectory path)))
+    (if-let (wind (get-buffer-window toolbox-buffer-name))
+        (delete-window wind)
+      (progn
+        (split-window (selected-window) size side)
+        (let ((split-window-preferred-function nil)
+              (pop-up-windows nil))
+          (~smart-open-file path))
+        (set-window-dedicated-p (selected-window) t)))))
+
 (defun ~toggle-maximize-buffer ()
   "Toggles maximization of current buffer."
   (interactive)
