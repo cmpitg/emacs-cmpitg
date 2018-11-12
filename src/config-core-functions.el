@@ -521,6 +521,14 @@ text.  Moves the cursor to the new line."
 (defalias '~switch-to-last-buffer 'mode-line-other-buffer
   "Switches to the most recently visited buffer.")
 
+(defun ~toggle-scratch ()
+  "Toggles the `scratch.el' buffer.  `scratch.el' should reside
+in the `*scratch-dir*' directory."
+  (interactive)
+  (let* ((scratch-dir (or *scratch-dir* temporary-file-directory))
+         (scratch-file (s-concat scratch-dir "scratch.el")))
+    (~toggle-toolbox :path scratch-file :size 100)))
+
 (defun ~switch-to-scratch ()
   "Switches to `scratch.el' in `*scratch-dir*' directory in
 another window."
