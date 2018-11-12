@@ -256,6 +256,37 @@ we might have in the frame."
                "Window '%s' is now normal")
              (current-buffer))))
 
+(defun* ~read-input-string (&key prompt callback default-input (size 70))
+  "Displays a separate buffer to input string.  The input is
+accepted with `C-c C-c' and discarded with `C-c C-k'.  When the
+input is accepted, The `callback' function, taking the buffer
+string as its only argument, will be called.
+
+The buffered used for input uses `prompt' as it title and
+`default-input' as its default value."
+  (interactive)
+  ;; Make sure the input window doesn't exist in any frame
+  (when-let (wind (get-buffer-window prompt t))
+    (delete-window wind))
+
+  ;; Now create the window
+  (let* ((accept-input #'(lambda ()
+                           (interactive)
+                           (let ((value (buffer-string)))
+                             (kill-buffer-and-window)
+                             (funcall callback value))))
+         (current-buffer (get-buffer-create prompt)))
+    (with-current-buffer current-buffer
+      (~clean-up-buffer)
+      (when default-input (insert default-input))
+      (~bind-key-with-prefix "RET" accept-input :keymap (current-local-map))
+      (bind-key "C-c C-c" accept-input (current-local-map))
+      (bind-key "C-c C-k" #'kill-buffer-and-window (current-local-map))
+      (split-window (selected-window) size 'left)
+      (switch-to-buffer current-buffer)
+      (set-window-dedicated-p (selected-window) t))
+    current-buffer))
+
 (defun ~toggle-maximize-buffer ()
   "Toggles maximization of current buffer."
   (interactive)
