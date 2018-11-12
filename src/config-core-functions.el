@@ -289,7 +289,7 @@ The buffered used for input uses `prompt' as it title and
 
 (defun* ~toggle-toolbox (&key (path *toolbox-path*)
                               (side 'left)
-                              (size 70)
+                              (size 78)
                               (follow-dir t))
   "Toggles toolbox file.  The path to the toolbox file is passed
 on using the `path' argument.  The toolbox window is sticky,
@@ -534,7 +534,7 @@ in the `*scratch-dir*' directory."
   (interactive)
   (let* ((scratch-dir (or *scratch-dir* temporary-file-directory))
          (scratch-file (s-concat scratch-dir "scratch.el")))
-    (~toggle-toolbox :path scratch-file :size 100)))
+    (~toggle-toolbox :path scratch-file :size 80)))
 
 (defun ~switch-to-scratch ()
   "Switches to `scratch.el' in `*scratch-dir*' directory in
