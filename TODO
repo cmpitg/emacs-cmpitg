@@ -40,3 +40,7 @@
 * Notes on: s-SPC & s-SPC to move between beginning & end of region/reactivate region
 
 * Notes on: moving to matching brackets with % in Evil
+
+* Notes: MRU buffer
+
+* Notes: `~toggle-toolbox` & `~toggle-scratch`
