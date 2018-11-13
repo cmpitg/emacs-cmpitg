@@ -128,6 +128,7 @@
                    magit
                    elpa-mirror
                    resize-window
-                   wgrep))
+                   wgrep
+                   switch-buffer-functions))
   (unless (package-installed-p package)
     (package-install package)))
