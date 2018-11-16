@@ -23,7 +23,6 @@
 
 ;; TODO: rmacs --debug-on-error
 ;; TODO: tmux integration with emamux
-;; TODO: Tiling manager - winner-mode?, something like i3
 ;; TODO: See how https://github.com/joaotavora/sly could replace SLIME
 ;; TODO: https://github.com/tjarvstrand/edts and Erlang integration
 ;; TODO: https://wiki.haskell.org/Emacs#Scion for Haskell integration
@@ -90,12 +89,7 @@
 ;; er/mark-inner-tag
 ;; er/mark-outer-tag
 
-;; TODO - Think about C-x C-c C-v should work as expected
-;; TODO: Current directory
-;; TODO: Set current project directory of all visited files
 ;; TODO: Make point-pos open up closed file
-;; TODO: Recent file list based on Emacs server name
-;; TODO: toolbox:open
 ;; TODO: Migrate all old advice functions to the new advice mechanism as with :commands, so force-load might be necessary
 ;; TODO: Think about how testing should work
 ;; TODO: config-literate-programming's TODOs

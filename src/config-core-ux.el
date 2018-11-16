@@ -430,11 +430,6 @@
     (acme-mouse-mode)
     (global-acme-mouse-mode)))
 
-;; Preventing other windows from stealing the current window
-;; (defadvice pop-to-buffer (before cancel-other-window first)
-;;   (ad-set-arg 1 nil))
-;; (ad-activate 'pop-to-buffer)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core UX")
