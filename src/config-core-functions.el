@@ -148,6 +148,20 @@ If point is already there, moves to the beginning of the line."
   (push-mark (point) t t)
   (end-of-line))
 
+(defun ~append-pos-to-window-on-the-right ()
+  "Appends path to the current position to the end of window on
+the right so that it could be open with `~smart-open-file' later
+on."
+  (interactive)
+  (save-mark-and-excursion
+    (let ((path (format "%s:%s" (buffer-file-name) (line-number-at-pos))))
+      (windmove-right)
+      (save-mark-and-excursion
+        (end-of-buffer)
+        (insert path "\n"))
+      (windmove-left)
+      (message path))))
+
 (defun* ~file-pattern? (str &key (must-exists t))
   "Determines if a string is a file pattern \(`path' or
 `path:line-number', or `path:pattern'\).  By default, the

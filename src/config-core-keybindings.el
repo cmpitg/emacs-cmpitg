@@ -127,6 +127,7 @@
   (~bind-key-with-prefix "b l" #'mru-buffer:switch-to-last-buffer)
   (~bind-key-with-prefix "b r" #'revert-buffer)
   (~bind-key-with-prefix "b n" #'~new-buffer)
+  (~bind-key-with-prefix "b p a" #'~append-pos-to-window-on-the-right)
 
   ;; External commands
   (bind-key "s-a" #'~exec|)
