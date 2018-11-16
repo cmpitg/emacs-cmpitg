@@ -686,7 +686,7 @@ first occurrence of a pattern.  E.g.
       (find-file path))
     (when pattern
       (cond ((numberp pattern)
-             (forward-line pattern))
+             (goto-line pattern))
             (t
              (goto-char (point-min))
              (re-search-forward pattern))))
