@@ -51,3 +51,5 @@
       (add-hook 'find-file-hook #'mru-buffer:record-buffer-in-find-file)
       (advice-add 'switch-to-buffer
                   :around #'mru-buffer:advice/record-current-buffer)
+
+* Notes: evil's `;`
