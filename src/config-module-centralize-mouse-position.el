@@ -24,7 +24,11 @@
     (defun centralize-mouse:advice/centralize-mouse (orig-fun &rest args)
       "Centralize mouse position.  Intended to be used as an advice."
       (apply orig-fun args)
-      (condition-case ex (~centralize-mouse-position)
+      (condition-case ex
+          (progn
+            (~centralize-mouse-position)
+            (select-window (window-at (cadr (mouse-position))
+                                      (cddr (mouse-position)))))
         ('error (message "Error when calling advice to centralize mouse position" ex))))
 
     (defun centralize-mouse:centralize-mouse-in-find-file ()
@@ -40,7 +44,8 @@
       (advice-add 'switch-to-buffer :around #'centralize-mouse:advice/centralize-mouse)
       (advice-add 'other-window :around #'centralize-mouse:advice/centralize-mouse)
       (with-eval-after-load "magit"
-        (advice-add 'magit-display-buffer :around #'centralize-mouse:advice/centralize-mouse)))
+        (advice-add 'magit-display-buffer :around #'centralize-mouse:advice/centralize-mouse))
+      (advice-add 'select-frame-set-input-focus :around #'centralize-mouse:advice/centralize-mouse))
 
     (defun centralize-mouse:disable-centralizing-mouse ()
       "Disables the centralizing mouse position feature."
@@ -48,7 +53,8 @@
       (remove-hook 'find-file-hook #'centralize-mouse:centralize-mouse-in-find-file)
       (advice-remove 'switch-to-buffer #'centralize-mouse:advice/centralize-mouse)
       (advice-remove 'other-window #'centralize-mouse:advice/centralize-mouse)
-      (advice-remove 'magit-display-buffer #'centralize-mouse:advice/centralize-mouse))
+      (advice-remove 'magit-display-buffer #'centralize-mouse:advice/centralize-mouse)
+      (advice-remove 'select-frame-set-input-focus #'centralize-mouse:advice/centralize-mouse))
 
     (centralize-mouse:enable-centralizing-mouse)))
 
