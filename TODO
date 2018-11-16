@@ -44,3 +44,10 @@
 * Notes: MRU buffer
 
 * Notes: `~toggle-toolbox` & `~toggle-scratch`
+
+* Notes: performing an action whenever a buffer is focused/opened/switched requires at least 2 hooks & one advice, see the implementation of MRU buffer list:
+
+      (add-hook 'switch-buffer-functions #'mru-buffer:record-buffer-with-prev)
+      (add-hook 'find-file-hook #'mru-buffer:record-buffer-in-find-file)
+      (advice-add 'switch-to-buffer
+                  :around #'mru-buffer:advice/record-current-buffer)

@@ -27,43 +27,94 @@
       be in the MRU (most-recently-used) list.")
 
     (defvar *mru-buffer-list* (list)
-      "List of MRU (most-recently-used) buffers in chronological order.")
+      "List of MRU (most-recently-used) buffers in chronological
+      order.")
 
-    (defun mru-buffer:record-prev-buffer-name (prev-buffer current-buffer)
-      "Records the `prev-buffer' to the MRU (most-recently-used)
-list."
-      (unless (or (minibufferp current-buffer)
-                  (-any? #'(lambda (pattern)
-                             (s-matches? pattern (buffer-name prev-buffer)))
-                         *mru-buffer-skip-list*))
-        (setq *mru-buffer-list* (remove* prev-buffer *mru-buffer-list*))
-        (add-to-list '*mru-buffer-list* prev-buffer)))
+    (defun mru-buffer:buffer-satisfies-skip-list? (buffer)
+      "Checks if a buffer satisfies the skip list (defined be the
+      `*mru-buffer-skip-list*' variable."
+      (let ((buffer (get-buffer buffer)))
+        (and (buffer-live-p buffer)
+             (not (minibufferp buffer))
+             (not (-any? #'(lambda (pattern)
+                             (s-matches? pattern (buffer-name buffer)))
+                         *mru-buffer-skip-list*)))))
+
+    (defun mru-buffer:check-and-record-buffer (buffer)
+      "Checks and records `buffer' to the `mru-buffer-list' if
+      satisfies."
+      (let ((buffer (get-buffer buffer)))
+        ;; (message "checking %S" buffer)
+        (when (mru-buffer:buffer-satisfies-skip-list? buffer)
+          (setq *mru-buffer-list* (remove* buffer *mru-buffer-list*))
+          (add-to-list '*mru-buffer-list* buffer))))
+
+    (defun mru-buffer:advice/record-current-buffer (orig-fun buffer-or-name &rest args)
+      "Records current buffer to the `mru-buffer-list' list."
+      (condition-case ex
+          (mru-buffer:check-and-record-buffer buffer-or-name)
+        ('error (message "Error when recording buffer %S to the MRU list: %S"
+                         buffer-or-name
+                         ex)))
+      (apply orig-fun buffer-or-name args))
+
+    (defun mru-buffer:record-buffer-with-prev (prev-buffer current-buffer)
+      "Records the current buffer to the MRU (most-recently-used)
+      list."
+      (condition-case ex
+          (mru-buffer:check-and-record-buffer current-buffer)
+        ('error (message "Error when recording buffer: %S to thu MRU list: %S. Previous buffer: %S"
+                         current-buffer
+                         ex
+                         prev-buffer))))
+
+    (defun mru-buffer:record-buffer-in-find-file ()
+      "Records the current buffer after find-file.  This function
+      is meant to be added to `find-file-hook'."
+      (interactive)
+      (condition-case ex
+          (mru-buffer:check-and-record-buffer (current-buffer))
+        ('error (message "Error when recording current buffer in find-file: %S"
+                         ex))))
 
     (defun mru-buffer:enable-mru ()
       "Enables the record of MRU (most-recently-used) buffer feature."
-      (add-hook 'switch-buffer-functions #'mru-buffer:record-prev-buffer-name))
+      (interactive)
+      (add-hook 'switch-buffer-functions #'mru-buffer:record-buffer-with-prev)
+      (add-hook 'find-file-hook #'mru-buffer:record-buffer-in-find-file)
+      (advice-add 'switch-to-buffer
+                  :around #'mru-buffer:advice/record-current-buffer))
 
     (defun mru-buffer:disable-mru ()
       "Disables the record of MRU (most-recently-used) buffer feature."
-      (remove-hook 'switch-buffer-functions #'mru-buffer:record-prev-buffer-name))
+      (interactive)
+      (remove-hook 'switch-buffer-functions #'mru-buffer:record-buffer-with-buffer)
+      (remove-hook 'find-file-hook #'mru-buffer:record-buffer-in-find-file)
+      (advice-remove 'switch-to-buffer #'mru-buffer:advice/record-current-buffer))
 
     (defun mru-buffer:switch-to-last-buffer ()
       "Switches to the MRU (most-recently-used) buffer."
       (interactive)
-      (unless (null *mru-buffer-list*)
-        (let ((dest-buffer (first *mru-buffer-list*)))
-          (cond ((equalp dest-buffer (current-buffer))
-                 (setq *mru-buffer-list* (rest *mru-buffer-list*))
-                 (switch-to-buffer (first *mru-buffer-list*)))
-                (t
-                 (switch-to-buffer dest-buffer))))))
+      (condition-case ex
+          (progn
+            (setq *mru-buffer-list*
+                  (remove-if-not #'buffer-live-p *mru-buffer-list*))
+            (if (= 1 (length *mru-buffer-list*))
+                (switch-to-buffer (first *mru-buffer-list*))
+              (when (> (length *mru-buffer-list*) 1)
+                (if (equalp (first *mru-buffer-list*) (current-buffer))
+                    (switch-to-buffer (second *mru-buffer-list*))
+                  (switch-to-buffer (first *mru-buffer-list*))))))
+        ('error (message "Error when switching to last buffer: %S. Buffer list: %S"
+                         ex
+                         *mru-buffer-list*))))
 
     (defun mru-buffer:reset-switch-buffer-functions ()
       "Resets the functionality of `switch-buffer-functions'
 since it's easily broken."
       (interactive)
-      (add-hook 'post-command-hook #'switch-buffer-functions-run)
-      (remove-hook 'post-command-hook #'switch-buffer-functions-run))
+      (remove-hook 'post-command-hook #'switch-buffer-functions-run)
+      (add-hook 'post-command-hook #'switch-buffer-functions-run))
 
     (mru-buffer:enable-mru)))
 
