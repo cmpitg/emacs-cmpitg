@@ -130,7 +130,10 @@ the blank buffer."
            (~is-buffer-visible? buffer-or-name))
       (let* ((window (get-buffer-window buffer-or-name t))
              (frame (window-frame window)))
-        (select-frame-set-input-focus frame)
+        ;; Do not set the mouse position
+        (let ((focus-follows-mouse nil)
+              (mouse-autoselect-window nil))
+          (select-frame-set-input-focus frame))
         (select-window window))
     (apply orig-fun buffer-or-name args)))
 

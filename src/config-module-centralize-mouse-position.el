@@ -21,20 +21,11 @@
   :demand t
   :config
   (progn
-    (defun centralize-mouse:advice/centralize-mouse (orig-fun buffer-or-name &rest args)
-      "Centralize mouse position.  Intended to be used with `switch-to-buffer'"
+    (defun centralize-mouse:advice/centralize-mouse (orig-fun &rest args)
+      "Centralize mouse position.  Intended to be used as an advice."
+      (apply orig-fun args)
       (condition-case ex (~centralize-mouse-position)
-        ('error (message "Error when calling advice to centralize mouse position" ex)))
-      (apply orig-fun buffer-or-name args))
-
-    (defun centralize-mouse:centralize-mouse-with-prev-buffer (prev-buffer current-buffer)
-      "Centralize mouse position.  Intended to be used with the
-`switch-buffer-functions' hook."
-      (condition-case ex (~centralize-mouse-position)
-        ('error (message "Error when trying to centralize mouse position: %S.  Previous buffer: %S.  Current buffer: %S."
-                         ex
-                         prev-buffer
-                         current-buffer))))
+        ('error (message "Error when calling advice to centralize mouse position" ex))))
 
     (defun centralize-mouse:centralize-mouse-in-find-file ()
       "Centralize mouse position.  Intended to be used with
@@ -45,16 +36,19 @@
     (defun centralize-mouse:enable-centralizing-mouse ()
       "Enables the centralizing mouse position feature."
       (interactive)
-      (add-hook 'switch-buffer-functions #'centralize-mouse:centralize-mouse-with-prev-buffer)
       (add-hook 'find-file-hook #'centralize-mouse:centralize-mouse-in-find-file)
-      (advice-add 'switch-to-buffer :around #'centralize-mouse:advice/centralize-mouse))
+      (advice-add 'switch-to-buffer :around #'centralize-mouse:advice/centralize-mouse)
+      (advice-add 'other-window :around #'centralize-mouse:advice/centralize-mouse)
+      (with-eval-after-load "magit"
+        (advice-add 'magit-display-buffer :around #'centralize-mouse:advice/centralize-mouse)))
 
     (defun centralize-mouse:disable-centralizing-mouse ()
       "Disables the centralizing mouse position feature."
       (interactive)
-      (remove-hook 'switch-buffer-functions #'centralize-mouse:centralize-mouse-with-prev-buffer)
       (remove-hook 'find-file-hook #'centralize-mouse:centralize-mouse-in-find-file)
-      (advice-remove 'switch-to-buffer #'centralize-mouse:advice/centralize-mouse))
+      (advice-remove 'switch-to-buffer #'centralize-mouse:advice/centralize-mouse)
+      (advice-remove 'other-window #'centralize-mouse:advice/centralize-mouse)
+      (advice-remove 'magit-display-buffer #'centralize-mouse:advice/centralize-mouse))
 
     (centralize-mouse:enable-centralizing-mouse)))
 
