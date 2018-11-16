@@ -29,8 +29,6 @@
 
 ;; TODO: DOC - Python mode keybinding - Look under the Elpy configuration
 
-;; TODO: BUG - swiper-all → losing focus when swiping
-
 ;; TODO: Manual testing scenario
 
 ;; TODO: *exec* in combination with the header-line
