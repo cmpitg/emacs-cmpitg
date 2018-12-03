@@ -276,11 +276,12 @@ we might have in the frame."
 (defun ~centralize-mouse-position ()
   "Centralizes mouse position in the current window."
   (interactive)
-  (let ((frame (selected-frame)))
-    (destructuring-bind (x1 y1 x2 y2) (window-edges)
-      (set-mouse-position frame
-                          (+ x1 (/ (window-body-width) 2))
-                          (+ y1 (/ (window-body-height) 2))))))
+  (unless (minibufferp (current-buffer))
+    (let ((frame (selected-frame)))
+      (destructuring-bind (x1 y1 x2 y2) (window-edges)
+        (set-mouse-position frame
+                            (+ x1 (/ (window-body-width) 2))
+                            (+ y1 (/ (window-body-height) 2)))))))
 
 (defun* ~read-input-string (&key prompt callback default-input (size 70))
   "Displays a separate buffer to input string.  The input is
