@@ -250,7 +250,11 @@
 
 ;; To make the behavior of `display-buffer' consistent, do not allow it to
 ;; split/create a new window by setting to `nil'
-;; (setq pop-up-windows nil)
+(setq pop-up-windows nil)
+;; Display some buffers in a separate frame so that they don't steal the
+;; current window
+(add-to-list 'special-display-buffer-names "*Help*")
+(add-to-list 'special-display-buffer-names "*compilation*")
 
 ;; One buffer per window setup
 (require 'rmacs:config-one-buffer-per-window
