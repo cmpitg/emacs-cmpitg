@@ -154,7 +154,10 @@ the right so that it could be open with `~smart-open-file' later
 on."
   (interactive)
   (save-mark-and-excursion
-    (let ((path (format "%s:%s" (buffer-file-name) (line-number-at-pos))))
+    (let* ((line-number-or-pattern (if (~is-selecting?)
+                                       (s-concat "/" (~current-selection) "/")
+                                     (line-number-at-pos)))
+           (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
       (windmove-right)
       (save-mark-and-excursion
         (end-of-buffer)
