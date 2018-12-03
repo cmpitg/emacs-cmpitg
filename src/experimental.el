@@ -79,31 +79,31 @@ directory."
 (require 'widget)
 
 (defun* ~clean-up-buffer (&key (buffer (current-buffer))
-                               (keep-local-vars nil))
+                               (keep-local-vars? nil))
   "Cleans up buffer."
   (interactive)
   (with-current-buffer buffer
     (let ((inhibit-read-only t))
       (erase-buffer)
-      (unless keep-local-vars
+      (unless keep-local-vars?
         (kill-all-local-variables))
       (remove-overlays))))
 
-(defun* ui:render-widgets (&key buffer func)
+(defun* ui:render-widgets (&key buffer func (keep-local-vars? nil))
   "Does book-keeping and handles the render of widgets in a
 buffer.  All the processing and insertions of widgets should be
 in `func'."
   (interactive)
   (let ((buffer (get-buffer-create buffer)))
     (with-current-buffer buffer
-      (~clean-up-buffer)
+      (~clean-up-buffer :keep-local-vars? keep-local-vars?)
       (funcall func)
       (use-local-map widget-keymap)
       (widget-setup)
       (goto-char (point-min))
       (switch-to-buffer buffer))))
 
-(defun* ui:render-buffer (&key buffer func)
+(defun* ui:render-buffer (&key buffer func (keep-local-vars? nil))
   "Does book-keeping and handles the render of text in a buffer.
 All the processing and insertions of text should be in `func'.
 This function is useful when building text-based interactive
@@ -111,9 +111,8 @@ application."
   (interactive)
   (let ((buffer (get-buffer-create buffer)))
     (with-current-buffer buffer
-      (~clean-up-buffer)
+      (~clean-up-buffer :keep-local-vars? keep-local-vars?)
       (let ((inhibit-read-only t))
-        (fundamental-mode)
         (setq truncate-lines nil)
         (setq truncate-partial-width-windows nil)
         (setq word-wrap t)
@@ -239,7 +238,7 @@ application."
 
 (defun dir-browser:render-dir (path)
   "Renders the content of a directory."
-  (~clean-up-buffer :keep-local-vars t)
+  (~clean-up-buffer :keep-local-vars? t)
 
   (let ((inhibit-read-only t)
         (path (expand-file-name (file-name-as-directory path))))
@@ -263,10 +262,13 @@ application."
   (interactive "DDirectory: ")
   (ui:render-buffer
    :buffer "*dir-browser*"
+   :keep-local-vars? t
    :func
    #'(lambda ()
        (setq-local lexical-binding t)
-       (set (make-local-variable 'local/dir-history) (list))
+       (let ((sym/local/dir-history (make-local-variable 'local/dir-history)))
+         (unless (boundp sym/local/dir-history)
+           (set sym/local/dir-history (list))))
        (dir-browser:render-dir path))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
