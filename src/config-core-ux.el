@@ -256,6 +256,9 @@
 (dolist (buffer-name (list "*Help*" "*compilation*" "*cider-result*"))
   (add-to-list 'special-display-buffer-names buffer-name))
 
+;; Make window combinations resize proportionally
+(setq window-combination-resize t)
+
 ;; One buffer per window setup
 (require 'rmacs:config-one-buffer-per-window
          "config-one-buffer-per-window")
