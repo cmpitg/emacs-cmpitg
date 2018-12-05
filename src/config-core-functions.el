@@ -609,8 +609,22 @@ E.g.
   (with-output-to-temp-buffer buffer-name
     (funcall print-func content)))
 
-(defalias '~popup-buffer 'internal-temp-output-buffer-show
-  "Pops up a buffer for temporary display.")
+;; (defalias '~popup-buffer 'internal-temp-output-buffer-show
+;;   "Pops up a buffer for temporary display.")
+
+(defun* ~popup-buffer (buffer &key (size 80))
+  "Pops up a buffer for temporary display."
+  (interactive)
+  (let ((buffer (get-buffer-create buffer)))
+    ;; Make sure the input window doesn't exist in any frame
+    (when-let (wind (get-buffer-window buffer t))
+      (delete-window wind))
+
+    ;; Now create the window
+    (with-current-buffer buffer
+      (split-window (selected-window) size 'left)
+      (switch-to-buffer buffer))
+    buffer))
 
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
