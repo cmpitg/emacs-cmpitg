@@ -214,6 +214,12 @@ recursively."
                 (rx (0+ any) ".zip" eol)
                 (rx (0+ any) ".pyc" eol)
                 (rx (0+ any) ".elc" eol)
+                (rx (0+ any) ".class" eol)
+                (rx (0+ any) "~" eol)
+                (rx (0+ any) "swp" eol)
+                (rx ".lein-" (0+ any))
+                "/classes/"
+                "/target/"
                 "/node_modules/"
                 "/bower_components/"))
 
