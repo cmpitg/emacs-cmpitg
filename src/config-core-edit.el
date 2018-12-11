@@ -218,10 +218,12 @@ recursively."
                 (rx (0+ any) "~" eol)
                 (rx (0+ any) "swp" eol)
                 (rx ".lein-" (0+ any))
-                "/classes/"
-                "/target/"
-                "/node_modules/"
-                "/bower_components/"))
+                (rx ".git/")
+                (rx ".hg/")
+                (rx "/classes/")
+                (rx "/target/")
+                (rx "/node_modules/")
+                (rx "/bower_components/")))
 
     (defun ~projectile-ignored-patterns ()
       "Collects all ignored patterns for Projectile."
@@ -259,12 +261,11 @@ project root."
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
     (setq projectile-enable-caching t)
-    (setq projectile-indexing-method 'hybrid)
 
-    ;; Customize find file command via function
-    ;; projectile-get-ext-command
-    (setq projectile-git-command projectile-generic-command)
-    (setq projectile-hg-command projectile-generic-command)))
+    ;; (setq projectile-indexing-method 'hybrid)
+
+    (setq projectile-indexing-method 'alien)
+    (setq projectile-generic-command "find . -type f | grep -v -f <(grep . .projectile) | tr \"\\n\" \"\\0\"")))
 
 ;;
 ;; Smart completion framework
