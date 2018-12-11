@@ -26,9 +26,7 @@
       (apply orig-fun args)
       (condition-case ex
           (progn
-            (~centralize-mouse-position)
-            (select-window (window-at (cadr (mouse-position))
-                                      (cddr (mouse-position)))))
+            (~centralize-mouse-position))
         ('error (message "Error when calling advice to centralize mouse position" ex))))
 
     (defun centralize-mouse:centralize-mouse-in-find-file ()
