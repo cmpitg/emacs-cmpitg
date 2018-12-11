@@ -253,7 +253,7 @@ project root."
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
     (setq projectile-enable-caching t)
-    (setq projectile-indexing-method 'alien)
+    (setq projectile-indexing-method 'hybrid)
 
     ;; Customize find file command via function
     ;; projectile-get-ext-command
