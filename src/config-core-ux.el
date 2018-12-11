@@ -253,7 +253,10 @@
 (setq pop-up-windows nil)
 ;; Display some buffers in a separate frame so that they don't steal the
 ;; current window
-(dolist (buffer-name (list "*Help*" "*compilation*" "*cider-result*"))
+(dolist (buffer-name (list "*Help*"
+                           "*compilation*"
+                           "*cider-result*"
+                           "*Org Agenda*"))
   (add-to-list 'special-display-buffer-names buffer-name))
 
 ;; Make window combinations resize proportionally
