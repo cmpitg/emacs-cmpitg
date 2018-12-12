@@ -406,7 +406,7 @@
     (conda-env-initialize-eshell)
     (conda-env-autoactivate-mode -1)
     (setq conda-anaconda-home *conda-home-path*)
-    
+
     (let ((conda-bin (concat *conda-home-path* "/bin"))
           (current-env-path (getenv "PATH")))
       (unless (string-prefix-p conda-bin current-env-path)
@@ -500,6 +500,9 @@ the sequence, and its index within the sequence."
     (add-hook 'clojure-mode-hook #'paredit-mode)
     (add-hook 'clojure-mode-hook #'midje-mode)
 
+    ;; Do not pop up REPL after connecting
+    (setq cider-repl-pop-to-buffer-on-connect nil)
+
     ;; Only display eldoc for current function/macro, not current symbol
     (setq cider-eldoc-display-for-symbol-at-point nil)
     (add-hook 'cider-mode-hook 'eldoc-mode)
@@ -541,7 +544,7 @@ the sequence, and its index within the sequence."
       (context 2)
       (tabular '(2 1))
       (are '(2 1)))
-    
+
     (~bind-key-with-prefix "d d e a" #'~clojure/add-dependency     :keymap cider-mode-map)
     (~bind-key-with-prefix "d d d"   #'cider-doc                   :keymap cider-mode-map)
     (~bind-key-with-prefix "d d w"   #'cider-grimoire-web          :keymap cider-mode-map)
