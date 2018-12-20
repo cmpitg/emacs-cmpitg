@@ -443,6 +443,22 @@
     (global-acme-mouse-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Standard behaviors for C-x, C-c, C-v
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ref: https://www.emacswiki.org/emacs/CuaMode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Don't rebind <C-return>, must set before enabling CUA
+(setq cua-rectangle-mark-key "")
+(cua-mode 1)
+;; Don't tabify after rectangle command
+(setq cua-auto-tabify-rectangles nil)
+;; No region when it's not highlighted
+(transient-mark-mode 1)
+;; Keep region after copying
+(setq cua-keep-region-after-copy t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core UX")
 
