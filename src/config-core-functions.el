@@ -283,6 +283,14 @@ we might have in the frame."
                             (+ x1 (/ (window-body-width) 2))
                             (+ y1 (/ (window-body-height) 2)))))))
 
+(defun ~auto-pos-mouse-position ()
+  "Automatically position mouse in a sensible way."
+  (interactive)
+  (unless (minibufferp (current-buffer))
+    (let ((frame (selected-frame)))
+      (destructuring-bind (x1 y1 x2 y2) (window-edges)
+        (set-mouse-position frame (+ x1 1) y1)))))
+
 (defun* ~read-input-string (&key prompt callback default-input (size 70))
   "Displays a separate buffer to input string.  The input is
 accepted with `C-c C-c' and discarded with `C-c C-k'.  When the

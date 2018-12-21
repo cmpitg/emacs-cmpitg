@@ -106,6 +106,6 @@
 (require 'rmacs:config-core-ux                          "config-core-ux")
 (require 'rmacs:config-core-keybindings                 "config-core-keybindings")
 (require 'rmacs:config-module-mru-buffer                "config-module-mru-buffer")
-(require 'rmacs:config-module-centralize-mouse-position "config-module-centralize-mouse-position")
+(require 'rmacs:config-module-auto-pos-mouse-position   "config-module-auto-pos-mouse-position")
 
 (message "Done loading Rmacs bare")
