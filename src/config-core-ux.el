@@ -61,6 +61,13 @@
             (scroll-restore-mode -1)
             (scroll-restore-mode 1)))
 
+;; Smooth scrolling
+;; Ref: https://github.com/zk-phi/sublimity
+(require 'sublimity-scroll)
+(setq sublimity-scroll-weight 10
+      sublimity-scroll-drift-length 6)
+(sublimity-mode 1)
+
 ;; Save and restore current editing point when opening a file
 (use-package saveplace
   :config (save-place-mode 1))
@@ -137,10 +144,9 @@
 (tool-bar-mode -1)
 
 ;; Scroll bar comes in handy with mouse usage
-;; (scroll-bar-mode 1)
-;; (set-scroll-bar-mode 'left)
+(set-scroll-bar-mode 'left)
 ;; Not anymore
-(scroll-bar-mode -1)
+;; (scroll-bar-mode -1)
 
 ;; No menu bar, more screen estate
 (menu-bar-mode -1)

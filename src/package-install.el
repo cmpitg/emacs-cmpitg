@@ -129,6 +129,7 @@
                    elpa-mirror
                    resize-window
                    wgrep
-                   switch-buffer-functions))
+                   switch-buffer-functions
+                   sublimity))
   (unless (package-installed-p package)
     (package-install package)))
