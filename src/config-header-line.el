@@ -41,10 +41,6 @@
                 ,*header-line-separator*
                 "/"
                 ,*header-line-separator*
-                "⎘"
-                ,*header-line-separator*
-                "✂"
-                ,*header-line-separator*
                 "⊞+"
                 ,*header-line-separator*
                 "⊞-"
@@ -77,10 +73,6 @@
            (call-interactively 'ibuffer))
           ((string= "/" str)
            (dir-browser:render-dir-buffer default-directory))
-          ((string= "⎘" str)
-           (call-interactively 'clipboard-kill-ring-save))
-          ((string= "✂" str)
-           (call-interactively 'kill-region))
           ((string= "⊞+" str)
            (call-interactively 'make-frame))
           ((string= "➡+" str)
