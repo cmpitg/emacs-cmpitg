@@ -122,9 +122,10 @@
   (~bind-key-with-prefix "p f" #'treemacs-select-window)
 
   ;; Buffer management
-  (bind-key "<C-tab>" #'mru-buffer:switch-to-last-buffer)
+  (bind-key "C-<tab>" #'iflipb-next-buffer)
+  (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
+  (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
-  (~bind-key-with-prefix "b l" #'mru-buffer:switch-to-last-buffer)
   (~bind-key-with-prefix "b r" #'revert-buffer)
   (~bind-key-with-prefix "b n" #'~new-buffer)
   (~bind-key-with-prefix "b p a" #'~append-pos-to-window-on-the-right)

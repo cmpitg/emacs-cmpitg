@@ -448,6 +448,10 @@
     (acme-mouse-mode)
     (global-acme-mouse-mode)))
 
+;; Most-recently-used (MRU) buffer behavior
+;; Ref: https://github.com/jrosdahl/iflipb
+(use-package iflipb)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Standard behaviors for C-x, C-c, C-v
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -130,6 +130,7 @@
                    resize-window
                    wgrep
                    switch-buffer-functions
+                   iflipb
                    sublimity))
   (unless (package-installed-p package)
     (package-install package)))
