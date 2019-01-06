@@ -37,6 +37,8 @@
 (setq font-use-system-font t)
 ;; But do customize current font
 (set-frame-font "Go Mono-10.5" nil t)
+(add-to-list 'default-frame-alist
+             '(font . "Go Mono-10.5"))
 
 ;; Restore cursor position after scrolling
 ;; Ref: http://elpa.gnu.org/packages/scroll-restore.html
