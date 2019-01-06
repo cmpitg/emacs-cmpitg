@@ -66,7 +66,7 @@ Examples:
 	Lists all running Emacs server socket names.
 
   rmacs --name foobar kill
-    Kills the server with socket named 'foobar'.
+	Kills the server with socket named 'foobar'.
 
 Available Rmacs options:
 }]} trap {CMDLINE USAGE} {msg _o} {
