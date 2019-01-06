@@ -1,281 +1,262 @@
-#!/bin/bash
+#!/usr/bin/env tclsh
 
-export GPG_TTY=$(tty)
+package require Tcl 8
+package require cmdline
 
-if [[ "${1}" = "--help" ]]; then
-	cat <<EOF
-Usage: rmacs [rmacs-options] <command> [arguments] ...
+try {
+	array set cmdArgs [::cmdline::getoptions ::argv {
+		{shape.arg        "minimal"  "The shape Rmacs takes"}
+		{name.arg         ""         "(optional) A unique name used by Emacs server, for interprocess communication.  By default this option is taken from 'shape' if not specified."}
+		{timeout.arg      30000      "Timeout (in milisecs) to wait for the server to be alive.  Not in use when 'command' is 'start'."}
+		{client-opts.arg  ""         "Extra options passed to Emacsclient invocation.  Not in use when 'command' is 'start'."}
+		{no-wait                     "Don't wait for the client session to complete, return immediately.  Not in use when 'command' is 'start'."}
+		{new-frame                   "Create a new frame.  Not in use when 'command' is 'start'."}
+		{verbose                     "Be verbose, prints options and arguments"}
+		{init-dir.arg     ""         "Alternative Rmacs init directory.  Not in use if the server is already started."}
+		{init.arg         ""         "Additional init file, loaded after loading base init.  Not in use if the server is already started."}
+	} {[rmacs-options] <command> [arguments] ...
 
-Rmacs is a Re-enforced eMacs, shaping Emacs into one of the supported tools
-(called 'shapes') specified below.
+Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized tool (called "shape").  The shape is specified by the '--shape' option.  Each shape shared a base configuration with different configurations on top of it.  Currently the following shapes are supported:
 
-'command' is one of the following:
+  minimal :: General text editing framework
+  edit    :: Text editor
+  note    :: Note taker
 
-  edit		:: Run Rmacs as text editor
-  mail		:: Run Rmacs as mail browser
-  note		:: Run Rmacs as note taker
-  minimal	:: Run a minimal Rmacs without additional configuration
-  eval		:: Evals an arbitrary Emacs Lisp expression
+After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
 
-Rmacs works by loading an init file from the Rmacs init directory denoted by
-the environment variable RMACS_INIT_DIR.
+  open <path> :: Open a path or URL
+  eval <sexp> :: Evaluate an Emacs Lisp expression and return the result
+  wait        :: Wait until the corresponding server is alive
 
-Rmacs starts an Emacs server with 'server-start' if not started.
+In addition, Rmacs also supports commands to facilitate the manage of Emacs servers:
 
-One or more Rmacs options might be specificied before 'command':
+  list  :: List the current Emacs server socket names
+  kill  :: Kill an Rmacs server, '--name' or '--shape' must be provided
+  start :: Start Rmacs server in the foreground, '--name' or '--shape' must be provided
 
-  --name <server-name>  :: A unique name used by Emacs server, for
-                           interprocess communication.
-  --no-wait             :: Don't wait for the Rmacs session to complete,
-                           return immediately.
-  --new-frame           :: Create a new frame.
-  --verbose             :: Print command, options, and arguments.
+Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name, specified by the '--name' option.  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible.
 
-  --init-dir <dir>      :: Alternative base init directory.  Not in use if
-                           the server is already started or if 'command' is
-                           'start'.
-  --init <path>         :: Additional init file, loaded after loading base
-                           init.  Not in use if the server is already started.
+Rmacs works by loading init files from the Rmacs init directory (denoted by the environment variable RMACS_INIT_DIR).  There are 2 main cases where Rmacs works a bit different in the background:
+- If 'command' is 'start', Rmacs loads the init file and starts the server in the foreground.  This is useful when running Rmacs as a daemon, particularly in conjunction in a supervisor process such as Sys V Init, SystemD, or Runit, ...
+- Otherwise, Rmacs will try to start an Emacs server (if necessary) in the background.  Then it will use Emacsclient to connect to that server to perform the action denoted by 'command'.
 
-If '--name' is not specified:
-
-  text editor uses server name 'edit'
-  mail browser uses server name 'mail'
-  note taker uses server name 'note'
-  otherwise, server name is set to 'nil'
-
-The load of custom inits are supported.  Rmacs will load
-~/.emacs-machine-specific-init before and ~/.emacs-machine-specific after
-loading Rmacs configuration.
+Rmacs will always load ~/.emacs-machine-specific-init before and ~/.emacs-machine-specific after all other configurations.
 
 Examples:
 
-  rmacs edit <path>
-    Opens a file.
+  rmacs --shape edit open <path>
+	Opens a path as text editor, server is named 'edit'.
 
-  rmacs edit <path>:<line-number>
-    Opens a file, jumps to a specific line.
+  rmacs --shape edit start
+	Starts an Rmacs text editor server on the foreground, server is named 'edit'.
 
-  rmacs edit <path>:/<pattern>/
-    Opens a file, jumps to the first line containing a specific pattern.
+  rmacs --shape note open
+	Runs Rmacs as note taker, server is named 'note'.
 
-  rmacs mail
-    Runs Rmacs as mail browser.
+  rmacs --shape minimal open
+	Runs Rmacs as a general, "minimal" text editor; server is named 'minimal'.
 
-  rmacs note
-    Runs Rmacs as note taker.
+  rmacs --name edit eval <sexp>
+	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'minimal'.
 
-  rmacs minimal
-    Runs a minimal Rmacs configuration.
+  rmacs --shape edit eval <sexp>
+	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'edit'.
 
-  rmacs eval <expression>
-    Evals an Emacs Lisp expression.
+  rmacs list
+	Lists all running Emacs server socket names.
 
-EOF
-	exit 0
-fi
+  rmacs --name foobar kill
+    Kills the server with socket named 'foobar'.
 
-##############################################################################
-# Reading commands and arguments
-##############################################################################
-
-command_=""
-emacs_as_=""
-name_=""
-no_wait_="false"
-new_frame_="false"
-rmacs_init_dir_="${RMACS_INIT_DIR:-}"
-init_=""
-verbose_="false"
-tmpdir_="${TMPDIR:-/tmp/${USER}}"
-
-while [[ "${1}" == --* ]]; do
-	case "${1}" in
-		--name)
-			name_="${2}"
-			shift
-			;;
-		--init)
-			init_="${2}"
-			shift
-			;;
-		--init-dir)
-			rmacs_init_dir_="${2}"
-			shift
-			;;
-		--no-wait)
-			no_wait_=true
-			;;
-		--new-frame)
-			new_frame_=true
-			;;
-		--verbose)
-			verbose_=true
-			;;
-		*)
-			echo Invalid options "${1}". >&2
-			exit 2
-	esac
-	shift
-done
-
-case "${1}" in
-	edit|eval)
-		command_="${1}"
-		;;
-	mail)
-		command_=mail
-		;;
-	note)
-		command_=note
-		;;
-	minimal)
-		command_=minimal
-		;;
-	bare)
-		command_=bare
-		;;
-	"")
-		echo Missing command.  See rmacs --help for usage. >&2
-		exit 1
-		;;
-	*)
-		echo Invalid command "${1}". >&2
-		exit 1
-		;;
-esac
-shift
-
-name_="${name_:-${command_}}"
-
-if [[ "${command_}" = "edit" ]]; then
-	emacs_as_="nil"
-else
-	emacs_as_=":${command_}"
-fi
-
-rmacs_init_="${rmacs_init_dir_}/src/init-${command_}.el"
+Available Rmacs options:
+}]} trap {CMDLINE USAGE} {msg _o} {
+	puts $msg
+	exit 127
+}
 
 ##############################################################################
-# emacsclient options
+# Constant
 ##############################################################################
 
-socket_path_="/tmp/emacs${UID}/${name_}"
-emacsclient_options_="${EMACS_CLIENT_OPTIONS}"
-
-if [[ "${no_wait_}" = "true" ]]; then
-	emacsclient_options_="${emacsclient_options_} --no-wait"
-fi
-if [[ "${new_frame_}" = "true" ]]; then
-	emacsclient_options_="${emacsclient_options_} --create-frame"
-fi
-
-##############################################################################
-
-if [[ "${verbose_}" = "true" ]]; then
-	echo Command: ${command_}
-	echo Server name: ${name_}
-	echo Socket path: ${socket_path_}
-	echo No wait: ${no_wait_}
-	echo New frame when running: ${new_frame_}
-	echo Rmacs init directory: ${rmacs_init_dir_}
-	echo Rmacs init file: ${rmacs_init_}
-	if [[ -n "${init_}" ]]; then
-		echo Init: ${init_}
-	fi
-	echo Additional Emacs client options: ${emacsclient_options_}
-	echo "Variable *emacs-as-tool*: ${emacs_as_}"
-fi
+set ALLOWED_SHAPES {minimal edit note}
 
 ##############################################################################
 # Helpers
 ##############################################################################
 
-server_running_p() {
-	local eval_result_=$(emacsclient --socket-name ${socket_path_} \
-	                                 --quiet --eval '(+ 1 1)' 2>/dev/null)
-	if [[ "${eval_result_}" = "2" ]]; then
-		echo true
-	else
-		echo false
-	fi
+proc validateShape {shape} {
+	global ALLOWED_SHAPES
+	if {[lsearch -exact $ALLOWED_SHAPES $shape] == -1} {
+		puts stderr "Error: Shape $shape is not supported"
+		exit 1
+	}
 }
 
-wait_until_server_is_running() {
-	local retries_=25
-	while [[ $(server_running_p) = "false" ]]; do
-		sleep 1
-		retries_=$((retries_ - 1))
-		if [[ "${retries_}" = "0" ]]; then
-			echo "Got timeout when waiting for server to start..." >&2
-			exit 1
-		fi
-	done
+proc standardizeCmdArgs {cmdArgsList} {
+	array set cmdArgs $cmdArgsList
+	validateShape $cmdArgs(shape)
+	if {$cmdArgs(init-dir) eq ""} {
+		array set cmdArgs [list init-dir $::env(RMACS_INIT_DIR)]
+	}
+	if {$cmdArgs(name) eq ""} {
+		array set cmdArgs [list name $cmdArgs(shape)]
+	}
+	if {$cmdArgs(shape) eq "edit"} {
+		array set cmdArgs [list emacs-as "nil"]
+	} else {
+		array set cmdArgs [list emacs-as ":$cmdArgs(shape)"]
+	}
+	if {$cmdArgs(no-wait)} {
+		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --no-wait"]
+	}
+	if {$cmdArgs(new-frame)} {
+		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --create-frame"]
+	}
+	array set cmdArgs [list shape-init-path [file join $cmdArgs(init-dir) "src" "init-$cmdArgs(shape).el"]]
+	return [array get cmdArgs]
+}
+
+proc isServerRunning {name} {
+	try {
+		return [expr [exec emacsclient --socket-name $name --quiet --eval "(+ 1 1)" 2> /dev/null] == 2]
+	} trap CHILDSTATUS {_res _opts} {
+		return 0
+	}
+}
+
+proc rmacsWait {name timeout} {
+	set timeToWait 200
+	set retries [expr $timeout / $timeToWait]
+	while {$retries > 0} {
+		if {[isServerRunning $name]} {
+			return 1
+		}
+		puts "Waiting for server '$name', retries = $retries..."
+		set retries [expr $retries - 1]
+		after $timeToWait
+	}
+	puts stderr "Timed out when waiting for '$name' to start..."
+	exit 2
+}
+
+proc rmacsStart {name emacsAs shapeInitPath init bgDaemon verbose} {
+	set cmd [list emacs -Q]
+	set cmd [concat $cmd [list --eval "(setq *emacs-as-tool* $emacsAs)"]]
+	set cmd [concat $cmd [list --eval "(setq server-name \"$name\")"]]
+	set cmd [concat $cmd [list --load $shapeInitPath]]
+	if {$init ne ""} {
+		set cmd [concat $cmd [list --load $init]]
+	}
+	if {$bgDaemon} {
+		set cmd [concat $cmd [list --bg-daemon=$name]]
+	} else {
+		set cmd [concat $cmd [list --fg-daemon=$name]]
+	}
+	if {$verbose} {
+		puts "Server command: $cmd"
+	}
+	return [exec {*}$cmd <@ stdin >@ stderr 2>@ stderr]
+}
+
+proc rmacsEval {name clientOpts argList verbose} {
+	set cmd [list emacsclient --quiet]
+	set cmd [concat $cmd [list --socket-name $name]]
+	if {$clientOpts ne ""} {
+		set cmd [concat $cmd $clientOpts]
+	}
+	set cmd [concat $cmd [list --eval {*}$argList]]
+	if {$verbose} {
+		puts "Client command: $cmd"
+	}
+	return [exec {*}$cmd <@ stdin >@ stderr 2>@ stderr]
+}
+
+proc rmacsList {} {
+	set uid [exec id -u]
+	return [exec ls -1 /tmp/emacs$uid/ <@ stdin >@ stderr 2>@ stderr]
+}
+
+proc rmacsKill {name verbose} {
+	set cmd [list emacsclient --quiet]
+	set cmd [concat $cmd [list --socket-name $name]]
+	set cmd [concat $cmd [list --eval "(kill-emacs)"]]
+	if {$verbose} {
+		puts "Client command: $cmd"
+	}
+	return [exec {*}$cmd <@ stdin >@ stderr 2>@ stderr]
+}
+
+proc makeSureServerIsRunning {argList} {
+	array set args $argList
+	if {![isServerRunning $args(name)]} {
+		rmacsStart $args(name) $args(emacs-as) $args(shape-init-path) $args(init) 1 $args(verbose)
+		rmacsWait $args(name) $args(timeout)
+	}
 }
 
 ##############################################################################
 # Main
 ##############################################################################
 
-if [[ $(server_running_p) = "false" ]]; then
-	if [[ "${verbose_}" = "true" ]]; then
-		echo Server ${name_} is not running.  Starting...
-	fi
+# Makes Emacs GPG-aware
+set ::env(GPG_TTY) [exec tty]
 
-	if [[ -z "${init_}" ]]; then
-		nohup emacs -Q \
-			--eval "(setq *emacs-as-tool* ${emacs_as_})" \
-			--eval '(setq server-name "'${name_}'")' \
-			--eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
-			--load "${rmacs_init_}" \
-			>"${tmpdir_}/emacs-${name_}.out" \
-			2>"${tmpdir_}/emacs-${name_}.err" &
-	else
-		nohup emacs -Q \
-			--eval "(setq *emacs-as-tool* ${emacs_as_})" \
-			--eval '(setq server-name "'${name_}'")' \
-			--eval '(setq server-socket-dir "'/tmp/emacs${UID}'")' \
-			--load "${rmacs_init_}" \
-			--load "${init_}" \
-			>"${tmpdir_}/emacs-${name_}.out" \
-			2>"${tmpdir_}/emacs-${name_}.err" &
-	fi
-fi
+array set args [standardizeCmdArgs [array get cmdArgs]]
+set mainCommand [lindex $::argv 0]
+set mainArgs [lrange $::argv 1 end]
 
-wait_until_server_is_running
+if {$args(verbose)} {
+	parray args
+	puts "Main command and arguments: $::argv"
+}
 
-case "${command_}" in
-	eval)
-		if [[ -z "${1}" ]]; then
-			echo No expression to eval. >&2
-			exit 2
-		fi
+switch $mainCommand {
+	list {
+		rmacsList
+	}
+	kill {
+		if {[isServerRunning $args(name)]} {
+			rmacsKill $args(name) $args(verbose)
+		}
+	}
+	wait {
+		rmacsWait $args(name) $args(timeout)
+	}
+	start {
+		if {[isServerRunning $args(name)]} {
+			puts stderr "Error: Server '$args(name)' is running..."
+		} else {
+			rmacsStart $args(name) $args(emacs-as) $args(shape-init-path) $args(init) 0 $args(verbose)
+		}
+		exit 15
+	}
+	eval {
+		makeSureServerIsRunning [array get args]
+		rmacsEval $args(name) $args(client-opts) $mainArgs $args(verbose)
+	}
+	open {
+		makeSureServerIsRunning [array get args]
 
-		emacsclient --quiet \
-			--socket-name "${socket_path_}" \
-			${emacsclient_options_} \
-			--eval "$@"
-		;;
-	edit|minimal|bare)
-		if [[ "${1}" == /* ]]; then
-			path_="$@"
-		elif ! [[ -z "${1}" ]]; then
-			path_="${PWD}/$@"
-		fi
+		set rawPath [lindex $mainArgs 0]
+		switch -glob rawPath {
+			/* {
+				set path $rawPath
+			}
+			default {
+				# Do not use `file join` since rawPath might contain non-path elements
+				set path "[pwd]/$rawPath"
+			}
+		}
 
-		if ! [[ -z "${path_}" ]]; then
-			if [[ "${new_frame_}" = "true" ]]; then
-				expr_='(prog1 (~smart-open-file "'${path_}'") (setq-local local/delete-frame-on-close t))'
-			else
-				expr_='(~smart-open-file "'${path_}'")'
-			fi
-			emacsclient --quiet \
-				--socket-name "${socket_path_}" \
-				${emacsclient_options_} \
-				--eval "${expr_}"
-		fi
-		;;
-esac
+		if {$args(new-frame)} {
+			set sexp "(prog1 (~smart-open-file \"$path\") (setq-local local/delete-frame-on-close t))"
+		} else {
+			set sexp "(~smart-open-file \"$path\")"
+		}
+
+		rmacsEval $args(name) $args(client-opts) [list $sexp] $args(verbose)
+	}
+}
 
 # Local Variables:
 # indent-tabs-mode: t
