@@ -74,8 +74,12 @@ Available Rmacs options:
 	exit 127
 }
 
+if {$cmdArgs(verbose)} {
+	parray cmdArgs
+}
+
 ##############################################################################
-# Constant
+# Constants
 ##############################################################################
 
 set ALLOWED_SHAPES {minimal edit note}
