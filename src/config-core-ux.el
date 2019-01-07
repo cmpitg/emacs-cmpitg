@@ -313,6 +313,11 @@
         mode-line-misc-info))
 (setq-default mode-line-format ~mode-line-format)
 (setq mode-line-format ~mode-line-format)
+(defun ~format-mode-line-for-frame (frame)
+  (interactive)
+  (with-selected-frame frame
+    (setq mode-line-format ~mode-line-format)))
+(add-to-list 'after-make-frame-functions #'~format-mode-line-for-frame)
 
 ;; Managing recent files
 (use-package recentf
