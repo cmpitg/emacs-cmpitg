@@ -202,8 +202,10 @@ proc makeSureServerIsRunning {argList} {
 # Main
 ##############################################################################
 
-# Makes Emacs GPG-aware
-set ::env(GPG_TTY) [exec tty]
+# Makes Emacs GPG-aware when there is a TTY
+if {[dict exists [fconfigure stdin] -mode]} {
+	set ::env(GPG_TTY) [exec tty]
+}
 
 array set args [standardizeCmdArgs [array get cmdArgs]]
 set mainCommand [lindex $::argv 0]
