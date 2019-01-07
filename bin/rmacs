@@ -238,7 +238,7 @@ switch $mainCommand {
 		makeSureServerIsRunning [array get args]
 
 		set rawPath [lindex $mainArgs 0]
-		switch -glob rawPath {
+		switch -glob $rawPath {
 			/* {
 				set path $rawPath
 			}
