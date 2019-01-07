@@ -880,7 +880,7 @@ off the buffer."
   (interactive)
   (when (and (local-variable-p 'local/delete-frame-on-close)
              (buffer-local-value 'local/delete-frame-on-close (current-buffer)))
-    (delete-frame)))
+    (delete-frame local/delete-frame-on-close)))
 
 (defun ~maybe-make-current-file-executable ()
   "Checks for the hashbang and `chmod u+x`s current file if

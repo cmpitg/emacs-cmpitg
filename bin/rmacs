@@ -252,8 +252,8 @@ switch $mainCommand {
 			}
 		}
 
-		if {$args(new-frame)} {
-			set sexp "(prog1 (~smart-open-file \"$path\") (setq-local local/delete-frame-on-close t))"
+		if {$args(new-frame) && !$args(no-wait)} {
+			set sexp "(prog1 (~smart-open-file \"$path\") (setq-local local/delete-frame-on-close (selected-frame)))"
 		} else {
 			set sexp "(~smart-open-file \"$path\")"
 		}
