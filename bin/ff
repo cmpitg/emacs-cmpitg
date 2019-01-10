@@ -2,4 +2,4 @@
 
 export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg}
 
-rmacs --no-wait --new-frame --shape edit open "$@"
+rmacs --no-wait --shape edit open "$@"
