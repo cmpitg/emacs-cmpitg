@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg/src}
+export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg}
 
 rmacs --client-opts "--alternate-editor=vim" --new-frame --name edit open "$@"
