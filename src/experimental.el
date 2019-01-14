@@ -69,6 +69,15 @@ directory."
           (eshell/pwd)
           (if (zerop (user-uid)) "#" "$")))
 
+(defun ~my/eshell-maybe-bol ()
+  "Goes to beginning of command line first, then beginning of
+line in Eshell."
+  (interactive)
+  (let ((p (point)))
+    (eshell-bol)
+    (when (= p (point))
+      (beginning-of-line))))
+
 (require 'eshell)
 (require 'em-smart)
 (setq eshell-where-to-jump 'begin)
@@ -79,6 +88,11 @@ directory."
 
 (setq eshell-prompt-function #'~my/eshell-prompt-function)
 (setq eshell-prompt-regexp (rx bol (or "#" "$") " "))
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (bind-key "s-d" #'~my/eshell-maybe-bol eshell-mode-map)
+              (evil-define-key 'normal eshell-mode-map (kbd "0") #'~my/eshell-maybe-bol)))
+
 ;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
