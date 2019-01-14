@@ -401,6 +401,10 @@
             #'(lambda (arg)
                 (~eval-with-overlay arg (point))))
 
+(advice-add 'pp-eval-last-sexp :filter-return
+            #'(lambda (arg)
+                (~eval-with-overlay arg (point))))
+
 (advice-add 'eval-defun :filter-return
             #'(lambda (arg)
                 (~eval-with-overlay arg (save-excursion
