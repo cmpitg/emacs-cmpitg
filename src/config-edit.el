@@ -555,6 +555,8 @@ the sequence, and its index within the sequence."
     (~bind-key-with-prefix "d b l"   #'cider-load-buffer           :keymap cider-mode-map)
     (~bind-key-with-prefix "d f l"   #'cider-load-file             :keymap cider-mode-map)
     (~bind-key-with-prefix "d f a"   #'cider-load-all-files        :keymap cider-mode-map)
+    (~bind-key-with-prefix "d a a"   #'clojure-align               :keymap cider-mode-map)
+    (~bind-key-with-prefix "d p p"   #'cider-pprint-eval-last-sexp :keymap cider-mode-map)
     (~bind-key-with-prefix "d ."     #'cider-find-var              :keymap cider-mode-map)
     (~bind-key-with-prefix "d ,"     #'cider-pop-back              :keymap cider-mode-map)
     (~bind-key-with-prefix "d l"     #'cider-repl-clear-buffer     :keymap cider-repl-mode-map)
