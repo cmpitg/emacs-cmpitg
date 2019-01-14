@@ -966,6 +966,16 @@ fallback to current directory if project root is not found."
       (setq deactivate-mark t)
       res)))
 
+(defun ~eval-last-sexp-pp ()
+  "Evals the the last sexp and pprints to a buffer."
+  (interactive)
+  (let ((content (pp-to-string (eval (pp-last-sexp) lexical-binding)))
+        (buffer (get-buffer-create "*emacs-lisp-eval*")))
+    (with-current-buffer buffer
+      (erase-buffer)
+      (insert content))
+    (switch-to-buffer-other-frame buffer)))
+
 (defun ~eval-last-sexp-or-region ()
   "Evals region if active, or evals last sexpr."
   (interactive)
