@@ -61,6 +61,14 @@ directory."
   (insert "exit")
   (eshell-send-input))
 
+(defun ~my/eshell-prompt-function ()
+  (format " - %s %s@%s %s -\n%s "
+          (format-time-string "%H:%M:%S" (current-time))
+          (user-login-name)
+          (system-name)
+          (eshell/pwd)
+          (if (zerop (user-uid)) "#" "$")))
+
 (require 'eshell)
 (require 'em-smart)
 (setq eshell-where-to-jump 'begin)
@@ -69,6 +77,8 @@ directory."
 
 (bind-key "<M-insert>" '~eshell-current-project-dir)
 
+(setq eshell-prompt-function #'~my/eshell-prompt-function)
+(setq eshell-prompt-regexp (rx bol (or "#" "$") " "))
 ;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
