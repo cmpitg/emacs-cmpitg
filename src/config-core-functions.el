@@ -642,8 +642,9 @@ E.g.
          (buffer-name (thread-first (~exec "random-string 32")
                         string-trim))
          (buffer (generate-new-buffer buffer-name)))
-    (switch-to-buffer-other-frame buffer)
-    (insert content)))
+    (with-current-buffer buffer
+      (insert content))
+    (switch-to-buffer-other-frame buffer)))
 
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
