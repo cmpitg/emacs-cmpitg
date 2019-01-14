@@ -128,6 +128,7 @@
   (bind-key "C-S-t" #'~undo-killed-buffers)
   (~bind-key-with-prefix "b r" #'revert-buffer)
   (~bind-key-with-prefix "b n" #'~new-buffer)
+  (~bind-key-with-prefix "b s" #'~new-buffer-frame-from-selection)
   (~bind-key-with-prefix "b p a" #'~append-pos-to-window-on-the-right)
 
   ;; External commands

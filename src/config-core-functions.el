@@ -634,6 +634,17 @@ E.g.
       (switch-to-buffer buffer))
     buffer))
 
+(defun ~new-buffer-frame-from-selection ()
+  "Opens a new frame with a temporary buffer containing the
+  current selection."
+  (interactive)
+  (let* ((content (~current-selection))
+         (buffer-name (thread-first (~exec "random-string 32")
+                        string-trim))
+         (buffer (generate-new-buffer buffer-name)))
+    (switch-to-buffer-other-frame buffer)
+    (insert content)))
+
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
 corresponding file name for the buffer is set to the current time
