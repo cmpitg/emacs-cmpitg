@@ -386,37 +386,37 @@
 
 (autoload 'cider--make-result-overlay "cider-overlays")
 
-(defun ~eval-with-overlay (value point)
+(defun ~display-overlay-value (value point)
   "Displays the return of the `eval' in an overlay."
   (cider--make-result-overlay (format "%S" value)
     :where point
     :duration 'command)
   value)
 
-(advice-add 'eval-region :around
-            #'(lambda (fun beg end &rest args)
-                (~eval-with-overlay (apply fun beg end args) end)))
+(defun ~advice/display-overlay-value-at-point (value)
+  "Advice to display `value' in an overlay at current point."
+  (~display-overlay-value value (point)))
 
-(advice-add 'eval-last-sexp :filter-return
-            #'(lambda (arg)
-                (~eval-with-overlay arg (point))))
+(defun ~advice/display-overlay-value-at-end-of-selection (value)
+  "Advice to display `value' in an overlay at the end of the
+current selection."
+  (~display-overlay-value value (region-end)))
 
-(advice-add 'pp-eval-last-sexp :filter-return
-            #'(lambda (arg)
-                (~eval-with-overlay arg (point))))
-
+(advice-add 'eval-last-sexp :filter-return #'~advice/display-overlay-value-at-point)
+(advice-add 'pp-eval-last-sexp :filter-return #'~advice/display-overlay-value-at-point)
 (advice-add 'eval-defun :filter-return
             #'(lambda (arg)
-                (~eval-with-overlay arg (save-excursion
-                                          (end-of-defun)
-                                          (point)))))
-
+                (~display-overlay-value arg (save-excursion
+                                              (end-of-defun)
+                                              (point)))))
 (advice-add '~eval-current-sexp :filter-return
             #'(lambda (arg)
-                (~eval-with-overlay arg (save-excursion
-                                          (sp-forward-up)
-                                          (end-of-defun)
-                                          (point)))))
+                (~display-overlay-value arg (save-excursion
+                                              (sp-up-sexp)
+                                              (end-of-defun)
+                                              (point)))))
+(advice-add 'eval-region :filter-return #'~advice/display-overlay-value-at-end-of-selection)
+(advice-add '~eval-region :filter-return #'~advice/display-overlay-value-at-end-of-selection)
 
 ;; Buffer list sidebar
 ;; Ref: https://github.com/jojojames/ibuffer-sidebar
