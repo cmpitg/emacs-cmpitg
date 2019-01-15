@@ -136,9 +136,9 @@
   (bind-key "s-A" #'~exec<)
   (bind-key "M-a" #'~exec>)
   (bind-key "s-[" #'emamux:send-region)
-  (bind-key "<s-return>" #'wand:execute)
+  (bind-key "<s-return>" #'~execute-text)
   (bind-key "<C-down-mouse-1>" nil)
-  (bind-key "<C-mouse-1>" #'wand:execute)
+  (bind-key "<C-mouse-1>" #'~execute-text)
   (bind-key "<mouse-3>" #'~popup-right-click-menu)
 
   ;; Semantic editting

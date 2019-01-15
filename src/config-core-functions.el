@@ -1009,6 +1009,22 @@ fallback to current directory if project root is not found."
       (kill-sexp -1))
     (insert (format "%s" value))))
 
+(defun* ~execute-text (&optional text)
+  "Executes text using `wand:execute'.  If `text' is not
+  provided, take current selection."
+  (interactive)
+  (let* ((text (if (or (null text)
+                       (string-empty-p text))
+                   (~current-selection)
+                 text))
+         (result (wand:execute text))
+         (result-str (if (stringp result) 
+                         result 
+                       (format "%s" result))))
+    (~popup-buffer-frame :content result-str
+                         :working-dir default-directory)
+    result))
+
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
 returns it (assuming that it denotes a shell command); otherwise,
