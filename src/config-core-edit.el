@@ -621,6 +621,10 @@ interactively, `text' is taken as the current region."
                                   :capture :after
                                   :skip-comment t
                                   :action ~exec>)
+                (wand:create-rule :match "!!"
+                                  :capture :after
+                                  :skip-comment t
+                                  :action ~exec-with-term-emu)
                 (wand:create-rule :match "!"
                                   :capture :after
                                   :skip-comment t

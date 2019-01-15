@@ -1221,6 +1221,15 @@ environment variable."
                              ;; Error piped to output
                              nil)))
 
+(defun* ~exec-with-term-emu (command &key (term-emu "run-with-term-emu"))
+  "Executes a command in a terminal emulator asynchronously."
+  (interactive "MCommand: ")
+  (let ((process-name (format "term-emu:%s" command)))
+    (async-start-process process-name
+                         term-emu
+                         nil
+                         command)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core functions")
