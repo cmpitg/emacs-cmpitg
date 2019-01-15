@@ -97,7 +97,7 @@
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
-    (bind-key "s-T" #'sp-forward-up)
+    (bind-key "s-T" #'sp-up-sexp)
     (bind-key "M-s" #'sp-splice-sexp)
     (bind-key "M-S" #'sp-split-sexp))
 
