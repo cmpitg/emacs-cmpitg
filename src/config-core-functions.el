@@ -634,6 +634,22 @@ E.g.
       (switch-to-buffer buffer))
     buffer))
 
+(defun* ~popup-buffer-frame (&key (buffer (thread-first (~exec "random-string 32")
+                                            string-trim))
+                                  (content "")
+                                  working-dir)
+  "Pops up a buffer in a new frame, useful for workflows with
+  tiling window manager.  When the buffer is closed, the
+  corresponding frame is deleted."
+  (interactive)
+  (let* ((buffer (get-buffer-create buffer)))
+    (with-current-buffer buffer
+      (erase-buffer)
+      (insert content)
+      (setq-local default-directory working-dir)
+      (switch-to-buffer-other-frame buffer)
+      (setq-local local/delete-frame-on-close (selected-frame)))))
+
 (defun ~new-buffer-frame-from-selection ()
   "Opens a new frame with a temporary buffer containing the
   current selection."
