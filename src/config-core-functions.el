@@ -654,13 +654,8 @@ E.g.
   "Opens a new frame with a temporary buffer containing the
   current selection."
   (interactive)
-  (let* ((content (~current-selection))
-         (buffer-name (thread-first (~exec "random-string 32")
-                        string-trim))
-         (buffer (generate-new-buffer buffer-name)))
-    (with-current-buffer buffer
-      (insert content))
-    (switch-to-buffer-other-frame buffer)))
+  (~popup-buffer-frame :content (~current-selection)
+                       :working-dir default-directory))
 
 (defun ~new-buffer ()
   "Opens a new empty buffer in `*scratch-dir*'.  The
@@ -988,10 +983,9 @@ fallback to current directory if project root is not found."
   (interactive)
   (let ((content (pp-to-string (eval (pp-last-sexp) lexical-binding)))
         (buffer (get-buffer-create "*emacs-lisp-eval*")))
-    (with-current-buffer buffer
-      (erase-buffer)
-      (insert content))
-    (switch-to-buffer-other-frame buffer)))
+    (~popup-buffer-frame :buffer buffer
+                         :content content
+                         :working-dir default-directory)))
 
 (defun ~eval-last-sexp-or-region ()
   "Evals region if active, or evals last sexpr."
