@@ -24,7 +24,7 @@ Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized to
 
 After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
 
-  open <path> :: Open a path or URL
+  open [path] :: Open a path or URL.  If 'path' is not provided, one a blank buffer.
   eval <sexp> :: Evaluate an Emacs Lisp expression and return the result
   wait        :: Wait until the corresponding server is alive
 
@@ -254,7 +254,9 @@ switch $mainCommand {
 			}
 		}
 
-		if {$args(new-frame) && !$args(no-wait)} {
+		if {[llength $mainArgs] == 0} {
+			set sexp {(switch-to-buffer "*Blank*")}
+		} elseif {$args(new-frame) && !$args(no-wait)} {
 			set sexp "(prog1 (~smart-open-file \"$path\") (setq-local local/delete-frame-on-close (selected-frame)))"
 		} else {
 			set sexp "(~smart-open-file \"$path\")"
