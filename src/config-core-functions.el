@@ -1058,8 +1058,8 @@ necessary."
                                 "https://encrypted.google.com/")))))
   (let ((url (shell-quote-argument url)))
    (~run-process (if new-window?
-                     (format "firefox-beta --new-window %s" url)
-                   (format "firefox-beta %s" url)))))
+                     (format "firefox --new-window %s" url)
+                   (format "firefox %s" url)))))
 
 (defun ~get-process-output (process)
   "Gets the output for a managed process."
