@@ -400,7 +400,9 @@
 (defun ~advice/display-overlay-value-at-end-of-selection (value)
   "Advice to display `value' in an overlay at the end of the
 current selection."
-  (~display-overlay-value value (region-end)))
+  (~display-overlay-value value (if (~is-selecting?)
+                                    (region-end)
+                                  (point))))
 
 (advice-add 'eval-last-sexp :filter-return #'~advice/display-overlay-value-at-point)
 (advice-add 'pp-eval-last-sexp :filter-return #'~advice/display-overlay-value-at-point)
