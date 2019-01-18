@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#!/usr/bin/env expect
 
 package require Tcl 8
 package require cmdline
@@ -159,7 +159,7 @@ proc rmacsStart {name emacsAs shapeInitPath init bgDaemon verbose} {
 	if {$verbose} {
 		puts "Server command: $cmd"
 	}
-	return [exec {*}$cmd <@ stdin >@ stderr 2>@ stderr]
+	return [interact [spawn -noecho {*}$cmd]]
 }
 
 proc rmacsEval {name clientOpts argList verbose} {
@@ -172,7 +172,7 @@ proc rmacsEval {name clientOpts argList verbose} {
 	if {$verbose} {
 		puts "Client command: $cmd"
 	}
-	return [exec {*}$cmd <@ stdin >@ stderr 2>@ stderr]
+	return [interact [spawn -noecho {*}$cmd]]
 }
 
 proc rmacsList {} {
@@ -187,7 +187,7 @@ proc rmacsKill {name verbose} {
 	if {$verbose} {
 		puts "Client command: $cmd"
 	}
-	return [exec {*}$cmd <@ stdin >@ stderr 2>@ stderr]
+	return [interact [spawn -noecho {*}$cmd]]
 }
 
 proc makeSureServerIsRunning {argList} {
