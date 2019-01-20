@@ -35,10 +35,6 @@
 ;; TODO: header-line → double-right-clicking to edit
 
 ;; TODO: Functions:
-;; - toolbox:open (from Rmacs invocation) aliased
-;; - e b eval-buffer
-;; - e e ~eval-current-expression
-;; - e r eval-region
 ;; - e r (python-mode) python-shell-send-region
 ;; - (bind-key "s-+" 'mc/edit-lines)
 
