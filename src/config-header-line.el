@@ -68,7 +68,7 @@
           ((string= "x" str)
            (call-interactively 'delete-frame))
           ((string= "x-buffer" str)
-           (call-interactively 'kill-this-buffer))
+           (call-interactively 'kill-current-buffer))
           ((string= "x-window" str)
            (call-interactively '~delete-window))
           ((string= "╳" str)
