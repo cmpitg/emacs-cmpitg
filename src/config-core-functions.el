@@ -906,6 +906,13 @@ off the buffer."
              (buffer-local-value 'local/delete-frame-on-close (current-buffer)))
     (delete-frame local/delete-frame-on-close)))
 
+(defun ~maybe-delete-window-when-killing-buffer ()
+  "Deletes current window when killing buffer if needed."
+  (interactive)
+  (when (and (local-variable-p 'local/delete-window-on-close)
+             (buffer-local-value 'local/delete-window-on-close (current-buffer)))
+    (delete-window)))
+
 (defun ~maybe-make-current-file-executable ()
   "Checks for the hashbang and `chmod u+x`s current file if
 needed."

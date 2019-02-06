@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -234,8 +234,9 @@
 ;; Clean up all Tramp remote connection before killing Emacs
 (add-hook 'kill-emacs-hook #'~clean-up-tramp)
 
-;; Delete file when killing buffer if necessary
+;; Delete file/window/frame when killing buffer if necessary
 (add-hook 'kill-buffer-hook #'~maybe-delete-file-when-killing-buffer)
+(add-hook 'kill-buffer-hook #'~maybe-delete-window-when-killing-buffer)
 (add-hook 'kill-buffer-hook #'~maybe-delete-frame-when-killing-buffer)
 
 ;; Track recently closed files
