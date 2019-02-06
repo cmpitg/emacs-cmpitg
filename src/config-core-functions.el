@@ -458,6 +458,17 @@ prefix arg (`C-u') to force deletion if it is."
 (defalias '~switch-buffer 'ivy-switch-buffer
   "Switches to a buffer and focus the corresponding window & frame.")
 
+(defun* ~clean-up-buffer (&key (buffer (current-buffer))
+                               (keep-local-vars? nil))
+  "Cleans up buffer."
+  (interactive)
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (unless keep-local-vars?
+        (kill-all-local-variables))
+      (remove-overlays))))
+
 ;; FIXME: Review these hippie-expand enhancements
 (defun try-expand-flexible-abbrev (old)
   "Tries to complete word using flexible matching.
