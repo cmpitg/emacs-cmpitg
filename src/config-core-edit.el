@@ -687,6 +687,12 @@ interactively, `text' is taken as the current region."
             (setq company-quickhelp-delay nil)))
 
 ;;
+;; Always load man mode
+;;
+
+(use-package man)
+
+;;
 ;; Better way to switch to and swap windows
 ;;
 ;; Ref: https://github.com/abo-abo/ace-window
@@ -700,6 +706,7 @@ interactively, `text' is taken as the current region."
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-frame-on-close . t))
+(add-to-list 'safe-local-variable-values '(local/delete-window-on-close . t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
