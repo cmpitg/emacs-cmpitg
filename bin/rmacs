@@ -159,7 +159,8 @@ proc rmacsStart {name emacsAs shapeInitPath init bgDaemon verbose} {
 	if {$verbose} {
 		puts "Server command: $cmd"
 	}
-	return [interact [spawn -noecho {*}$cmd]]
+	# return [interact [spawn -noecho {*}$cmd]]
+	return [exec {*}$cmd <@ stdin >@ stdout 2>@ stderr]
 }
 
 proc rmacsEval {name clientOpts argList verbose} {
@@ -172,7 +173,9 @@ proc rmacsEval {name clientOpts argList verbose} {
 	if {$verbose} {
 		puts "Client command: $cmd"
 	}
-	return [interact [spawn -noecho {*}$cmd]]
+	# The following command doesn't work, why?
+	# return [interact [spawn -noecho {*}$cmd]]
+	return [exec {*}$cmd <@ stdin >@ stdout 2>@ stderr]
 }
 
 proc rmacsList {} {
