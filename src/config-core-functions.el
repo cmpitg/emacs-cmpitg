@@ -17,6 +17,17 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+(defvar *popup-exec-result?*
+  nil
+  "Determines whether or not result from an exec function should
+be popped up (in a separate frame).")
+
+(defvar *popup-buffer-in*
+  :window
+  "Determines whether a buffer popped up by `~popup-buffer' is in
+a new window or a new frame.  Possible values: `:window',
+`:frame'.")
+
 ;;
 ;; Menu
 ;;
@@ -611,29 +622,32 @@ reference."
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
 
-;; TODO - Should use ~popup-buffer, since the temp buffer might interfere with
-;; the current buffer?
-(defun* ~popup-message (content &key (buffer-name "*Temporary*")
-                                (print-func #'princ))
-  "Displays a popup window with `content' as its content and an
-optional `buffer-name' name.
+(defun* ~popup-buffer-frame (&key (buffer "*Temp*")
+                                  content
+                                  working-dir)
+  "Pops up a buffer in a new frame, useful for workflows with
+tiling window manager.  If `content' is non-`nil', it serves as
+the content of the buffer.  When the buffer is closed, the
+corresponding frame is deleted."
+  (interactive)
+  (let* ((buffer (get-buffer-create buffer)))
+    (with-current-buffer buffer
+      (when content
+        (~clean-up-buffer)
+        (insert content))
 
-E.g.
+      (switch-to-buffer-other-frame buffer)
+      (setq-local default-directory working-dir)
+      (setq-local local/delete-frame-on-close (selected-frame)))))
 
-;; Display \"Hello World\" in a popup window.
-\(~popup-message \"Hello World\"\)
-
-;; Display \"Hola Mundo\" in a popup window, naming that window buffer \"*mundo*\"
-\(~popup-message \"Hello World\" :buffer-name \"*mundo*\"\)
-"
-  (with-output-to-temp-buffer buffer-name
-    (funcall print-func content)))
-
-;; (defalias '~popup-buffer 'internal-temp-output-buffer-show
-;;   "Pops up a buffer for temporary display.")
-
-(defun* ~popup-buffer (buffer &key (size 80))
-  "Pops up a buffer for temporary display."
+(defun* ~popup-buffer-window (&key (buffer "*Temp*")
+                                   content
+                                   working-dir
+                                   (size 80))
+  "Pops up a buffer in a new window.  If `content' is non-`nil',
+it serves as the content of the buffer.  `size' defines the width
+threshold which the window receives.  When the buffer is closed,
+the corresponding window is deleted."
   (interactive)
   (let ((buffer (get-buffer-create buffer)))
     ;; Make sure the input window doesn't exist in any frame
@@ -642,25 +656,47 @@ E.g.
 
     ;; Now create the window
     (with-current-buffer buffer
+      (when content
+        (~clean-up-buffer)
+        (insert content))
+
       (split-window (selected-window) size 'left)
+      (setq-local default-directory working-dir)
+      (setq-local local/delete-window-on-close t)
       (switch-to-buffer buffer))
     buffer))
 
-(defun* ~popup-buffer-frame (&key (buffer (thread-first (~exec "random-string 32")
-                                            string-trim))
-                                  (content "")
-                                  working-dir)
-  "Pops up a buffer in a new frame, useful for workflows with
-  tiling window manager.  When the buffer is closed, the
-  corresponding frame is deleted."
+(defun* ~popup-buffer (&key (buffer "*Temp*")
+                            content
+                            working-dir
+                            (size 80))
+  "Pops up a buffer in a new window or frame.  If `content' is non-`nil',
+it serves as the content of the buffer.  `size' defines the width
+threshold which the window receives in case a new window is
+popped up.  When the buffer is closed, the corresponding
+window/frame is deleted.
+
+This function will pop up a buffer window if the variable
+`*popup-buffer-in*' is `:window' and it is called without a
+prefix argument.  Otherwise, it will pop up a buffer frame."
   (interactive)
-  (let* ((buffer (get-buffer-create buffer)))
-    (with-current-buffer buffer
-      (erase-buffer)
-      (insert content)
-      (setq-local default-directory working-dir)
-      (switch-to-buffer-other-frame buffer)
-      (setq-local local/delete-frame-on-close (selected-frame)))))
+  (cond
+   ((or (eq :frame *popup-buffer-in*)
+        current-prefix-arg)
+    (~popup-buffer-frame :buffer buffer
+                         :content content
+                         :working-dir working-dir))
+   ((eq :window *popup-buffer-in*)
+    (~popup-buffer-window :buffer buffer
+                          :content content
+                          :working-dir working-dir
+                          :size size))
+   (t
+    (error "Unrecognized value of *popup-buffer-in*: %s. It must be either :window or :frame."
+           *popup-buffer-in*))))
+
+;; (defalias '~popup-buffer 'internal-temp-output-buffer-show
+;;   "Pops up a buffer for temporary display.")
 
 (defun ~new-buffer-frame-from-selection ()
   "Opens a new frame with a temporary buffer containing the
@@ -1002,9 +1038,9 @@ fallback to current directory if project root is not found."
   (interactive)
   (let ((content (pp-to-string (eval (pp-last-sexp) lexical-binding)))
         (buffer (get-buffer-create "*emacs-lisp-eval*")))
-    (~popup-buffer-frame :buffer buffer
-                         :content content
-                         :working-dir default-directory)))
+    (~popup-buffer :buffer buffer
+                   :content content
+                   :working-dir default-directory)))
 
 (defun ~eval-last-sexp-or-region ()
   "Evals region if active, or evals last sexpr."
@@ -1024,18 +1060,23 @@ fallback to current directory if project root is not found."
 
 (defun* ~execute-text (&optional text)
   "Executes text using `wand:execute'.  If `text' is not
-  provided, take current selection."
+provided, take current selection.  When calling with a prefix
+argument or when `*popup-exec-result?*' is `t', the result is
+popped up in a separate frame."
   (interactive)
   (let* ((text (if (or (null text)
                        (string-empty-p text))
                    (~current-selection)
                  text))
          (result (wand:execute text))
-         (result-str (if (stringp result) 
-                         result 
+         (result-str (if (stringp result)
+                         result
                        (format "%s" result))))
-    (~popup-buffer-frame :content result-str
-                         :working-dir default-directory)
+    (when (or current-prefix-arg
+              (and (boundp '*popup-exec-result?*)
+                   *popup-exec-result?*))
+      (~popup-buffer :content result-str
+                     :working-dir default-directory))
     result))
 
 (defun ~read-command-or-get-from-secondary-selection ()
@@ -1060,6 +1101,12 @@ necessary."
                                               max-length)
                                              (length ellipsis))))
       str)))
+
+(defun ~toggle-popup-exec-result ()
+  "Toggles whether or not result from an exec function is popped
+up in a separate frame."
+  (interactive)
+  (setf *popup-exec-result?* (not *popup-exec-result?*)))
 
 ;;
 ;; Processes
@@ -1178,8 +1225,8 @@ is determined by the `SHELL' environment variable."
                          current-shell
                          #'(lambda (process)
                              (let ((output (~get-process-output process)))
-                               (~popup-message output
-                                               :buffer-name process-name)))
+                               (~popup-buffer :content output
+                                              :buffer process-name)))
                          "-c"
                          actual-command)))
 
@@ -1227,7 +1274,7 @@ shell which is determined by the `SHELL' environment variable."
 
                                     ;; Error piped to output
                                     nil))
-    (~popup-buffer command)))
+    (~popup-buffer :buffer command)))
 
 (defun ~exec| (&optional command)
   "Executes a command, taking input from the current region,
