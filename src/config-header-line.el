@@ -74,7 +74,7 @@
           ((string= "╳" str)
            (call-interactively '~delete-window))
           ((string= "Buffers" str)
-           (call-interactively 'ibuffer))
+           (call-interactively '~choose-buffer))
           ((string= "/" str)
            (dir-browser:render-dir-buffer default-directory))
           ((string= "✓" str)

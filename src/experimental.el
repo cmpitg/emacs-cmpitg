@@ -102,17 +102,6 @@ line in Eshell."
 (eval-when-compile (require 'wid-edit))
 (require 'widget)
 
-(defun* ~clean-up-buffer (&key (buffer (current-buffer))
-                               (keep-local-vars? nil))
-  "Cleans up buffer."
-  (interactive)
-  (with-current-buffer buffer
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (unless keep-local-vars?
-        (kill-all-local-variables))
-      (remove-overlays))))
-
 (defun* ui:render-widgets (&key buffer func (keep-local-vars? nil))
   "Does book-keeping and handles the render of widgets in a
 buffer.  All the processing and insertions of widgets should be
@@ -294,6 +283,62 @@ application."
          (unless (boundp sym/local/dir-history)
            (set sym/local/dir-history (list))))
        (dir-browser:render-dir path))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Simple buffer listing
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Require: iflipb
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~remap-path (path)
+  (thread-last path
+    (s-replace "/home/hdn/Desktop/Data/Source/" "/m/src/")
+    (s-replace "/home/hdn/" "~/")))
+
+(defun ~choose-buffer ()
+  (interactive)
+  (cl-flet ((~visit-buffer-at-current-line
+             ()
+             (interactive)
+             (save-excursion
+               (beginning-of-line)
+               (forward-char)
+               (let* ((buffer-name (s-trim (field-string-no-properties)))
+                      (buffer (get-buffer buffer-name)))
+                 (if (null buffer)
+                     (message "Buffer %s doesn't exist" buffer-name)
+                   (progn
+                     (kill-current-buffer)
+                     (switch-to-buffer buffer)))))))
+    (let ((buffer-list (iflipb-interesting-buffers))
+          (buffer-index iflipb-current-buffer-index)
+          (current-buffer (get-buffer-create "*buffer-list*")))
+      (with-current-buffer current-buffer
+        (~clean-up-buffer)
+
+        (dolist (buffer buffer-list)
+          (let ((name (buffer-name buffer))
+                (path (if (buffer-file-name buffer)
+                          (~remap-path (buffer-file-name buffer))
+                        "")))
+            (insert (propertize (format "%-60s" name)
+                                'field name)
+                    (propertize path
+                                'field (s-concat "path-" name)))
+            (newline)))
+
+        (goto-line buffer-index)
+        (beginning-of-line)
+
+        (evil-normal-state)
+        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        (evil-define-key 'insert 'local (kbd "q") #'kill-current-buffer)
+        (evil-define-key 'normal 'local (kbd "RET") #'~visit-buffer-at-current-line)
+        (evil-define-key 'insert 'local (kbd "RET") #'~visit-buffer-at-current-line)
+        (evil-define-key 'insert 'local (kbd "<double-mouse-1>") #'~visit-buffer-at-current-line)
+        (evil-define-key 'normal 'local (kbd "<double-mouse-1>") #'~visit-buffer-at-current-line)
+
+        (switch-to-buffer current-buffer)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Alignment and indentation
