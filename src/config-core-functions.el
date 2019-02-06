@@ -303,14 +303,14 @@ we might have in the frame."
         (destructuring-bind (x1 y1 x2 y2) (window-edges)
           (set-mouse-position frame (+ x1 1) y1))))))
 
-(defun* ~read-input-string (&key prompt callback default-input (size 70))
-  "Displays a separate buffer to input string.  The input is
+(defun* ~read-input-string-async (&key prompt callback default-value (size 70))
+  "Displays a separate buffer to read input string.  The input is
 accepted with `C-c C-c' and discarded with `C-c C-k'.  When the
 input is accepted, The `callback' function, taking the buffer
 string as its only argument, will be called.
 
 The buffered used for input uses `prompt' as it title and
-`default-input' as its default value."
+`default-value' as its default value."
   (interactive)
   ;; Make sure the input window doesn't exist in any frame
   (when-let (wind (get-buffer-window prompt t))
@@ -325,10 +325,65 @@ The buffered used for input uses `prompt' as it title and
          (current-buffer (get-buffer-create prompt)))
     (with-current-buffer current-buffer
       (~clean-up-buffer)
-      (when default-input (insert default-input))
+      (when default-value (insert default-value))
       (~bind-key-with-prefix "RET" accept-input :keymap (current-local-map))
       (bind-key "C-c C-c" accept-input (current-local-map))
       (bind-key "C-c C-k" #'kill-buffer-and-window (current-local-map))
+      (split-window (selected-window) size 'left)
+      (switch-to-buffer current-buffer)
+      (set-window-dedicated-p (selected-window) t))
+    current-buffer))
+
+(defun* ~read-multiple-input-strings-async (&key prompts
+                                                 callback
+                                                 (title "Prompting")
+                                                 (size 70))
+  "Displays a separate buffer to input multiple strings.  The
+input is accepted with `C-c C-c' and discarded with `C-c C-k'.
+When the input is accepted, The `callback' function, taking the
+buffer string as its only argument, will be called.
+
+`prompts' is an alist, each element has the format of `(<prompt>
+. <default-value>)', denoting the prompt and its default value."
+  (interactive)
+  ;; Make sure the input window doesn't exist in any frame
+  (when-let (wind (get-buffer-window title t))
+    (delete-window wind))
+
+  ;; Now create the window
+  (let* ((accept-input #'(lambda ()
+                           (interactive)
+                           (goto-char 0)
+                           (let ((values (loop
+                                          for i from 1 to (length prompts)
+                                          collect (progn (delete-field)
+                                                         (let ((value (thread-first (field-string-no-properties)
+                                                                        (seq-drop 1))))
+                                                           (delete-field)
+                                                           (delete-field)
+                                                           value)))))
+                             (kill-buffer-and-window)
+                             (apply callback values))))
+         (current-buffer (get-buffer-create title)))
+    (with-current-buffer current-buffer
+      ;; Display the content
+      (~clean-up-buffer)
+      (dolist (prompt&default-value prompts)
+        (let ((prompt (car prompt&default-value))
+              (default-value (cdr prompt&default-value)))
+          (insert (propertize prompt
+                              'field prompt)
+                  (propertize (s-concat " " default-value)
+                              'field (s-concat prompt "-value"))
+                  (propertize "\n"
+                              'field "newline"))))
+
+      ;; Bind keys
+      (~bind-key-with-prefix "RET" accept-input :keymap (current-local-map))
+      (bind-key "C-c C-c" accept-input (current-local-map))
+      (bind-key "C-c C-k" #'kill-buffer-and-window (current-local-map))
+
+      ;; Display the buffer
       (split-window (selected-window) size 'left)
       (switch-to-buffer current-buffer)
       (set-window-dedicated-p (selected-window) t))
