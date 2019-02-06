@@ -70,8 +70,13 @@ Examples:
 
 Available Rmacs options:
 }]} trap {CMDLINE USAGE} {msg _o} {
-	puts $msg
-	exit 127
+	if {[llength $::argv] == 0} {
+		puts $msg
+		exit 0
+	} else {
+		puts stderr $msg
+		exit 127
+	}
 }
 
 if {$cmdArgs(verbose)} {
