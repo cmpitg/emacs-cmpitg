@@ -131,6 +131,7 @@
                    wgrep
                    switch-buffer-functions
                    iflipb
-                   sublimity))
+                   sublimity
+                   smooth-scrolling))
   (unless (package-installed-p package)
     (package-install package)))

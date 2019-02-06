@@ -65,10 +65,12 @@
 
 ;; Smooth scrolling
 ;; Ref: https://github.com/zk-phi/sublimity
-(require 'sublimity-scroll)
-(setq sublimity-scroll-weight 10
-      sublimity-scroll-drift-length 6)
-(sublimity-mode 1)
+;; (require 'sublimity-scroll)
+;; (setq sublimity-scroll-weight 10
+;;       sublimity-scroll-drift-length 6)
+;; (sublimity-mode 1)
+(require 'smooth-scrolling)
+(smooth-scrolling-mode 1)
 
 ;; Save and restore current editing point when opening a file
 (use-package saveplace
