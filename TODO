@@ -23,6 +23,12 @@
 
 * Notes on Ruby development & CHRUBY_VERSION environment variable
 
+* Notes on some variables
+** `local/delete-on-close`
+** `local/delete-frame-on-close`
+** `local/delete-window-on-close`
+** `*popup-exec-result?*`
+
 * Notes on Clojure development
 ** cider-connect
 ** Jump to def and jump back
