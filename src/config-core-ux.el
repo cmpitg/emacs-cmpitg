@@ -267,6 +267,7 @@
 (dolist (buffer-name (list "*Help*"
                            "*compilation*"
                            "*cider-result*"
+                           "*cider-doc*"
                            "*Org Agenda*"))
   (add-to-list 'special-display-buffer-names buffer-name))
 
