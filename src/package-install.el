@@ -75,6 +75,7 @@
                    evil-visualstar
                    evil-paredit
                    evil-surround
+                   rust-mode
                    treemacs
                    treemacs-evil
                    treemacs-projectile
