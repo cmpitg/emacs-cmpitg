@@ -130,7 +130,7 @@
   (~bind-key-with-prefix "b n" #'~new-buffer)
   (~bind-key-with-prefix "b s" #'~new-buffer-frame-from-selection)
   (~bind-key-with-prefix "b m" #'mark-whole-buffer)
-  (~bind-key-with-prefix "b l" #'list-buffers)
+  (~bind-key-with-prefix "b l" #'~choose-buffer)
   (~bind-key-with-prefix "b p a" #'~append-pos-to-window-on-the-right)
 
   ;; External commands
