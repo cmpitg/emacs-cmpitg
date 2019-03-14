@@ -272,8 +272,6 @@
                             (rx bol "*ivy-occur")))
   (add-to-list 'display-buffer-alist (cons buffer-regex (cons #'special-display-popup-frame nil))))
 
-(setq special-display-buffer-names nil)
-
 ;; Make window combinations resize proportionally
 (setq window-combination-resize t)
 
