@@ -264,12 +264,15 @@
 (setq pop-up-windows nil)
 ;; Display some buffers in a separate frame so that they don't steal the
 ;; current window
-(dolist (buffer-name (list "*Help*"
-                           "*compilation*"
-                           "*cider-result*"
-                           "*cider-doc*"
-                           "*Org Agenda*"))
-  (add-to-list 'special-display-buffer-names buffer-name))
+(dolist (buffer-regex (list (rx bol "*Help*" eol)
+                            (rx bol "*compilation*" eol)
+                            (rx bol "*cider-result*" eol)
+                            (rx bol "*cider-doc*" eol)
+                            (rx bol "*Org Agenda*" eol)
+                            (rx bol "*ivy-occur")))
+  (add-to-list 'display-buffer-alist (cons buffer-regex (cons #'special-display-popup-frame nil))))
+
+(setq special-display-buffer-names nil)
 
 ;; Make window combinations resize proportionally
 (setq window-combination-resize t)
