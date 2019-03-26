@@ -257,7 +257,9 @@
          (buffer-file-name "%f"
                            (dired-directory dired-directory "%b")))))
   (setq-default frame-title-format title-format)
-  (setq frame-title-format title-format))
+  (setq-default icon-title-format title-format)
+  (setq frame-title-format title-format)
+  (setq icon-title-format title-format))
 
 ;; To make the behavior of `display-buffer' consistent, do not allow it to
 ;; split/create a new window by setting to `nil'
