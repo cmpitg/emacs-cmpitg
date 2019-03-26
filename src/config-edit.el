@@ -496,6 +496,12 @@ the sequence, and its index within the sequence."
                    sequence)))))
   :config
   (progn
+    (defun ~cider-connect ()
+      "Interactively calls `cider-connect', saving the current cursor position."
+      (interactive)
+      (save-excursion
+        (call-interactively 'cider-connect)))
+
     ;; (add-hook 'clojure-mode-hook #'cider-mode)
     (add-hook 'clojure-mode-hook #'paredit-mode)
     (add-hook 'clojure-mode-hook #'midje-mode)
