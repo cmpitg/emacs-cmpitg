@@ -251,9 +251,10 @@
 ;; Set frame title
 (let ((title-format
        `("Rmacs"
-         ,(format " @ %s" (or *emacs-as-tool*
-                              :edit))
-         " \u262f "
+         ,(format " @ %s" (or server-name :minimal))
+         ;; " \u262f "
+         ;; " ☯ "
+         " "
          (buffer-file-name "%f"
                            (dired-directory dired-directory "%b")))))
   (setq-default frame-title-format title-format)
