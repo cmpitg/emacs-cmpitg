@@ -487,6 +487,14 @@ prefix arg (`C-u') to force deletion if it is."
    (t
     next-window)))
 
+(defun* ~get-non-minibuffer-window-in-dir (dir)
+  "Gets the next non-minibuffer in a direction.
+If the found window is the mini-buffer, returns `nil'."
+  (require 'windmove)
+  (let ((window (windmove-find-other-window dir)))
+    (unless (minibufferp (window-buffer window))
+      window)))
+
 (defun* ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
   "Transposes the current window with the next one."
   (interactive)
