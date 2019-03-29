@@ -142,6 +142,7 @@
   (bind-key "<C-down-mouse-1>" nil)
   (bind-key "<C-mouse-1>" #'~execute-text)
   (bind-key "<mouse-3>" #'~popup-right-click-menu)
+  (bind-key "<C-down-mouse-3>" #'~popup-right-click-menu)
   (bind-key "<f1>" #'~firefox)
 
   ;; Semantic editting
