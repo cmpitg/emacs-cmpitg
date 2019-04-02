@@ -657,16 +657,6 @@ in the `*scratch-dir*' directory."
          (scratch-file (s-concat scratch-dir "scratch.el")))
     (~toggle-toolbox :path scratch-file :size 80)))
 
-(defun ~switch-to-scratch ()
-  "Switches to `scratch.el' in `*scratch-dir*' directory in
-another window."
-  (interactive)
-  (let ((scratch-dir (or *scratch-dir* temporary-file-directory)))
-    (unless (string= "scratch.el"
-                     (file-name-nondirectory (or buffer-file-name "")))
-      (if (get-buffer "scratch.el")
-          (switch-to-buffer-other-window "scratch.el")
-        (find-file-other-window (s-concat scratch-dir "scratch.el"))))))
 
 (defun* ~switch-to-messages-buffer (&key (in-other-window t))
   "Switches to the `*Messages*' buffer."
