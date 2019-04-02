@@ -7,6 +7,8 @@
 ** `EMACS_ENABLED_MAIL`
 ** `EMACS_ENABLED_NOTES`
 
+* Move some default features from init-bare to config-core-ux
+
 * Notes about repo structure
 
 * Notes about `ff` and `ffn`

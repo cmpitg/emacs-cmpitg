@@ -1011,6 +1011,8 @@ off the buffer."
       (delete-file current-file)
       (message "%s deleted" current-file))))
 
+;; TODO: Is buffer-local-value necessary?
+
 (defun ~maybe-delete-file-when-killing-buffer ()
   "Deletes current file when killing buffer if needed."
   (interactive)
