@@ -187,10 +187,17 @@ returns `nil'."
            (cp-buffer-name (format "*cp:%s*" main-path))
            (cp-buffer (get-buffer-create cp-buffer-name)))
       (with-current-buffer cp-buffer
-        (erase-buffer)
-        (unless (eq 'emacs-lisp-mode major-mode)
-          (emacs-lisp-mode))
-        (evil-mode 1)
+        ;; Only change the content of the command palette buffer if not exists
+        (when (string-empty-p (string-trim (buffer-string)))
+          (erase-buffer)
+          (unless (eq 'emacs-lisp-mode major-mode)
+            (emacs-lisp-mode))
+          (evil-mode 1)
+
+          ;; Set the content
+          (if (f-exists? cp-path)
+              (insert-file cp-path)
+            (insert (command-palette:construct-content main-buffer main-path))))
 
         (defvar-local local/buffer-features nil)
         (add-to-list 'local/buffer-features :command-palette)
@@ -202,12 +209,7 @@ returns `nil'."
 
         (setq-local local/main-path main-path)
         (setq-local local/cp-path cp-path)
-        (setq-local default-directory main-dir)
-
-        ;; Set the content of the command palette buffer
-        (if (f-exists? cp-path)
-            (insert-file cp-path)
-          (insert (command-palette:construct-content main-buffer main-path))))
+        (setq-local default-directory main-dir))
       cp-buffer)))
 
 (defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
