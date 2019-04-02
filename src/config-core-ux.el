@@ -291,9 +291,12 @@
 ;; TODO: Make the following call into an enable/disable call
 (setq *one-buffer-per-window-temporarily-disabled?* t)
 
-;; Header line as command palette
-(require 'rmacs:config-header-line
-         "config-header-line")
+;; Command palette
+;; (require 'rmacs:config-header-line "config-header-line")
+(require 'rmacs:config-module-command-palette "config-module-command-palette")
+(command-palette:enable)
+;; With command palette, buffers are popped up in a separate frame
+(setq *popup-buffer-in* :frame)
 
 ;; Better display of header-line
 (set-face-attribute 'header-line nil
