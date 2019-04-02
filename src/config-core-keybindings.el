@@ -94,6 +94,7 @@
   (bind-key "s-&" #'~join-with-next-line)
   (bind-key "M-Q" #'~unfill-paragraph)
   (bind-key "s-; ; ;" #'~insert-full-line-comment)
+  (bind-key "s-b" #'pop-to-mark-command)
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
@@ -138,9 +139,12 @@
   (bind-key "s-A" #'~exec<)
   (bind-key "M-a" #'~exec>)
   (bind-key "s-[" #'emamux:send-region)
-  (bind-key "<s-return>" #'~execute-text)
+  (bind-key "<s-return>" #'~execute-text-main-selection)
   (bind-key "<C-down-mouse-1>" nil)
   (bind-key "<C-mouse-1>" #'~execute-text)
+  (bind-key "<down-mouse-2>" nil)
+  (bind-key "<mouse-2>" #'~execute-text)
+  ;; (bind-key "<C-mouse-1>" #'command-palette:execute)
   (bind-key "<mouse-3>" #'~popup-right-click-menu)
   (bind-key "<C-down-mouse-3>" #'~popup-right-click-menu)
   (bind-key "<f1>" #'~firefox)
