@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -1038,6 +1038,16 @@ needed."
    (shell-command (concat "chmod u+x " (shell-quote-argument buffer-file-name)))
    (revert-buffer)
    (message "%s saved as executable" buffer-file-name)))
+
+(defun ~delete-linked-windows ()
+  "Deletes the linked windows, which are store in the local
+variable `local/linked-windows'."
+  (interactive)
+  (when (local-variable-p 'local/linked-windows)
+    (dolist (window local/linked-windows)
+      (unless (or (equalp window (get-buffer-window))
+                  (not (window-live-p window)))
+        (delete-window window)))))
 
 (defun ~clean-up-tramp ()
   "Closes all tramp connections and buffers."

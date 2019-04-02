@@ -237,9 +237,14 @@
 (add-hook 'kill-emacs-hook #'~clean-up-tramp)
 
 ;; Delete file/window/frame when killing buffer if necessary
+(defun ~advice/delete-linked-windows (orig-fun &rest args)
+  "Deletes linked windows."
+  (apply orig-fun args)
+  (~delete-linked-windows))
 (add-hook 'kill-buffer-hook #'~maybe-delete-file-when-killing-buffer)
 (add-hook 'kill-buffer-hook #'~maybe-delete-window-when-killing-buffer)
 (add-hook 'kill-buffer-hook #'~maybe-delete-frame-when-killing-buffer)
+(advice-add #'delete-window :around #'~advice/delete-linked-windows)
 
 ;; Track recently closed files
 (add-hook 'kill-buffer-hook #'~track-closed-file)
