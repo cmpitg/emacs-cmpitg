@@ -492,7 +492,7 @@ prefix arg (`C-u') to force deletion if it is."
            (window-dedicated-p (selected-window))
            (message "Window '%s' is sticky/dedicated, should you want to delete, re-invoke the command with C-u prefix."
                     (current-buffer)))
-      (delete-window (selected-window))))
+      (call-interactively 'delete-window)))
 
 (defun* ~get-next-non-dedicated-window (&optional original-window next-window)
   "Gets the next non-dedicated, non-minibuffer window."
