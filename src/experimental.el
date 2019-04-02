@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,6 +17,18 @@
 
 (setf *open-with-regexps*
       `(("\\.pdf" . "evince '%s'")))
+
+;;
+
+;;
+;; Madness - Projectile automatically returns true path - Don't do that!
+;;
+
+(defun my/advice-preserve-directory-name (dir)
+  (thread-last
+      (replace-regexp-in-string "/home/hdn/Desktop/Data/Source" "/m/src" dir)
+    (replace-regexp-in-string "/home/hdn/Desktop/Data/Source/toolbox" "/m/toolbox")))
+(advice-add #'file-truename :filter-return #'my/advice-preserve-directory-name)
 
 ;;
 ;; Auto-compile Emacs Lisp unless already compiled
