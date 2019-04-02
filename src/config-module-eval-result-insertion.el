@@ -58,7 +58,8 @@ be at least one blank line between the currently eval'ed
 expression and the next one."
   (interactive "MValue: ")
   (save-excursion
-    (let* ((prefix (s-concat (s-repeat 2 comment-start) " "))
+    (let* ((comment-start (or comment-start ";"))
+           (prefix (s-concat (s-repeat 2 comment-start) " "))
            (result-str (if (stringp result) result (format "%s" result)))
            (short-result (if (> (length result-str) max-length)
                              "..."
