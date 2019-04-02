@@ -390,8 +390,8 @@ buffer string as its only argument, will be called.
     current-buffer))
 
 (defun* ~toggle-toolbox (&key (path *toolbox-path*)
-                              (side 'left)
-                              (size 78)
+                              (side 'right)
+                              (size -78)
                               (follow-dir t))
   "Toggles toolbox file.  The path to the toolbox file is passed
 on using the `path' argument.  The toolbox window is sticky,
@@ -401,15 +401,16 @@ inherits the working directory from the buffer that calls it."
   (interactive)
   (let ((toolbox-buffer-name (file-name-nondirectory path))
         (working-dir default-directory))
-    (if-let (wind (get-buffer-window toolbox-buffer-name))
-        (delete-window wind)
+    (if-let (window (get-buffer-window toolbox-buffer-name))
+        (delete-window window)
       (progn
         (split-window (selected-window) size side)
-        (let ((split-window-preferred-function nil)
-              (pop-up-windows nil))
-          (~smart-open-file path))
-        (when follow-dir (setq-local default-directory working-dir))
-        (set-window-dedicated-p (selected-window) t)))))
+        (with-selected-window (windmove-do-window-select side)
+          (let ((split-window-preferred-function nil)
+                (pop-up-windows nil))
+            (~smart-open-file path))
+          (when follow-dir (setq-local default-directory working-dir))
+          (set-window-dedicated-p (selected-window) t))))))
 
 (defun ~toggle-maximize-buffer ()
   "Toggles maximization of current buffer."
@@ -655,8 +656,7 @@ in the `*scratch-dir*' directory."
   (interactive)
   (let* ((scratch-dir (or *scratch-dir* temporary-file-directory))
          (scratch-file (s-concat scratch-dir "scratch.el")))
-    (~toggle-toolbox :path scratch-file :size 80)))
-
+    (~toggle-toolbox :path scratch-file :size -80)))
 
 (defun* ~switch-to-messages-buffer (&key (in-other-window t))
   "Switches to the `*Messages*' buffer."
