@@ -164,6 +164,7 @@ If point is already there, moves to the beginning of the line."
 the right so that it could be open with `~smart-open-file' later
 on."
   (interactive)
+  (require 'windmove)
   (save-mark-and-excursion
     (let* ((line-number-or-pattern (if (~is-selecting?)
                                        (s-concat "/" (~current-selection) "/")
