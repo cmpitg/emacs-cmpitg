@@ -176,6 +176,24 @@ on."
       (windmove-left)
       (message path))))
 
+(defun ~append-pos-to-command-palette ()
+  "Appends path to the current position to the end of the command
+palette window so that it could be open with `~smart-open-file'
+later on."
+  (interactive)
+  (require 'windmove)
+  (save-mark-and-excursion
+    (let* ((line-number-or-pattern (if (~is-selecting?)
+                                       (s-concat "/" (~current-selection) "/")
+                                     (line-number-at-pos)))
+           (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
+      (windmove-up)  ;; The command palette is the immedicate upper window
+      (save-mark-and-excursion
+        (end-of-buffer)
+        (insert path "\n"))
+      (windmove-left)
+      (message path))))
+
 (defun* ~file-pattern? (str &key (must-exists t))
   "Determines if a string is a file pattern \(`path' or
 `path:line-number', or `path:pattern'\).  By default, the
@@ -1121,17 +1139,20 @@ fallback to current directory if project root is not found."
       (kill-sexp -1))
     (insert (format "%s" value))))
 
-(defun* ~execute-text (&optional text)
-  "Executes text using `wand:execute'.  If `text' is not
-provided, take current selection.  When calling with a prefix
-argument or when `*popup-exec-result?*' is `t', the result is
-popped up in a separate frame."
+(defun* ~execute-text (&optional text
+                                 (exec-fn #'command-palette:execute)
+                                 (selection-fn #'~get-secondary-selection))
+  "Executes text using `exec-fn'.  If `text' is not
+provided, call and take the return value of `selection-fn' as the
+text.  When calling with a prefix argument or when
+`*popup-exec-result?*' is `t', the result is popped up in a
+separate frame."
   (interactive)
   (let* ((text (if (or (null text)
                        (string-empty-p text))
-                   (~current-selection)
+                   (funcall selection-fn)
                  text))
-         (result (wand:execute text))
+         (result (funcall exec-fn text))
          (result-str (if (stringp result)
                          result
                        (format "%s" result))))
@@ -1141,6 +1162,11 @@ popped up in a separate frame."
       (~popup-buffer :content result-str
                      :working-dir default-directory))
     result))
+
+(defun* ~execute-text-main-selection (&optional text)
+  "TODO"
+  (interactive)
+  (~execute-text text #'wand:execute #'~current-selection))
 
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
