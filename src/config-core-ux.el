@@ -65,12 +65,14 @@
 
 ;; Smooth scrolling
 ;; Ref: https://github.com/zk-phi/sublimity
-;; (require 'sublimity-scroll)
-;; (setq sublimity-scroll-weight 10
-;;       sublimity-scroll-drift-length 6)
-;; (sublimity-mode 1)
-(require 'smooth-scrolling)
-(smooth-scrolling-mode 1)
+;; Sublimity makes CPU scream
+(require 'sublimity-scroll)
+(setq sublimity-scroll-weight 10
+      sublimity-scroll-drift-length 6)
+(sublimity-mode 1)
+;; The smooth-scrolling makes cursor jump unexpectedly
+;; (require 'smooth-scrolling)
+;; (smooth-scrolling-mode 1)
 
 ;; Save and restore current editing point when opening a file
 (use-package saveplace
