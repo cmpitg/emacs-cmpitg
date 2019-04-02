@@ -316,21 +316,25 @@ non-exceptional buffers."
   "TODO"
   (interactive)
   (require 'wand)
-  (let* ((expr (if (null expr)
-                   (if (null (~get-secondary-selection))
-                       (let ((point (posn-point (event-end last-command-event))))
-                         (save-excursion
-                           (goto-char point)
-                           (thing-at-point 'symbol)))
-                     (~get-secondary-selection))
-                 expr))
-         (main-window (window-parameter (selected-window) :local/main-window))
-         (main-buffer local/main-buffer)
+  (let* ((expr (if (not (null expr))
+                   (if (not (string-empty-p expr))
+                       expr
+                     ;; Empty expression means we take from mouse or symbol at
+                     ;; point
+                     (~get-thing-at-mouse-or-symbol))
+                 (if (null (~get-secondary-selection))
+                     ;; No expression and no secondary selection
+                     (~get-thing-at-mouse-or-symbol)
+                   ;; No expression and there is secondary selection
+                   (~get-secondary-selection))))
+         (main-window (or (window-parameter (selected-window) :local/main-window)
+                          (selected-window)))
+         (main-buffer (if (boundp 'local/main-buffer)
+                          local/main-buffer
+                        (current-buffer)))
          (local-action-fn (alist-get expr command-palette:*default-action-patterns*
                                      nil nil #'string-equal)))
     (if (null local-action-fn)
-        ;; TODO: assert main-buffer exists
-        ;; TODO: assert main-window exists
         (with-selected-window main-window
           (with-current-buffer main-buffer
             (unless (or (null expr) (string-empty-p expr))
