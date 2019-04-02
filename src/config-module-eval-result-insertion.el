@@ -138,25 +138,29 @@ effectively buffers that have enabled the feature previously."
 ;; Setting up & tearing down
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun eval-result-insertion:add-advice ()
-  "Adds advice to enable the insertion of eval result."
+(defun eval-result-insertion:enable ()
+  "Enables the insertion of eval result."
   (interactive)
   (advice-add 'eval-last-sexp :filter-return #'eval-result-insertion:add-eval-result-at-point)
   (advice-add 'pp-eval-last-sexp :filter-return #'eval-result-insertion:add-eval-result-at-point)
   (advice-add '~eval-current-sexp :filter-return #'eval-result-insertion:add-eval-result-at-current-sexp)
   (advice-add '~eval-region :filter-return #'eval-result-insertion:add-eval-result-at-end-of-selection)
-  (advice-add 'eval-defun :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun))
+  (advice-add 'eval-defun :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun)
+  (advice-add 'cider-eval-last-sexp :filter-return #'eval-result-insertion:add-eval-result-at-point)
+  (advice-add 'cider-eval-defun-at-point :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun)
+  (advice-add 'cider-eval-sexp-at-point :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun))
 
-(defun eval-result-insertion:remove-advice ()
-  "Removes advice to disable the insertion of eval result."
+(defun eval-result-insertion:disable ()
+  "Enables the insertion of eval result."
   (interactive)
   (advice-remove 'eval-last-sexp #'eval-result-insertion:add-eval-result-at-point)
   (advice-remove 'pp-eval-last-sexp #'eval-result-insertion:add-eval-result-at-point)
   (advice-remove '~eval-current-sexp #'eval-result-insertion:add-eval-result-at-current-sexp)
   (advice-remove '~eval-region #'eval-result-insertion:add-eval-result-at-end-of-selection)
-  (advice-remove 'eval-defun #'eval-result-insertion:add-eval-result-at-end-of-defun))
-
-(eval-result-insertion:add-advice)
+  (advice-remove 'eval-defun #'eval-result-insertion:add-eval-result-at-end-of-defun)
+  (advice-remove 'cider-eval-last-sexp #'eval-result-insertion:add-eval-result-at-point)
+  (advice-remove 'cider-eval-defun-at-point #'eval-result-insertion:add-eval-result-at-end-of-defun)
+  (advice-remove 'cider-eval-sexp-at-point #'eval-result-insertion:add-eval-result-at-end-of-defun))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
