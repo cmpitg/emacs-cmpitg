@@ -633,6 +633,17 @@ text.  Moves the cursor to the new line."
     (newline arg)
     (indent-according-to-mode)))
 
+(defun ~get-thing-at-mouse-or-symbol ()
+  "Returns the symbol at the mouse cursor if the last command is
+a mouse event, or just returns the symbol at the current point
+otherwise."
+  (interactive)
+  (if-let (point (posn-point (event-end last-command-event)))
+      (save-excursion
+        (goto-char point)
+        (thing-at-point 'symbol))
+    (thing-at-point 'symbol)))
+
 (defun ~get-buffer-content (buffer-or-name)
   "Gets the content of a buffer."
   (with-current-buffer buffer-or-name
