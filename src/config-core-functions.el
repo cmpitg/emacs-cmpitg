@@ -1180,7 +1180,7 @@ separate frame."
 (defun* ~execute-text-main-selection (&optional text)
   "TODO"
   (interactive)
-  (~execute-text text #'wand:execute #'~current-selection))
+  (~execute-text text #'command-palette:execute #'~current-selection))
 
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
