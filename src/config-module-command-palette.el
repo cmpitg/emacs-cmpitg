@@ -60,7 +60,15 @@
   "TODO"
   )
 
-(setq command-palette:*default-content* "x x-buf x-win w/fit w/x buffers +tool +frame +bm")
+(defvar command-palette:*default-content*
+  "x x-buf x-win w/fit w/x buffers +tool +frame +bm"
+
+  )
+
+(defvar command-palette:*conditional-content*
+  (list (cons (lambda () (eq 'clojure-mode major-mode))
+              "~cider-connect clojure-align"))
+  )
 
 (defvar command-palette:*buffer-exception-regexp-list*
   (list (rx bol "*" (0+ any) "*" eol))
@@ -68,7 +76,7 @@
   )
 
 ;; TODO: Takes all the functions out
-(setq command-palette:*default-action-patterns*
+(defvar command-palette:*default-action-patterns*
   (list (cons "x" #'delete-frame)
         (cons "x-buf" #'(lambda ()
                           (interactive)
@@ -97,6 +105,19 @@
 ;;   (add-to-list 'safe-local-variable-values `(,local-var-name . t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun* command-palette:construct-content (main-buffer main-path)
+  "Constructs the content for a command palette buffer."
+  (with-current-buffer main-buffer
+    (let ((conditional-content (thread-last
+                                   (loop for x in command-palette:*conditional-content*
+                                         when (destructuring-bind (condition . content) x
+                                                (funcall condition))
+                                         collect (cdr x))
+                                 (s-join " "))))
+      (if (string-empty-p conditional-content)
+          (format "%s\n%s\n___" main-path command-palette:*default-content*)
+        (format "%s\n%s %s\n___" main-path command-palette:*default-content* conditional-content)))))
 
 (defun* command-palette:is-buffer-exception? (buffer-or-name)
   "Determines if the buffer is not supposed to have a command-palette window."
@@ -186,7 +207,7 @@ returns `nil'."
         ;; Set the content of the command palette buffer
         (if (f-exists? cp-path)
             (insert-file cp-path)
-          (insert (format "%s\n%s" main-path command-palette:*default-content*))))
+          (insert (command-palette:construct-content main-buffer main-path))))
       cp-buffer)))
 
 (defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
