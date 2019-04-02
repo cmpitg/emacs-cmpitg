@@ -19,6 +19,20 @@
       `(("\\.pdf" . "evince '%s'")))
 
 ;;
+;; Aliases
+;;
+
+(defalias '+cp #'command-palette:ensure-command-palette)
+(defalias '+col #'split-window-horizontally)
+(defalias '+row #'split-window-vertically)
+(defalias '+buf #'~new-buffer)
+(defalias '+frame #'make-frame)
+(defalias '+tool #'~toggle-toolbox)
+(defalias '+bm #'~append-pos-to-window-on-the-right)
+(defalias '-buf #'kill-this-buffer)
+(defalias '-window #'~delete-window)
+(defalias '-me #'~kill-buffer-and-window)
+(defalias '-frame #'~kill-buffer-and-frame)
 
 ;;
 ;; Madness - Projectile automatically returns true path - Don't do that!
