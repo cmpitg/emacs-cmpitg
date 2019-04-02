@@ -543,8 +543,8 @@ with prefix `s-SPC' at the same time."
                 (when (< (point) old-point)
                   (call-interactively 'exchange-point-and-mark))
                 res))
-            (advice-add 'evil-mouse-drag-region
-                        :around #'~advice/mouse-1-evil-insert-mode)
+            ;; (advice-add 'evil-mouse-drag-region :around #'~advice/mouse-1-evil-insert-mode)
+            ;; (advice-remove 'evil-mouse-drag-region #'~advice/mouse-1-evil-insert-mode)
 
             (defun ~evil-kill-line-or-sexpr ()
               "Kills current line or sexp using Paredit in Evil mode."
