@@ -286,9 +286,9 @@
 (setq window-combination-resize t)
 
 ;; One buffer per window setup
-(require 'rmacs:config-one-buffer-per-window
-         "config-one-buffer-per-window")
+(require 'rmacs:config-one-buffer-per-window "config-one-buffer-per-window")
 ;; We don't want to have the behavior but still want to keep the blank buffer
+;; TODO: Make the following call into an enable/disable call
 (setq *one-buffer-per-window-temporarily-disabled?* t)
 
 ;; Header line as command palette
