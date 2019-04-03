@@ -901,10 +901,9 @@ first occurrence of a pattern.  E.g.
   (find-file (~get-config "init-bare.el")))
 
 (defun ~visit-toolbox ()
-  "Visits toolbox."
+  "Visits toolbox file."
   (interactive)
-  (find-file (or *toolbox-path*
-                 "/m/toolbox/Toolbox.adoc")))
+  (~smart-open-file *toolbox-path*))
 
 (defun ~parse-tramp-argument (connection-string)
   "Returns an alist with

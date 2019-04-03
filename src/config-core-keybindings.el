@@ -207,10 +207,11 @@
   (~bind-key-with-prefix "h l" #'find-library)
 
   ;;
-  ;; Configuration
+  ;; Configuration & quick opening
   ;;
 
   (~bind-key-with-prefix "v i" #'~visit-init-bare)
+  (~bind-key-with-prefix "v t" #'~visit-toolbox)
 
   ;;
   ;; Function keys & other convenient bindings
