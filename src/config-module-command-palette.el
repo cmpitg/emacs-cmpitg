@@ -57,12 +57,10 @@
 
 (defvar command-palette:*cp-window-face*
   '(:family "Go" :height 110)
-  "TODO"
   )
 
 (defvar command-palette:*default-content*
-  "x x-buf x-win w/fit w/x buffers +tool +frame +bm"
-
+  "x x-buf x-win w/reload w/x buffers +tool +frame +bm"
   )
 
 (defvar command-palette:*conditional-content*
@@ -71,9 +69,11 @@
   )
 
 (defvar command-palette:*buffer-exception-regexp-list*
-  (list (rx bol "*" (0+ any) "*" eol))
-  ""
-  )
+  (list
+   ;; (rx bol "*" (0+ any) "*" eol)
+   (rx bol "*cp:" (0+ any) "*" eol)
+   (rx bol "*Blank*" eol))
+  "")
 
 ;; TODO: Takes all the functions out
 (defvar command-palette:*default-action-patterns*
@@ -86,7 +86,9 @@
                           (let ((main-window (command-palette:get-main-window)))
                             (with-selected-window main-window
                               (~delete-window)))))
-        (cons "w/fit" #'fit-window-to-buffer)
+        (cons "w/reload" #'(lambda ()
+                             (interactive)
+                             (command-palette:fit-command-palette-window)))
         (cons "w/x" #'command-palette:kill-window-and-buffer)
         (cons "buffers" #'(lambda ()
                             (interactive)
@@ -163,6 +165,13 @@ returns `nil'."
   (when (command-palette:command-palette-window-exists? window)
     (~get-non-minibuffer-window-in-dir 'up)))
 
+(defun* command-palette:fit-command-palette-window (&optional (cp-window (selected-window)))
+  "Refits the command palette window."
+  (interactive)
+  (with-selected-window cp-window
+    (fit-window-to-buffer)
+    (recenter-top-bottom -1)))
+
 (defun command-palette:switch-to-command-palette-buffer (cp-buffer)
   "Switches to the command palette buffer."
   (interactive)
@@ -171,7 +180,7 @@ returns `nil'."
   (with-current-buffer cp-buffer
     (setq mode-line-format nil))
   (buffer-face-set command-palette:*cp-window-face*)
-  (fit-window-to-buffer)
+  (command-palette:fit-command-palette-window)
   (set-window-dedicated-p (selected-window) t)
   cp-buffer)
 
@@ -227,7 +236,7 @@ returns `nil'."
            (windmove-up)
            (~switch-to-blank-buffer)
            (command-palette:setup-command-palette-window main-window (selected-window))
-           (fit-window-to-buffer)
+           (command-palette:fit-command-palette-window (selected-window))
            (selected-window)))))
 
 (defun* command-palette:ensure-command-palette (&optional (main-window (selected-window)))
@@ -294,6 +303,12 @@ non-exceptional buffers."
       (delete-window cp-window))
     res))
 
+(defun* command-palette:advice/fit-command-palette-window (orig-fun &rest args)
+  "Fits the command palette window."
+  (when (command-palette:is-command-palette-window?)
+    (command-palette:fit-command-palette-window))
+  (apply orig-fun args))
+
 (defun* command-palette:enable ()
   "TODO"
   (interactive)
@@ -301,7 +316,8 @@ non-exceptional buffers."
   (advice-add 'switch-to-prev-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'find-file :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'delete-window :around #'command-palette:advice/delete-command-palette-window)
-  (advice-add 'split-window :around #'command-palette:advice/split-command-palette-window))
+  (advice-add 'split-window :around #'command-palette:advice/split-command-palette-window)
+  (advice-add 'other-window :around #'command-palette:advice/fit-command-palette-window))
 
 (defun* command-palette:disable ()
   "TODO"
@@ -310,7 +326,8 @@ non-exceptional buffers."
   (advice-remove 'switch-to-prev-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'find-file #'command-palette:advice/ensure-command-palette)
   (advice-remove 'delete-window #'command-palette:advice/delete-command-palette-window)
-  (advice-remove 'split-window #'command-palette:advice/split-command-palette-window))
+  (advice-remove 'split-window #'command-palette:advice/split-command-palette-window)
+  (advice-remove 'other-window #'command-palette:advice/fit-command-palette-window))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
