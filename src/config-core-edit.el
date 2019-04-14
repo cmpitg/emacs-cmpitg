@@ -611,43 +611,38 @@ interactively, `text' is taken as the current region."
     (setq wand:*rules*
           (list (wand:create-rule :match "|"
                                   :capture :after
-                                  :skip-comment nil
-                                  :action ~exec|)
+                                  :action #'~exec|)
                 (wand:create-rule :match "<"
                                   :capture :after
-                                  :skip-comment t
-                                  :action ~exec<)
+                                  :action #'~exec<)
                 (wand:create-rule :match ">"
                                   :capture :after
-                                  :skip-comment t
-                                  :action ~exec>)
+                                  :action #'~exec>)
                 (wand:create-rule :match "!!"
                                   :capture :after
-                                  :skip-comment t
-                                  :action ~exec-with-term-emu)
+                                  :action #'~exec-with-term-emu)
                 (wand:create-rule :match "!"
                                   :capture :after
-                                  :skip-comment t
-                                  :action ~exec-pop-up)
+                                  :action #'~exec-pop-up)
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
-                                  :action ~current-snippet->file)
+                                  :action #'~current-snippet->file)
                 (wand:create-rule :match "chrome:"
                                   :capture :after
-                                  :action ~open-with-google-chrome)
+                                  :action #'~open-with-google-chrome)
                 (wand:create-rule :match "https?://"
                                   :capture :whole
-                                  :action ~web-browse-gui)
+                                  :action #'~web-browse-gui)
                 (wand:create-rule :match ".*\\.html$"
                                   :capture :whole
-                                  :action ~web-browse-gui)
+                                  :action #'~web-browse-gui)
                 (wand:create-rule :match "file:"
                                   :capture :after
-                                  :action ~smart-open-file)
+                                  :action #'~smart-open-file)
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
                                   :skip-comment t
-                                  :action ~open-or-eval)))))
+                                  :action #'~open-or-eval)))))
 
 ;;
 ;; Snippet mode
