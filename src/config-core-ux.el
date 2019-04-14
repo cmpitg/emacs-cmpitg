@@ -403,6 +403,7 @@
 
 ;; Displaying eval result in an overlay after eval'ing
 ;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
+;; TODO - Clean up the following code
 
 (autoload 'cider--make-result-overlay "cider-overlays")
 
