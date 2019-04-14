@@ -49,6 +49,7 @@
 ;; - Killing the command palette buffer kills the main buffer and vice versa
 ;;
 
+;; TODO: With ignored buffers -> delete the command palette window
 ;; TODO: Default content template
 ;; TODO: Mode-specific content
 ;; TODO: Refactor using buffer-local-value
