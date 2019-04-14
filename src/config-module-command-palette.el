@@ -72,7 +72,8 @@
   (list
    ;; (rx bol "*" (0+ any) "*" eol)
    (rx bol "*cp:" (0+ any) "*" eol)
-   (rx bol "*Blank*" eol))
+   (rx bol "*Blank*" eol)
+   (rx bol "magit" (0+ any) eol))
   "")
 
 ;; TODO: Takes all the functions out
