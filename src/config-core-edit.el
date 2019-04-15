@@ -504,8 +504,9 @@ with prefix `s-SPC' at the same time."
   :config (progn
             (evil-mode t)
 
-            ;; Use insert mode by default
-            (setq evil-default-state 'insert)
+            ;; Default evil mode
+            ;; (setq evil-default-state 'insert)
+            (setq evil-default-state 'normal)
 
             ;; (with-eval-after-load "evil-vars"
             ;;   (dolist (mode '(term-mode
