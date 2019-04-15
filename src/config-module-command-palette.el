@@ -263,6 +263,14 @@ command palette window if exists."
                    (command-palette:is-command-palette-window? presumed-cp-window))
           (delete-window presumed-cp-window))))))
 
+(defun command-palette:try-fitting-cp-window ()
+  "Tries fitting the command palette window if necessary and
+possible."
+  (interactive)
+  (when (command-palette:is-command-palette-window?)
+    (command-palette:fit-command-palette-window))
+  (when-let (cp-window (command-palette:get-command-palette-window))
+    (command-palette:fit-command-palette-window cp-window)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -319,8 +327,7 @@ non-exceptional buffers."
 
 (defun* command-palette:advice/fit-command-palette-window (orig-fun &rest args)
   "Fits the command palette window."
-  (when (command-palette:is-command-palette-window?)
-    (command-palette:fit-command-palette-window))
+  (command-palette:try-fitting-cp-window)
   (apply orig-fun args))
 
 (defun* command-palette:enable ()
