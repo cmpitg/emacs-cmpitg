@@ -291,6 +291,10 @@
 ;; TODO: Make the following call into an enable/disable call
 (setq *one-buffer-per-window-temporarily-disabled?* t)
 
+;; Notebook-like feature: Inserting eval result back to current buffer
+(require 'rmacs:config-module-eval-result-insertion "config-module-eval-result-insertion")
+(eval-result-insertion:enable)
+
 ;; Command palette
 ;; (require 'rmacs:config-header-line "config-header-line")
 (require 'rmacs:config-module-command-palette "config-module-command-palette")
