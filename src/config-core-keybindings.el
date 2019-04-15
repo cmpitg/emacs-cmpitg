@@ -198,6 +198,7 @@
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m" #'~eval-then-replace-region-or-last-sexp)
   (bind-key "s-#" #'eval-expression)
+  (bind-key "s-!" #'~execute-text-prompt)
 
   (~bind-key-with-prefix "h f" #'describe-function)
   (~bind-key-with-prefix "h v" #'describe-variable)
