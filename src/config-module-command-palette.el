@@ -259,6 +259,14 @@ command palette window if exists."
       ;; so let's move to that window
       (select-window main-window)
 
+      ;; TODO: Errorneous
+      ;; (let ((presumed-cp-window (ignore-errors (save-excursion (windmove-up)))))
+      ;;   (when (and (not (null presumed-cp-window))
+      ;;              (command-palette:is-command-palette-window? presumed-cp-window)
+      ;;              (window-live-p presumed-cp-window))
+      ;;     (delete-window presumed-cp-window)))
+      )))
+
 (defun command-palette:try-fitting-cp-window ()
   "Tries fitting the command palette window if necessary and
 possible."
