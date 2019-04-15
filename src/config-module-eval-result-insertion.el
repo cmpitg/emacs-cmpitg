@@ -128,6 +128,18 @@ selection."
   (make-local-variable 'eval-result-insertion:*insert-eval-result-enabled*)
   (setq eval-result-insertion:*insert-eval-result-enabled* (not eval-result-insertion:*insert-eval-result-enabled*)))
 
+(defun eval-result-insertion:enable-local ()
+  "Enables the insertion of eval result for the current buffer."
+  (interactive)
+  (make-local-variable 'eval-result-insertion:*insert-eval-result-enabled*)
+  (setq eval-result-insertion:*insert-eval-result-enabled* t))
+
+(defun eval-result-insertion:disable-local ()
+  "Disables the insertion of eval result for the current buffer."
+  (interactive)
+  (make-local-variable 'eval-result-insertion:*insert-eval-result-enabled*)
+  (setq eval-result-insertion:*insert-eval-result-enabled* nil))
+
 (defun eval-result-insertion:toggle-global ()
   "Enables/disables the insertion of eval result globally, not
 effectively buffers that have enabled the feature previously."
