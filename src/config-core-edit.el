@@ -179,7 +179,9 @@ might need manual refreshing."
               (~emacs-server-name)))
 (dolist (var '(kill-ring
                search-ring
-               regexp-search-ring))
+               regexp-search-ring
+               read-expression-history
+               *~execute-text-prompt-hist*))
   (add-to-list 'savehist-additional-variables var))
 
 ;;
