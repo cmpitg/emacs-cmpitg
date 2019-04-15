@@ -51,7 +51,6 @@
 
 ;; TODO: Decouple the execute-text function here from the Wand package
 
-;; TODO: With ignored buffers -> delete the command palette window
 ;; TODO: Default content template
 ;; TODO: Mode-specific content
 ;; TODO: Refactor using buffer-local-value
@@ -245,14 +244,24 @@ returns `nil'."
 
 (defun* command-palette:ensure-command-palette (&optional (main-window (selected-window)))
   "Ensures that a command palette window and buffer for the
-current main window is properly set up."
+current main window is properly set up.  If the current main
+window contains an exceptional buffer, delete the existing
+command palette window if exists."
   (interactive)
   (let ((main-buffer (window-buffer main-window)))
-    (when-let (cp-buffer (command-palette:ensure-command-palette-buffer main-buffer))
-      (let* ((cp-window (command-palette:ensure-command-palette-window main-window)))
-        ;; Create the command palette buffer and switch to that buffer
-        (with-selected-window cp-window
-          (command-palette:switch-to-command-palette-buffer cp-buffer))))))
+    (if-let (cp-buffer (command-palette:ensure-command-palette-buffer main-buffer))
+        (let ((cp-window (command-palette:ensure-command-palette-window main-window)))
+          (with-selected-window cp-window
+            ;; Create the command palette buffer and switch to that buffer
+            (command-palette:switch-to-command-palette-buffer cp-buffer)
+            ;; Most of the time we would want to work on the main buffer
+            ;; immediately so let's move to that window
+            (windmove-down)))
+      (let ((presumed-cp-window (ignore-errors (save-excursion (windmove-up)))))
+        (when (and (not (null presumed-cp-window))
+                   (command-palette:is-command-palette-window? presumed-cp-window))
+          (delete-window presumed-cp-window))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -319,9 +328,11 @@ non-exceptional buffers."
   (advice-add 'switch-to-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'switch-to-prev-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'find-file :around #'command-palette:advice/ensure-command-palette)
+  (advice-add 'magit-status :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'delete-window :around #'command-palette:advice/delete-command-palette-window)
   (advice-add 'split-window :around #'command-palette:advice/split-command-palette-window)
-  (advice-add 'other-window :around #'command-palette:advice/fit-command-palette-window))
+  (advice-add 'other-window :around #'command-palette:advice/fit-command-palette-window)
+  (add-hook 'mouse-leave-buffer-hook #'command-palette:try-fitting-cp-window))
 
 (defun* command-palette:disable ()
   "TODO"
@@ -329,9 +340,11 @@ non-exceptional buffers."
   (advice-remove 'switch-to-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'switch-to-prev-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'find-file #'command-palette:advice/ensure-command-palette)
+  (advice-remove 'magit-status #'command-palette:advice/ensure-command-palette)
   (advice-remove 'delete-window #'command-palette:advice/delete-command-palette-window)
   (advice-remove 'split-window #'command-palette:advice/split-command-palette-window)
-  (advice-remove 'other-window #'command-palette:advice/fit-command-palette-window))
+  (advice-remove 'other-window #'command-palette:advice/fit-command-palette-window)
+  (remove-hook 'mouse-leave-buffer-hook #'command-palette:try-fitting-cp-window))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
