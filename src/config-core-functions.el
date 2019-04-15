@@ -1176,10 +1176,28 @@ separate frame."
                      :working-dir default-directory))
     result))
 
-(defun* ~execute-text-main-selection (&optional text)
-  "TODO"
+(defun* ~execute-text-prompt ()
+  "Prompts for text and executes it."
   (interactive)
-  (~execute-text text #'command-palette:execute #'~current-selection))
+  (defvar *~execute-text-prompt-hist* (list))
+  (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
+    (~execute-text text)))
+
+(defun* ~execute-text-from-context ()
+  "Executes text non-interactively from the current context.  The
+rule for retrieving the text as follows:
+
+- If the secondary selection is active, take it as the text; otherwise
+- if the primary selection is active, take it as the text; otherwise
+- if the last command is a mouse event, take the text at the mouse cursor; otherwise
+- take the current symbol at point."
+  (interactive)
+  (let ((text (or (~get-secondary-selection)
+                  (and (region-active-p) (~current-selection))
+                  (~get-thing-at-mouse-or-symbol))))
+    (if (null text)
+        (message "Nothing to execute")
+      (~execute-text text))))
 
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
