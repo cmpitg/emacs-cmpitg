@@ -62,8 +62,9 @@
   )
 
 (defvar command-palette:*default-content*
-  "x x-buf x-win w/reload w/x buffers +tool +frame +bm"
-  )
+  "x x-buf x-win w/reload w/x"
+  "Default content for the command palette buffer, which is
+  displayed from the second line onward.")
 
 (defvar command-palette:*conditional-content*
   (list (cons (lambda () (eq 'clojure-mode major-mode))
