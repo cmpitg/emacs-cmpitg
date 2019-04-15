@@ -298,6 +298,8 @@
 ;; Command palette
 ;; (require 'rmacs:config-header-line "config-header-line")
 (require 'rmacs:config-module-command-palette "config-module-command-palette")
+(setq command-palette:*default-content*
+      "x x-buf x-win w/reload w/x buffers +tool +frame +bm +nb -nb")
 (command-palette:enable)
 ;; With command palette, buffers are popped up in a separate frame
 (setq *popup-buffer-in* :frame)
