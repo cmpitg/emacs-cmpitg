@@ -317,7 +317,8 @@ non-exceptional buffers."
   (let* ((window (first args))
          (cp-window (window-parameter window :local/cp-window))
          (res (apply orig-fun args)))
-    (unless (null cp-window)
+    (when (and (not (null cp-window))
+               (window-live-p cp-window))
       (delete-window cp-window))
     res))
 
