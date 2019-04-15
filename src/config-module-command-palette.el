@@ -254,14 +254,10 @@ command palette window if exists."
         (let ((cp-window (command-palette:ensure-command-palette-window main-window)))
           (with-selected-window cp-window
             ;; Create the command palette buffer and switch to that buffer
-            (command-palette:switch-to-command-palette-buffer cp-buffer)
-            ;; Most of the time we would want to work on the main buffer
-            ;; immediately so let's move to that window
-            (windmove-down)))
-      (let ((presumed-cp-window (ignore-errors (save-excursion (windmove-up)))))
-        (when (and (not (null presumed-cp-window))
-                   (command-palette:is-command-palette-window? presumed-cp-window))
-          (delete-window presumed-cp-window))))))
+            (command-palette:switch-to-command-palette-buffer cp-buffer)))
+      ;; Most of the time we would want to work on the main buffer immediately
+      ;; so let's move to that window
+      (select-window main-window)
 
 (defun command-palette:try-fitting-cp-window ()
   "Tries fitting the command palette window if necessary and
