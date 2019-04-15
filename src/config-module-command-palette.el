@@ -49,6 +49,8 @@
 ;; - Killing the command palette buffer kills the main buffer and vice versa
 ;;
 
+;; TODO: Decouple the execute-text function here from the Wand package
+
 ;; TODO: With ignored buffers -> delete the command palette window
 ;; TODO: Default content template
 ;; TODO: Mode-specific content
