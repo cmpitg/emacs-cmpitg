@@ -122,8 +122,8 @@
                                          collect (cdr x))
                                  (s-join " "))))
       (if (string-empty-p conditional-content)
-          (format "%s\n%s\n___" main-path command-palette:*default-content*)
-        (format "%s\n%s %s\n___" main-path command-palette:*default-content* conditional-content)))))
+          (format "%s\n%s" main-path command-palette:*default-content*)
+        (format "%s\n%s %s" main-path command-palette:*default-content* conditional-content)))))
 
 (defun* command-palette:is-buffer-exception? (buffer-or-name)
   "Determines if the buffer is not supposed to have a command-palette window."
