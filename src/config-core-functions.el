@@ -1338,22 +1338,19 @@ command, if `stdin' is:
 
 (defun* ~exec-pop-up (command)
   "Executes a command & pops up a temporary buffer showing
-result.  The command is executed asynchronously in a shell which
-is determined by the `SHELL' environment variable."
+result, returing the process.  The command is executed asynchronously."
   (interactive "MCommand: ")
-  (let ((current-shell (getenv "SHELL"))
-        (process-name command)
-        ;; Make sure the command doesn't fail, otherwise the finish function
-        ;; never gets called
-        (actual-command (s-concat command "; true")))
-    (async-start-process process-name
-                         current-shell
-                         #'(lambda (process)
-                             (let ((output (~get-process-output process)))
-                               (~popup-buffer :content output
-                                              :buffer process-name)))
-                         "-c"
-                         actual-command)))
+  (let* ((name command)
+         (process (start-process-shell-command name name command))
+         (dir default-directory))
+    (~popup-buffer :buffer name)
+    (with-current-buffer name
+      (setq-local default-directory dir)
+      ;; For some weird reason, we need to sleep shortly before we're able to
+      ;; jump to the beginning of the buffer
+      (sleep-for 0 1)
+      (goto-char (point-min)))
+    process))
 
 (defun* ~exec< (command)
   "Executes a command and replaces the region with the output.
