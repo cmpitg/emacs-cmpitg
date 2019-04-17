@@ -105,6 +105,14 @@ convenient wrapper of `join-line'."
   (interactive)
   (swiper (~current-selection)))
 
+(defun* ~show-buffer-chooser ()
+  "Shows the buffer chooser tool."
+  (interactive)
+  (with-current-buffer (if (command-palette:is-command-palette-window?)
+                           local/main-buffer
+                         (current-buffer))
+    (call-interactively '~choose-buffer)))
+
 ;; TODO cleanup
 (defun ~duplicate-line-or-region (&optional n)
   "Duplicate current line, or region if active.
@@ -554,7 +562,10 @@ If the found window is the mini-buffer, returns `nil'."
   (find-file (let ((ivy-sort-functions-alist nil))
                (completing-read "File: " *recently-closed-file-list*))))
 
-(defalias '~switch-buffer 'ivy-switch-buffer
+;; (defalias '~switch-buffer 'ivy-switch-buffer
+;;   "Switches to a buffer and focus the corresponding window & frame.")
+
+(defalias '~switch-buffer '~show-buffer-chooser
   "Switches to a buffer and focus the corresponding window & frame.")
 
 (defun* ~clean-up-buffer (&key (buffer (current-buffer))
