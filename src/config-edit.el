@@ -603,6 +603,14 @@ the sequence, and its index within the sequence."
     (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
 
 ;;
+;; Acme-like command palette
+;;
+
+(require 'rmacs:config-module-command-palette "config-module-command-palette")
+(setq command-palette:*default-content* "x x-buf x-win w/reload w/x buffers +tool +frame +bm +nb -nb")
+(command-palette:enable)
+
+;;
 ;; HTTP request library
 ;;
 ;; Ref: https://github.com/tkf/emacs-request
