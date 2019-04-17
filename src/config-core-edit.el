@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
