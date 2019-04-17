@@ -505,8 +505,8 @@ with prefix `s-SPC' at the same time."
             (evil-mode t)
 
             ;; Default evil mode
-            ;; (setq evil-default-state 'insert)
-            (setq evil-default-state 'normal)
+            (setq evil-default-state 'insert)
+            ;; (setq evil-default-state 'normal)
 
             ;; (with-eval-after-load "evil-vars"
             ;;   (dolist (mode '(term-mode
