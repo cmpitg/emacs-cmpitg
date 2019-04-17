@@ -100,6 +100,11 @@ convenient wrapper of `join-line'."
   (open-line arg)
   (indent-according-to-mode))
 
+(defun* ~search-buffer-interactively ()
+  "Searches the current buffer interactively."
+  (interactive)
+  (swiper (~current-selection)))
+
 ;; TODO cleanup
 (defun ~duplicate-line-or-region (&optional n)
   "Duplicate current line, or region if active.

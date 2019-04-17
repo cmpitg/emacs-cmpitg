@@ -77,7 +77,7 @@
   ;; Searching
   (bind-key "C-s" #'isearch-forward-regexp)
   (bind-key "C-r" #'isearch-backward-regexp)
-  (bind-key "s-s" #'swiper)
+  (bind-key "s-s" #'~search-buffer-interactively)
   (bind-key "s-f" #'query-replace-regexp)
   (bind-key "s-F" #'query-replace)
 
