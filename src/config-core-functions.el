@@ -17,11 +17,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defvar *popup-exec-result?*
-  nil
-  "Determines whether or not result from an exec function should
-be popped up (in a separate frame).")
-
 (defvar *popup-buffer-in*
   :window
   "Determines whether a buffer popped up by `~popup-buffer' is in
@@ -1171,42 +1166,65 @@ fallback to current directory if project root is not found."
 (defun* ~execute-text (&optional text
                                  (exec-fn #'command-palette:execute)
                                  (selection-fn #'~get-secondary-selection))
-  "Executes text using `exec-fn'.  If `text' is not
-provided, call and take the return value of `selection-fn' as the
-text.  When calling with a prefix argument or when
-`*popup-exec-result?*' is `t', the result is popped up in a
-separate frame."
+  "Executes text using `exec-fn' in the assumed current project
+root directory.  If `text' is not provided, call and take the
+return value of `selection-fn' as the text.
+
+When calling with `*~popup-exec-result?*' being `t', the result
+is popped up in a separate frame.
+
+When calling with prefix argument, executes the text in the
+current directory."
   (interactive)
-  (let* ((text (if (or (null text)
-                       (string-empty-p text))
-                   (funcall selection-fn)
-                 text))
-         (result (funcall exec-fn text))
-         (result-str (if (stringp result)
-                         result
-                       (format "%s" result))))
-    (when (or current-prefix-arg
-              (and (boundp '*popup-exec-result?*)
-                   *popup-exec-result?*))
-      (~popup-buffer :content result-str
-                     :working-dir default-directory))
-    result))
+  (defvar *~popup-exec-result?*
+    nil
+    "Determines whether or not result from an exec function
+    should be popped up (in a separate frame).")
+  (let ((default-directory (if current-prefix-arg
+                               default-directory
+                             (~current-project-root))))
+    (let* ((text (if (or (null text)
+                         (string-empty-p text))
+                     (funcall selection-fn)
+                   text))
+           (result (funcall exec-fn text))
+           (result-str (if (stringp result)
+                           result
+                         (format "%s" result))))
+      (when *~popup-exec-result?*
+        (~popup-buffer :content result-str
+                       :working-dir default-directory))
+      result)))
 
 (defun* ~execute-text-prompt ()
-  "Prompts for text and executes it."
+  "Prompts for text and executes it in the assumed current
+project root directory.
+
+When calling with `*~popup-exec-result?*' being `t', the result
+is popped up in a separate frame.
+
+When calling with prefix argument, executes the text in the
+current directory."
   (interactive)
   (defvar *~execute-text-prompt-hist* (list))
   (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
     (~execute-text text)))
 
 (defun* ~execute-text-from-context ()
-  "Executes text non-interactively from the current context.  The
-rule for retrieving the text as follows:
+  "Executes text non-interactively from the current context in
+the assumped current project root directory.  The rule for
+retrieving the text as follows:
 
 - If the secondary selection is active, take it as the text; otherwise
 - if the primary selection is active, take it as the text; otherwise
 - if the last command is a mouse event, take the text at the mouse cursor; otherwise
-- take the current symbol at point."
+- take the current symbol at point.
+
+When calling with `*~popup-exec-result?*' being `t', the result
+is popped up in a separate frame.
+
+When calling with prefix argument, executes the text in the
+current directory."
   (interactive)
   (let ((text (or (~get-secondary-selection)
                   (and (region-active-p) (~current-selection))
@@ -1242,7 +1260,7 @@ necessary."
   "Toggles whether or not result from an exec function is popped
 up in a separate frame."
   (interactive)
-  (setf *popup-exec-result?* (not *popup-exec-result?*)))
+  (setf *~popup-exec-result?* (not *~popup-exec-result?*)))
 
 ;;
 ;; Processes

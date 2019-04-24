@@ -28,7 +28,7 @@
 ;; - Command palette buffer:
 ;;   * links to the main buffer via local/main-buffer
 ;;   * links to its file via local/cp-path
-;;   * has the default directory of the main buffer
+;;   * has the default directory of the project directory of main buffer (if possible)
 ;;   * executes commands in the main buffer, unless specified otherwise
 ;;   * might and should belong to a command palette window
 ;;   * cannot be killed if the main buffer is visible -> TODO: helper to check if a buffer is visible
@@ -56,6 +56,7 @@
 ;; TODO: Refactor using buffer-local-value
 ;; TODO: Refactor: get-buffer-window -> selected-window
 ;; TODO: See how the performance of the loop is, then refactor with links from the main buffer
+;; TODO: Implement ~current-project-root here
 
 (defvar command-palette:*cp-window-face*
   '(:family "Go" :height 110)
@@ -195,7 +196,7 @@ returns `nil'."
     (let* ((main-path (if (buffer-file-name main-buffer)
                           (buffer-file-name main-buffer)
                         (buffer-name)))
-           (main-dir (with-current-buffer main-buffer (~current-dir)))
+           (main-dir (with-current-buffer main-buffer (~current-project-root)))
            (cp-path (concat main-path ".rmacs-cp"))
            (cp-buffer-name (format "*cp:%s*" main-path))
            (cp-buffer (get-buffer-create cp-buffer-name)))
@@ -222,7 +223,7 @@ returns `nil'."
 
         (setq-local local/main-path main-path)
         (setq-local local/cp-path cp-path)
-        (setq-local default-directory main-dir))
+        (setq-local default-directory (~current-project-root)))
       cp-buffer)))
 
 (defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
@@ -381,13 +382,15 @@ non-exceptional buffers."
          (main-buffer (if (boundp 'local/main-buffer)
                           local/main-buffer
                         (current-buffer)))
+         (dir default-directory)
          (local-action-fn (alist-get expr command-palette:*default-action-patterns*
                                      nil nil #'string-equal)))
     (if (null local-action-fn)
         (with-selected-window main-window
           (with-current-buffer main-buffer
-            (unless (or (null expr) (string-empty-p expr))
-              (wand:execute expr))))
+            (let ((default-directory dir))
+              (unless (or (null expr) (string-empty-p expr))
+                (wand:execute expr)))))
       (funcall local-action-fn))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
