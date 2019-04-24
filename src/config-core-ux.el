@@ -477,6 +477,7 @@ current selection."
 ;; Acme-mouse
 ;; Ref: https://github.com/cmpitg/acme-mouse
 (use-package acme-mouse
+  :disabled t
   :config
   (progn
     (acme-mouse-mode)
