@@ -600,9 +600,9 @@ with prefix `s-SPC' at the same time."
       "Executes quick action on a piece of text.  If called
 interactively, `text' is taken as the current region."
       (interactive)
-      (let ((text (if (null text)
-                      (buffer-substring (region-beginning) (region-end))
-                    text)))
+      (let ((text (string-trim (if (null text)
+                                   (~current-selection)
+                                 text))))
         (cond ((~file-pattern? text)
                (~smart-open-file text))
               ((and (derived-mode-p 'emacs-lisp-mode)
