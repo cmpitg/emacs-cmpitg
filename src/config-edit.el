@@ -51,7 +51,7 @@
 
 (use-package treemacs
   :after (evil)
-  :demand t
+  :disabled t
   :config
   (progn
     (treemacs-follow-mode -1)
@@ -62,10 +62,10 @@
     (setq treemacs-follow-after-init t)))
 (use-package treemacs-evil
   :after (treemacs evil)
-  :demand t)
+  :disabled t)
 (use-package treemacs-projectile
   :after (treemacs projectile)
-  :demand t
+  :disabled t
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 
 ;;
