@@ -468,8 +468,8 @@ inherits the working directory from the buffer that calls it."
           (delete-frame frame))
       (kill-buffer buffer))))
 
-(defun* ~count-windows-without-sticky ()
-  "Counts the number of windows that are not sticky."
+(defun* ~count-non-sticky-windows ()
+  "Counts the number of non-sticky windows."
   (loop for window being the windows
         unless (window-dedicated-p window)
         count window))
@@ -478,7 +478,7 @@ inherits the working directory from the buffer that calls it."
   "Kills the a buffer along with its window (if exists)."
   (interactive)
   (unless (null buffer)
-    (if (= (~count-windows-without-sticky) 1)
+    (if (= (~count-non-sticky-windows) 1)
         (kill-buffer)
       (kill-buffer-and-window))))
 

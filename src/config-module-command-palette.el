@@ -57,6 +57,7 @@
 ;; TODO: Refactor: get-buffer-window -> selected-window
 ;; TODO: See how the performance of the loop is, then refactor with links from the main buffer
 ;; TODO: Implement ~current-project-root here
+;; TODO: Implement ~count-non-sticky-windows here
 
 (defvar command-palette:*cp-window-face*
   '(:family "Go" :height 110)
@@ -325,6 +326,14 @@ non-exceptional buffers."
       (set-window-parameter res :local/cp-window fake-cp-window))
     res))
 
+(defun command-palette:advice/maybe-delete-window (orig-fun &rest args)
+  "Deletes the non-sticky window only if the number of non-sticky
+windows is greater than 1."
+  (if (or (window-dedicated-p)
+          (> (~count-non-sticky-windows) 1))
+      (apply orig-fun args)
+    (message "Cannot delete the only non-sticky window")))
+
 (defun command-palette:advice/delete-command-palette-window (orig-fun &rest args)
   "Deletes the corresponding command palette windows."
   (let* ((window (first args))
@@ -348,6 +357,7 @@ non-exceptional buffers."
   (advice-add 'switch-to-prev-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'find-file :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'magit-status :around #'command-palette:advice/ensure-command-palette)
+  (advice-add 'delete-window :around #'command-palette:advice/maybe-delete-window)
   (advice-add 'delete-window :around #'command-palette:advice/delete-command-palette-window)
   (advice-add 'split-window :around #'command-palette:advice/split-command-palette-window)
   (advice-add 'other-window :around #'command-palette:advice/fit-command-palette-window)
@@ -361,6 +371,7 @@ non-exceptional buffers."
   (advice-remove 'switch-to-prev-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'find-file #'command-palette:advice/ensure-command-palette)
   (advice-remove 'magit-status #'command-palette:advice/ensure-command-palette)
+  (advice-remove 'delete-window #'command-palette:advice/maybe-delete-window)
   (advice-remove 'delete-window #'command-palette:advice/delete-command-palette-window)
   (advice-remove 'split-window #'command-palette:advice/split-command-palette-window)
   (advice-remove 'other-window #'command-palette:advice/fit-command-palette-window)
