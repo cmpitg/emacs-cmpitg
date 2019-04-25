@@ -48,6 +48,8 @@
 ;;
 ;; - Killing the command palette buffer kills the main buffer and vice versa
 ;;
+;; - Command palette is per project
+;;
 
 ;; TODO: Decouple the execute-text function here from the Wand package
 
@@ -198,21 +200,25 @@ returns `nil'."
                           (buffer-file-name main-buffer)
                         (buffer-name)))
            (main-dir (with-current-buffer main-buffer (~current-project-root)))
-           (cp-path (concat main-path ".rmacs-cp"))
-           (cp-buffer-name (format "*cp:%s*" main-path))
-           (cp-buffer (get-buffer-create cp-buffer-name)))
+           (cp-path (f-join main-dir ".rmacs-cp"))
+           (cp-buffer-name (format "*cp:%s*" main-dir))
+           (cp-buffer (get-buffer-create cp-buffer-name))
+           (this-command.saved this-command))
       (with-current-buffer cp-buffer
-        ;; Only change the content of the command palette buffer if not exists
-        (when (string-empty-p (string-trim (buffer-string)))
-          (erase-buffer)
-          (unless (eq 'emacs-lisp-mode major-mode)
-            (emacs-lisp-mode))
-          (evil-mode 1)
-
-          ;; Set the content
-          (if (f-exists? cp-path)
-              (insert-file cp-path)
-            (insert (command-palette:construct-content main-buffer main-path))))
+        (if (string-empty-p (string-trim (buffer-string)))
+            (progn
+              (erase-buffer)
+              (unless (eq 'emacs-lisp-mode major-mode)
+                (emacs-lisp-mode))
+              (evil-mode 1)
+              (if (f-exists? cp-path)
+                  (insert-file cp-path)
+                (insert (command-palette:construct-content main-buffer main-path))))
+          (progn
+            (goto-char (point-min))
+            (let ((kill-whole-line nil)) (kill-line))
+            (goto-char (point-min))
+            (insert main-path)))
 
         (defvar-local local/buffer-features nil)
         (add-to-list 'local/buffer-features :command-palette)
@@ -224,7 +230,11 @@ returns `nil'."
 
         (setq-local local/main-path main-path)
         (setq-local local/cp-path cp-path)
-        (setq-local default-directory (~current-project-root)))
+        (setq-local default-directory (~current-project-root))
+        
+        ;; We don't want to record possible buffer manipulations as part of
+        ;; the current command
+        (setq this-command this-command.saved))
       cp-buffer)))
 
 (defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
