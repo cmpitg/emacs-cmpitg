@@ -343,7 +343,8 @@ non-exceptional buffers."
 (defun* command-palette:enable ()
   "TODO"
   (interactive)
-  (advice-add 'set-buffer :around #'command-palette:advice/ensure-command-palette)
+  (advice-add 'switch-to-buffer :around #'command-palette:advice/ensure-command-palette)
+  (advice-add 'pop-to-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'switch-to-prev-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'find-file :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'magit-status :around #'command-palette:advice/ensure-command-palette)
@@ -355,7 +356,8 @@ non-exceptional buffers."
 (defun* command-palette:disable ()
   "TODO"
   (interactive)
-  (advice-remove 'set-buffer #'command-palette:advice/ensure-command-palette)
+  (advice-remove 'switch-to-buffer #'command-palette:advice/ensure-command-palette)
+  (advice-remove 'pop-to-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'switch-to-prev-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'find-file #'command-palette:advice/ensure-command-palette)
   (advice-remove 'magit-status #'command-palette:advice/ensure-command-palette)
