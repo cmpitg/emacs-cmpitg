@@ -250,23 +250,24 @@ current main window is properly set up.  If the current main
 window contains an exceptional buffer, delete the existing
 command palette window if exists."
   (interactive)
-  (let ((main-buffer (window-buffer main-window)))
-    (if-let (cp-buffer (command-palette:ensure-command-palette-buffer main-buffer))
-        (let ((cp-window (command-palette:ensure-command-palette-window main-window)))
-          (with-selected-window cp-window
-            ;; Create the command palette buffer and switch to that buffer
-            (command-palette:switch-to-command-palette-buffer cp-buffer)))
-      ;; Most of the time we would want to work on the main buffer immediately
-      ;; so let's move to that window
-      (select-window main-window)
+  (unless (command-palette:is-command-palette-window? main-window)
+    (let ((main-buffer (window-buffer main-window)))
+      (if-let (cp-buffer (command-palette:ensure-command-palette-buffer main-buffer))
+          (let ((cp-window (command-palette:ensure-command-palette-window main-window)))
+            (with-selected-window cp-window
+              ;; Create the command palette buffer and switch to that buffer
+              (command-palette:switch-to-command-palette-buffer cp-buffer)))
+        ;; Most of the time we would want to work on the main buffer immediately
+        ;; so let's move to that window
+        (select-window main-window)
 
-      ;; TODO: Errorneous
-      ;; (let ((presumed-cp-window (ignore-errors (save-excursion (windmove-up)))))
-      ;;   (when (and (not (null presumed-cp-window))
-      ;;              (command-palette:is-command-palette-window? presumed-cp-window)
-      ;;              (window-live-p presumed-cp-window))
-      ;;     (delete-window presumed-cp-window)))
-      )))
+        ;; TODO: Errorneous
+        ;; (let ((presumed-cp-window (ignore-errors (save-excursion (windmove-up)))))
+        ;;   (when (and (not (null presumed-cp-window))
+        ;;              (command-palette:is-command-palette-window? presumed-cp-window)
+        ;;              (window-live-p presumed-cp-window))
+        ;;     (delete-window presumed-cp-window)))
+        ))))
 
 (defun command-palette:try-fitting-cp-window ()
   "Tries fitting the command palette window if necessary and
