@@ -336,19 +336,19 @@ non-exceptional buffers."
       (set-window-parameter res :local/cp-window fake-cp-window))
     res))
 
-(defun command-palette:advice/maybe-delete-window (orig-fun &rest args)
+(defun command-palette:advice/maybe-delete-window (orig-fun window &rest args)
   "Deletes the non-sticky window only if the number of non-sticky
 windows is greater than 1."
-  (if (or (window-dedicated-p)
-          (> (~count-non-sticky-windows) 1))
-      (apply orig-fun args)
-    (message "Cannot delete the only non-sticky window")))
+  (if (and (or (window-dedicated-p window)
+               (> (~count-non-sticky-windows) 1))
+           (window-live-p window))
+      (apply orig-fun window args)
+    (message "Cannot delete the only non-sticky window=%s" window)))
 
-(defun command-palette:advice/delete-command-palette-window (orig-fun &rest args)
+(defun command-palette:advice/delete-command-palette-window (orig-fun window &rest args)
   "Deletes the corresponding command palette windows."
-  (let* ((window (first args))
-         (cp-window (window-parameter window :local/cp-window))
-         (res (apply orig-fun args)))
+  (let* ((cp-window (window-parameter window :local/cp-window))
+         (res (apply orig-fun window args)))
     (when (and (not (null cp-window))
                (window-live-p cp-window))
       (delete-window cp-window))
