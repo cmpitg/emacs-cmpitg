@@ -106,7 +106,7 @@ convenient wrapper of `join-line'."
   (with-current-buffer (if (command-palette:is-command-palette-window?)
                            local/main-buffer
                          (current-buffer))
-    (call-interactively '~choose-buffer)))
+    (call-interactively #'~choose-buffer)))
 
 ;; TODO cleanup
 (defun ~duplicate-line-or-region (&optional n)

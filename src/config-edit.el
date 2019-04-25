@@ -645,6 +645,6 @@ the sequence, and its index within the sequence."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finish configuring Rmacs for code & text editting")
+(message "Finished configuring Rmacs for code & text editting")
 
 (provide 'rmacs:config-edit)
