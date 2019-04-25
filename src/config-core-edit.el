@@ -612,34 +612,34 @@ interactively, `text' is taken as the current region."
                (wand:eval-string text)))))
 
     (setq wand:*rules*
-          (list (wand:create-rule :match "|"
+          (list (wand:create-rule :match (rx bol (0+ " ") "|")
                                   :capture :after
                                   :action #'~exec|)
-                (wand:create-rule :match "<"
+                (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
                                   :action #'~exec<)
-                (wand:create-rule :match ">"
+                (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
                                   :action #'~exec>)
-                (wand:create-rule :match "!!"
+                (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :action #'~exec-with-term-emu)
-                (wand:create-rule :match "!"
+                (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
                                   :action #'~exec-pop-up)
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)
-                (wand:create-rule :match "chrome:"
+                (wand:create-rule :match (rx bol (0+ " ") "chrome:")
                                   :capture :after
                                   :action #'~open-with-google-chrome)
-                (wand:create-rule :match "https?://"
+                (wand:create-rule :match (rx bol (0+ " ") "https?://")
                                   :capture :whole
                                   :action #'~web-browse-gui)
                 (wand:create-rule :match ".*\\.html$"
                                   :capture :whole
                                   :action #'~web-browse-gui)
-                (wand:create-rule :match "file:"
+                (wand:create-rule :match (rx bol (0+ " ") "file:")
                                   :capture :after
                                   :action #'~smart-open-file)
                 (wand:create-rule :match (rx (0+ (or any "\n")))
