@@ -420,6 +420,14 @@ windows is greater than 1."
                 (wand:execute expr)))))
       (funcall local-action-fn))))
 
+(define-minor-mode command-palette-mode
+  "Global mode for command palette feature."
+  :lighter " CP"
+  :global t
+  (if command-palette-mode
+      (command-palette:enable)
+    (command-palette:disable)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Done: How to properly resize the header window
