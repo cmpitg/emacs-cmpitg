@@ -621,6 +621,9 @@ interactively, `text' is taken as the current region."
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
                                   :action #'~exec>)
+                (wand:create-rule :match (rx bol (0+ " ") "!!!")
+                                  :capture :after
+                                  :action #'~exec-with-pause-in-term-emu)
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :action #'~exec-with-term-emu)

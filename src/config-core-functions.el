@@ -1457,6 +1457,17 @@ environment variable."
                          nil
                          command)))
 
+(defun* ~exec-with-pause-in-term-emu (command &key (term-emu "run-with-term-emu"))
+  "Executes a command in a terminal emulator asynchronously and
+pauses after the execution."
+  (interactive "MCommand: ")
+  (let* ((command (concat "with-pause " command))
+        (process-name (format "term-emu:%s" command)))
+    (async-start-process process-name
+                         term-emu
+                         nil
+                         command)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core functions")
