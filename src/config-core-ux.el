@@ -295,6 +295,9 @@
 (require 'rmacs:config-module-eval-result-insertion "config-module-eval-result-insertion")
 (eval-result-insertion:enable)
 
+;; Simple buffer listing
+(require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
+
 ;; Buffers are popped up in a separate frame
 (setq *popup-buffer-in* :frame)
 

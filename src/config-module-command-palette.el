@@ -101,7 +101,7 @@
                                   (main-window (command-palette:get-main-window)))
                               (with-current-buffer main-buffer
                                 (with-selected-window main-window
-                                  (call-interactively #'~choose-buffer))))))))
+                                  (call-interactively #'bl:show-buffer-chooser))))))))
 
 ;; TODO - Use the following to refactor other parts
 ;; (dolist (local-var-name '(local/buffer-features
