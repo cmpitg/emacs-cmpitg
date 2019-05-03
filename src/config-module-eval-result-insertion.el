@@ -93,7 +93,8 @@ expression and the next one."
   "Advice to add the eval result at the current point."
   (when (and (boundp 'eval-result-insertion:*insert-eval-result-enabled*)
              eval-result-insertion:*insert-eval-result-enabled*)
-    (save-excursion (eval-result-insertion:add-eval-result value))))
+    (save-excursion (eval-result-insertion:add-eval-result value)))
+  value)
 
 (defun eval-result-insertion:add-eval-result-at-end-of-defun (value)
   "Advice to add the eval result at the end of the `defun' form."
@@ -101,7 +102,8 @@ expression and the next one."
              eval-result-insertion:*insert-eval-result-enabled*)
     (save-excursion
       (end-of-defun)
-      (eval-result-insertion:add-eval-result value))))
+      (eval-result-insertion:add-eval-result value)))
+  value)
 
 (defun eval-result-insertion:add-eval-result-at-current-sexp (value)
   "Advice to add the eval result at the end of the current sexp."
@@ -110,7 +112,8 @@ expression and the next one."
     (save-excursion
       (sp-up-sexp)
       (end-of-defun)
-      (eval-result-insertion:add-eval-result value))))
+      (eval-result-insertion:add-eval-result value)))
+  value)
 
 (defun eval-result-insertion:add-eval-result-at-end-of-selection (value)
   "Advice to add the eval result at the end of the current
@@ -120,7 +123,8 @@ selection."
     (save-excursion
       (when (~is-selecting?)
         (region-end))
-      (eval-result-insertion:add-eval-result value))))
+      (eval-result-insertion:add-eval-result value)))
+  value)
 
 (defun eval-result-insertion:toggle-local ()
   "Enables/disables the insertion of eval result for the current buffer."
