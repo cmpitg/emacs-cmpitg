@@ -108,6 +108,12 @@ convenient wrapper of `join-line'."
                          (current-buffer))
     (call-interactively #'bl:show-buffer-chooser)))
 
+(defun ~delete-line ()
+  "Deletes the current line."
+  (interactive)
+  (save-excursion
+   (delete-region (point-at-bol) (point-at-eol))))
+
 ;; TODO cleanup
 (defun ~duplicate-line-or-region (&optional n)
   "Duplicate current line, or region if active.
