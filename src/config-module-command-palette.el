@@ -298,10 +298,10 @@ possible."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: Remove buffer-or-name
-(defun command-palette:advice/ensure-command-palette (orig-fun buffer-or-name &rest args)
+(defun command-palette:advice/ensure-command-palette (orig-fun &rest args)
   "Advice to ensure command palette exists and properly setup for
 non-exceptional buffers."
-  (let* ((res (apply orig-fun buffer-or-name args))
+  (let* ((res (apply orig-fun args))
          (window (selected-window)))
     (command-palette:ensure-command-palette)
     (select-window window)
