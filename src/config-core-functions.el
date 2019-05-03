@@ -73,6 +73,12 @@ default)."
 ;; Editing
 ;;
 
+
+(defun ~format-json ()
+  "Formats current selection as JSON.  Requires jq."
+  (interactive)
+  (~exec| "jq ."))
+
 (defun ~join-with-next-line ()
   "Joins next line with the current line.  This is just a
 convenient wrapper of `join-line'."

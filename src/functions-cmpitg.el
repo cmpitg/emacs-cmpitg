@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2017-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2017-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -27,13 +27,8 @@ Jekyll."
         (replace-match (format "last_updated: %s"
                                (string-trim (~exec "date -R")))))))
 
-(defun ~format-json ()
-  "Formats current selection as JSON."
-  (interactive)
-  (~exec| "jq ."))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finish loading cmpitg-specific functions ")
+(message "Finish loading cmpitg-specific functions")
 
 (provide 'rmacs:functions-cmpitg)
