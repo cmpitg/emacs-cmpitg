@@ -77,4 +77,4 @@ denoted by current text field at the current cursor."
 
 (message "Finished configuring simple buffer listing")
 
-(provide 'rmacs:config-simple-buffer-list)
+(provide 'rmacs:config-module-simple-buffer-list)
