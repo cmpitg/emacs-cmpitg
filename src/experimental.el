@@ -36,6 +36,10 @@
 (defalias '-frame #'~kill-buffer-and-frame)
 (defalias '-nb #'eval-result-insertion:disable-local)
 
+(defalias '!!! '~exec-with-term-emu-detach)
+(defalias '!! '~exec-with-pause-in-term-emu)
+(defalias '!@ '~exec-with-term-emu)
+
 ;;
 ;; Madness - Projectile automatically returns true path - Don't do that!
 ;;
