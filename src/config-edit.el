@@ -651,6 +651,7 @@ the sequence, and its index within the sequence."
 ;;              (message "I sent: %S" (assoc-default 'form data)))))
 
 (use-package request
+  :disabled t
   :commands request)
 
 ;;
