@@ -27,6 +27,24 @@ Jekyll."
         (replace-match (format "last_updated: %s"
                                (string-trim (~exec "date -R")))))))
 
+(defun* ~wmii/get-frame-id (&optional (frame (selected-frame)))
+  "Gets the frame ID in Wmii-readable format."
+  (thread-last (frame-parameter frame 'outer-window-id)
+    string-to-number
+    (format "0x%x")))
+
+(defun* ~wmii/toggle-frame-floating (&optional (frame (selected-frame)))
+  "Toggles the floating of a frame when using Wmii."
+  (interactive)
+  (~exec (format "wmiir xwrite /tag/sel/ctl send %s toggle"
+                 (~wmii/get-frame-id frame))))
+
+(defun* ~wmii/set-frame-floating (&optional (frame (selected-frame)))
+  "Sets a frame to floating mode when using Wmii."
+  (interactive)
+  (~exec (format "wmiir xwrite /tag/sel/ctl send %s ~"
+                 (~wmii/get-frame-id frame))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finish loading cmpitg-specific functions")
