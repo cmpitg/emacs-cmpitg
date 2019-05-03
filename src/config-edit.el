@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -601,6 +601,22 @@ the sequence, and its index within the sequence."
       (yas-minor-mode 1))
 
     (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
+
+;;
+;; Language server mode
+;;
+;; Ref: https://github.com/joaotavora/eglot
+;;
+;; Supported languages:
+;; - C, C++: Clangd
+;; - Rust: https://github.com/rust-lang/rls
+;;
+
+(use-package eglot
+  :config (progn
+            (add-to-list 'eglot-server-programs
+                         '((c++-mode c-mode) "clangd-6.0"))
+            (add-hook 'rust-mode-hook 'eglot-ensure)))
 
 ;;
 ;; Acme-like command palette

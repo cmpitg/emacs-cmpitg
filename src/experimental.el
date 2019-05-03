@@ -64,22 +64,6 @@
     (auto-compile-on-save-mode)))
 
 ;;
-;; Language server mode
-;;
-;; Ref: https://github.com/joaotavora/eglot
-;;
-;; Supported languages:
-;; - C, C++: Clangd
-;; - Rust: https://github.com/rust-lang/rls
-;;
-
-(use-package eglot
-  :config (progn
-            (add-to-list 'eglot-server-programs
-                         '((c++-mode c-mode) "clangd-6.0"))
-            (add-hook 'rust-mode-hook 'eglot-ensure)))
-
-;;
 ;; Eshell utilization
 ;;
 
