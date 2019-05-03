@@ -19,6 +19,7 @@ try {
 Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized tool (called "shape").  The shape is specified by the '--shape' option.  Each shape shared a base configuration with different configurations on top of it.  Currently the following shapes are supported:
 
   minimal :: General text editing framework
+  utils   :: Utility framework
   edit    :: Text editor
   note    :: Note taker
 
@@ -87,7 +88,7 @@ if {$cmdArgs(verbose)} {
 # Constants
 ##############################################################################
 
-set ALLOWED_SHAPES {minimal edit note}
+set ALLOWED_SHAPES {minimal edit note utils}
 
 ##############################################################################
 # Helpers
