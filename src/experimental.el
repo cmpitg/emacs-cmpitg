@@ -29,12 +29,12 @@
 (defalias '+frame #'make-frame)
 (defalias '+tool #'~toggle-toolbox)
 (defalias '+bm #'~append-pos-to-window-on-the-right)
-(defalias '+nb #'eval-result-insertion:enable-local)
 (defalias '-buf #'kill-this-buffer)
 (defalias '-window #'~delete-window)
 (defalias '-me #'~kill-buffer-and-window)
 (defalias '-frame #'~kill-buffer-and-frame)
-(defalias '-nb #'eval-result-insertion:disable-local)
+
+(defalias 'ojo #'ojo-mode)
 
 (defalias '!!! '~exec-with-term-emu-detach)
 (defalias '!! '~exec-with-pause-in-term-emu)

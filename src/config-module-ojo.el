@@ -19,39 +19,43 @@
 ;; Inserting eval result back to the current buffer after the expression.
 ;;
 
+;;
+;; TODO: Documentation
+;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Variables & parameters
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar eval-result-insertion:*insert-eval-result-enabled* nil
+(defvar ojo:*insert-eval-result-enabled* nil
   "Determining if the result of an `eval' function should be
 inserted back to the current buffer after current point.")
 
-(defvar eval-result-insertion:*result-length-threshold* 200
+(defvar ojo:*result-length-threshold* 200
   "The maximum number of characters under which the eval result
 stays as-is when inserted back to the buffer.  If the number of
 characters exceeds this threshold, insert an elipsis.")
 
-(defvar eval-result-insertion:*begin-token* "⇨"
+(defvar ojo:*begin-token* "⇨"
   "The token which is used as the marker to determine which point
 is the beginning of the eval result.")
 
 (add-to-list 'safe-local-variable-values
-             '(eval-result-insertion:*insert-eval-result-enabled* . t))
+             '(ojo:*insert-eval-result-enabled* . t))
 (add-to-list 'safe-local-variable-values
-             '(eval-result-insertion:*result-length-threshold* . t))
+             '(ojo:*result-length-threshold* . t))
 (add-to-list 'safe-local-variable-values
-             '(eval-result-insertion:*begin-token* . t))
+             '(ojo:*begin-token* . t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Implementation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* eval-result-insertion:add-eval-result (result
-                                               &key
-                                               (max-length eval-result-insertion:*result-length-threshold*))
+(defun* ojo:add-eval-result (result
+                             &key
+                             (max-length ojo:*result-length-threshold*))
   "Adds eval result after the current
-`eval-result-insertion:*begin-token*'.  The token should be
+`ojo:*begin-token*'.  The token should be
 prefixed by a double line comment and a space, in the next line.
 If the token is not yet found, it would be inserted.  There must
 be at least one blank line between the currently eval'ed
@@ -74,7 +78,7 @@ expression and the next one."
                               (rx bol
                                   (0+ " ")
                                   (1+ (eval comment-start))
-                                  " " (eval eval-result-insertion:*begin-token*)
+                                  " " (eval ojo:*begin-token*)
                                   (0+ " "))))
              (next-line)
              (next-line)
@@ -89,97 +93,105 @@ expression and the next one."
              (insert prefix "⇨" "\n"
                      final-result "\n"))))))
 
-(defun eval-result-insertion:add-eval-result-at-point (value)
+(defun ojo:add-eval-result-at-point (value)
   "Advice to add the eval result at the current point."
-  (when (and (boundp 'eval-result-insertion:*insert-eval-result-enabled*)
-             eval-result-insertion:*insert-eval-result-enabled*)
-    (save-excursion (eval-result-insertion:add-eval-result value)))
+  (when (and (boundp 'ojo:*insert-eval-result-enabled*)
+             ojo:*insert-eval-result-enabled*)
+    (save-excursion (ojo:add-eval-result value)))
   value)
 
-(defun eval-result-insertion:add-eval-result-at-end-of-defun (value)
+(defun ojo:add-eval-result-at-end-of-defun (value)
   "Advice to add the eval result at the end of the `defun' form."
-  (when (and (boundp 'eval-result-insertion:*insert-eval-result-enabled*)
-             eval-result-insertion:*insert-eval-result-enabled*)
+  (when (and (boundp 'ojo:*insert-eval-result-enabled*)
+             ojo:*insert-eval-result-enabled*)
     (save-excursion
       (end-of-defun)
-      (eval-result-insertion:add-eval-result value)))
+      (ojo:add-eval-result value)))
   value)
 
-(defun eval-result-insertion:add-eval-result-at-current-sexp (value)
+(defun ojo:add-eval-result-at-current-sexp (value)
   "Advice to add the eval result at the end of the current sexp."
-  (when (and (boundp 'eval-result-insertion:*insert-eval-result-enabled*)
-             eval-result-insertion:*insert-eval-result-enabled*)
+  (when (and (boundp 'ojo:*insert-eval-result-enabled*)
+             ojo:*insert-eval-result-enabled*)
     (save-excursion
       (sp-up-sexp)
       (end-of-defun)
-      (eval-result-insertion:add-eval-result value)))
+      (ojo:add-eval-result value)))
   value)
 
-(defun eval-result-insertion:add-eval-result-at-end-of-selection (value)
+(defun ojo:add-eval-result-at-end-of-selection (value)
   "Advice to add the eval result at the end of the current
 selection."
-  (when (and (boundp 'eval-result-insertion:*insert-eval-result-enabled*)
-             eval-result-insertion:*insert-eval-result-enabled*)
+  (when (and (boundp 'ojo:*insert-eval-result-enabled*)
+             ojo:*insert-eval-result-enabled*)
     (save-excursion
       (when (~is-selecting?)
         (region-end))
-      (eval-result-insertion:add-eval-result value)))
+      (ojo:add-eval-result value)))
   value)
 
-(defun eval-result-insertion:toggle-local ()
+(defun ojo:toggle-local ()
   "Enables/disables the insertion of eval result for the current buffer."
   (interactive)
-  (make-local-variable 'eval-result-insertion:*insert-eval-result-enabled*)
-  (setq eval-result-insertion:*insert-eval-result-enabled* (not eval-result-insertion:*insert-eval-result-enabled*)))
+  (make-local-variable 'ojo:*insert-eval-result-enabled*)
+  (setq ojo:*insert-eval-result-enabled* (not ojo:*insert-eval-result-enabled*)))
 
-(defun eval-result-insertion:enable-local ()
+(defun ojo:enable-local ()
   "Enables the insertion of eval result for the current buffer."
   (interactive)
-  (make-local-variable 'eval-result-insertion:*insert-eval-result-enabled*)
-  (setq eval-result-insertion:*insert-eval-result-enabled* t))
+  (make-local-variable 'ojo:*insert-eval-result-enabled*)
+  (setq ojo:*insert-eval-result-enabled* t))
 
-(defun eval-result-insertion:disable-local ()
+(defun ojo:disable-local ()
   "Disables the insertion of eval result for the current buffer."
   (interactive)
-  (make-local-variable 'eval-result-insertion:*insert-eval-result-enabled*)
-  (setq eval-result-insertion:*insert-eval-result-enabled* nil))
+  (make-local-variable 'ojo:*insert-eval-result-enabled*)
+  (setq ojo:*insert-eval-result-enabled* nil))
 
-(defun eval-result-insertion:toggle-global ()
+(defun ojo:toggle-global ()
   "Enables/disables the insertion of eval result globally, not
 effectively buffers that have enabled the feature previously."
   (interactive)
-  (setq eval-result-insertion:*insert-eval-result-enabled* (not eval-result-insertion:*insert-eval-result-enabled*)))
+  (setq ojo:*insert-eval-result-enabled* (not ojo:*insert-eval-result-enabled*)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setting up & tearing down
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun eval-result-insertion:enable ()
-  "Enables the insertion of eval result."
-  (interactive)
-  (advice-add 'eval-last-sexp :filter-return #'eval-result-insertion:add-eval-result-at-point)
-  (advice-add 'pp-eval-last-sexp :filter-return #'eval-result-insertion:add-eval-result-at-point)
-  (advice-add '~eval-current-sexp :filter-return #'eval-result-insertion:add-eval-result-at-current-sexp)
-  (advice-add '~eval-region :filter-return #'eval-result-insertion:add-eval-result-at-end-of-selection)
-  (advice-add 'eval-defun :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun)
-  (advice-add 'cider-eval-last-sexp :filter-return #'eval-result-insertion:add-eval-result-at-point)
-  (advice-add 'cider-eval-defun-at-point :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun)
-  (advice-add 'cider-eval-sexp-at-point :filter-return #'eval-result-insertion:add-eval-result-at-end-of-defun))
 
-(defun eval-result-insertion:disable ()
+(defun ojo:enable ()
   "Enables the insertion of eval result."
   (interactive)
-  (advice-remove 'eval-last-sexp #'eval-result-insertion:add-eval-result-at-point)
-  (advice-remove 'pp-eval-last-sexp #'eval-result-insertion:add-eval-result-at-point)
-  (advice-remove '~eval-current-sexp #'eval-result-insertion:add-eval-result-at-current-sexp)
-  (advice-remove '~eval-region #'eval-result-insertion:add-eval-result-at-end-of-selection)
-  (advice-remove 'eval-defun #'eval-result-insertion:add-eval-result-at-end-of-defun)
-  (advice-remove 'cider-eval-last-sexp #'eval-result-insertion:add-eval-result-at-point)
-  (advice-remove 'cider-eval-defun-at-point #'eval-result-insertion:add-eval-result-at-end-of-defun)
-  (advice-remove 'cider-eval-sexp-at-point #'eval-result-insertion:add-eval-result-at-end-of-defun))
+  (advice-add 'eval-last-sexp :filter-return #'ojo:add-eval-result-at-point)
+  (advice-add 'pp-eval-last-sexp :filter-return #'ojo:add-eval-result-at-point)
+  (advice-add '~eval-current-sexp :filter-return #'ojo:add-eval-result-at-current-sexp)
+  (advice-add '~eval-region :filter-return #'ojo:add-eval-result-at-end-of-selection)
+  (advice-add 'eval-defun :filter-return #'ojo:add-eval-result-at-end-of-defun)
+  (advice-add 'cider-eval-last-sexp :filter-return #'ojo:add-eval-result-at-point)
+  (advice-add 'cider-eval-defun-at-point :filter-return #'ojo:add-eval-result-at-end-of-defun)
+  (advice-add 'cider-eval-sexp-at-point :filter-return #'ojo:add-eval-result-at-end-of-defun))
+
+(defun ojo:disable ()
+  "Enables the insertion of eval result."
+  (interactive)
+  (advice-remove 'eval-last-sexp #'ojo:add-eval-result-at-point)
+  (advice-remove 'pp-eval-last-sexp #'ojo:add-eval-result-at-point)
+  (advice-remove '~eval-current-sexp #'ojo:add-eval-result-at-current-sexp)
+  (advice-remove '~eval-region #'ojo:add-eval-result-at-end-of-selection)
+  (advice-remove 'eval-defun #'ojo:add-eval-result-at-end-of-defun)
+  (advice-remove 'cider-eval-last-sexp #'ojo:add-eval-result-at-point)
+  (advice-remove 'cider-eval-defun-at-point #'ojo:add-eval-result-at-end-of-defun)
+  (advice-remove 'cider-eval-sexp-at-point #'ojo:add-eval-result-at-end-of-defun))
+
+(define-minor-mode ojo-mode
+  "Local minor mode for Ojo."
+  :lighter " Ojo"
+  (if ojo-mode
+      (ojo:enable-local)
+    (ojo:disable-local)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "Finished configuring insertion of eval result")
+(message "Finished configuring Ojo mode")
 
-(provide 'rmacs:config-module-eval-result-insertion)
+(provide 'rmacs:config-module-ojo)

@@ -291,9 +291,9 @@
 ;; TODO: Make the following call into an enable/disable call
 (setq *one-buffer-per-window-temporarily-disabled?* t)
 
-;; Notebook-like feature: Inserting eval result back to current buffer
-(require 'rmacs:config-module-eval-result-insertion "config-module-eval-result-insertion")
-(eval-result-insertion:enable)
+;; Ojo - Inserting eval result back to current buffer
+(require 'rmacs:config-module-ojo "config-module-ojo")
+(ojo:enable)
 
 ;; Simple buffer listing
 (require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
