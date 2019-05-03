@@ -368,6 +368,7 @@ windows is greater than 1."
 (defun* command-palette:enable ()
   "TODO"
   (interactive)
+  (advice-add 'top-level :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'switch-to-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'pop-to-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'switch-to-prev-buffer :around #'command-palette:advice/ensure-command-palette)
@@ -382,6 +383,7 @@ windows is greater than 1."
 (defun* command-palette:disable ()
   "TODO"
   (interactive)
+  (advice-remove 'top-level #'command-palette:advice/ensure-command-palette)
   (advice-remove 'switch-to-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'pop-to-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'switch-to-prev-buffer #'command-palette:advice/ensure-command-palette)
