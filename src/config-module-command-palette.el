@@ -234,6 +234,15 @@ returns `nil'."
         (setq this-command this-command.saved))
       cp-buffer)))
 
+(defun* command-palette:save-cp (&optional (main-buffer (current-buffer)))
+  "Saves the current command palette buffer."
+  (interactive)
+  (save-excursion
+    (unless (boundp 'local/cp-buffer)
+      (error "Main buffer=%s doesn't have a command palette buffer" main-buffer))
+    (with-current-buffer local/cp-buffer
+      (~write-to-file local/cp-path (buffer-string)))))
+
 (defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
   "Ensures that a command palette window exists for a main window."
   (interactive)
