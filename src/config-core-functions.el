@@ -1190,6 +1190,7 @@ is popped up in a separate frame.
 When calling with prefix argument, executes the text in the
 current directory."
   (interactive)
+  (require 'rmacs:config-module-command-palette)
   (defvar *~popup-exec-result?*
     nil
     "Determines whether or not result from an exec function

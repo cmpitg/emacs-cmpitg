@@ -622,7 +622,7 @@ the sequence, and its index within the sequence."
 ;; Acme-like command palette
 ;;
 
-(require 'rmacs:config-module-command-palette "config-module-command-palette")
+(require 'rmacs:config-module-command-palette)
 (setq command-palette:*default-content* "x x-buf x-win w/x buffers +tool +frame +bm ojo")
 (command-palette-mode 1)
 

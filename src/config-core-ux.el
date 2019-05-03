@@ -291,6 +291,11 @@
 ;; TODO: Make the following call into an enable/disable call
 (setq *one-buffer-per-window-temporarily-disabled?* t)
 
+;; Acme-like command palette utils.  By default the command palette itself is
+;; not enabled.
+(require 'rmacs:config-module-command-palette "config-module-command-palette")
+(command-palette-mode -1)
+
 ;; Ojo - Inserting eval result back to current buffer
 (require 'rmacs:config-module-ojo "config-module-ojo")
 (ojo:enable)
