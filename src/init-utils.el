@@ -25,6 +25,7 @@
 (require 'rmacs:functions-aws          "functions-aws")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")
 (require 'rmacs:config-themes          "config-themes")
+(require 'rmacs:config-module-rocket   "config-module-rocket")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
