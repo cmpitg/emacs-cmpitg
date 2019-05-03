@@ -213,7 +213,7 @@ returns `nil'."
                 (insert (command-palette:construct-content main-buffer main-path))))
           (progn
             (goto-char (point-min))
-            (let ((kill-whole-line nil)) (kill-line))
+            (delete-region (point) (point-at-eol))
             (goto-char (point-min))
             (insert main-path)))
 
