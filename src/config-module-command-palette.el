@@ -66,7 +66,7 @@
   )
 
 (defvar command-palette:*default-content*
-  "x x-buf x-win w/reload w/x"
+  "x x-buf x-win w/x"
   "Default content for the command palette buffer, which is
   displayed from the second line onward.")
 
@@ -94,9 +94,6 @@
                           (let ((main-window (command-palette:get-main-window)))
                             (with-selected-window main-window
                               (~delete-window)))))
-        (cons "w/reload" #'(lambda ()
-                             (interactive)
-                             (command-palette:fit-command-palette-window)))
         (cons "w/x" #'command-palette:kill-window-and-buffer)
         (cons "buffers" #'(lambda ()
                             (interactive)
