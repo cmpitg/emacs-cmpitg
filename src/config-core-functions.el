@@ -1038,21 +1038,21 @@ off the buffer."
   "Deletes current file when killing buffer if needed."
   (interactive)
   (when (and (local-variable-p 'local/delete-on-close)
-             (buffer-local-value 'local/delete-on-close (current-buffer)))
+             local/delete-on-close)
     (~delete-current-file)))
 
 (defun ~maybe-delete-frame-when-killing-buffer ()
   "Deletes current frame when killing buffer if needed."
   (interactive)
   (when (and (local-variable-p 'local/delete-frame-on-close)
-             (buffer-local-value 'local/delete-frame-on-close (current-buffer)))
+             local/delete-frame-on-close)
     (delete-frame local/delete-frame-on-close)))
 
 (defun ~maybe-delete-window-when-killing-buffer ()
   "Deletes current window when killing buffer if needed."
   (interactive)
   (when (and (local-variable-p 'local/delete-window-on-close)
-             (buffer-local-value 'local/delete-window-on-close (current-buffer)))
+             local/delete-window-on-close)
     (delete-window)))
 
 (defun ~maybe-make-current-file-executable ()
