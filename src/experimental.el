@@ -117,6 +117,13 @@ directory."
           (eshell/pwd)
           (if (zerop (user-uid)) "#" "$")))
 
+;; (defun ~my/eshell-prompt-function ()
+;;   (format " - %s %s@%s %s -\n"
+;;           (format-time-string "%H:%M:%S" (current-time))
+;;           (user-login-name)
+;;           (system-name)
+;;           (eshell/pwd)))
+
 (defun ~my/eshell-maybe-bol ()
   "Goes to beginning of command line first, then beginning of
 line in Eshell."
@@ -136,6 +143,7 @@ line in Eshell."
 
 (setq eshell-prompt-function #'~my/eshell-prompt-function)
 (setq eshell-prompt-regexp (rx bol (or "#" "$") " "))
+;; (setq eshell-prompt-regexp "")
 (add-hook 'eshell-mode-hook
           #'(lambda ()
               (bind-key "s-d" #'~my/eshell-maybe-bol eshell-mode-map)
