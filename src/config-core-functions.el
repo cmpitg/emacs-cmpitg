@@ -1164,6 +1164,7 @@ fallback to current directory if project root is not found."
     (insert (format "%s" value))))
 
 (defun* ~execute-text (&optional text
+                                 &key
                                  (exec-fn #'command-palette:execute)
                                  (selection-fn #'~get-secondary-selection))
   "Executes text using `exec-fn' in the assumed current project
