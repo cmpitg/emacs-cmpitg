@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -18,20 +18,6 @@
 ;;
 
 ;;
-;; Color theme
-;;
-;; Ref: https://www.emacswiki.org/emacs/ColorThemes
-;;
-
-(use-package color-theme)
-
-;;
-;; Load all themes
-;;
-
-(apply #'~load-files (directory-files (~get-config "themes/")))
-
-;;
 ;; Theming
 ;;
 
@@ -41,10 +27,7 @@
 ;; (set-background-color "#efefef")
 
 ;; Current
-;; (require 'color-theme-acme-light)
-;; (color-theme-acme-light)
 (load-theme 'plan9 t)
-;; (color-theme-textmate-modified)
 ;; (load-theme 'afternoon t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
