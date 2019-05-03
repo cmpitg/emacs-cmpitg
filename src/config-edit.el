@@ -607,7 +607,7 @@ the sequence, and its index within the sequence."
 ;;
 
 (require 'rmacs:config-module-command-palette "config-module-command-palette")
-(setq command-palette:*default-content* "x x-buf x-win w/reload w/x buffers +tool +frame +bm +nb -nb")
+(setq command-palette:*default-content* "x x-buf x-win w/x buffers +tool +frame +bm ojo")
 (command-palette-mode 1)
 
 ;;
