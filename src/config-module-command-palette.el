@@ -435,6 +435,7 @@ shadowed when the call ends."
       (command-palette:cleanup))
     result))
 
+;; TODO: Local action should be handled by Wand
 (defun* command-palette:execute (&optional expr)
   "TODO"
   (interactive)
