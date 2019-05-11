@@ -417,39 +417,68 @@
 
 (autoload 'cider--make-result-overlay "cider-overlays")
 
-(defun ~display-overlay-value (value point)
-  "Displays the return of the `eval' in an overlay."
-  (cider--make-result-overlay (format "%S" value)
-    :where point
-    :duration 'command)
+(defun blink:display-value (value point)
+  "Displays a value in an overlay at a point."
+  (let ((comment-start (if (null comment-start) ";" comment-start)))
+    (cider--make-result-overlay (format "%S" value)
+      :where point
+      :duration 'command))
   value)
 
-(defun ~advice/display-overlay-value-at-point (value)
-  "Advice to display `value' in an overlay at current point."
-  (~display-overlay-value value (point)))
+(defun blink:display-value-at-point (value)
+  "Displays `value' in an overlay at current point."
+  (blink:display-value value (point)))
 
-(defun ~advice/display-overlay-value-at-end-of-selection (value)
-  "Advice to display `value' in an overlay at the end of the
-current selection."
-  (~display-overlay-value value (if (~is-selecting?)
-                                    (region-end)
-                                  (point))))
+(defun blink:display-value-at-end-of-selection (value)
+  "Displays `value' in an overlay at the end of the current
+selection or current point."
+  (blink:display-value value (if (region-active-p)
+                                 (region-end)
+                               (point))))
 
-(advice-add 'eval-last-sexp :filter-return #'~advice/display-overlay-value-at-point)
-(advice-add 'pp-eval-last-sexp :filter-return #'~advice/display-overlay-value-at-point)
-(advice-add 'eval-defun :filter-return
-            #'(lambda (arg)
-                (~display-overlay-value arg (save-excursion
-                                              (end-of-defun)
-                                              (point)))))
-(advice-add '~eval-current-sexp :filter-return
-            #'(lambda (arg)
-                (~display-overlay-value arg (save-excursion
-                                              (sp-up-sexp)
-                                              (end-of-defun)
-                                              (point)))))
-(advice-add 'eval-region :filter-return #'~advice/display-overlay-value-at-end-of-selection)
-(advice-add '~eval-region :filter-return #'~advice/display-overlay-value-at-end-of-selection)
+(defun blink:display-value-at-end-of-defun (value)
+  "Displays `value' in an overlay at end-of-defun."
+  (blink:display-value value (save-excursion
+                               (end-of-defun)
+                               (point))))
+
+(defun blink:display-value-at-end-of-selection-or-defun (value)
+  "Displays `value' in an overlay at the end of the current
+selection or end-of-defun."
+  (blink:display-value value (if (region-active-p)
+                                 (region-end)
+                               (save-excursion
+                                 (end-of-defun)
+                                 (point)))))
+
+(defun blink:display-value-at-end-of-sexp (value)
+  "Displays `value' in an overlay at end of the current sexp."
+  (blink:display-value-at-end-of-defun value (save-excursion
+                                               (sp-up-sexp)
+                                               (point))))
+
+(defun blink:enable ()
+  (interactive)
+  (advice-add 'eval-last-sexp :filter-return #'blink:display-value-at-point)
+  (advice-add 'pp-eval-last-sexp :filter-return #'blink:display-value-at-point)
+  (advice-add 'eval-defun :filter-return #'blink:display-value-at-end-of-defun)
+  (advice-add '~eval-current-sexp :filter-return #'blink:display-value-at-end-of-sexp)
+  (advice-add 'eval-region :filter-return #'blink:display-value-at-end-of-selection)
+  (advice-add '~eval-region :filter-return #'blink:display-value-at-end-of-selection)
+  (advice-add '~execute :filter-return #'blink:display-value-at-end-of-selection-or-defun))
+
+(defun blink:disable ()
+  (interactive)
+  (advice-remove 'eval-last-sexp #'blink:display-value-at-point)
+  (advice-remove 'pp-eval-last-sexp #'blink:display-value-at-point)
+  (advice-remove 'eval-defun #'blink:display-value-at-end-of-defun)
+  (advice-remove '~eval-current-sexp #'blink:display-value-at-end-of-sexp)
+  (advice-remove 'eval-region #'blink:display-value-at-end-of-selection)
+  (advice-remove '~eval-region #'blink:display-value-at-end-of-selection)
+  (advice-remove '~execute #'blink:display-value-at-end-of-selection-or-defun))
+
+(blink:enable)
+;; (blink:disable)
 
 ;; Buffer list sidebar
 ;; Ref: https://github.com/jojojames/ibuffer-sidebar
