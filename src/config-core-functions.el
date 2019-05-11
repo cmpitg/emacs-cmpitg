@@ -658,16 +658,38 @@ text.  Moves the cursor to the new line."
     (newline arg)
     (indent-according-to-mode)))
 
-(defun ~get-thing-at-mouse-or-symbol ()
-  "Returns the symbol at the mouse cursor if the last command is
-a mouse event, or just returns the symbol at the current point
-otherwise."
+(defun ~get-last-sexp ()
+  "Returns the last sexp before the current point."
   (interactive)
-  (if-let (point (posn-point (event-end last-command-event)))
-      (save-excursion
-        (goto-char point)
-        (thing-at-point 'symbol))
-    (thing-at-point 'symbol)))
+  (elisp--preceding-sexp))
+
+(defun ~get-cursor-pos-at-last-mouse-event ()
+  "Returns the position of the mouse cursor if the last command
+event is a mouse event, or `nil' otherwise."
+  (interactive)
+  (posn-point (event-end last-command-event)))
+
+(defun ~try-getting-current-thing ()
+  "Returns text from the current context:
+
+- If the last command is a mouse event, go to the point under the
+  cursor.
+
+- if the current line is a path, returns it; or
+
+- if the thing-at-point could be retrieved as a symbol, returns
+  its string representation; otherwise
+
+- returns the last sexp."
+  (interactive)
+  (require 'rmacs:config-module-bowser)
+  (save-excursion
+    (if-let (point (~get-cursor-pos-at-last-mouse-event))
+        (goto-char point))
+    (let ((path (bowser:get-path-current-line)))
+      (or (and (~file-pattern? path) path)
+          (thing-at-point 'symbol)
+          (~get-last-sexp)))))
 
 (defun ~get-buffer-content (buffer-or-name)
   "Gets the content of a buffer."
