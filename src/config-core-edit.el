@@ -606,7 +606,6 @@ with prefix `s-SPC' at the same time."
         (when (f-dir? text)
           (setq-local default-directory text))))
 
-
     (defun* ~wand:open-or-eval (&optional text)
       "Performs an action based on what `text' represents:
 - if `text' is a path to a directory, expands or collapses it with Bowser;
