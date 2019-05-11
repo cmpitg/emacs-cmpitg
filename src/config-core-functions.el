@@ -850,7 +850,7 @@ expanded using `expand-file-name', then
           (return (typecase action
                     (function   (funcall action path))
                     (string     (~open-with path action))
-                    (otherwise  (message-box (format "Invalid program %s" action))))))))))
+                    (otherwise  (error "Invalid program %s" action)))))))))
 
 (defun ~gui/open-file ()
   (interactive)
