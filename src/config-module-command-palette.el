@@ -61,12 +61,17 @@
 ;; TODO: Implement ~current-project-root here
 ;; TODO: Implement ~count-non-sticky-windows here
 
+(require 'wand)
+
 (defvar command-palette:*cp-window-face*
   '(:family "Go" :height 110)
   )
 
+(defvar command-palette:*exec-fn*
+  #'wand:execute)
+
 (defvar command-palette:*default-content*
-  "x x-buf x-win w/x"
+  "x x-buf x-win w/x w/save"
   "Default content for the command palette buffer, which is
   displayed from the second line onward.")
 
@@ -95,6 +100,7 @@
                             (with-selected-window main-window
                               (~delete-window)))))
         (cons "w/x" #'command-palette:kill-window-and-buffer)
+        (cons "w/save" #'command-palette:save-cp)
         (cons "buffers" #'(lambda ()
                             (interactive)
                             (let ((main-buffer local/main-buffer)
@@ -238,10 +244,14 @@ returns `nil'."
   "Saves the current command palette buffer."
   (interactive)
   (save-excursion
-    (unless (boundp 'local/cp-buffer)
-      (error "Main buffer=%s doesn't have a command palette buffer" main-buffer))
-    (with-current-buffer local/cp-buffer
-      (~write-to-file local/cp-path (buffer-string)))))
+    (let ((cp-buffer (cond ((boundp 'local/main-buffer)
+                            (current-buffer))
+                           ((boundp 'local/cp-buffer)
+                            local/cp-buffer)
+                           (t
+                            (error "Main buffer=%s doesn't have a command palette buffer" main-buffer)))))
+      (with-current-buffer cp-buffer
+        (~write-to-file local/cp-path (buffer-string))))))
 
 (defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
   "Ensures that a command palette window exists for a main window."
