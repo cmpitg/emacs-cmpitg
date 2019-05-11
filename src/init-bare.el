@@ -77,5 +77,6 @@
 (require 'rmacs:config-core-edit        "config-core-edit")
 (require 'rmacs:config-core-ux          "config-core-ux")
 (require 'rmacs:config-core-keybindings "config-core-keybindings")
+(require 'rmacs:config-module-bowser    "config-module-bowser")
 
 (message "Done loading Rmacs bare")
