@@ -56,7 +56,7 @@
                   (~current-selection)
                 (s-trim (thing-at-point 'line)))))
     (rocket:save-to-history text)
-    (~execute-text text)))
+    (~execute text)))
 
 (defun rocket:run-text-from-context-then-delete-frame ()
   "Runs text from the current context then delete the current frame."

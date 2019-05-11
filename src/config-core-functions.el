@@ -1199,77 +1199,92 @@ fallback to current directory if project root is not found."
       (kill-sexp -1))
     (insert (format "%s" value))))
 
-(defun* ~execute-text (&optional text
-                                 &key
-                                 (exec-fn #'command-palette:execute)
-                                 (selection-fn #'~get-secondary-selection))
-  "Executes text using `exec-fn' in the assumed current project
-root directory.  If `text' is not provided, call and take the
-return value of `selection-fn' as the text.
+(defun* ~get-thing-to-execute-from-context ()
+  "Retrieves the thing to execute from the current context.  The
+rules are as follows:
+
+- If the secondary selection is active, take it;
+  otherwise
+
+- if the primary selection is active, take it;
+  otherwise
+
+- if the last command is a mouse event, take the thing at the
+  mouse cursor;
+
+- if the current line corresponds to a path, take it;
+
+- otherwise take the current symbol or the last sexp at point."
+  (interactive)
+  (or (~get-secondary-selection)
+      (and (region-active-p) (~current-selection))
+      (~try-getting-current-thing)))
+
+(defun* ~execute (&optional thing
+                            &key
+                            (exec-fn #'command-palette:execute)
+                            (selection-fn #'~get-thing-to-execute-from-context))
+  "Executes a `thing' which is a piece of text or an sexp using
+`exec-fn'.  If `thing' is not provided, calls and takes the
+return value of `selection-fn' as `thing'.  If the current buffer
+is a command palette buffer, executes `thing' in the main buffer.
+
+The execution is done in the project root (determined by calling
+`~current-project-root') by default.
 
 When calling with `*~popup-exec-result?*' being `t', the result
 is popped up in a separate frame.
 
-When calling with prefix argument, executes the text in the
-current directory."
+When calling with prefix argument, executes in the current
+directory."
   (interactive)
   (require 'rmacs:config-module-command-palette)
   (defvar *~popup-exec-result?*
     nil
     "Determines whether or not result from an exec function
     should be popped up (in a separate frame).")
-  (let ((default-directory (if current-prefix-arg
-                               default-directory
-                             (~current-project-root))))
-    (let* ((text (if (or (null text)
-                         (string-empty-p text))
-                     (funcall selection-fn)
-                   text))
-           (result (funcall exec-fn text))
-           (result-str (if (stringp result)
-                           result
-                         (format "%s" result))))
-      (when *~popup-exec-result?*
-        (~popup-buffer :content result-str
-                       :working-dir default-directory))
-      result)))
+  (let ((default-directory.new default-directory)
+        (outer/result nil)
+        (outer/result-str nil))
+    (let* ((default-directory (cond (current-prefix-arg
+                                     default-directory)
+                                    ((boundp 'local/main-buffer)
+                                     default-directory)
+                                    (t
+                                     (~current-project-root))))
+           (default-directory.old default-directory)
+           (thing (if (null thing)
+                      (funcall selection-fn)
+                    thing)))
+      (when (null thing)
+        (error "Nothing to execute"))
+
+      (setq outer/result (if (consp thing)
+                             (eval thing)
+                           (funcall exec-fn thing)))
+      (setq outer/result-str (if (stringp outer/result)
+                                 outer/result
+                               (format "%s" outer/result)))
+
+      ;; In case the shadowed default-directory got changed, we want to change
+      ;; the original binding too
+      (unless (string-equal default-directory.old default-directory)
+        (setq default-directory.new default-directory)))
+
+    (setq-local default-directory default-directory.new)
+
+    (when *~popup-exec-result?*
+      (~popup-buffer :content outer/result-str
+                     :working-dir outer/default-directory))
+
+    outer/result))
 
 (defun* ~execute-text-prompt ()
-  "Prompts for text and executes it in the assumed current
-project root directory.
-
-When calling with `*~popup-exec-result?*' being `t', the result
-is popped up in a separate frame.
-
-When calling with prefix argument, executes the text in the
-current directory."
+  "Prompts for text and executes it with `~execute'."
   (interactive)
   (defvar *~execute-text-prompt-hist* (list))
   (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
-    (~execute-text text)))
-
-(defun* ~execute-text-from-context ()
-  "Executes text non-interactively from the current context in
-the assumped current project root directory.  The rule for
-retrieving the text as follows:
-
-- If the secondary selection is active, take it as the text; otherwise
-- if the primary selection is active, take it as the text; otherwise
-- if the last command is a mouse event, take the text at the mouse cursor; otherwise
-- take the current symbol at point.
-
-When calling with `*~popup-exec-result?*' being `t', the result
-is popped up in a separate frame.
-
-When calling with prefix argument, executes the text in the
-current directory."
-  (interactive)
-  (let ((text (or (~get-secondary-selection)
-                  (and (region-active-p) (~current-selection))
-                  (~get-thing-at-mouse-or-symbol))))
-    (if (null text)
-        (message "Nothing to execute")
-      (~execute-text text))))
+    (~execute text)))
 
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
