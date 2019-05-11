@@ -593,21 +593,33 @@ with prefix `s-SPC' at the same time."
 ;; Ref: https://github.com/cmpitg/wand
 ;;
 
+;; TODO: Separate ~smart-open-file to a module
+
 (use-package wand
+  :after (rmacs:config-module-bowser f)
   :config
   (progn
-    (defun ~open-or-eval (&optional text)
-      "Executes quick action on a piece of text.  If called
-interactively, `text' is taken as the current region."
+    (defun* ~wand:set-current-dir (&optional
+                                   (text (thing-at-point 'line)))
+      (interactive)
+      (let ((text (string-trim text)))
+        (when (f-dir? text)
+          (setq-local default-directory text))))
+
+
+    (defun* ~wand:open-or-eval (&optional text)
+      "Performs an action based on what `text' represents:
+- if `text' is a path to a directory, expands or collapses it with Bowser;
+- if `text' is a file pattern, smartly opens it with `~smart-open-file';
+- otherwise, executes it as Emacs Lisp code"
       (interactive)
       (let ((text (string-trim (if (null text)
                                    (~current-selection)
                                  text))))
         (cond ((~file-pattern? text)
-               (~smart-open-file text))
-              ((and (derived-mode-p 'emacs-lisp-mode)
-                    (s-starts-with? "(" text))
-               (~eval-string text))
+               (if (string-equal text (bowser:get-path-current-line))
+                   (bowser:expand-or-collapse-dir)
+                 (~smart-open-file text)))
               (t
                (wand:eval-string text)))))
 
@@ -645,13 +657,16 @@ interactively, `text' is taken as the current region."
                 (wand:create-rule :match ".*\\.html$"
                                   :capture :whole
                                   :action #'~web-browse-gui)
+                (wand:create-rule :match (rx bol (0+ " ") "in:")
+                                  :capture :after
+                                  :action #'~wand:set-current-dir)
                 (wand:create-rule :match (rx bol (0+ " ") "file:")
                                   :capture :after
                                   :action #'~smart-open-file)
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
                                   :skip-comment t
-                                  :action #'~open-or-eval)))))
+                                  :action #'~wand:open-or-eval)))))
 
 ;;
 ;; Snippet mode
