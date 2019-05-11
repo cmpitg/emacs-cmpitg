@@ -407,6 +407,34 @@ windows is greater than 1."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun* command-palette:call-with-current-dir (dir fn)
+  "Calls `fn' with `dir' being the current working directory.
+This function makes sure that the `default-directory' is not
+shadowed when the call ends."
+  (lexical-let ((default-directory.new nil)
+                (catching? nil)
+                (result nil))
+    (cl-labels ((command-palette:-watch
+                 (_symbol newval &rest _args)
+                 (when catching?
+                   (setq default-directory.new newval)))
+                (command-palette:cleanup
+                 ()
+                 (remove-variable-watcher 'default-directory #'command-palette:-watch)
+                 (unless (null default-directory.new)
+                   (setq-local default-directory default-directory.new))))
+      (add-variable-watcher 'default-directory #'command-palette:-watch)
+      (condition-case err
+          (let ((default-directory dir))
+            (setq catching? t)
+            (setq result (funcall fn))
+            (setq catching? nil))
+        (error
+         (command-palette:cleanup)
+         (signal (car err) (cdr err))))
+      (command-palette:cleanup))
+    result))
+
 (defun* command-palette:execute (&optional expr)
   "TODO"
   (interactive)
