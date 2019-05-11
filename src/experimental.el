@@ -34,6 +34,7 @@
 (defalias '-me #'~kill-buffer-and-window)
 (defalias '-frame #'~kill-buffer-and-frame)
 
+(defalias 'save-cp #'command-palette:save-cp)
 (defalias 'ojo #'ojo-mode)
 
 (defalias '!!! '~exec-with-term-emu-detach)
