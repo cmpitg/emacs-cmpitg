@@ -413,6 +413,8 @@
 ;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
 ;; TODO - Clean up the following code
 
+(require 'cider)
+
 (autoload 'cider--make-result-overlay "cider-overlays")
 
 (defun ~display-overlay-value (value point)
