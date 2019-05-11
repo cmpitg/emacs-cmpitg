@@ -455,15 +455,17 @@ shadowed when the call ends."
          (main-buffer (if (boundp 'local/main-buffer)
                           local/main-buffer
                         (current-buffer)))
-         (dir default-directory)
          (local-action-fn (alist-get expr command-palette:*default-action-patterns*
-                                     nil nil #'string-equal)))
+                                     nil nil #'string-equal))
+         (dir default-directory))
     (if (null local-action-fn)
         (with-selected-window main-window
           (with-current-buffer main-buffer
-            (let ((default-directory dir))
-              (unless (or (null expr) (string-empty-p expr))
-                (wand:execute expr)))))
+            (unless (or (null expr) (string-empty-p expr))
+              (command-palette:call-with-current-dir
+               dir
+               #'(lambda ()
+                   (funcall command-palette:*exec-fn* expr))))))
       (funcall local-action-fn))))
 
 (define-minor-mode command-palette-mode
