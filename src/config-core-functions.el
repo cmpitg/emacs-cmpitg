@@ -558,6 +558,7 @@ If the found window is the mini-buffer, returns `nil'."
 (defvar *recently-closed-file-list* (list)
   "List of recently closed files.")
 
+;; TODO: Make the tracking of recently closed file a separate module
 (defun ~track-closed-file ()
   "Tracks the list of recently closed files."
   (when-let (path buffer-file-name)
