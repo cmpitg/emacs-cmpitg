@@ -1243,41 +1243,30 @@ directory."
     nil
     "Determines whether or not result from an exec function
     should be popped up (in a separate frame).")
-  (let ((default-directory.new default-directory)
-        (outer/result nil)
-        (outer/result-str nil))
-    (let* ((default-directory (cond (current-prefix-arg
-                                     default-directory)
-                                    ((boundp 'local/main-buffer)
-                                     default-directory)
-                                    (t
-                                     (~current-project-root))))
-           (default-directory.old default-directory)
-           (thing (if (null thing)
-                      (funcall selection-fn)
-                    thing)))
-      (when (null thing)
-        (error "Nothing to execute"))
-
-      (setq outer/result (if (consp thing)
-                             (eval thing)
-                           (funcall exec-fn thing)))
-      (setq outer/result-str (if (stringp outer/result)
-                                 outer/result
-                               (format "%s" outer/result)))
-
-      ;; In case the shadowed default-directory got changed, we want to change
-      ;; the original binding too
-      (unless (string-equal default-directory.old default-directory)
-        (setq default-directory.new default-directory)))
-
-    (setq-local default-directory default-directory.new)
-
-    (when *~popup-exec-result?*
-      (~popup-buffer :content outer/result-str
-                     :working-dir outer/default-directory))
-
-    outer/result))
+  (let* ((dir (cond (current-prefix-arg
+                     default-directory)
+                    ((boundp 'local/main-buffer)
+                     default-directory)
+                    (t
+                     (~current-project-root))))
+         (thing (if (null thing)
+                    (funcall selection-fn)
+                  thing)))
+    (when (null thing)
+      (error "Nothing to execute"))
+    (let* ((result (command-palette:call-with-current-dir
+                    dir
+                    #'(lambda ()
+                        (if (consp thing)
+                            (eval thing)
+                          (funcall exec-fn thing)))))
+           (result-str (if (stringp result)
+                           result
+                         (format "%s" result))))
+      (when *~popup-exec-result?*
+        (~popup-buffer :content result-str
+                       :working-dir dir))
+      result)))
 
 (defun* ~execute-text-prompt ()
   "Prompts for text and executes it with `~execute'."
