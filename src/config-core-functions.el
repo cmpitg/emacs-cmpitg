@@ -837,7 +837,7 @@ to `nil'."
   "Opens path and with external program if necessary.  `path' is
 expanded using `expand-file-name', then
 `substitute-in-file-name'."
-  (let ((path (expand-file-name path)))
+  (let ((path (string-trim (expand-file-name path))))
     (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
                                        *open-with-regexps*
                                      (list))
