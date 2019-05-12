@@ -107,7 +107,6 @@
       (goto-char (point-min))
       (evil-normal-state)
       (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
-      (evil-define-key 'insert 'local (kbd "q") #'kill-current-buffer)
       
       (evil-define-key 'insert 'local (kbd "<S-return>") #'rocket:run-text-from-context)
       (evil-define-key 'normal 'local (kbd "<S-return>") #'rocket:run-text-from-context))
