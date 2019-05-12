@@ -828,6 +828,22 @@ prefix argument.  Otherwise, it will pop up a buffer frame."
 ;; (defalias '~popup-buffer 'internal-temp-output-buffer-show
 ;;   "Pops up a buffer for temporary display.")
 
+(defun* ~center-frame-in-chars (width-in-chars
+                                height-in-chars
+                                &key
+                                (frame (selected-frame))
+                                (display nil))
+  "Centers a frame with the width & height dimensions in
+characters."
+  (set-frame-size frame width-in-chars height-in-chars)
+  (let* ((width (frame-pixel-width frame))
+         (height (frame-pixel-height frame))
+         (screen-width (display-pixel-width display))
+         (screen-height (display-pixel-height display))
+         (desired-x (/ (- screen-width width) 2))
+         (desired-y (/ (- screen-height height) 2)))
+    (set-frame-position frame desired-x desired-y)))
+
 (defun ~new-buffer-frame-from-selection ()
   "Opens a new frame with a temporary buffer containing the
   current selection."
