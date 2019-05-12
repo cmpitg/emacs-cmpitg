@@ -42,7 +42,7 @@ Jekyll."
 (defun* ~wmii/set-frame-floating (&optional (frame (selected-frame)))
   "Sets a frame to floating mode when using Wmii."
   (interactive)
-  (~exec (format "wmiir xwrite /tag/sel/ctl send %s ~"
+  (~exec (format "wmiir xwrite /tag/sel/ctl send %s '~'"
                  (~wmii/get-frame-id frame))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
