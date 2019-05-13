@@ -234,7 +234,7 @@ returns `nil'."
         (setq-local local/main-path main-path)
         (setq-local local/cp-path cp-path)
         (setq-local default-directory (~current-project-root))
-        
+
         ;; We don't want to record possible buffer manipulations as part of
         ;; the current command
         (setq this-command this-command.saved))
@@ -378,6 +378,7 @@ windows is greater than 1."
 (defun* command-palette:enable ()
   "TODO"
   (interactive)
+  (add-variable-watcher 'default-directory #'command-palette:default-dir-watcher)
   (advice-add 'top-level :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'switch-to-buffer :around #'command-palette:advice/ensure-command-palette)
   (advice-add 'pop-to-buffer :around #'command-palette:advice/ensure-command-palette)
@@ -393,6 +394,7 @@ windows is greater than 1."
 (defun* command-palette:disable ()
   "TODO"
   (interactive)
+  (remove-variable-watcher 'default-directory #'command-palette:default-dir-watcher)
   (advice-remove 'top-level #'command-palette:advice/ensure-command-palette)
   (advice-remove 'switch-to-buffer #'command-palette:advice/ensure-command-palette)
   (advice-remove 'pop-to-buffer #'command-palette:advice/ensure-command-palette)
@@ -407,33 +409,35 @@ windows is greater than 1."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* command-palette:call-with-current-dir (dir fn)
-  "Calls `fn' with `dir' being the current working directory.
+;; TODO: This is a hack.  I haven't yet found a better way.
+(let ((catching?-hash (make-hash-table :test #'equal))
+      (new-dirs-hash (make-hash-table :test #'equal)))
+  (defun* command-palette:default-dir-watcher (symbol new-val operation buffer)
+    (when (and (eq 'default-directory symbol)
+               (eq 'set operation)
+               (gethash buffer catching?-hash))
+      (message "default-directory is modified in buffer=%s" buffer)
+      (puthash buffer new-val new-dirs-hash)))
+
+  (defun* command-palette:call-with-current-dir (dir fn)
+    "Calls `fn' with `dir' being the current working directory.
 This function makes sure that the `default-directory' is not
 shadowed when the call ends."
-  (lexical-let ((default-directory.new nil)
-                (catching? nil)
-                (result nil))
-    (cl-labels ((command-palette:-watch
-                 (_symbol newval &rest _args)
-                 (when catching?
-                   (setq default-directory.new newval)))
-                (command-palette:cleanup
-                 ()
-                 (remove-variable-watcher 'default-directory #'command-palette:-watch)
-                 (unless (null default-directory.new)
-                   (setq-local default-directory default-directory.new))))
-      (add-variable-watcher 'default-directory #'command-palette:-watch)
+    (lexical-let ((result nil))
+      (puthash (current-buffer) nil new-dirs-hash)
+      (puthash (current-buffer) t catching?-hash)
       (condition-case err
-          (let ((default-directory dir))
-            (setq catching? t)
-            (setq result (funcall fn))
-            (setq catching? nil))
+          (let* ((default-directory dir))
+            (setq result (funcall fn)))
         (error
-         (command-palette:cleanup)
+         (puthash (current-buffer) nil new-dirs-hash)
+         (puthash (current-buffer) nil catching?-hash)
          (signal (car err) (cdr err))))
-      (command-palette:cleanup))
-    result))
+      (when-let (dir (gethash (current-buffer) new-dirs-hash))
+        (setq-local default-directory dir))
+      (puthash (current-buffer) nil new-dirs-hash)
+      (puthash (current-buffer) nil catching?-hash)
+      result)))
 
 ;; TODO: Local action should be handled by Wand
 (defun* command-palette:execute (&optional expr)
