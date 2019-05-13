@@ -612,11 +612,11 @@ with prefix `s-SPC' at the same time."
 - if `text' is a file pattern, smartly opens it with `~smart-open-file';
 - otherwise, executes it as Emacs Lisp code"
       (interactive)
-      (let ((text (string-trim (if (null text)
-                                   (~current-selection)
-                                 text))))
+      (let ((text (string-trim text)))
         (cond ((~file-pattern? text)
-               (if (string-equal text (bowser:get-path-current-line))
+               (if (and (string-equal text (bowser:get-path-current-line))
+                        (f-directory? text)
+                        (f-exists? text))
                    (bowser:expand-or-collapse-dir)
                  (~smart-open-file text)))
               (t
