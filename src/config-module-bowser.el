@@ -175,7 +175,7 @@ variable."
 
 (defun bowser:get-path-current-line ()
   "Gets the path at the current line."
-  (string-trim-left (bowser:get-current-line)))
+  (string-trim (bowser:get-current-line)))
 
 (defun bowser:delete-consecutive-lines (level)
   "Deletes consecutive lines whose level is greater than or equal
@@ -213,7 +213,7 @@ Inspect local variable `local/bowser:dirs-expanded?' for further
 info.  If the line does not correspond to a directory path, does
 nothing and returns `nil'. "
   (interactive)
-  (let* ((path (string-trim-left line)))
+  (let* ((path (string-trim line)))
     (when (f-dir? path)
       (save-excursion
         (if (bowser:is-dir-expanded? path)
