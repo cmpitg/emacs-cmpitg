@@ -440,18 +440,9 @@ shadowed when the call ends."
   "TODO"
   (interactive)
   (require 'wand)
-  (let* ((expr (if (not (null expr))
-                   (if (not (string-empty-p expr))
-                       expr
-                     ;; Empty expression means we take from mouse or symbol at
-                     ;; point
-                     (~get-thing-at-mouse-or-symbol))
-                 (if (null (~get-secondary-selection))
-                     ;; No expression and no secondary selection
-                     (~get-thing-at-mouse-or-symbol)
-                   ;; No expression and there is secondary selection
-                   (~get-secondary-selection))))
-         (main-window (or (window-parameter (selected-window) :local/main-window)
+  (when (null expr)
+    (error "command-palette: No expression to execute"))
+  (let* ((main-window (or (window-parameter (selected-window) :local/main-window)
                           (selected-window)))
          (main-buffer (if (boundp 'local/main-buffer)
                           local/main-buffer
