@@ -623,7 +623,7 @@ the sequence, and its index within the sequence."
 ;;
 
 (require 'rmacs:config-module-command-palette)
-(setq command-palette:*default-content* "x x-buf x-win w/x buffers +tool +frame +bm ojo")
+(setq command-palette:*default-content* "save-cp buffers +tool +frame +bm ojo")
 (command-palette-mode 1)
 
 ;;
