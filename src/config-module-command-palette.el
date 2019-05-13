@@ -71,7 +71,7 @@
   #'wand:execute)
 
 (defvar command-palette:*default-content*
-  "x x-buf x-win w/x w/save"
+  ""
   "Default content for the command palette buffer, which is
   displayed from the second line onward.")
 
@@ -87,27 +87,6 @@
    (rx bol "*Blank*" eol)
    (rx bol "magit" (0+ any) eol))
   "")
-
-;; TODO: Takes all the functions out
-(defvar command-palette:*default-action-patterns*
-  (list (cons "x" #'delete-frame)
-        (cons "x-buf" #'(lambda ()
-                          (interactive)
-                          (kill-buffer local/main-buffer)))
-        (cons "x-win" #'(lambda ()
-                          (interactive)
-                          (let ((main-window (command-palette:get-main-window)))
-                            (with-selected-window main-window
-                              (~delete-window)))))
-        (cons "w/x" #'command-palette:kill-window-and-buffer)
-        (cons "w/save" #'command-palette:save-cp)
-        (cons "buffers" #'(lambda ()
-                            (interactive)
-                            (let ((main-buffer local/main-buffer)
-                                  (main-window (command-palette:get-main-window)))
-                              (with-current-buffer main-buffer
-                                (with-selected-window main-window
-                                  (call-interactively #'bl:show-buffer-chooser))))))))
 
 ;; TODO - Use the following to refactor other parts
 ;; (dolist (local-var-name '(local/buffer-features
@@ -439,7 +418,6 @@ shadowed when the call ends."
       (puthash (current-buffer) nil catching?-hash)
       result)))
 
-;; TODO: Local action should be handled by Wand
 (defun* command-palette:execute (&optional expr)
   "TODO"
   (interactive)
@@ -451,18 +429,14 @@ shadowed when the call ends."
          (main-buffer (if (boundp 'local/main-buffer)
                           local/main-buffer
                         (current-buffer)))
-         (local-action-fn (alist-get expr command-palette:*default-action-patterns*
-                                     nil nil #'string-equal))
          (dir default-directory))
-    (if (null local-action-fn)
-        (with-selected-window main-window
-          (with-current-buffer main-buffer
-            (unless (or (null expr) (string-empty-p expr))
-              (command-palette:call-with-current-dir
-               dir
-               #'(lambda ()
-                   (funcall command-palette:*exec-fn* expr))))))
-      (funcall local-action-fn))))
+    (with-selected-window main-window
+      (with-current-buffer main-buffer
+        (unless (or (null expr) (string-empty-p expr))
+          (command-palette:call-with-current-dir
+           dir
+           #'(lambda ()
+               (funcall command-palette:*exec-fn* expr))))))))
 
 (define-minor-mode command-palette-mode
   "Global mode for command palette feature."
