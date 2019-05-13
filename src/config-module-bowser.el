@@ -57,15 +57,17 @@
 
 (defun bowser:is-dir-expanded? (dir)
   "Checks if the current dir is expanded already."
-  (unless (local-variable-p 'local/bowser:dirs-expanded?)
-    (setq-local local/bowser:dirs-expanded? (make-hash-table :test #'equal)))
-  (gethash dir local/bowser:dirs-expanded?))
+  (let ((dir (file-name-as-directory dir)))
+    (unless (local-variable-p 'local/bowser:dirs-expanded?)
+      (setq-local local/bowser:dirs-expanded? (make-hash-table :test #'equal)))
+    (gethash dir local/bowser:dirs-expanded?)))
 
 (defun bowser:record-dir-expanded (dir expanded?)
   "Records that the current dir is either expanded or not."
-  (unless (local-variable-p 'local/bowser:dirs-expanded?)
-    (setq-local local/bowser:dirs-expanded? (make-hash-table :test #'equal)))
-  (puthash dir expanded? local/bowser:dirs-expanded?))
+  (let ((dir (file-name-as-directory dir)))
+    (unless (local-variable-p 'local/bowser:dirs-expanded?)
+      (setq-local local/bowser:dirs-expanded? (make-hash-table :test #'equal)))
+    (puthash dir expanded? local/bowser:dirs-expanded?)))
 
 (defun bowser:format-buffer-name (path)
   (format bowser:*buffer-name-format* path))
@@ -91,23 +93,24 @@
   "Constructs a find command that will be called to list
 directories (with `type' being `:dir') or files (with `type'
 equals `:file')."
-  (case type
-    (:dir
-     (format "%s %s -maxdepth %s -type d | sort -n"
-             (executable-find "find")
-             (shell-quote-argument dir)
-             (shell-quote-argument (number-to-string max-depth))))
-    (:file
-     (format "%s %s -maxdepth %s -not -type d | sort -n"
-             (executable-find "find")
-             (shell-quote-argument dir)
-             (shell-quote-argument (number-to-string max-depth))))
-    (t
-     (error "The :type argument must be `:dir or `:file'"))))
+  (let ((dir (file-name-as-directory dir)))
+    (case type
+      (:dir
+       (format "%s %s -maxdepth %s -type d | sort -n"
+               (executable-find "find")
+               (shell-quote-argument dir)
+               (shell-quote-argument (number-to-string max-depth))))
+      (:file
+       (format "%s %s -maxdepth %s -not -type d | sort -n"
+               (executable-find "find")
+               (shell-quote-argument dir)
+               (shell-quote-argument (number-to-string max-depth))))
+      (t
+       (error "The :type argument must be `:dir or `:file'")))))
 
 (defun* bowser:get-dir-paths (dir &key (max-depth 1))
   "Gets subdirectories under a path."
-  (let* ((dir (substitute-in-file-name (expand-file-name dir)))
+  (let* ((dir (file-name-as-directory (substitute-in-file-name (expand-file-name dir))))
          (find-command (bowser:construct-find-command dir
                                                       :max-depth max-depth
                                                       :type :dir)))
@@ -120,7 +123,7 @@ equals `:file')."
 
 (defun* bowser:get-file-paths (dir &key (max-depth 1))
   "Gets non-dir files under a path."
-  (let* ((dir (substitute-in-file-name (expand-file-name dir)))
+  (let* ((dir (file-name-as-directory (substitute-in-file-name (expand-file-name dir))))
          (find-command (bowser:construct-find-command dir
                                                       :max-depth max-depth
                                                       :type :file)))
@@ -138,7 +141,8 @@ will be expanded again.  Directories are inserted before non-dir
 files."
   (goto-char (point-at-bol))
   ;; (delete-region (point-at-bol) (point-at-eol))
-  (let ((padding (apply #'concat (make-list level bowser:*level-padding*))))
+  (let ((dir (file-name-as-directory dir))
+        (padding (apply #'concat (make-list level bowser:*level-padding*))))
     ;; Insert the corresponding subdirectories and expend them if needed
     (loop for path in (bowser:get-dir-paths dir :max-depth max-depth)
           do (progn
@@ -215,10 +219,11 @@ nothing and returns `nil'. "
   (interactive)
   (let* ((path (string-trim line)))
     (when (f-dir? path)
-      (save-excursion
-        (if (bowser:is-dir-expanded? path)
-            (bowser:collapse-dir-here)
-          (bowser:expand-dir-here)))
+      (let ((path (file-name-as-directory path)))
+       (save-excursion
+         (if (bowser:is-dir-expanded? path)
+             (bowser:collapse-dir-here)
+           (bowser:expand-dir-here))))
       path)))
 
 (defun bowser:perform-action-here ()
