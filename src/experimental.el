@@ -49,7 +49,8 @@
   (thread-last
       (replace-regexp-in-string "/home/hdn/Desktop/Data/Source" "/m/src" dir)
     (replace-regexp-in-string "/home/hdn/Desktop/Data/Source/toolbox" "/m/toolbox")))
-(advice-add #'file-truename :filter-return #'my/advice-preserve-directory-name)
+(advice-add 'file-truename :filter-return #'my/advice-preserve-directory-name)
+(advice-add 'projectile-project-root :filter-return #'my/advice-preserve-directory-name)
 
 ;;
 ;; Auto-compile Emacs Lisp unless already compiled
