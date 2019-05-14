@@ -27,6 +27,11 @@ Jekyll."
         (replace-match (format "last_updated: %s"
                                (string-trim (~exec "date -R")))))))
 
+(defun* ~visit-project-toolbox (&optional (file-name ".rmacs-toolbox"))
+  "Visits the current project's toolbox file."
+  (interactive)
+  (find-file (f-join (~current-project-root) file-name)))
+
 (defun* ~wmii/get-frame-id (&optional (frame (selected-frame)))
   "Gets the frame ID in Wmii-readable format."
   (thread-last (frame-parameter frame 'outer-window-id)

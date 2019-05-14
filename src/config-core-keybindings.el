@@ -134,7 +134,7 @@
   (~bind-key-with-prefix "b l" #'~show-buffer-chooser)
   (~bind-key-with-prefix "b p a" #'~append-pos-to-window-on-the-right)
 
-  ;; External commands
+  ;; Execution
   (bind-key "s-a" #'~exec|)
   (bind-key "s-A" #'~exec<)
   (bind-key "M-a" #'~exec>)
@@ -212,6 +212,7 @@
 
   (~bind-key-with-prefix "v i" #'~visit-init-bare)
   (~bind-key-with-prefix "v t" #'~visit-toolbox)
+  (~bind-key-with-prefix "v b" #'~visit-project-toolbox)
 
   ;;
   ;; Function keys & other convenient bindings
