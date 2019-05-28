@@ -768,7 +768,9 @@ corresponding frame is deleted."
     (with-current-buffer buffer
       (when content
         (~clean-up-buffer)
-        (insert content))
+        (insert content)
+        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        (bind-key "q" #'kill-current-buffer (current-local-map)))
 
       (switch-to-buffer-other-frame buffer)
       (setq-local default-directory working-dir)
@@ -792,7 +794,9 @@ the corresponding window is deleted."
     (with-current-buffer buffer
       (when content
         (~clean-up-buffer)
-        (insert content))
+        (insert content)
+        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        (bind-key "q" #'kill-current-buffer (current-local-map)))
 
       (split-window (selected-window) size 'left)
       (setq-local default-directory working-dir)
