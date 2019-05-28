@@ -42,18 +42,6 @@
   "Default path to Scratch directory.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Specialized Emacs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar *emacs-as-tool* nil
-  "Which shape Emacs is running as.")
-
-(defun ~emacs-as ()
-  "Returns `:mail', `:notes', ... or `nil' when Emacs is running
-as mail browser, note taker, or just Emacs the text editor."
-  *emacs-as-tool*)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -79,11 +67,11 @@ as mail browser, note taker, or just Emacs the text editor."
 (message "
 %s
 Invoke debugger when error: %s
-Emacs as: %s
+Server name: %s
 "
          (emacs-version)
          debug-on-error
-         (~emacs-as))
+         server-name)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; On to configuration
@@ -91,9 +79,8 @@ Emacs as: %s
 
 (add-to-list 'load-path *config-dir*)
 
-(unless (string= "1" (getenv "RMACS_NO_MACHINE_INIT"))
-  (~load-files "~/.emacs-machine-specific-init"
-               (~get-config "machine-specific-init")))
+(~load-files "~/.emacs-machine-specific-init"
+             (~get-config "machine-specific-init"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
