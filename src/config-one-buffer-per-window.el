@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -93,8 +93,8 @@ visible."
         (switch-to-buffer (~get-blank-buffer))
       buffer)))
 
-(advice-add 'switch-to-prev-buffer
-            :around #'~advice/switch-to-blank-when-buffer-is-visible)
+;; (advice-add 'switch-to-prev-buffer
+;;             :around #'~advice/switch-to-blank-when-buffer-is-visible)
 
 ;;
 ;; Filter out the blank buffer when calling buffer list.
