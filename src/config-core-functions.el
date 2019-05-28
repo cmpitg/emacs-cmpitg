@@ -1576,11 +1576,15 @@ environment variable."
                              ;; Output buffer name
                              command
 
-                             ;; Don't replace current region
+                             ;; Replace current region
                              t
 
                              ;; Error piped to output
-                             nil)))
+                             nil
+
+                             nil
+
+                             t)))
 
 (defun* ~exec-with-term-emu (command &key (term-emu "run-with-term-emu"))
   "Executes a command in a terminal emulator asynchronously."
