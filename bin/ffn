@@ -1,5 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env tclsh
 
-export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg}
+package require Tclx
 
-rmacs --client-opts "--alternate-editor=vim" --new-frame --shape edit open "$@"
+if {![info exists ::env(RMACS_INIT_DIR)]} {
+    set ::env(RMACS_INIT_DIR) {/m/src/emacs-cmpitg}
+}
+
+if {[llength $::argv] > 1 && [string match {*+*} [lindex $::argv 0]]} {
+    # Invoked with: ffn +<number> <path>
+    set number [string range [lindex $::argv 0] 1 end]
+    set rest [lrange $::argv 1 end]
+    execl rmacs [list --client-opts --alternate-editor=vim --new-frame --shape edit open "$rest:$number"]
+} else {
+    execl rmacs [list --client-opts --alternate-editor=vim --new-frame --shape edit open {*}$::argv]
+}
