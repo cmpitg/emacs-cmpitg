@@ -1341,6 +1341,11 @@ is popped up in a separate frame."
   (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
     (~execute text)))
 
+(defun* ~execute-line ()
+  "Executes current line with `~execute'."
+  (interactive)
+  (~execute (string-trim (thing-at-point 'line t))))
+
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
 returns it (assuming that it denotes a shell command); otherwise,
