@@ -624,7 +624,7 @@ the sequence, and its index within the sequence."
 
 (require 'rmacs:config-module-command-palette)
 (setq command-palette:*default-content* "save-cp buffers +tool +frame +bm ojo")
-(command-palette-mode 1)
+(command-palette-mode -1)
 
 ;;
 ;; HTTP request library
