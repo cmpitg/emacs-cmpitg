@@ -244,7 +244,7 @@
   (bind-key "<S-f10>" #'~counsel-ag-default-project-root)
   (bind-key "<f11>" #'counsel-yank-pop)
   (bind-key "<f12>" #'counsel-M-x)
-  (bind-key "<S-f12>" #'~toggle-toolbox)
+  (bind-key "<S-f12>" #'~toggle-project-toolbox)
 
   (bind-key "M-/" #'hippie-expand)
   (bind-key "M-ESC" #'~keyboard-quit)
