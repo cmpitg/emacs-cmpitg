@@ -1254,10 +1254,10 @@ rules are as follows:
       (and (region-active-p) (~current-selection))
       (~try-getting-current-thing)))
 
-(defun* ~execute (&optional thing
-                            &key
-                            (exec-fn #'command-palette:execute)
-                            (selection-fn #'~get-thing-to-execute-from-context))
+(defun* ~execute.old (&optional thing
+                                &key
+                                (exec-fn #'command-palette:execute)
+                                (selection-fn #'~get-thing-to-execute-from-context))
   "Executes a `thing' which is a piece of text or an sexp using
 `exec-fn'.  If `thing' is not provided, calls and takes the
 return value of `selection-fn' as `thing'.  If the current buffer
@@ -1294,6 +1294,38 @@ directory."
                         (if (consp thing)
                             (eval thing)
                           (funcall exec-fn thing)))))
+           (result-str (if (stringp result)
+                           result
+                         (format "%s" result))))
+      (when *~popup-exec-result?*
+        (~popup-buffer :content result-str
+                       :working-dir dir))
+      result)))
+
+(defun* ~execute (&optional thing
+                            &key
+                            (exec-fn #'wand:execute)
+                            (selection-fn #'~get-thing-to-execute-from-context))
+  "Executes a `thing' which is a piece of text or an sexp using
+`exec-fn'.  If `thing' is not provided, calls and takes the
+return value of `selection-fn' as `thing'.  If the current buffer
+is a command palette buffer, executes `thing' in the main buffer.
+
+When calling with `*~popup-exec-result?*' being `t', the result
+is popped up in a separate frame."
+  (interactive)
+  (defvar *~popup-exec-result?*
+    nil
+    "Determines whether or not result from an exec function
+    should be popped up (in a separate frame).")
+  (let* ((thing (if (null thing)
+                    (funcall selection-fn)
+                  thing)))
+    (when (null thing)
+      (error "Nothing to execute"))
+    (let* ((result (if (consp thing)
+                       (eval thing)
+                     (funcall exec-fn thing)))
            (result-str (if (stringp result)
                            result
                          (format "%s" result))))
