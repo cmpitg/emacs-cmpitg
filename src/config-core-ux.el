@@ -463,6 +463,13 @@ selection or end-of-defun."
                                  (end-of-defun)
                                  (point)))))
 
+(defun blink:display-value-at-end-of-selection-or-line (value)
+  "Displays `value' in an overlay at the end of the current
+selection or end-of-line."
+  (blink:display-value value (if (region-active-p)
+                                 (region-end)
+                               (point-at-eol))))
+
 (defun blink:display-value-at-end-of-sexp (value)
   "Displays `value' in an overlay at end of the current sexp."
   (blink:display-value-at-end-of-defun value (save-excursion
@@ -477,7 +484,8 @@ selection or end-of-defun."
   (advice-add '~eval-current-sexp :filter-return #'blink:display-value-at-end-of-sexp)
   (advice-add 'eval-region :filter-return #'blink:display-value-at-end-of-selection)
   (advice-add '~eval-region :filter-return #'blink:display-value-at-end-of-selection)
-  (advice-add '~execute :filter-return #'blink:display-value-at-end-of-selection-or-defun))
+  (advice-add '~execute :filter-return #'blink:display-value-at-end-of-selection-or-line)
+  (advice-add '~execute-line :filter-return #'blink:display-value-at-end-of-selection-or-line))
 
 (defun blink:disable ()
   (interactive)
@@ -487,7 +495,8 @@ selection or end-of-defun."
   (advice-remove '~eval-current-sexp #'blink:display-value-at-end-of-sexp)
   (advice-remove 'eval-region #'blink:display-value-at-end-of-selection)
   (advice-remove '~eval-region #'blink:display-value-at-end-of-selection)
-  (advice-remove '~execute #'blink:display-value-at-end-of-selection-or-defun))
+  (advice-remove '~execute #'blink:display-value-at-end-of-selection-or-line)
+  (advice-remove '~execute-line #'blink:display-value-at-end-of-selection-or-line))
 
 (blink:enable)
 ;; (blink:disable)
