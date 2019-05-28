@@ -108,7 +108,10 @@
 ;; Ref: https://github.com/jacktasia/dumb-jump
 ;;
 
-(use-package dumb-jump)
+(use-package dumb-jump
+  :config
+  (progn
+    (setq dumb-jump-selector 'ivy)))
 
 ;;
 ;; Asciidoc mode
