@@ -491,10 +491,10 @@ Returns the toolbox window."
         unless (window-dedicated-p window)
         count window))
 
-(defun* ~kill-buffer-and-window (&optional (buffer (current-buffer)))
+(defun* ~kill-buffer-and-window (&optional (window (selected-window)))
   "Kills the a buffer along with its window (if exists)."
   (interactive)
-  (unless (null buffer)
+  (with-selected-window window
     (if (= (~count-non-sticky-windows) 1)
         (kill-buffer)
       (kill-buffer-and-window))))
