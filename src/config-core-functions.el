@@ -437,11 +437,14 @@ buffer string as its only argument, will be called.
 on using the `path' argument.  The toolbox window is sticky,
 appears on the `side', and using `size' as its width.
 `follow-dir' determines whether or not the toolbox buffer
-inherits the working directory from the buffer that calls it."
+inherits the working directory from the buffer that calls it.
+Returns the toolbox window."
   (interactive)
-  (let ((toolbox-buffer-name (file-name-nondirectory path))
+  ;; TODO: Correctly get the buffer
+  (let ((toolbox-buffer (get-file-buffer path))
         (working-dir default-directory))
-    (if-let (window (get-buffer-window toolbox-buffer-name))
+    (if-let (window (and toolbox-buffer
+                         (get-buffer-window toolbox-buffer)))
         (delete-window window)
       (progn
         (split-window (selected-window) size side)
@@ -450,7 +453,8 @@ inherits the working directory from the buffer that calls it."
                 (pop-up-windows nil))
             (~smart-open-file path))
           (when follow-dir (setq-local default-directory working-dir))
-          (set-window-dedicated-p (selected-window) t))))))
+          (set-window-dedicated-p (selected-window) t)
+          (selected-window))))))
 
 (defun ~toggle-maximize-buffer ()
   "Toggles maximization of current buffer."
