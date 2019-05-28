@@ -27,10 +27,23 @@ Jekyll."
         (replace-match (format "last_updated: %s"
                                (string-trim (~exec "date -R")))))))
 
-(defun* ~visit-project-toolbox (&optional (file-name ".rmacs-toolbox"))
+(defun* ~get-project-toolbox-path (&key (dir (~current-project-root))
+                                        (file-name ".rmacs-toolbox"))
+  "Gets the path to the current project toolbox file."
+  (f-join dir file-name))
+
+(defun* ~visit-project-toolbox ()
   "Visits the current project's toolbox file."
   (interactive)
-  (find-file (f-join (~current-project-root) file-name)))
+  (find-file (~get-project-toolbox-path)))
+
+(defun* ~toggle-project-toolbox (&key (side 'right)
+                                      (size -78))
+  "Toggles display of the project toolbox file."
+  (interactive)
+  (let* ((project-toolbox-path (~get-project-toolbox-path))
+         (window (~toggle-toolbox :path project-toolbox-path)))
+    window))
 
 (defun* ~wmii/get-frame-id (&optional (frame (selected-frame)))
   "Gets the frame ID in Wmii-readable format."
