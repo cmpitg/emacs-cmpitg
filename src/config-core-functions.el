@@ -1346,6 +1346,27 @@ is popped up in a separate frame."
   (interactive)
   (~execute (string-trim (thing-at-point 'line t))))
 
+(with-eval-after-load "evil"
+  (defun* ~advice/evil-ret-execute (orig-fn &rest args)
+    "Prevents `evil-ret' in Evil normal-mode and visual-mode to
+move the cursor but rather to call `~execute'."
+    (interactive)
+    (require 'thingatpt)
+    (cond ((evil-visual-state-p)
+           (let ((thing (if (eq 'line (evil-visual-type))
+                            (string-trim-right (thing-at-point 'line))
+                          (~current-selection))))
+             (~execute thing)))
+          ((evil-normal-state-p)
+           (lexical-let* ((current-point (point))
+                          (res (apply orig-fn args)))
+             (unless (= current-point (point))
+               (goto-char current-point)
+               (setq res (call-interactively #'~execute)))
+             res))
+          (t
+           (apply orig-fn args)))))
+
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
 returns it (assuming that it denotes a shell command); otherwise,
