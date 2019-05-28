@@ -118,6 +118,8 @@ frame closes itself."
   (interactive)
   (with-current-buffer (rocket:show-command-runner)
     (setq-local local/delete-frame-on-close (selected-frame))
+    ;; (~wmii/set-frame-floating (selected-frame))
+    ;; (~center-frame 1200 700)
     (evil-define-key 'insert 'local (kbd "<S-return>") #'rocket:run-text-from-context-then-delete-frame)
     (evil-define-key 'normal 'local (kbd "<S-return>") #'rocket:run-text-from-context-then-delete-frame)))
 
