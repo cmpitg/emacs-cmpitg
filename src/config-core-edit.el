@@ -625,10 +625,27 @@ with prefix `s-SPC' at the same time."
               (t
                (wand:eval-string text)))))
 
+    (defun* ~exec|-with-cp (text)
+      "TODO"
+      (interactive)
+      (destructuring-bind (command . buffer)
+          (if (boundp 'local/cp-buffer)
+              (let ((cp-selection (with-current-buffer local/cp-buffer
+                                    (~current-selection))))
+                (if (or (string-empty-p cp-selection)
+                        (string-equal cp-selection text))
+                    (cons text (current-buffer))
+                  (cons cp-selection (current-buffer))))
+            (cons text (current-buffer)))
+        (with-current-buffer buffer
+          (~exec| command))))
+
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "|")
                                   :capture :after
-                                  :action #'~exec|)
+                                  :action #'~exec|
+                                  ;; :action #'~exec|-with-cp
+                                  )
                 (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
                                   :action #'~exec<)
