@@ -368,6 +368,7 @@
 ;; Ref: https://github.com/justbur/emacs-which-key
 (use-package which-key
   :diminish which-key-mode
+  :disabled t
   :config (progn
             (which-key-mode)
             (which-key-setup-side-window-right-bottom)))
