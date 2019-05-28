@@ -140,6 +140,7 @@
   (bind-key "M-a" #'~exec>)
   (bind-key "s-[" #'emamux:send-region)
   (bind-key "<s-return>" #'~execute)
+  (bind-key "<S-return>" #'~execute-line)
   (bind-key "<C-down-mouse-1>" nil)
   ;; (bind-key "<C-mouse-1>" #'~execute)
   (bind-key "<down-mouse-2>" nil)
@@ -196,7 +197,6 @@
 
   (bind-key "<C-return>"   #'~eval-last-sexp-or-region)
   (bind-key "<M-return>"   #'eval-defun)
-  (bind-key "<S-return>"   #'~eval-current-sexp)
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m" #'~eval-then-replace-region-or-last-sexp)
   (bind-key "s-#" #'eval-expression)
