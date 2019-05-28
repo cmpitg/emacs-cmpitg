@@ -64,15 +64,26 @@
             (scroll-restore-mode 1)))
 
 ;; Smooth scrolling
+
 ;; Ref: https://github.com/zk-phi/sublimity
 ;; Sublimity makes CPU scream
-(require 'sublimity-scroll)
-(setq sublimity-scroll-weight 10
-      sublimity-scroll-drift-length 6)
-(sublimity-mode 1)
+;; (require 'sublimity-scroll)
+;; (setq sublimity-scroll-weight 10
+;;       sublimity-scroll-drift-length 6)
+;; (sublimity-mode 1)
+
 ;; The smooth-scrolling makes cursor jump unexpectedly
 ;; (require 'smooth-scrolling)
 ;; (smooth-scrolling-mode 1)
+
+;; Ref: https://github.com/emacs-mirror/emacs/blob/master/lisp/pixel-scroll.el
+;; Ref: https://emacs.stackexchange.com/questions/10354/smooth-mouse-scroll-for-inline-images
+;; (require 'pixel-scroll)
+;; (pixel-scroll-mode -1)
+;; (pixel-scroll-mode 1)
+;; (setq pixel-dead-time 0)               ; Never go back to the old scrolling behaviour
+;; (setq pixel-resolution-fine-flag t)    ; Scroll by number of pixels instead of lines (t = frame-char-height pixels)
+;; (setq mouse-wheel-scroll-amount '(1))  ; Distance in pixel-resolution to scroll each mouse wheel event
 
 ;; Save and restore current editing point when opening a file
 (use-package saveplace
