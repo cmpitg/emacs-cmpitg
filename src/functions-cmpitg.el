@@ -42,7 +42,8 @@ Jekyll."
   "Toggles display of the project toolbox file."
   (interactive)
   (let* ((project-toolbox-path (~get-project-toolbox-path))
-         (window (~toggle-toolbox :path project-toolbox-path)))
+         (window (~toggle-toolbox :path project-toolbox-path
+                                  :follow-dir nil)))
     window))
 
 (defun* ~wmii/get-frame-id (&optional (frame (selected-frame)))
