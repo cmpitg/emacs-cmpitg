@@ -640,6 +640,12 @@ with prefix `s-SPC' at the same time."
         (with-current-buffer buffer
           (~exec| command))))
 
+    (defun* ~exec<-next-line (text)
+      (interactive)
+      (~open-line 1)
+      (beginning-of-line)
+      (~exec< text))
+
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "|")
                                   :capture :after
@@ -649,6 +655,9 @@ with prefix `s-SPC' at the same time."
                 (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
                                   :action #'~exec<)
+                (wand:create-rule :match (rx bol (0+ " ") "$")
+                                  :capture :after
+                                  :action #'~exec<-next-line)
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
                                   :action #'~exec>)
