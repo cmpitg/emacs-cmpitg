@@ -63,6 +63,14 @@ a new window or a new frame.  Possible values: `:window',
                       (~selection-end))
     ""))
 
+(defun ~activate-selection (pos-1 pos-2)
+  "Activates a selection, also visually, then leaves the point at
+`pos-2'."
+  (interactive)
+  (set-mark pos-1)
+  (goto-char pos-2)
+  (activate-mark))
+
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (activated with `M-Mouse-1' by
 default)."
