@@ -994,6 +994,16 @@ first occurrence of a pattern.  E.g.
   (interactive)
   (~smart-open-file *toolbox-path*))
 
+(defun ~copy-file-name-to-clipboard ()
+  "Copies current file/dir name to clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied '%s' to the clipboard." filename))))
+
 (defun ~parse-tramp-argument (connection-string)
   "Returns an alist with
 
