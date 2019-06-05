@@ -273,6 +273,19 @@ project root."
     (setq projectile-generic-command "find . -type f | grep -v -f <(grep . .projectile) | tr \"\\n\" \"\\0\"")))
 
 ;;
+;; Enhanced M-x
+;;
+;; Ref: https://github.com/DarwinAwardWinner/amx
+;;
+
+(use-package amx
+  :config
+  (progn
+    (amx-mode 1)
+    (setq amx-save-file (format "~/.emacs.d/amx-items.%s"
+                                (~emacs-server-name)))))
+
+;;
 ;; Smart completion framework
 ;;
 ;; Ref: https://github.com/abo-abo/swiper

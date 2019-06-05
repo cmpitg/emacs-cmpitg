@@ -54,6 +54,7 @@
                    embrace
                    flx
                    hydra
+                   amx
                    counsel
                    ivy
                    ivy-hydra
