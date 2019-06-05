@@ -1499,6 +1499,10 @@ command, if `stdin' is:
 
                                         ;; Error piped to output
                                         nil))
+             (save-mark-and-excursion
+               (with-current-buffer command
+                 (ansi-color-apply-on-region (point-min)
+                                             (point-max))))
              (~get-buffer-content command))
     (stdin-value (let ((inhibit-message t))
                    (with-temp-buffer
@@ -1515,6 +1519,10 @@ command, if `stdin' is:
 
                                               ;; Error piped to output
                                               nil)))
+                 (save-mark-and-excursion
+                   (with-current-buffer command
+                     (ansi-color-apply-on-region (point-min)
+                                                 (point-max))))
                  (~get-buffer-content command))))
 
 (defun* ~exec-pop-up (command)
@@ -1554,7 +1562,10 @@ by the `SHELL' environment variable."
                                    (delete-region (region-beginning)
                                                   (region-end)))
                                  (push-mark)
-                                 (insert output))))
+                                 (insert output)
+                                 (save-mark-and-excursion
+                                   (ansi-color-apply-on-region (region-beginning)
+                                                               (region-end))))))
                          "-c"
                          actual-command)))
 
@@ -1577,6 +1588,10 @@ shell which is determined by the `SHELL' environment variable."
 
                                     ;; Error piped to output
                                     nil))
+    (save-mark-and-excursion
+      (with-current-buffer command
+        (ansi-color-apply-on-region (point-min)
+                                    (point-max))))
     (~popup-buffer :buffer command)))
 
 (defun ~exec| (&optional command)
