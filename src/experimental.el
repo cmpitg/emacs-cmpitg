@@ -27,7 +27,7 @@
 (defalias '+row #'split-window-vertically)
 (defalias '+buf #'~new-buffer)
 (defalias '+frame #'make-frame)
-(defalias '+tool #'~toggle-toolbox)
+(defalias '+-tool #'~toggle-project-toolbox)
 (defalias '+bm #'~append-pos-to-window-on-the-right)
 (defalias '-buf #'kill-this-buffer)
 (defalias '-window #'~delete-window)
