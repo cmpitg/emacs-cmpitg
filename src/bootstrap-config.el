@@ -23,6 +23,8 @@
     (setq debug-on-error t)
   (setq debug-on-error nil))
 
+(setq init-file-user (user-login-name))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Important global values
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -66,12 +68,14 @@
 
 (message "
 %s
-Invoke debugger when error: %s
-Server name: %s
+Invoke debugger when error: debug-on-error=%s
+Server name: serser-name=%s
+Init file user: init-file-user=%s
 "
          (emacs-version)
          debug-on-error
-         server-name)
+         server-name
+         init-file-user)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; On to configuration
