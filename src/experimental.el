@@ -116,8 +116,8 @@ line in Eshell."
 
 (bind-key "<M-insert>" '~eshell-current-project-dir)
 
-(setq eshell-prompt-function #'~my/eshell-prompt-function)
-(setq eshell-prompt-regexp (rx bol (or "#" "$") " "))
+;; (setq eshell-prompt-function #'~my/eshell-prompt-function)
+;; (setq eshell-prompt-regexp (rx bol (or "#" "$") " "))
 ;; (setq eshell-prompt-regexp "")
 (add-hook 'eshell-mode-hook
           #'(lambda ()
