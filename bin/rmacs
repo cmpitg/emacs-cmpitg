@@ -1,6 +1,7 @@
 #!/usr/bin/env expect
 
 package require Tcl 8
+package require Tclx
 package require cmdline
 
 try {
