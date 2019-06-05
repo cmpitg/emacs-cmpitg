@@ -61,6 +61,8 @@
   (bind-key "C-," #'point-pos-next)
   (bind-key "C-;" #'point-pos-previous)
   (bind-key "<M-f2>" #'point-pos-goto)
+  (~bind-key-with-prefix "j" #'ace-jump-mode)
+
 
   ;; Deletion
   (bind-key "s-u" #'delete-char)
