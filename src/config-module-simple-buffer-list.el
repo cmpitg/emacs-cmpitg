@@ -43,13 +43,18 @@ denoted by current text field at the current cursor."
 (defun bl:show-buffer-chooser ()
   "Shows the buffer chooser."
   (interactive)
-  (let ((buffer-list (iflipb-interesting-buffers))
+  (let ((buffers (let ((res (iflipb-interesting-buffers)))
+                   (concatenate 'list
+                                res
+                                (loop for b in (buffer-list)
+                                      unless (member b res)
+                                      collect b))))
         (buffer-index iflipb-current-buffer-index)
         (current-buffer (get-buffer-create "*buffer-list*")))
     (with-current-buffer current-buffer
       (~clean-up-buffer)
 
-      (dolist (buffer buffer-list)
+      (dolist (buffer buffers)
         (let ((name (buffer-name buffer))
               (path (if (buffer-file-name buffer)
                         (buffer-file-name buffer)
