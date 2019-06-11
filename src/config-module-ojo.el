@@ -22,6 +22,8 @@
 ;;
 ;; TODO: Documentation
 ;;
+;; TODO: Bug with Cider -> Cider doesn't return the eval result
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Variables & parameters
@@ -31,7 +33,7 @@
   "Determining if the result of an `eval' function should be
 inserted back to the current buffer after current point.")
 
-(defvar ojo:*result-length-threshold* 200
+(defvar ojo:*result-length-threshold* 2000
   "The maximum number of characters under which the eval result
 stays as-is when inserted back to the buffer.  If the number of
 characters exceeds this threshold, insert an elipsis.")
@@ -157,7 +159,6 @@ effectively buffers that have enabled the feature previously."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setting up & tearing down
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (defun ojo:enable ()
   "Enables the insertion of eval result."
