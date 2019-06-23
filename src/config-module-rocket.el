@@ -33,7 +33,7 @@
   (expand-file-name "~/.local/rmacs.rocket-history"))
 
 (defvar rocket:*default-exec-prefix*
-  "!!!")
+  "!@")
 
 (defvar rocket:*history-max*
   256)
