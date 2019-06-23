@@ -120,6 +120,7 @@
                    cider
                    scss-mode
                    js2-mode
+                   tide
                    ruby-mode
                    ruby-dev
                    toml-mode

@@ -363,6 +363,24 @@
          ("\\.jsx?\\'" . js2-jsx-mode))
   :interpreter "node")
 
+(use-package tide
+  :after (flycheck company)
+  :config
+  (progn
+    (defun my/setup-javascript-dev ()
+      (interactive)
+      (tide-setup)
+      (eldoc-mode 1)
+      (flycheck-mode 1)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+      (tide-hl-identifier-mode 1))
+    
+    (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+    
+    (add-hook 'js2-mode-hook #'my/setup-javascript-dev)
+    (add-hook 'js2-jsx-mode-hook #'my/setup-javascript-dev)
+    (add-hook 'typescript-mode-hook #'my/setup-javascript-dev)))
+
 ;;
 ;; Ruby development
 ;;
