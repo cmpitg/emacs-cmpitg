@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: var req = require(path-to-req-module)
-# key: req
+# name: require module
+# key: ;req
 # group: js-mode
 # --
-var ${1:$(~jsify-var yas-text)} = require("$1");
+require($1);$0

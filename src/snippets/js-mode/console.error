@@ -3,4 +3,4 @@
 # key: ;err
 # group: js-mode
 # --
-console.error($1);$0
+console.error($1)$0
