@@ -621,6 +621,15 @@ the sequence, and its index within the sequence."
     (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
 
 ;;
+;; Zig mode
+;;
+;; Ref: https://github.com/ziglang/zig-mode
+;;
+
+(use-package zig-mode
+  :mode (("\\.zig\\'" . zig-mode)))
+
+;;
 ;; Language server mode
 ;;
 ;; Ref: https://github.com/joaotavora/eglot

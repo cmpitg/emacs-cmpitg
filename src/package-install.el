@@ -121,6 +121,7 @@
                    scss-mode
                    js2-mode
                    tide
+                   zig-mode
                    ruby-mode
                    ruby-dev
                    toml-mode
