@@ -166,8 +166,11 @@ proc rmacsStart {name emacsAs shapeInitPath init bgDaemon verbose} {
 	if {$verbose} {
 		puts "Server command: $cmd"
 	}
-	# return [interact [spawn -noecho {*}$cmd]]
-	return [exec {*}$cmd <@ stdin >@ stdout 2>@ stderr]
+	if {$bgDaemon} {
+		return [exec {*}$cmd <@ stdin >@ stdout 2>@ stderr]
+	} else {
+		execl [lindex $cmd 0] [lrange $cmd 1 end]
+	}
 }
 
 proc rmacsEval {name clientOpts argList verbose} {
