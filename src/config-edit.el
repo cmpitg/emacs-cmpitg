@@ -630,6 +630,19 @@ the sequence, and its index within the sequence."
   :mode (("\\.zig\\'" . zig-mode)))
 
 ;;
+;; Tcl mode
+;;
+
+(use-package tcl
+  :init
+  (progn
+    (defvar *~tcl-version* "8.7")
+    (defun* ~tcl/browse-doc (&optional (version *~tcl-version*))
+      "Browses Tcl documentation."
+      (interactive)
+      (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))))
+
+;;
 ;; Language server mode
 ;;
 ;; Ref: https://github.com/joaotavora/eglot
