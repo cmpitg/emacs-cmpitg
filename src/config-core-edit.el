@@ -121,6 +121,7 @@
 
 (use-package adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode)
+  :after (evil)
   :config
   (progn
     (defun ~asciidoc/render (html-path)
