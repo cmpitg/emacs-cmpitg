@@ -1619,7 +1619,7 @@ environment variable."
 
                              t)))
 
-(defun* ~exec-with-term-emu (command &key (term-emu "run-with-term-emu"))
+(defun* ~exec-with-term-emu (command &key (term-emu "with-term-emu"))
   "Executes a command in a terminal emulator asynchronously."
   (interactive "MCommand: ")
   (let ((process-name (format "term-emu:%s" command)))
@@ -1631,9 +1631,9 @@ environment variable."
 (defun* ~exec-with-term-emu-detach (command)
   "Executes and detachs a command in a terminal emulator asynchronously."
   (interactive "MCommand: ")
-  (~exec-with-term-emu command :term-emu "run-with-term-emu-detach"))
+  (~exec-with-term-emu command :term-emu "with-term-emu-detach"))
 
-(defun* ~exec-with-pause-in-term-emu (command &key (term-emu "run-with-term-emu"))
+(defun* ~exec-with-pause-in-term-emu (command &key (term-emu "with-term-emu"))
   "Executes a command in a terminal emulator asynchronously and
 pauses after the execution."
   (interactive "MCommand: ")
