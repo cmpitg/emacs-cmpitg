@@ -26,6 +26,8 @@
 (require 'rmacs:config-package-manager
          (package-install:get-config "config-package-manager"))
 
+(package-refresh-contents)
+
 ;; (el-get-install 'acme-mouse)
 ;; (el-get-install 'mu4e)
 
