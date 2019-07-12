@@ -241,7 +241,11 @@
 ;; Ref: https://github.com/joaotavora/sly
 ;;
 
-
+(use-package sly
+  :commands common-lisp-mode
+  :config
+  (progn
+    (setq inferior-lisp-program *sbcl-bin-path*)))
 
 ;;
 ;; Ref: https://github.com/slime/slime
@@ -249,6 +253,7 @@
 
 (use-package slime
   :commands common-lisp-mode
+  :disabled t
   :config
   (progn
     (defun ~slime-connect-default ()
@@ -276,6 +281,7 @@
 ;; Ref: https://github.com/anwyn/slime-company
 (use-package slime-company
   :after (slime company)
+  :disabled t
   :config
   (progn
     (slime-setup '(slime-fancy slime-company))

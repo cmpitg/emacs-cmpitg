@@ -107,6 +107,7 @@
                    nginx-mode
                    coffee-mode
                    go-mode
+                   sly
                    slime
                    slime-company
                    erlang
