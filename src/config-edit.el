@@ -236,6 +236,14 @@
 ;;
 ;; Common Lisp development
 ;;
+
+;;
+;; Ref: https://github.com/joaotavora/sly
+;;
+
+
+
+;;
 ;; Ref: https://github.com/slime/slime
 ;;
 
@@ -280,7 +288,7 @@
 ;; Erlang & Elixir
 ;;
 
-;; Ref: https://github.com/joaotavora/sly
+;; Ref: https://github.com/tonini/alchemist.el
 (use-package alchemist
   :mode (("\\.ex$"  . alchemist-mode)
          ("\\.exs$" . alchemist-mode))
