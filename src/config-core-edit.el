@@ -768,6 +768,9 @@ with prefix `s-SPC' at the same time."
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-frame-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-window-on-close . t))
+(add-to-list 'safe-local-variable-values '(eval modify-syntax-entry 43 "'"))
+(add-to-list 'safe-local-variable-values '(eval modify-syntax-entry 36 "'"))
+(add-to-list 'safe-local-variable-values '(eval modify-syntax-entry 126 "'"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
