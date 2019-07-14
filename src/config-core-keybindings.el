@@ -173,6 +173,10 @@
   (~bind-key-with-prefix "w s" #'ace-swap-window)
   (~bind-key-with-prefix "w o" #'~one-window)
   (~bind-key-with-prefix "w t" #'~transpose-windows)
+  (bind-key "<M-left>" #'windmove-left)
+  (bind-key "<M-right>" #'windmove-right)
+  (bind-key "<M-up>" #'windmove-up)
+  (bind-key "<M-down>" #'windmove-down)
 
   (~bind-key-with-prefix "r" #'resize-window)
 
