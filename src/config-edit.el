@@ -245,7 +245,10 @@
   :commands common-lisp-mode
   :config
   (progn
-    (setq inferior-lisp-program *sbcl-bin-path*)))
+    (setq inferior-lisp-program *sbcl-bin-path*)
+
+    (bind-key "<C-return>" #'sly-eval-last-expression  sly-mode-map)
+    (bind-key "<M-return>" #'sly-eval-defun            sly-mode-map)))
 
 ;;
 ;; Ref: https://github.com/slime/slime
@@ -388,9 +391,9 @@
       (flycheck-mode 1)
       (setq flycheck-check-syntax-automatically '(save mode-enabled))
       (tide-hl-identifier-mode 1))
-    
+
     (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
-    
+
     (add-hook 'js2-mode-hook #'my/setup-javascript-dev)
     (add-hook 'js2-jsx-mode-hook #'my/setup-javascript-dev)
     (add-hook 'typescript-mode-hook #'my/setup-javascript-dev)))
