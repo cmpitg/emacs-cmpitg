@@ -60,9 +60,11 @@ denoted by current text field at the current cursor."
                         (buffer-file-name buffer)
                       "")))
           (insert (propertize (format "%-60s" name)
-                              'field name)
-                  (propertize path
-                              'field (s-concat "path-" name)))
+                              'field name
+                              'help-echo path)
+                  ;; (propertize path
+                  ;;             'field (s-concat "path-" name))
+                  )
           (newline)))
 
       (goto-line buffer-index)
