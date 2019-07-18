@@ -151,7 +151,7 @@
   (bind-key "<C-down-mouse-3>" #'~popup-right-click-menu)
   (bind-key "<f1>" #'~firefox)
   ;; Return in Evil executes commands based on context
-  (advice-add 'evil-ret :around #'~advice/evil-ret-execute)
+  ;; (advice-add 'evil-ret :around #'~advice/evil-ret-execute)
 
   ;; Semantic editting
   (bind-key "s-\\" #'counsel-imenu)
