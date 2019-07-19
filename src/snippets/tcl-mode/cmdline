@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: ;cmdline
+# key: ;cmdline
+# --
+try {
+    array set cmdArgs [::cmdline::getoptions ::argv {
+        {<arg>.arg "<default-value>" "<help-text>"}
+    } {<help text>}]} trap {CMDLINE USAGE} {msg _o} {
+    if {[llength $::argv] == 0} {
+        puts $msg
+        exit 0
+    } else {
+        puts stderr $msg
+        exit 1
+    }
+}
