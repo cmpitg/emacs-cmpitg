@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: bang-line
+# key: ;bang
+# --
+#!/usr/bin/env ${1:tclsh}
