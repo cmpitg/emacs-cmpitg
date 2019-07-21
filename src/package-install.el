@@ -43,6 +43,7 @@
                    ibuffer-sidebar
                    diminish
                    use-package
+                   lua-mode
                    ht
                    dash
                    which-key
@@ -108,8 +109,8 @@
                    coffee-mode
                    go-mode
                    sly
-                   slime
-                   slime-company
+                   ;; slime
+                   ;; slime-company
                    erlang
                    edts
                    elixir-mode

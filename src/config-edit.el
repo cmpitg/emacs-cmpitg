@@ -234,6 +234,14 @@
   (custom-set-variables '(coffee-tab-width 2)))
 
 ;;
+;; Lua mode
+;;
+;; Ref: https://github.com/immerrr/lua-mode
+;;
+
+(use-package lua-mode)
+
+;;
 ;; Common Lisp development
 ;;
 
