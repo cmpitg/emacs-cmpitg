@@ -30,7 +30,7 @@
   "*command-executor*")
 
 (defvar rocket:*history-path*
-  (expand-file-name "~/.local/rmacs.rocket-history"))
+  (expand-file-name "~/.local/app-runner-history"))
 
 (defvar rocket:*default-exec-prefix*
   "!@")
