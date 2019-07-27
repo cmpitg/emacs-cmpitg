@@ -239,7 +239,11 @@
 ;; Ref: https://github.com/immerrr/lua-mode
 ;;
 
-(use-package lua-mode)
+(use-package lua-mode
+  :config
+  (progn
+    ;; Freaking stupid indentation rule...
+    (setq lua-indent-level 2)))
 
 ;;
 ;; Common Lisp development
