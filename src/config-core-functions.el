@@ -764,6 +764,15 @@ reference."
         (emacs-lisp-docstring-fill-column t))
     (fill-paragraph nil region)))
 
+;; TODO: Thinking
+(defun* ~setup-temp-buffer (&optional (buffer (current-buffer)))
+  "Sets up a temporary buffer."
+  (interactive)
+  (with-current-buffer buffer
+    (when evil-mode
+      (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer))
+    (bind-key "q" #'kill-current-buffer (current-local-map))))
+
 (defun* ~popup-buffer-frame (&key (buffer "*Temp*")
                                   content
                                   working-dir)
@@ -1201,6 +1210,12 @@ fallback to current directory if project root is not found."
 ;;
 ;; Emacs Lisp
 ;;
+
+(defun ~ansi-colorize-region ()
+  "Colorizes a region."
+  (interactive)
+  (ansi-color-apply-on-region (region-beginning)
+                              (region-end)))
 
 (defun ~eval-string (str)
   "Evals a string."
