@@ -17,8 +17,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; TODO: rmacs --debug-on-error
-;; TODO: tmux integration with emamux
 ;; TODO: https://github.com/tjarvstrand/edts and Erlang integration
 ;; TODO: https://wiki.haskell.org/Emacs#Scion for Haskell integration
 
