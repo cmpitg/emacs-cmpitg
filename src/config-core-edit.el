@@ -95,17 +95,6 @@
 (use-package expand-region)
 
 ;;
-;; Just-work jump-to-definition
-;;
-;; Ref: https://github.com/jacktasia/dumb-jump
-;;
-
-(use-package dumb-jump
-  :config
-  (progn
-    (setq dumb-jump-selector 'ivy)))
-
-;;
 ;; Asciidoc mode
 ;;
 ;; Ref: https://github.com/sensorflo/adoc-mode

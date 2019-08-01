@@ -52,6 +52,17 @@
 (use-package embrace)
 
 ;;
+;; Just-work jump-to-definition
+;;
+;; Ref: https://github.com/jacktasia/dumb-jump
+;;
+
+(use-package dumb-jump
+  :config
+  (progn
+    (setq dumb-jump-selector 'ivy)))
+
+;;
 ;; File explorer and sidebar
 ;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs
