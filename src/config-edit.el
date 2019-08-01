@@ -121,6 +121,13 @@
               (ignore-errors
                 (loop do (paredit-forward-up))))))
 
+(use-package evil-paredit
+  :after (evil paredil)
+  :hook ((emacs-lisp-mode
+          lisp-mode
+          clojure-mode
+          scheme-mode) . evil-paredit-mode))
+
 ;;
 ;; Tmux interaction
 ;;

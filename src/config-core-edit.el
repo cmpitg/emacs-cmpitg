@@ -492,12 +492,6 @@ with prefix `s-SPC' at the same time."
   :init (progn
           (global-evil-visualstar-mode)
           (setq evil-visualstar/persistent nil)))
-(use-package evil-paredit
-  :after (evil)
-  :hook ((emacs-lisp-mode
-          lisp-mode
-          clojure-mode
-          scheme-mode) . evil-paredit-mode))
 
 ;;
 ;; Version control systems: Mercurial and Git
