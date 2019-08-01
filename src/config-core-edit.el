@@ -660,17 +660,6 @@ with prefix `s-SPC' at the same time."
 
 (use-package man)
 
-;;
-;; Better way to switch to and swap windows
-;;
-;; Ref: https://github.com/abo-abo/ace-window
-;;
-
-(use-package ace-window
-  :init (progn
-          (setq aw-dispatch-alway t)
-          (setq aw-keys '(?a ?h ?t ?s ?g ?r ?p ?l ?, ?. ?p))))
-
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-frame-on-close . t))

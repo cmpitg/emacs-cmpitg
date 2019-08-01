@@ -66,7 +66,7 @@
                    async
                    timp
                    guix
-                   ace-window
+                   ;; ace-window
                    ace-jump-buffer
                    ace-jump-mode
                    multiple-cursors
