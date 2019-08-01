@@ -501,24 +501,24 @@ selection or end-of-line."
 (blink:enable)
 ;; (blink:disable)
 
-;; Buffer list sidebar
-;; Ref: https://github.com/jojojames/ibuffer-sidebar
-(use-package ibuffer-sidebar
-  :bind (("<C-f8>" . ibuffer-sidebar-toggle-sidebar)
-         :map ibuffer-name-map
-         ("<double-mouse-1>" . ibuffer-visit-buffer))
-  :commands (ibuffer-sidebar-toggle-sidebar)
-  :config
-  (progn
-    (setq ibuffer-sidebar-use-custom-font t)
-    (setq ibuffer-sidebar-display-alist '((side . right) (slot . 1)))))
+;; ;; Buffer list sidebar
+;; ;; Ref: https://github.com/jojojames/ibuffer-sidebar
+;; (use-package ibuffer-sidebar
+;;   :bind (("<C-f8>" . ibuffer-sidebar-toggle-sidebar)
+;;          :map ibuffer-name-map
+;;          ("<double-mouse-1>" . ibuffer-visit-buffer))
+;;   :commands (ibuffer-sidebar-toggle-sidebar)
+;;   :config
+;;   (progn
+;;     (setq ibuffer-sidebar-use-custom-font t)
+;;     (setq ibuffer-sidebar-display-alist '((side . right) (slot . 1)))))
 
-;; Convenient display of buffer list, helpful when using mouse
-(setq ibuffer-formats '((mark modified read-only locked
-                              " "
-                              (name 50 -1 :left :elide)
-                              " "
-                              filename-and-process)))
+;; ;; Convenient display of buffer list, helpful when using mouse
+;; (setq ibuffer-formats '((mark modified read-only locked
+;;                               " "
+;;                               (name 50 -1 :left :elide)
+;;                               " "
+;;                               filename-and-process)))
 
 ;; Resize window
 ;; Ref: https://github.com/dpsutton/resize-window
