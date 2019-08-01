@@ -44,6 +44,14 @@
   :mode "\\.toml\\'")
 
 ;;
+;; Pairs management
+;;
+;; Ref: https://github.com/cute-jumper/embrace.el
+;;
+
+(use-package embrace)
+
+;;
 ;; File explorer and sidebar
 ;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs
