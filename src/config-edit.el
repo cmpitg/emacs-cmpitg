@@ -63,6 +63,65 @@
     (setq dumb-jump-selector 'ivy)))
 
 ;;
+;; Bracket-based structured editing
+;;
+;; Ref: https://www.emacswiki.org/emacs/ParEdit
+;;
+
+(use-package paredit
+  :hook ((emacs-lisp-mode
+          scheme-mode
+          common-lisp-mode
+          lisp-mode
+          clojure-mode) . paredit-mode)
+  :bind (:map paredit-mode-map
+         ("s-." . paredit-backward-kill-word)
+         ("s-p" . paredit-forward-kill-word)
+         ("s-r" . forward-word)
+         ("s-g" . backward-word)
+         ("s-C" . paredit-backward-up)
+         ("s-T" . paredit-forward-up)
+         ("s-R" . paredit-forward)
+         ("s-G" . paredit-backward))
+  :defines slime-repl-mode-map
+  :config (progn
+            ;; Always try to delete region first
+            (put 'paredit-forward-delete 'delete-selection 'supersede)
+            (put 'paredit-backward-delete 'delete-selection 'supersede)
+
+            (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
+              (when (apply orig-fun args)
+                (when (fboundp 'autopair-mode)
+                  (autopair-mode -1))
+                (when (fboundp 'smartparens-mode)
+                  (smartparens-mode -1))))
+            (advice-add 'paredit-mode
+                        :around #'~advice/disable-other-parens-modes-in-paredit)
+
+            ;; Use in minibuffer
+            (defun conditionally-enable-paredit-mode ()
+              "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
+              (if (eq this-command 'eval-expression)
+                  (paredit-mode 1)))
+            (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
+
+            ;; Use with SLIME REPL
+            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+
+            ;; Stop SLIME's REPL from grabbing DEL,
+            ;; which is annoying when backspacing over a '('
+            (defun override-slime-repl-bindings-with-paredit ()
+              (define-key slime-repl-mode-map
+                (read-kbd-macro paredit-backward-delete-key) nil))
+            (add-hook 'slime-repl-mode-hook
+                      #'override-slime-repl-bindings-with-paredit)
+
+            (defun ~paredit-up-all ()
+              (interactive)
+              (ignore-errors
+                (loop do (paredit-forward-up))))))
+
+;;
 ;; File explorer and sidebar
 ;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs
