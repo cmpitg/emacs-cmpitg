@@ -411,15 +411,6 @@ with prefix `s-SPC' at the same time."
   :config (dtrt-indent-mode 1))
 
 ;;
-;; Tmux interaction
-;;
-;; https://github.com/syohex/emacs-emamux
-;;
-
-(use-package emamux
-  :commands (emamux:send-command emamux:send-region))
-
-;;
 ;; Vim mode
 ;;
 ;; Ref: https://github.com/emacs-evil/evil
