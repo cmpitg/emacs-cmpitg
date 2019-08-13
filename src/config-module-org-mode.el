@@ -26,6 +26,9 @@
   :demand t
   :config
   (progn
+    (defun ~my/org-mode-setup ()
+      (font-lock-mode 1))
+
     ;; Add timestamp when an item is done
     (setq org-log-done 'time)
 
@@ -36,6 +39,8 @@
     ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
     ;; Of per file: #+STARTUP: showeverything
     (setq org-startup-folded nil)
+
+    (add-hook 'org-mode-hook #'~my/org-mode-setup)
 
     (with-eval-after-load "evil"
       (~bind-key-with-prefix "o a" #'org-agenda))))
