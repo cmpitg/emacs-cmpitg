@@ -1,7 +1,7 @@
-;; -*- no-byte-compile: t -*-
+;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,15 +17,14 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; Load init-basic
-(load (concat (file-name-directory (or (buffer-file-name)
-                                       load-file-name))
-              "init-bare"))
+;; Managing recent files
+(use-package recentf
+  :init (progn
+          (recentf-mode 1)
+          (setq recentf-max-menu-items 128)))
 
-(unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
-  (~load-files (~get-config "experimental")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Load machine-specific settings if existed
-(~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
+(message "Finished configuring core components (load last)")
 
-(message "Finish loading minimal functionalities")
+(provide 'rmacs:config-core-last)

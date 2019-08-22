@@ -358,12 +358,6 @@
     (setq mode-line-format ~mode-line-format)))
 (add-to-list 'after-make-frame-functions #'~format-mode-line-for-frame)
 
-;; Managing recent files
-(use-package recentf
-  :init (progn
-          (recentf-mode 1)
-          (setq recentf-max-menu-items 128)))
-
 ;; Displaying available keybindings in pop up
 ;; Ref: https://github.com/justbur/emacs-which-key
 (use-package which-key

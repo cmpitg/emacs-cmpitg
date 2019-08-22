@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -34,5 +34,7 @@
 
 ;; Machine/user-specific config
 (~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
+
+(require 'rmacs:config-core-last "config-core-last")
 
 (message "Finish loading Rmacs edit!")
