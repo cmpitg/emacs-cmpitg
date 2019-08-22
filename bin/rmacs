@@ -22,7 +22,6 @@ Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized to
   minimal :: General text editing framework
   utils   :: Utility framework
   edit    :: Text editor
-  note    :: Note taker
 
 After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
 
@@ -51,9 +50,6 @@ Examples:
 
   rmacs --shape edit start
 	Starts an Rmacs text editor server on the foreground, server is named 'edit'.
-
-  rmacs --shape note open
-	Runs Rmacs as note taker, server is named 'note'.
 
   rmacs --shape minimal open
 	Runs Rmacs as a general, "minimal" text editor; server is named 'minimal'.
@@ -89,7 +85,7 @@ if {$cmdArgs(verbose)} {
 # Constants
 ##############################################################################
 
-set ALLOWED_SHAPES {minimal edit note utils}
+set ALLOWED_SHAPES {minimal edit utils}
 
 ##############################################################################
 # Helpers
