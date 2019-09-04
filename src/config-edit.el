@@ -618,6 +618,16 @@
 (use-package clojure-mode
   :mode "\\.clj\\'")
 
+(use-package flycheck-clj-kondo
+  :init
+  (progn
+    (defun my/enable-clj-syntax-check ()
+      "Enables syntax check for Clojure."
+      (interactive)
+      (flycheck-mode 1))
+
+    (add-hook 'clojure-mode-hook #'my/enable-clj-syntax-check)))
+
 (use-package cider
   :after clojure-mode
   :init

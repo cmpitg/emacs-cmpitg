@@ -119,6 +119,7 @@
                    groovy-mode
                    clojure-mode
                    clojurescript-mode
+                   flycheck-clj-kondo
                    midje-mode
                    clj-refactor
                    cider
