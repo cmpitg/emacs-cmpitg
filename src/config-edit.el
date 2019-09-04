@@ -106,7 +106,7 @@
             (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
 
             ;; Use with SLIME REPL
-            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode 1)))
 
             ;; Stop SLIME's REPL from grabbing DEL,
             ;; which is annoying when backspacing over a '('
