@@ -62,14 +62,14 @@
 ;; TODO: Think about how testing should work
 ;; TODO: config-literate-programming's TODOs
 
+;; Make GC aware that we have a lot of memory
+(setq gc-cons-threshold (* 100 1024 1024))
+
 (defvar *bootstrap-config-path*
   (concat (file-name-directory (or (buffer-file-name)
                                    load-file-name))
           "bootstrap-config.el")
   "Path to the Rmacs boostrap-config file.")
-
-;; Make GC aware that we have a lot of memory
-(setq gc-cons-threshold (* 100 1024 1024))
 
 ;; Speed up Emacs startup by ignoring all file name handlers.  Ref:
 ;; https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
