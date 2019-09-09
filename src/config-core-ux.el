@@ -375,6 +375,7 @@
 ;; Soft-wrapping long lines
 ;; Ref: https://github.com/joostkremers/visual-fill-column
 (use-package visual-fill-column
+  :commands ~turn-on-soft-wrapping
   :init (progn
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
 
@@ -419,9 +420,9 @@
 ;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
 ;; TODO - Clean up the following code
 
-(require 'cider)
+;; (require 'cider)
 
-(autoload 'cider--make-result-overlay "cider-overlays")
+;; (autoload 'cider--make-result-overlay "cider-overlays")
 
 (defun blink:display-value (value point)
   "Displays a value in an overlay at a point."
@@ -517,7 +518,6 @@ selection or end-of-line."
 ;; Resize window
 ;; Ref: https://github.com/dpsutton/resize-window
 (use-package resize-window
-  :demand t
   :config
   (progn
     (setq resize-window-fine-argument 10)

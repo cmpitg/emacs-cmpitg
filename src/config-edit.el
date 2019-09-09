@@ -18,6 +18,25 @@
 ;;
 
 ;;
+;; Interactive menu
+;;
+;; Ref: https://github.com/abo-abo/hydra
+;;
+
+(use-package hydra)
+
+(use-package ivy-hydra
+  :after (ivy counsel))
+
+;;
+;; Sublime-like C-p
+;; Ref: https://github.com/vspinu/imenu-anywhere
+;;
+
+(use-package imenu-anywhere
+  :after (counsel))
+
+;;
 ;; YAML
 ;;
 ;; Ref: https://www.emacswiki.org/emacs/YamlMode
@@ -795,9 +814,9 @@ the sequence, and its index within the sequence."
 ;; Acme-like command palette
 ;;
 
-(require 'rmacs:config-module-command-palette)
-(setq command-palette:*default-content* "save-cp buffers +tool +frame +bm ojo")
-(command-palette-mode -1)
+;; (require 'rmacs:config-module-command-palette)
+;; (setq command-palette:*default-content* "save-cp buffers +tool +frame +bm ojo")
+;; (command-palette-mode -1)
 
 ;;
 ;; HTTP request library

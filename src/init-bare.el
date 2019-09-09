@@ -68,13 +68,19 @@
           "bootstrap-config.el")
   "Path to the Rmacs boostrap-config file.")
 
-(require 'rmacs:bootstrap-config        *bootstrap-config-path*)
-(require 'rmacs:config-package-manager  "config-package-manager")
-(require 'rmacs:config-ipc              "config-ipc")
-(require 'rmacs:config-core-functions   "config-core-functions")
-(require 'rmacs:config-core-edit        "config-core-edit")
-(require 'rmacs:config-core-ux          "config-core-ux")
-(require 'rmacs:config-core-keybindings "config-core-keybindings")
-(require 'rmacs:config-module-bowser    "config-module-bowser")
+;; Make GC aware that we have a lot of memory
+(setq gc-cons-threshold (* 100 1024 1024))
+
+;; Speed up Emacs startup by ignoring all file name handlers.  Ref:
+;; https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
+(let ((file-name-handler-alist nil))
+  (require 'rmacs:bootstrap-config        *bootstrap-config-path*)
+  (require 'rmacs:config-package-manager  "config-package-manager")
+  (require 'rmacs:config-ipc              "config-ipc")
+  (require 'rmacs:config-core-functions   "config-core-functions")
+  (require 'rmacs:config-core-edit        "config-core-edit")
+  (require 'rmacs:config-core-ux          "config-core-ux")
+  (require 'rmacs:config-core-keybindings "config-core-keybindings")
+  (require 'rmacs:config-module-bowser    "config-module-bowser"))
 
 (message "Done loading Rmacs bare")

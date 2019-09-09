@@ -77,22 +77,13 @@
 (use-package tramp)
 
 ;;
-;; Interactive menu
-;;
-;; Ref: https://github.com/abo-abo/hydra
-;;
-
-;;
-
-(use-package hydra)
-
-;;
 ;; Expand selection with one keybinding
 ;;
 ;; Ref: https://github.com/magnars/expand-region.el
 ;;
 
-(use-package expand-region)
+(use-package expand-region
+  :commands er/expand-region)
 
 ;;
 ;; Asciidoc mode
@@ -284,12 +275,6 @@ project root."
               ("<C-return>" . ivy-immediate-done)
               ("<S-return>" . ivy-call))
   :demand t
-  :init (progn
-          (use-package ivy-hydra)
-
-          ;; Sublime-like C-p
-          ;; Ref: https://github.com/vspinu/imenu-anywhere
-          (use-package imenu-anywhere))
   :config (progn
             (ivy-mode 1)
 
@@ -383,7 +368,10 @@ with prefix `s-SPC' at the same time."
 
 (use-package multiple-cursors)
 
+;;
 ;; Live doc in echo area
+;;
+
 (use-package eldoc
   :diminish eldoc-mode
   :hook ((emacs-lisp-mode
