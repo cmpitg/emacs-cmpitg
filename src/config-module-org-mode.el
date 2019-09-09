@@ -27,6 +27,9 @@
   :config
   (progn
     (defun ~my/org-mode-setup ()
+      (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
+      (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
+      (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
       (font-lock-mode 1))
 
     ;; Add timestamp when an item is done
