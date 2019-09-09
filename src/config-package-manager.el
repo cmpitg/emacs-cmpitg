@@ -29,7 +29,7 @@
                            ("elpy" . "https://jorgenschaefer.github.io/packages/")))
   (add-to-list 'package-archives package-archive))
 
-(package-initialize)
+(package-initialize nil)
 
 ;; Fetch the list of available packages
 (when (not package-archive-contents)
