@@ -375,7 +375,7 @@
 ;; Soft-wrapping long lines
 ;; Ref: https://github.com/joostkremers/visual-fill-column
 (use-package visual-fill-column
-  :commands ~turn-on-soft-wrapping
+  :demand t
   :init (progn
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
 
