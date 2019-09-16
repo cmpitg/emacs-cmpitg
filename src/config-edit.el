@@ -108,6 +108,11 @@
             (put 'paredit-forward-delete 'delete-selection 'supersede)
             (put 'paredit-backward-delete 'delete-selection 'supersede)
 
+            (defun ~enable-paredit-mode ()
+              "Enables paredit mode"
+              (interactive)
+              (paredit-mode 1))
+
             (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
               (when (apply orig-fun args)
                 (when (fboundp 'autopair-mode)
@@ -125,7 +130,7 @@
             (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
 
             ;; Use with SLIME REPL
-            (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode 1)))
+            (add-hook 'slime-repl-mode-hook #'~enable-paredit-mode)
 
             ;; Stop SLIME's REPL from grabbing DEL,
             ;; which is annoying when backspacing over a '('
@@ -673,14 +678,14 @@ the sequence, and its index within the sequence."
         (call-interactively 'cider-connect)))
 
     ;; (add-hook 'clojure-mode-hook #'cider-mode)
-    (add-hook 'clojure-mode-hook #'paredit-mode)
+    (add-hook 'clojure-mode-hook #'~enable-paredit-mode)
     (add-hook 'clojure-mode-hook #'midje-mode)
 
     ;; Only display eldoc for current function/macro, not current symbol
     (setq cider-eldoc-display-for-symbol-at-point nil)
     (add-hook 'cider-mode-hook 'eldoc-mode)
 
-    (add-hook 'cider-repl-mode-hook #'paredit-mode)
+    (add-hook 'cider-repl-mode-hook #'~enable-paredit-mode)
 
     ;; Moving inside subword
     (add-hook 'cider-repl-mode-hook #'subword-mode)

@@ -404,8 +404,8 @@ application."
 ;;               ;; (add-to-list 'racket-builtins (~symbol->string sym))
 ;;               )
 
-;;             (add-hook 'racket-mode-hook       '~load-paredit-mode)
-;;             (add-hook 'racket-repl-mode-hook  '~load-paredit-mode)
+;;             (add-hook 'racket-mode-hook       '~enable-paredit-mode)
+;;             (add-hook 'racket-repl-mode-hook  '~enable-paredit-mode)
 ;;             ;; (add-hook 'racket-mode-hook       'auto-complete-mode)
 ;;             ;; (add-hook 'racket-repl-mode-hook  'auto-complete-mode)
 
