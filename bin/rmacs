@@ -3,6 +3,7 @@
 package require Tcl 8
 package require Tclx
 package require cmdline
+package require struct::list 1.8
 
 try {
 	array set cmdArgs [::cmdline::getoptions ::argv {
@@ -12,6 +13,7 @@ try {
 		{client-opts.arg  ""         "Extra options passed to Emacsclient invocation.  Not in use when 'command' is 'start'."}
 		{no-wait                     "Don't wait for the client session to complete, return immediately.  Not in use when 'command' is 'start'."}
 		{new-frame                   "Create a new frame.  Not in use when 'command' is 'start'."}
+		{with-buffer                 "Command is executed in the first buffer found in the buffer list"}
 		{verbose                     "Be verbose, prints options and arguments"}
 		{init-dir.arg     ""         "Alternative Rmacs init directory.  Not in use if the server is already started."}
 		{init.arg         ""         "Additional init file, loaded after loading base init.  Not in use if the server is already started."}
@@ -118,6 +120,11 @@ proc standardizeCmdArgs {cmdArgsList} {
 	}
 	if {$cmdArgs(new-frame)} {
 		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --create-frame"]
+	}
+	if {$cmdArgs(with-buffer)} {
+		array set cmdArgs [list with-buffer 1]
+	} else {
+		array set cmdArgs [list with-buffer 0]
 	}
 	array set cmdArgs [list shape-init-path [file join $cmdArgs(init-dir) "src" "init-$cmdArgs(shape).el"]]
 	return [array get cmdArgs]
@@ -249,6 +256,9 @@ switch $mainCommand {
 	}
 	eval {
 		makeSureServerIsRunning [array get args]
+		if {$args(with-buffer)} {
+			set mainArgs [::struct::list mapfor x $mainArgs {expr {"(~with-first-buffer $x )"}}]
+		}
 		rmacsEval $args(name) $args(client-opts) $mainArgs $args(verbose)
 	}
 	open {

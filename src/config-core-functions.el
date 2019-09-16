@@ -1217,6 +1217,13 @@ fallback to current directory if project root is not found."
   (ansi-color-apply-on-region (region-beginning)
                               (region-end)))
 
+(defmacro ~with-first-buffer (&rest body)
+  "Evals body with the first buffer on the buffer list.  This
+macro is useful when used with Emacsclient."
+  (require 'iflipb)
+  `(with-current-buffer (first (iflipb-buffer-list))
+     ,@body))
+
 (defun ~eval-string (str)
   "Evals a string."
   (interactive "sString: ")
