@@ -12,7 +12,8 @@ try {
 		{timeout.arg      30000      "Timeout (in milisecs) to wait for the server to be alive.  Not in use when 'command' is 'start'."}
 		{client-opts.arg  ""         "Extra options passed to Emacsclient invocation.  Not in use when 'command' is 'start'."}
 		{no-wait                     "Don't wait for the client session to complete, return immediately.  Not in use when 'command' is 'start'."}
-		{new-frame                   "Create a new frame.  Not in use when 'command' is 'start'."}
+		{new-frame                   "Create a new frame.  Not in use when 'command' is 'start'.  Conflict with '--tty'."}
+		{tty                         "Use TTY.  Not in use when 'command' is 'start'.  Conflict with '--new-frame'."}
 		{with-buffer                 "Command is executed in the first buffer found in the buffer list"}
 		{verbose                     "Be verbose, prints options and arguments"}
 		{init-dir.arg     ""         "Alternative Rmacs init directory.  Not in use if the server is already started."}
@@ -119,7 +120,14 @@ proc standardizeCmdArgs {cmdArgsList} {
 		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --no-wait"]
 	}
 	if {$cmdArgs(new-frame)} {
+		if {$cmdArgs(tty)} {
+			puts stderr "--new-frame and --tty cannot be specified at the same time"
+			exit 1
+		}
 		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --create-frame"]
+	}
+	if {$cmdArgs(tty)} {
+		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --tty"]
 	}
 	if {$cmdArgs(with-buffer)} {
 		array set cmdArgs [list with-buffer 1]
