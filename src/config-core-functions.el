@@ -998,6 +998,9 @@ first occurrence of a pattern.  E.g.
   (interactive)
   (find-file (~get-config "init-bare.el")))
 
+(defalias '~visit-file #'find-file-noselect
+  "Visits a file without opening it.")
+
 (defun ~open-toolbox ()
   "Opens toolbox file."
   (interactive)
