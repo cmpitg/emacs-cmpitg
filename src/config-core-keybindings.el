@@ -218,9 +218,8 @@
   ;; Configuration & quick opening
   ;;
 
-  (~bind-key-with-prefix "v i" #'~visit-init-bare)
-  (~bind-key-with-prefix "v t" #'~visit-toolbox)
-  (~bind-key-with-prefix "v b" #'~visit-project-toolbox)
+  (~bind-key-with-prefix "v t" #'~open-toolbox)
+  (~bind-key-with-prefix "v b" #'~open-project-toolbox)
 
   ;;
   ;; Function keys & other convenient bindings

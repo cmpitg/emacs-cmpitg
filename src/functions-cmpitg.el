@@ -32,8 +32,8 @@ Jekyll."
   "Gets the path to the current project toolbox file."
   (f-join dir file-name))
 
-(defun* ~visit-project-toolbox ()
-  "Visits the current project's toolbox file."
+(defun* ~open-project-toolbox ()
+  "Opens the current project's toolbox file."
   (interactive)
   (find-file (~get-project-toolbox-path)))
 

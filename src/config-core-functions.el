@@ -998,8 +998,8 @@ first occurrence of a pattern.  E.g.
   (interactive)
   (find-file (~get-config "init-bare.el")))
 
-(defun ~visit-toolbox ()
-  "Visits toolbox file."
+(defun ~open-toolbox ()
+  "Opens toolbox file."
   (interactive)
   (~smart-open-file *toolbox-path*))
 
