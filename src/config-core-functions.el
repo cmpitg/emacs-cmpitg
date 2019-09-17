@@ -999,8 +999,9 @@ first occurrence of a pattern.  E.g.
   (interactive)
   (find-file (~get-config "init-bare.el")))
 
-(defalias '~visit-file #'find-file-noselect
-  "Visits a file without opening it.")
+(defun ~visit-file (path)
+  "Visits a file without opening it and returns the buffer name."
+  (buffer-name (find-file-noselect path)))
 
 (defun ~open-toolbox ()
   "Opens toolbox file."
@@ -1220,13 +1221,6 @@ fallback to current directory if project root is not found."
   (interactive)
   (ansi-color-apply-on-region (region-beginning)
                               (region-end)))
-
-(defmacro ~with-first-buffer (&rest body)
-  "Evals body with the first buffer on the buffer list.  This
-macro is useful when used with Emacsclient."
-  (require 'iflipb)
-  `(with-current-buffer (first (iflipb-buffer-list))
-     ,@body))
 
 (defun ~eval-string (str)
   "Evals a string."
