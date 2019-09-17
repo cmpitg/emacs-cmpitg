@@ -1,5 +1,78 @@
 = Rmacs - cmpitg's Emacs
 
+[source]
+----
+rmacs [rmacs-options] <command> [arguments] ...
+
+Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized tool (called "shape").  The shape is specified by the '--shape' option.  Each shape shared a base configuration with different configurations on top of it.  Currently the following shapes are supported:
+
+  minimal :: General text editing framework
+  utils   :: Utility framework
+  edit    :: Text editor
+
+After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
+
+  open [path]  :: Open a path or URL.  If 'path' is not provided, open a blank buffer.
+  visit [path] :: Visit a path or URL but do not switch to its buffer.  If 'path' is not provided, open a blank buffer.
+  eval <sexp>  :: Evaluate an Emacs Lisp expression and return the result
+  wait         :: Wait until the corresponding server is alive
+
+In addition, Rmacs also supports commands to manage Emacs servers:
+
+  list  :: List the current Emacs server socket names
+  kill  :: Kill an Rmacs server, '--name' or '--shape' must be provided
+  start :: Start Rmacs server in the foreground, '--name' or '--shape' must be provided
+
+Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name (specified by the '--name' option).  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible to Emacs users.
+
+Rmacs works by loading init files from the Rmacs init directory (from the environment variable RMACS_INIT_DIR).  Then:
+- If 'command' is 'start', Rmacs loads the init file and starts the server in the foreground.  This is useful when running Rmacs as a daemon, particularly in conjunction in a supervisor process such as Sys V Init, SystemD, or Runit, ...
+- Otherwise, Rmacs will try to start an Emacs server (if necessary) in the background.  It will then use Emacsclient to connect to that server to perform the action denoted by 'command'.
+
+Rmacs will always load ~/.emacs-machine-specific-init before and ~/.emacs-machine-specific after all other configurations.
+
+Examples:
+
+  rmacs --shape edit open <path>
+	Opens a path as text editor, server name is 'edit'.
+
+  rmacs --shape edit start
+	Starts an Rmacs text editor server on the foreground, server name is 'edit'.
+
+  rmacs --shape minimal open
+	Runs Rmacs as a general, "minimal" text editor; server name is 'minimal'.
+
+  rmacs --name edit eval <sexp>
+	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'minimal'.
+
+  rmacs --shape edit eval <sexp>
+	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'edit'.
+
+  rmacs list
+	Lists all current socket names for running Emacs servers.
+
+  rmacs --name foobar kill
+	Kills the server with socket name 'foobar'.
+
+Available Rmacs options:
+
+ -shape value         The shape Rmacs takes <minimal>
+ -name value          (optional) A unique name used by Emacs server, for interprocess communication.  By default this option is taken from 'shape' if not specified. <>
+ -timeout value       Timeout (in milisecs) to wait for the server to be alive.  Not in use when 'command' is 'start'. <30000>
+ -client-opts value   Extra options passed to Emacsclient invocation.  Not in use when 'command' is 'start'. <>
+ -no-wait             Don't wait for the client session to complete, return immediately.  Not in use when 'command' is 'start'.
+ -new-frame           Create a new frame.  Not in use when 'command' is 'start'.  Conflict with '--tty'.
+ -tty                 Use TTY.  Not in use when 'command' is 'start'.  Conflict with '--new-frame'.
+ -with-buffer value   Name of the buffer (returned by buffer-name) in which the command is executed. <>
+ -verbose             Be verbose, prints options and arguments
+ -init-dir value      Alternative Rmacs init directory.  Not in use if the server is already started. <>
+ -init value          Additional init file, loaded after loading base init.  Not in use if the server is already started. <>
+ --                   Forcibly stop option processing
+ -help                Print this message
+ -?                   Print this message
+
+----
+
 This documentation is a work in progress.  At this point in time please consult the source code (in `src/`) directly for in-depth documentation.
 
 Emacs is considered an editor framework, providing building blocks to build editor and much more.  This repo contains my personal Emacs configuration, which, though heavily customized, could potentially be adopted to different users.  The idea is to use Emacs Lisp to push Emacs to its limit, morphing it to different shapes depending on the use cases.  Currently I'm running Emacs as:
