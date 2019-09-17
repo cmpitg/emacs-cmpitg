@@ -146,7 +146,7 @@
                 (loop do (paredit-forward-up))))))
 
 (use-package evil-paredit
-  :after (evil paredil)
+  :after (evil paredit)
   :hook ((emacs-lisp-mode
           lisp-mode
           clojure-mode
