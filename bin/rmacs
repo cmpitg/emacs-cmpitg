@@ -290,7 +290,7 @@ switch $mainCommand {
 				set openFileFunc {~smart-open-file}
 			}
 			visit {
-				set openFileFunc {~visit}
+				set openFileFunc {~visit-file}
 			}
 		}
 
