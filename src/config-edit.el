@@ -88,6 +88,7 @@
 ;;
 
 (use-package paredit
+  :demand t
   :hook ((emacs-lisp-mode
           scheme-mode
           common-lisp-mode
