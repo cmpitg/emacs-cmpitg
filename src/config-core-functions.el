@@ -906,6 +906,7 @@ to `nil'."
     (goto-char (point-min))
     (setq buffer-offer-save t)))
 
+;; TODO: Remove the 'open with' logic, replacing it with dispatch-action?
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary.  `path' is
 expanded using `expand-file-name', then

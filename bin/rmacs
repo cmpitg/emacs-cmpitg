@@ -29,6 +29,7 @@ Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized to
 After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
 
   open [path]  :: Open a path or URL.  If 'path' is not provided, open a blank buffer.
+  visit [path] :: Visit a path or URL but do not switch to its buffer.  If 'path' is not provided, open a blank buffer.
   eval <sexp>  :: Evaluate an Emacs Lisp expression and return the result
   wait         :: Wait until the corresponding server is alive
 
@@ -269,7 +270,8 @@ switch $mainCommand {
 		}
 		rmacsEval $args(name) $args(client-opts) $mainArgs $args(verbose)
 	}
-	open {
+	open -
+	visit {
 		makeSureServerIsRunning [array get args]
 
 		set rawPath [lindex $mainArgs 0]
@@ -283,12 +285,21 @@ switch $mainCommand {
 			}
 		}
 
+		switch $mainCommand {
+			open {
+				set openFileFunc {~smart-open-file}
+			}
+			visit {
+				set openFileFunc {~visit}
+			}
+		}
+
 		if {[llength $mainArgs] == 0} {
 			set sexp {(switch-to-buffer "*Blank*")}
 		} elseif {$args(new-frame) && !$args(no-wait)} {
-			set sexp "(prog1 (~smart-open-file \"$path\") (setq-local local/delete-frame-on-close (selected-frame)))"
+			set sexp "(prog1 ($openFileFunc \"$path\") (setq-local local/delete-frame-on-close (selected-frame)))"
 		} else {
-			set sexp "(~smart-open-file \"$path\")"
+			set sexp "($openFileFunc \"$path\")"
 		}
 
 		rmacsEval $args(name) $args(client-opts) [list $sexp] $args(verbose)
