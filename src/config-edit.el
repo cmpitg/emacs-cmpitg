@@ -641,6 +641,7 @@
 ;;
 
 (use-package clojure-mode
+  :after paredit-mode
   :mode "\\.clj\\'")
 
 (use-package flycheck-clj-kondo
