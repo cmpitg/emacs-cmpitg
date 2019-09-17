@@ -28,34 +28,34 @@ Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized to
 
 After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
 
-  open [path] :: Open a path or URL.  If 'path' is not provided, one a blank buffer.
-  eval <sexp> :: Evaluate an Emacs Lisp expression and return the result
-  wait        :: Wait until the corresponding server is alive
+  open [path]  :: Open a path or URL.  If 'path' is not provided, open a blank buffer.
+  eval <sexp>  :: Evaluate an Emacs Lisp expression and return the result
+  wait         :: Wait until the corresponding server is alive
 
-In addition, Rmacs also supports commands to facilitate the manage of Emacs servers:
+In addition, Rmacs also supports commands to manage Emacs servers:
 
   list  :: List the current Emacs server socket names
   kill  :: Kill an Rmacs server, '--name' or '--shape' must be provided
   start :: Start Rmacs server in the foreground, '--name' or '--shape' must be provided
 
-Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name, specified by the '--name' option.  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible.
+Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name (specified by the '--name' option).  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible to Emacs users.
 
-Rmacs works by loading init files from the Rmacs init directory (denoted by the environment variable RMACS_INIT_DIR).  There are 2 main cases where Rmacs works a bit different in the background:
+Rmacs works by loading init files from the Rmacs init directory (from the environment variable RMACS_INIT_DIR).  Then:
 - If 'command' is 'start', Rmacs loads the init file and starts the server in the foreground.  This is useful when running Rmacs as a daemon, particularly in conjunction in a supervisor process such as Sys V Init, SystemD, or Runit, ...
-- Otherwise, Rmacs will try to start an Emacs server (if necessary) in the background.  Then it will use Emacsclient to connect to that server to perform the action denoted by 'command'.
+- Otherwise, Rmacs will try to start an Emacs server (if necessary) in the background.  It will then use Emacsclient to connect to that server to perform the action denoted by 'command'.
 
 Rmacs will always load ~/.emacs-machine-specific-init before and ~/.emacs-machine-specific after all other configurations.
 
 Examples:
 
   rmacs --shape edit open <path>
-	Opens a path as text editor, server is named 'edit'.
+	Opens a path as text editor, server name is 'edit'.
 
   rmacs --shape edit start
-	Starts an Rmacs text editor server on the foreground, server is named 'edit'.
+	Starts an Rmacs text editor server on the foreground, server name is 'edit'.
 
   rmacs --shape minimal open
-	Runs Rmacs as a general, "minimal" text editor; server is named 'minimal'.
+	Runs Rmacs as a general, "minimal" text editor; server name is 'minimal'.
 
   rmacs --name edit eval <sexp>
 	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'minimal'.
@@ -64,10 +64,10 @@ Examples:
 	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'edit'.
 
   rmacs list
-	Lists all running Emacs server socket names.
+	Lists all current socket names for running Emacs servers.
 
   rmacs --name foobar kill
-	Kills the server with socket named 'foobar'.
+	Kills the server with socket name 'foobar'.
 
 Available Rmacs options:
 }]} trap {CMDLINE USAGE} {msg _o} {
