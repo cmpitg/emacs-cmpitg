@@ -26,6 +26,22 @@
 (setq init-file-user (user-login-name))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Make sure to spawn an Emacs frame when there is interactive prompt
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when (daemonp)
+  (defun ~advice/ensure-frame (&rest _)
+    "Ensures a frame on display :0.0 and ignore args."
+    (let* ((display-list (x-display-list))
+           (display-re (and display-list (regexp-opt display-list)))
+           (term (and display-re (cl-some (lambda (term) (and (string-match display-re (terminal-name term)) term)) (terminal-list))))
+           (frame (and term (cl-some (lambda (frame) (and (frame-live-p frame) frame)) (frames-on-display-list term)))))
+      (select-frame (or frame (make-frame-on-display (getenv "DISPLAY"))))))
+  (advice-add 'y-or-n-p :before #'~advice/ensure-frame)
+  (advice-add 'yes-or-no-p :before #'~advice/ensure-frame)
+  (advice-add 'read-passwd :before #'~advice/ensure-frame))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Important global values
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
