@@ -37,6 +37,14 @@ Jekyll."
   (interactive)
   (find-file (~get-project-toolbox-path)))
 
+(defun ~format-opened-files ()
+  "Formats all currently open files."
+  (interactive)
+  (string-join (loop for b in (buffer-list)
+                     when (buffer-file-name b)
+                     collect (buffer-file-name b))
+               "\n"))
+
 (defun* ~toggle-project-toolbox (&key (side 'right)
                                       (size -78))
   "Toggles display of the project toolbox file."
