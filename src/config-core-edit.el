@@ -508,7 +508,7 @@ with prefix `s-SPC' at the same time."
 ;; TODO: Separate ~smart-open-file to a module
 
 (use-package wand
-  :after (rmacs:config-module-bowser f)
+  :after (rmacs:config-module-bowser rmacs:config-module-convenient-buffer-shell f)
   :config
   (progn
     (defun* ~wand:set-current-dir (&optional
@@ -549,11 +549,17 @@ with prefix `s-SPC' at the same time."
         (with-current-buffer buffer
           (~exec| command))))
 
-    (defun* ~exec<-next-line (text)
+    (defun* ~exec<-next-line-old (text)
       (interactive)
       (~open-line 1)
       (beginning-of-line)
       (~exec< text))
+
+    (defun* ~exec<-next-line (text)
+      (interactive)
+      (~open-line 1)
+      (beginning-of-line)
+      (bs:exec text))
 
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "|")
