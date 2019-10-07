@@ -549,7 +549,7 @@ with prefix `s-SPC' at the same time."
         (with-current-buffer buffer
           (~exec| command))))
 
-    (defun* ~exec<-next-line-old (text)
+    (defun* ~exec<-next-line-separate (text)
       (interactive)
       (~open-line 1)
       (beginning-of-line)
@@ -560,7 +560,7 @@ with prefix `s-SPC' at the same time."
       (~open-line 1)
       (beginning-of-line)
       (bs:exec text))
-
+    
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "|")
                                   :capture :after
@@ -570,6 +570,9 @@ with prefix `s-SPC' at the same time."
                 (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
                                   :action #'~exec<)
+                (wand:create-rule :match (rx bol (0+ " ") "$$")
+                                  :capture :after
+                                  :action #'~exec<-next-line-separate)
                 (wand:create-rule :match (rx bol (0+ " ") "$")
                                   :capture :after
                                   :action #'~exec<-next-line)
@@ -587,7 +590,10 @@ with prefix `s-SPC' at the same time."
                                   :action #'~exec-with-pause-in-term-emu)
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
-                                  :action #'~exec-pop-up)
+                                  :action #'~exec<-next-line-separate)
+                ;; (wand:create-rule :match (rx bol (0+ " ") "!")
+                ;;                   :capture :after
+                ;;                   :action #'~exec-pop-up)
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)
