@@ -1672,6 +1672,98 @@ pauses after the execution."
                          nil
                          command)))
 
+(defun* ~exec-async (command &key (stdin nil)
+                             output-callback
+                             output-as-buffer
+                             keep-output-buffer)
+  "Executes a program asynchronously and returns the
+corresponding async process.  COMMAND is a list of strings
+representing the program and its arguments.  Note that the
+program is executed as-is, not in a shell.  Thus shell operators,
+e.g. piping, don't work.  For piping, please have a look at the
+`~exec-pipe-async', which handles piping for external commands
+and Emacs Lisp function.
+
+STDIN determines where to pipe the standard input (stdin) to the
+program.  It takes one of the following value types:
+
+* NIL → no stdin is piped;
+
+* :REGION → stdin is the current region;
+
+* :2ND-REGION → stdin is the current secondary selection;
+
+* a buffer → stdin is the content of that buffer;
+
+* a string → stdin is the corresponding string
+
+Any other value types of STDIN will result in an error by `make-process'.
+
+OUTPUT-CALLBACK is a function taking a single value - the output
+of the program.  OUTPUT-CALLBACK is called when the program
+exits.
+
+OUTPUT-AS-BUFFER is a boolean value that determines whether the
+output of the program is passed to OUTPUT-CALLBACK as a string or
+as a buffer.  Note that the buffer connecting to the program's
+standard output (stdout) and standard error (stderr) is always
+created, no matter what value of OUTPUT-AS-BUFFER is.  Hence,
+generally speaking, it's preferred to pass `t' to
+OUTPUT-AS-BUFFER and make OUTPUT-CALLBACK takes that buffer for
+performance reason.
+
+KEEP-OUTPUT-BUFFER is a boolean value, determining whether or not
+the output buffer of the program is killed after the program
+exits.
+
+E.g.
+
+;; Execute 'ls -l', insert stdout and stderr to the current buffer
+\(~exec-async \(list \"ls\" \"-l\"\) :output-callback #'insert\)
+
+;; Execute 'ls -l', insert stdout and stderr to the current
+;; buffer a bit more efficiently
+\(~exec-async \(list \"ls\" \"-l\"\)
+             :output-callback #'\(lambda \(buf\)
+                                  \(insert \(with-current-buffer buf \(buffer-string\)\)\)\)
+             :output-as-buffer t\)
+
+;; Pipe 'hello world' to 'cat -', then insert it to the current
+;; buffer
+\(~exec-async \(list \"cat\" \"-\"\)
+             :stdin \"hello world\\n\"
+             :output-callback #'insert\)
+"
+  (interactive "MCommand: ")
+  (let* ((name (string-join command " "))
+         (buffer-name (format "*process :: %s :: %s*" name (~gen-uuid)))
+         (proc (make-process
+                :name name
+                :buffer buffer-name
+                :command command
+                :sentinel #'(lambda (proc _event)
+                              (when output-callback
+                                (let ((output (if output-as-buffer
+                                                  (process-buffer proc)
+                                                (with-current-buffer (process-buffer proc)
+                                                  (buffer-string)))))
+                                  (funcall output-callback output)))
+                              (unless (or keep-output-buffer
+                                          (not (buffer-live-p (process-buffer proc))))
+                                (kill-buffer (process-buffer proc)))))))
+    (pcase stdin
+      ('nil t)
+      (:region (process-send-region proc (region-beginning) (region-end))
+               (process-send-eof proc))
+      (:2nd-region (process-send-string proc (~get-secondary-selection))
+                   (process-send-eof proc))
+      (stdin-value (if (bufferp stdin-value)
+                       (with-current-buffer stdin-value
+                         (process-send-region proc (point-min) (point-max)))
+                     (process-send-string proc stdin))
+                   (process-send-eof proc)))
+    proc))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core functions")
