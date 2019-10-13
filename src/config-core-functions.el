@@ -1271,6 +1271,11 @@ fallback to current directory if project root is not found."
       (kill-sexp -1))
     (insert (format "%s" value))))
 
+(defun ~gen-uuid ()
+  "Generates a UUID."
+  (interactive)
+  (string-trim (~exec "uuidgen -r")))
+
 (defun* ~get-thing-to-execute-from-context ()
   "Retrieves the thing to execute from the current context.  The
 rules are as follows:
