@@ -1499,13 +1499,16 @@ quoted with `shell-quote-argument'."
                     "-c" command))))
 
 (defun* ~exec (command &key (stdin nil))
-  "Executes a shell command then returns its value as string.
-The `stdin' parameter determines where to read stdin or the shell
-command, if `stdin' is:
-* `nil' → no stdin is taken into account;
-* `:region' → stdin is taken from the current region;
-* any other value → takes the value of `stdin' as stdin of the shell
-  command."
+  "Executes a shell command then returns its output as string.
+
+STDIN determines where to read standard input for the shell
+command.  Its value type is one of the following:
+
+* NIL → no stdin;
+
+* :REGION → stdin is taken from the current region;
+
+* any other value → stdin is that value."
   (interactive "MCommand: ")
   (pcase stdin
     ('nil (with-temp-buffer
