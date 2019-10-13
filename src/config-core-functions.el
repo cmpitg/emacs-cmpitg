@@ -1764,6 +1764,143 @@ E.g.
                    (process-send-eof proc)))
     proc))
 
+(defmacro* ~exec-pipe-async (&rest commands)
+  "Executes commands in sequence, piping output (and possible
+standard error) from one command to the next one.
+
+Each command is a list of the following format: `\(COMMAND-TYPE
+ARGS...\)' or SEXP, where:
+
+* If a command is an sexp (SEXP), it is evaluated in turn.
+
+* If a command is of the other format, COMMAND-TYPE is one of the
+  following:
+
+  * :STR → the command is a string.  ARGS should be a single
+    string parameter, which is passed as-is as input to the next
+    command (if any);
+
+  * :FN → the command is a function call.  The first parameter
+    from ARGS is the function and the rest being the arguments
+    passed to the function when called.
+
+  * :SH → the command is an external programs.  The first
+    parameter from ARGS is the program and the rest being the
+    arguments passed to the program.
+
+  * :EXP → the command is an Emacs Lisp expression.  ARGS should
+    be a single sexp.
+
+This function is powerful as it allows mixing Emacs Lisp
+functions and external programs to process data.  Some examples:
+
+;; Just return \"hello world\"
+\(~exec-pipe-async \(:str \"hello world\"\)\)
+
+;; Pipe \"hello world\n\" to 'cat', and insert it back to the
+;; current buffer
+\(~exec-pipe-async \(:str \"hello world\\n\"\)
+                  \(:sh \"cat\" \"-\"\)
+                  \(:fn #'insert\)\)
+
+;; Build a context menu using sawfish-menu
+\(~exec-pipe-async \(:exp \(with-output-to-string
+                          \(print `\(popup-menu \(\(\"_Top level\" 0\)
+                                               \(\"_Sub menu\"
+                                                \(\"_Foo\" 1\)
+                                                \(\"_Bar\" 2\)
+                                                \(\"_Quux\" 3\)\)\)\)\)\)\)
+                  \(:sh \"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
+                  \(:fn #'insert\)\)
+
+For a bit more simplified, have a look at `~exec|-async'.
+
+Note on implementation details: this function uses `~exec-async'
+to call external programs and uses process buffers for piping for
+performance reasons."
+  `(funcall ,(loop for command in (reverse commands)
+                   for output-callback = (quote #'identity) then next-output-callback
+                   for next-output-callback = `(lambda (output-buffer)
+                                                 ,(cond
+
+                                                   ;; If is string, command is passed as-is
+                                                   ((eq :str (first command))
+                                                    `(funcall ,output-callback ,(second command)))
+
+                                                   ;; If is function, command is called then passed
+                                                   ((eq :fn (first command))
+                                                    `(funcall ,output-callback (funcall ,(second command)
+                                                                                        (if (bufferp output-buffer)
+                                                                                            (with-current-buffer output-buffer
+                                                                                              (buffer-string))
+                                                                                          output-buffer))))
+
+                                                   ;; If is an external program, execute it
+                                                   ((eq :sh (first command))
+                                                    `(~exec-async (list ,@(rest command))
+                                                                  :stdin output-buffer
+                                                                  :output-callback ,output-callback
+                                                                  :output-as-buffer t))
+
+                                                   ;; If is an exp, command is eval'ed then passed
+                                                   ((eq :exp (first command))
+                                                    `(funcall ,output-callback ,(second command)))
+                                                   (t
+                                                    `(funcall ,output-callback ,command))))
+                   finally (return next-output-callback))
+            nil))
+
+(defmacro* ~exec|-async (&rest commands)
+  "Wrapper for `~exec-pipe-async', does exactly when
+`~exec-pipe-async' do which simplified syntax.  In details, each
+command from COMMANDS has its type inferred from the value type:
+
+* If a command is a single string, pass it on;
+
+* If a command is a list with the first element being a string,
+  pass it on as an external program;
+
+* If a command is a list starting with FUNCTION or LAMBDA, pass
+  it on as a function call;
+
+* Otherwise, pass the command as an sexp.
+
+E.g.
+
+;; Just return \"hello world\"
+\(~exec|-async \(:str \"hello world\"\)\)
+
+;; Pipe \"hello world\n\" to 'cat', and insert it back to the
+;; current buffer
+\(~exec|-async \(:str \"hello world\\\"\)
+              \(:sh \"cat\" \"-\"\)
+              \(:fn #'insert\)\)
+
+;; Build a context menu using sawfish-menu
+\(~exec|-async \(:exp \(with-output-to-string
+                      \(print `\(popup-menu \(\(\"_Top level\" 0\)
+                                           \(\"_Sub menu\"
+                                            \(\"_Foo\" 1\)
+                                            \(\"_Bar\" 2\)
+                                            \(\"_Quux\" 3\)\)\)\)\)\)\)
+              \(:sh \"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
+              \(:fn #'insert\)\)"
+  `(~exec-pipe-async ,@(loop for command in commands
+                             collect (cond
+                                      ((stringp command)
+                                       `(:str ,command))
+                                      ((listp command)
+                                       (cond
+                                        ((stringp (first command))
+                                         `(:sh ,@command))
+                                        ((or (eq 'function (first command))
+                                             (eq 'lambda (first command)))
+                                         `(:fn ,command))
+                                        (t
+                                         command)))
+                                      (t
+                                       command)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core functions")
