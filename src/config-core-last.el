@@ -21,7 +21,9 @@
 (use-package recentf
   :init (progn
           (recentf-mode 1)
-          (setq recentf-max-menu-items 128)))
+          (custom-set-variables `(recentf-max-menu-items 128)
+                                `(recentf-save-file ,(format "~/.emacs.d/recentf.%s"
+                                                             (~emacs-server-name))))))
 
 (message "Reverting all file-backed buffers")
 (~revert-all-file-buffers-no-confirmation)
