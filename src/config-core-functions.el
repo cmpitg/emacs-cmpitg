@@ -1217,10 +1217,13 @@ fallback to current directory if project root is not found."
 ;;
 
 (defun ~ansi-colorize-region ()
-  "Colorizes a region."
+  "ANSI-colorizes a region."
   (interactive)
   (ansi-color-apply-on-region (region-beginning)
                               (region-end)))
+
+(defalias '~ansi-colorize 'ansi-color-apply
+  "ANSI-colorizes a string.")
 
 (defun ~eval-string (str)
   "Evals a string."
