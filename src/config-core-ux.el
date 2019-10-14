@@ -87,7 +87,10 @@
 
 ;; Save and restore current editing point when opening a file
 (use-package saveplace
-  :config (save-place-mode 1))
+  :config (save-place-mode 1)
+  :init (progn
+          (custom-set-variables `(save-place-file ,(format "~/.emacs.d/places.%s"
+                                                           (~emacs-server-name))))))
 
 ;; Open last session/visited files from the last session
 ;; Ref: https://github.com/nflath/save-visited-files
