@@ -906,6 +906,20 @@ to `nil'."
     (goto-char (point-min))
     (setq buffer-offer-save t)))
 
+(defun ~revert-all-file-buffers-no-confirmation ()
+  "Reverts all file-backed buffers without confirmation (by
+assuming a 'yes' answer).  This function is useful when calling
+at the end of Emacs startup stage to make sure configuration
+which is loaded lazily get loaded."
+  (interactive)
+  (loop for thread in (loop for buf in (buffer-list)
+                            for file-name = (buffer-file-name buf)
+                            when (and file-name (file-exists-p file-name))
+                            collect (make-thread #'(lambda ()
+                                                     (ignore-errors (with-current-buffer buf
+                                                                      (revert-buffer t t))))))
+        do (thread-join thread)))
+
 ;; TODO: Remove the 'open with' logic, replacing it with dispatch-action?
 (defun* ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary.  `path' is

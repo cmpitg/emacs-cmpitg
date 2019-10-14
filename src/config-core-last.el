@@ -23,6 +23,9 @@
           (recentf-mode 1)
           (setq recentf-max-menu-items 128)))
 
+(message "Reverting all file-backed buffers")
+(~revert-all-file-buffers-no-confirmation)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core components (load last)")
