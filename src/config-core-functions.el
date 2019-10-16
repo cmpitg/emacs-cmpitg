@@ -1881,8 +1881,8 @@ performance reasons."
 
 (defmacro* ~exec|-async (&rest commands)
   "Wrapper for `~exec-pipe-async', does exactly when
-`~exec-pipe-async' do which simplified syntax.  In details, each
-command from COMMANDS has its type inferred from the value type:
+`~exec-pipe-async' do with simplified syntax - each command from
+COMMANDS has its type inferred from the value type:
 
 * If a command is a single string, pass it on;
 
