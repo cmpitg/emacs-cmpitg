@@ -1897,23 +1897,23 @@ command from COMMANDS has its type inferred from the value type:
 E.g.
 
 ;; Just return \"hello world\"
-\(~exec|-async \(:str \"hello world\"\)\)
+\(~exec|-async \"hello world\"\)
 
-;; Pipe \"hello world\n\" to 'cat', and insert it back to the
+;; Pipe \"hello world\\n\" to 'cat', and insert it back to the
 ;; current buffer
-\(~exec|-async \(:str \"hello world\\\"\)
-              \(:sh \"cat\" \"-\"\)
-              \(:fn #'insert\)\)
+\(~exec|-async \"hello world\\n\"
+              \(\"cat\" \"-\"\)
+              #'insert\)
 
 ;; Build a context menu using sawfish-menu
-\(~exec|-async \(:exp \(with-output-to-string
-                      \(print `\(popup-menu \(\(\"_Top level\" 0\)
-                                           \(\"_Sub menu\"
-                                            \(\"_Foo\" 1\)
-                                            \(\"_Bar\" 2\)
-                                            \(\"_Quux\" 3\)\)\)\)\)\)\)
-              \(:sh \"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
-              \(:fn #'insert\)\)"
+\(~exec|-async \(with-output-to-string
+                \(print `\(popup-menu \(\(\"_Top level\" 0\)
+                                     \(\"_Sub menu\"
+                                      \(\"_Foo\" 1\)
+                                      \(\"_Bar\" 2\)
+                                      \(\"_Quux\" 3\)\)\)\)\)\)
+              \(\"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
+              #'insert\)\)"
   `(~exec-pipe-async ,@(loop for command in commands
                              collect (cond
                                       ((stringp command)
