@@ -126,6 +126,7 @@
                    scss-mode
                    js2-mode
                    tide
+                   add-node-modules-path
                    zig-mode
                    ruby-mode
                    ruby-dev

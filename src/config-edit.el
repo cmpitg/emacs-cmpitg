@@ -511,6 +511,13 @@
          ("\\.jsx?\\'" . js2-jsx-mode))
   :interpreter "node")
 
+(use-package add-node-modules-path
+  :after (js2-mode)
+  :config
+  (progn
+    (add-hook 'js2-mode-hook #'add-node-modules-path)
+    (add-hook 'js2-jsx-mode-hook #'add-node-modules-path)))
+
 (use-package tide
   :after (flycheck company)
   :config
