@@ -576,6 +576,9 @@ with prefix `s-SPC' at the same time."
                 (wand:create-rule :match (rx bol (0+ " ") "$")
                                   :capture :after
                                   :action #'~exec<-next-line)
+                (wand:create-rule :match (rx bol (0+ " ") "$<")
+                                  :capture :after
+                                  :action #'bs:send-complete-string)
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
                                   :action #'~exec>)
