@@ -544,6 +544,9 @@ selection or end-of-line."
 ;; Ref: https://github.com/jrosdahl/iflipb
 (use-package iflipb)
 
+;; Allow text drap-and-drop with mouse
+(custom-set-variables `(mouse-drag-and-drop-region t))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Standard behaviors for C-x, C-c, C-v
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
