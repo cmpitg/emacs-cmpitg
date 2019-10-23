@@ -560,8 +560,8 @@ selection or end-of-line."
 (setq cua-auto-tabify-rectangles nil)
 ;; No region when it's not highlighted
 (transient-mark-mode 1)
-;; Keep region after copying
-(setq cua-keep-region-after-copy t)
+;; Don't keep region after copying
+(setq cua-keep-region-after-copy nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
