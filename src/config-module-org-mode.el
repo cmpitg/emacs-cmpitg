@@ -27,6 +27,7 @@
   :config
   (progn
     (defun ~my/org-mode-setup ()
+      (bind-key "<S-return>" #'~execute-line org-mode-map)
       (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
       (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
       (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
@@ -40,7 +41,7 @@
 
     ;; No folding by default
     ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
-    ;; Of per file: #+STARTUP: showeverything
+    ;; Of per file: #+STARTUP: all
     (setq org-startup-folded nil)
 
     (add-hook 'org-mode-hook #'~my/org-mode-setup)
