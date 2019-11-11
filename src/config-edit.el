@@ -752,6 +752,7 @@ the sequence, and its index within the sequence."
     (~bind-key-with-prefix "d p p"     #'cider-pprint-eval-last-sexp :keymap cider-mode-map)
     (~bind-key-with-prefix "d ."       #'cider-find-var              :keymap cider-mode-map)
     (~bind-key-with-prefix "d ,"       #'cider-pop-back              :keymap cider-mode-map)
+    (~bind-key-with-prefix "d r e"     #'cider-eval-region           :keymap cider-mode-map)
 
     (~bind-key-with-prefix "d l"     #'cider-repl-clear-buffer :keymap cider-repl-mode-map)
     (~bind-key-with-prefix "d ."     #'cider-find-var          :keymap cider-repl-mode-map)
