@@ -761,7 +761,8 @@ the sequence, and its index within the sequence."
 
     (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
     (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
-    (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)))
+    (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
+    (bind-key "M-q"        #'cider-format-defun        cider-mode-map)))
 
 (use-package clojurescript-mode)
 
