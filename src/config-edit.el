@@ -788,6 +788,17 @@ the sequence, and its index within the sequence."
     (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
 
 ;;
+;; Scheme development
+;;
+;; Ref: https://www.nongnu.org/geiser/
+;;
+
+(use-package geiser-mode
+  :config
+  (progn
+    (custom-set-variables `(geiser-repl-use-other-window nil))))
+
+;;
 ;; Zig mode
 ;;
 ;; Ref: https://github.com/ziglang/zig-mode

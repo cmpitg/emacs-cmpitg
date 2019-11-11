@@ -591,19 +591,3 @@ application."
 ;;          ) inertias-prefix-key))
 
 ;;; ---
-
-;; (use-package geiser-mode
-;;   :config (progn
-;;            (dolist (sym '(process-string if-let))
-;;              (put sym 'scheme-indent-function 1)
-;;              (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
-
-;;            ;; (dolist (sym '(with-shell-commands))
-;;            ;;   (put sym 'scheme-indent-function 0)
-;;            ;;   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
-
-;;            ;; (dolist (sym '(module
-;;            ;;                module*))
-;;            ;;   (put sym 'scheme-indent-function 2)
-;;            ;;   (add-to-list 'geiser-racket-extra-keywords (~symbol->string sym)))
-;;            ))
