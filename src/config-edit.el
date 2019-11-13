@@ -686,6 +686,12 @@ the sequence, and its index within the sequence."
       (save-excursion
         (call-interactively 'cider-connect)))
 
+    (defun ~cider-format-defun ()
+      "Interactively calls `cider-connect', saving the current cursor position."
+      (interactive)
+      (save-excursion
+        (call-interactively 'cider-format-defun)))
+
     ;; (add-hook 'clojure-mode-hook #'cider-mode)
     (add-hook 'clojure-mode-hook #'~enable-paredit-mode)
     (add-hook 'clojure-mode-hook #'midje-mode)
@@ -763,7 +769,7 @@ the sequence, and its index within the sequence."
     (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
     (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
     (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
-    (bind-key "M-q"        #'cider-format-defun        cider-mode-map)))
+    (bind-key "M-q"        #'~cider-format-defun       cider-mode-map)))
 
 (use-package clojurescript-mode)
 
