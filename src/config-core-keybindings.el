@@ -97,6 +97,8 @@
   (bind-key "M-Q" #'~unfill-paragraph)
   (bind-key "s-; ; ;" #'~insert-full-line-comment)
   (bind-key "s-b" #'pop-to-mark-command)
+  (~bind-key-with-prefix "t p f" #'paredit-reindent-defun)
+  (~bind-key-with-prefix "t t f" #'fill-paragraph)
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
