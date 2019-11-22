@@ -88,7 +88,7 @@
   (interactive)
   (bs:ensure-buffer-process :name name
                             :buffer buffer
-                            :command (list "/usr/bin/env" "TERM=dumb" shell)
+                            :command (list "/usr/bin/env" "TERM=dumb" "PAGER=cat" shell)
                             :prompt-regexp prompt-regexp))
 
 (defun* bs:exec (str &optional (buffer (current-buffer)))
