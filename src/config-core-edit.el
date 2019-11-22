@@ -564,45 +564,35 @@ with prefix `s-SPC' at the same time."
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "|")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec|
                                   ;; :action #'~exec|-with-cp
                                   )
                 (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec<)
                 (wand:create-rule :match (rx bol (0+ " ") "$$")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec<-next-line-separate)
                 (wand:create-rule :match (rx bol (0+ " ") "$")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec<-next-line)
                 (wand:create-rule :match (rx bol (0+ " ") "$<")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'bs:send-complete-string)
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec>)
                 (wand:create-rule :match (rx bol (0+ " ") "!!!")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec-with-term-emu)
                 (wand:create-rule :match (rx bol (0+ " ") "!@")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec-with-term-emu-detach)
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec-with-pause-in-term-emu)
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
-                                  :skip-comment nil
                                   :action #'~exec<-next-line-separate)
                 ;; (wand:create-rule :match (rx bol (0+ " ") "!")
                 ;;                   :capture :after
