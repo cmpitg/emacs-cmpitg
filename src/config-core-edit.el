@@ -179,6 +179,11 @@ recursively."
 
 (use-package projectile
   :diminish projectile-mode
+  :init
+  (progn
+    (custom-set-variables `(projectile-known-projects-file ,(format (expand-file-name "projectile-bookmarks.%s.eld"
+                                                                                      user-emacs-directory)
+                                                                    (~emacs-server-name)))))
   :config
   (progn
     (projectile-mode)
