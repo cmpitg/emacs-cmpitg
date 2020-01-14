@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -99,6 +99,8 @@
   (bind-key "s-b" #'pop-to-mark-command)
   (~bind-key-with-prefix "t p f" #'paredit-reindent-defun)
   (~bind-key-with-prefix "t t f" #'fill-paragraph)
+
+  (~bind-key-with-prefix "i e" #'~insert-exec)
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
