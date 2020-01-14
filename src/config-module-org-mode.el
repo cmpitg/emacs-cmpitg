@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -49,6 +49,9 @@
 
     (with-eval-after-load "evil"
       (~bind-key-with-prefix "o a" #'org-agenda))))
+
+(setq-default initial-major-mode 'org-mode)
+(setq-default major-mode 'org-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

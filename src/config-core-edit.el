@@ -134,8 +134,6 @@ might need manual refreshing."
     (~bind-key-with-prefix "d r" #'~asciidoc/render :keymap adoc-mode-map)
     (~bind-key-with-prefix "d p" #'~asciidoc/preview :keymap adoc-mode-map)
     (~bind-key-with-prefix "d u" #'~asciidoc/update-preview :keymap adoc-mode-map)))
-(setq-default initial-major-mode 'adoc-mode)
-(setq-default major-mode 'adoc-mode)
 
 ;;
 ;; grep command
