@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -563,7 +563,7 @@ with prefix `s-SPC' at the same time."
       (~open-line 1)
       (beginning-of-line)
       (bs:exec text))
-    
+
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "|")
                                   :capture :after
@@ -576,12 +576,12 @@ with prefix `s-SPC' at the same time."
                 (wand:create-rule :match (rx bol (0+ " ") "$$")
                                   :capture :after
                                   :action #'~exec<-next-line-separate)
-                (wand:create-rule :match (rx bol (0+ " ") "$")
-                                  :capture :after
-                                  :action #'~exec<-next-line)
                 (wand:create-rule :match (rx bol (0+ " ") "$<")
                                   :capture :after
                                   :action #'bs:send-complete-string)
+                (wand:create-rule :match (rx bol (0+ " ") "$")
+                                  :capture :after
+                                  :action #'~exec<-next-line)
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
                                   :action #'~exec>)
