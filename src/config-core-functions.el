@@ -316,6 +316,22 @@ we might have in the frame."
           (keyboard-escape-quit))
     (keyboard-quit)))
 
+(defun ~insert-exec ()
+  "Inserts an executable from PATH or the current working
+directory to the current buffer."
+  (interactive)
+  (defvar *~recent-inserted-execs* (list)
+    "List of recently inserted executables.")
+  (let* ((execs (s-lines (~exec "get-all-execs")))
+         (current-dir-execs (thread-first (~exec "find . -type f -maxdepth 1")
+                              (s-lines)
+                              (butlast)))
+         (all-execs (append *~recent-inserted-execs* current-dir-execs execs))
+         (output (ivy-read "Choose exec: " all-execs
+                           :history  '*~recent-inserted-execs*)))
+    (unless (s-blank? output)
+      (insert output))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window & Frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
