@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -23,9 +23,9 @@
 a new window or a new frame.  Possible values: `:window',
 `:frame'.")
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Menu
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~right-click-menu ()
   "Returns a list to build a context menu."
@@ -47,9 +47,9 @@ a new window or a new frame.  Possible values: `:window',
   (interactive)
   (popup-menu (~right-click-menu)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Region: https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Region.html
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defalias '~is-selecting? 'use-region-p
   "Determines if current there is a selection/active region.")
@@ -77,10 +77,9 @@ default)."
   (interactive)
   (gui-get-selection 'SECONDARY))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editing
-;;
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~format-json ()
   "Formats current selection as JSON.  Requires jq."
@@ -317,9 +316,9 @@ we might have in the frame."
           (keyboard-escape-quit))
     (keyboard-quit)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window & Frame
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~toggle-sticky-window ()
   "Toggles stickiness of the currently active window."
@@ -563,9 +562,9 @@ If the found window is the mini-buffer, returns `nil'."
       (set-window-buffer next-window current-buffer)
       (set-window-buffer current-window next-buffer))))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; File & buffer
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar *recently-closed-file-list* (list)
   "List of recently closed files.")
@@ -1238,9 +1237,9 @@ fallback to current directory if project root is not found."
   (or (expand-file-name buffer-file-name)
       ""))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Emacs Lisp
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~ansi-colorize-region ()
   "ANSI-colorizes a region."
@@ -1468,9 +1467,9 @@ up in a separate frame."
   (interactive)
   (setf *~popup-exec-result?* (not *~popup-exec-result?*)))
 
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Processes
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun* ~firefox (url &key (new-window? nil))
   "Opens a URL in Firefox."
