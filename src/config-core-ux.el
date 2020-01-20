@@ -40,6 +40,9 @@
 (add-to-list 'default-frame-alist
              '(font . "Go Mono-10.5"))
 
+;; Set line spacing
+(setq-default line-spacing 2)
+
 ;; Restore cursor position after scrolling
 ;; Ref: http://elpa.gnu.org/packages/scroll-restore.html
 ;; FIXME: Buggy - Check and fix
