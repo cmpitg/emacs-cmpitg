@@ -1661,8 +1661,7 @@ by the `SHELL' environment variable."
                                  (push-mark)
                                  (insert output)
                                  (save-mark-and-excursion
-                                   (ansi-color-apply-on-region (region-beginning)
-                                                               (region-end))))))
+                                   (~ansi-colorize-region)))))
                          "-c"
                          actual-command)))
 
