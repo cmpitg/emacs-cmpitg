@@ -1599,6 +1599,31 @@ command.  Its value type is one of the following:
 
 (defun* ~exec-pop-up (command)
   "Executes a command & pops up a temporary buffer showing
+result, returning the process.  The command is executed
+asynchronously."
+  (interactive "MCommand: ")
+  (let* ((name command)
+         (process (start-process-shell-command name name command))
+         (dir default-directory))
+    (~popup-buffer :buffer name)
+    (with-current-buffer name
+      (setq-local default-directory dir)
+      ;; For some weird reason, we need to sleep shortly before we're able to
+      ;; jump to the beginning of the buffer
+      (sleep-for 0 1)
+      (if (process-live-p process)
+          (set-process-sentinel process #'(lambda (process signal)
+                                            (when (memq (process-status process) '(exit signal))
+                                              (ansi-color-apply-on-region (point-min)
+                                                                          (point-max))
+                                              (shell-command-sentinel process signal))))
+        (ansi-color-apply-on-region (point-min)
+                                    (point-max)))
+      (goto-char (point-min)))
+    process))
+
+(defun* ~exec-pop-up.old (command)
+  "Executes a command & pops up a temporary buffer showing
 result, returing the process.  The command is executed asynchronously."
   (interactive "MCommand: ")
   (let* ((name command)
