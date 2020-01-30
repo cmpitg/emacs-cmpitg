@@ -588,6 +588,9 @@ with prefix `s-SPC' at the same time."
                 (wand:create-rule :match (rx bol (0+ " ") "!@")
                                   :capture :after
                                   :action #'~exec-with-term-emu-detach)
+                (wand:create-rule :match (rx bol (0+ " ") "!^")
+                                  :capture :after
+                                  :action #'~exec-pop-up)
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :action #'~exec-with-pause-in-term-emu)
