@@ -558,7 +558,7 @@ with prefix `s-SPC' at the same time."
       (beginning-of-line)
       (~exec< text))
 
-    (defun* ~exec<-next-line (text)
+    (defun* ~bs:exec-output-to-next-line (text)
       (interactive)
       (~open-line 1)
       (beginning-of-line)
@@ -581,7 +581,7 @@ with prefix `s-SPC' at the same time."
                                   :action #'bs:send-complete-string)
                 (wand:create-rule :match (rx bol (0+ " ") "$")
                                   :capture :after
-                                  :action #'~exec<-next-line)
+                                  :action #'~bs:exec-output-to-next-line)
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
                                   :action #'~exec>)
