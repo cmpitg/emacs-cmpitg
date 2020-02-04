@@ -263,8 +263,9 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
   "Inserts a line full of comment characters until `fill-column' is reached."
   (interactive)
   (let ((comment (s-trim comment-start)))
-    (thread-first (loop for time from (current-column) upto (1- fill-column) by (length comment)
-                        collect comment)
+    (thread-first
+        (loop for time from (current-column) upto (1- fill-column) by (length comment)
+              collect comment)
       (string-join "")
       insert)))
 
