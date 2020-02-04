@@ -552,12 +552,11 @@ If the found window is the mini-buffer, returns `nil'."
 ;; File & buffer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *recently-closed-file-list* (list)
-  "List of recently closed files.")
-
 ;; TODO: Make the tracking of recently closed file a separate module
 (defun ~track-closed-file ()
   "Tracks the list of recently closed files."
+  (defvar *recently-closed-file-list* (list)
+    "List of recently closed files.")
   (when-let (path buffer-file-name)
     (delete path *recently-closed-file-list*)
     (add-to-list '*recently-closed-file-list* path)))
@@ -565,6 +564,8 @@ If the found window is the mini-buffer, returns `nil'."
 (defun ~undo-killed-buffers ()
   "Undoes the kill of buffers."
   (interactive)
+  (defvar *recently-closed-file-list* (list)
+    "List of recently closed files.")
   (find-file (let ((ivy-sort-functions-alist nil))
                (completing-read "File: " *recently-closed-file-list*))))
 
@@ -732,7 +733,7 @@ in the `*scratch-dir*' directory."
          (scratch-file (s-concat scratch-dir "scratch.el")))
     (~toggle-toolbox :path scratch-file :size -80)))
 
-(defun* ~switch-to-messages-buffer (&key (in-other-window t))
+(defun* ~switch-to-messages-buffer (&key (in-other-window nil))
   "Switches to the `*Messages*' buffer."
   (interactive)
   (if in-other-window
