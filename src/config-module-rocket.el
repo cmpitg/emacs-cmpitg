@@ -53,7 +53,7 @@
   "Runs text from the current context."
   (interactive)
   (let ((text (if (region-active-p)
-                  (~current-selection)
+                  (~get-selection)
                 (s-trim (thing-at-point 'line)))))
     (rocket:save-to-history text)
     (~execute text)))

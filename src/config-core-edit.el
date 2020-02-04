@@ -543,7 +543,7 @@ with prefix `s-SPC' at the same time."
       (destructuring-bind (command . buffer)
           (if (boundp 'local/cp-buffer)
               (let ((cp-selection (with-current-buffer local/cp-buffer
-                                    (~current-selection))))
+                                    (~get-selection))))
                 (if (or (string-empty-p cp-selection)
                         (string-equal cp-selection text))
                     (cons text (current-buffer))

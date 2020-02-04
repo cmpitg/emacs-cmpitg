@@ -56,8 +56,8 @@ a new window or a new frame.  Possible values: `:window',
 (defalias '~selection-start 'region-beginning)
 (defalias '~selection-end 'region-end)
 
-(defun ~current-selection ()
-  "The currently selected text."
+(defun ~get-selection ()
+  "Gets the currently selected text."
   (if (~is-selecting?)
     (buffer-substring (~selection-start)
                       (~selection-end))
@@ -111,7 +111,7 @@ convenient wrapper of `join-line'."
 (defun* ~search-buffer-interactively ()
   "Searches the current buffer interactively."
   (interactive)
-  (swiper (~current-selection)))
+  (swiper (~get-selection)))
 
 (defun* ~show-buffer-chooser ()
   "Shows the buffer chooser tool."
@@ -898,7 +898,7 @@ characters."
   "Opens a new frame with a temporary buffer containing the
   current selection."
   (interactive)
-  (~popup-buffer-frame :content (~current-selection)
+  (~popup-buffer-frame :content (~get-selection)
                        :working-dir default-directory))
 
 (defun ~new-buffer ()
@@ -1338,7 +1338,7 @@ rules are as follows:
 - otherwise take the current symbol or the last sexp at point."
   (interactive)
   (or (~get-secondary-selection)
-      (and (region-active-p) (~current-selection))
+      (and (region-active-p) (~get-selection))
       (~try-getting-current-thing)))
 
 (defun* ~execute.old (&optional thing
@@ -1442,7 +1442,7 @@ move the cursor but rather to call `~execute'."
     (cond ((evil-visual-state-p)
            (let ((thing (if (eq 'line (evil-visual-type))
                             (string-trim-right (thing-at-point 'line))
-                          (~current-selection))))
+                          (~get-selection))))
              (~execute thing)))
           ((evil-normal-state-p)
            (lexical-let* ((current-point (point))
@@ -1492,7 +1492,7 @@ up in a separate frame."
   (interactive
    (list (read-string "URL: " (cond
                                ((~is-selecting?)
-                                (~current-selection))
+                                (~get-selection))
                                ((thing-at-point-url-at-point)
                                 (thing-at-point-url-at-point))
                                (t
