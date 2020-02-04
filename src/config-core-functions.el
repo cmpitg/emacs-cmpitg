@@ -244,7 +244,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
 (defun* ~gui/insert-file-path ()
   "Inserts a file path at point."
   (interactive)
-  (~exec|-async ("zenity" "--file-selection" "--filename=%s" "2>/dev/null")
+  (~exec-|-async ("zenity" "--file-selection" "--filename=%s" "2>/dev/null")
                 #'string-trim
                 #'(lambda (text)
                     (unless (string-empty-p text)
@@ -253,7 +253,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
 (defun* ~gui/insert-dir-path ()
   "Inserts a dir path at point."
   (interactive)
-  (~exec|-async ("zenity" "--file-selection" "--directory" "--filename=%s" "2>/dev/null")
+  (~exec-|-async ("zenity" "--file-selection" "--directory" "--filename=%s" "2>/dev/null")
                 #'string-trim
                 #'(lambda (text)
                     (unless (string-empty-p text)
@@ -891,20 +891,6 @@ to `nil'."
       (add-file-local-variable var/symbol t))
     (goto-char (point-min))
     (setq buffer-offer-save t)))
-
-;; (defun ~revert-all-file-buffers-no-confirmation ()
-;;   "Reverts all file-backed buffers without confirmation (by
-;; assuming a 'yes' answer).  This function is useful when calling
-;; at the end of Emacs startup stage to make sure configuration
-;; which is loaded lazily get loaded."
-;;   (interactive)
-;;   (loop for thread in (loop for buf in (buffer-list)
-;;                             for file-name = (buffer-file-name buf)
-;;                             when (and file-name (file-exists-p file-name))
-;;                             collect (make-thread #'(lambda ()
-;;                                                      (with-current-buffer buf
-;;                                                        (revert-buffer t t)))))
-;;         do (thread-join thread)))
 
 (defun ~revert-all-file-buffers-no-confirmation ()
   "Reverts all file-backed buffers without confirmation (by
@@ -1856,7 +1842,7 @@ functions and external programs to process data.  Some examples:
                   \(:sh \"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
                   \(:fn #'insert\)\)
 
-For a bit more simplified, have a look at `~exec|-async'.
+For a bit more simplified, have a look at `~exec-|-async'.
 
 Note on implementation details: this function uses `~exec-async'
 to call external programs and uses process buffers for piping for
@@ -1893,7 +1879,7 @@ performance reasons."
                    finally (return next-output-callback))
             nil))
 
-(defmacro* ~exec|-async (&rest commands)
+(defmacro* ~exec-|-async (&rest commands)
   "Wrapper for `~exec-pipe-async', does exactly what
 `~exec-pipe-async' does but with simplified syntax - each command
 from COMMANDS has its type inferred from the value type:
@@ -1911,23 +1897,23 @@ from COMMANDS has its type inferred from the value type:
 E.g.
 
 ;; Just return \"hello world\"
-\(~exec|-async \"hello world\"\)
+\(~exec-|-async \"hello world\"\)
 
 ;; Pipe \"hello world\\n\" to 'cat', and insert it back to the
 ;; current buffer
-\(~exec|-async \"hello world\\n\"
-              \(\"cat\" \"-\"\)
-              #'insert\)
+\(~exec-|-async \"hello world\\n\"
+               \(\"cat\" \"-\"\)
+               #'insert\)
 
 ;; Build a context menu using sawfish-menu
-\(~exec|-async \(with-output-to-string
-                \(print `\(popup-menu \(\(\"_Top level\" 0\)
-                                     \(\"_Sub menu\"
-                                      \(\"_Foo\" 1\)
-                                      \(\"_Bar\" 2\)
-                                      \(\"_Quux\" 3\)\)\)\)\)\)
-              \(\"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
-              #'insert\)\)"
+\(~exec-|-async \(with-output-to-string
+                 \(print `\(popup-menu \(\(\"_Top level\" 0\)
+                                      \(\"_Sub menu\"
+                                       \(\"_Foo\" 1\)
+                                       \(\"_Bar\" 2\)
+                                       \(\"_Quux\" 3\)\)\)\)\)\)
+               \(\"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
+               #'insert\)\)"
   `(~exec-pipe-async ,@(loop for command in commands
                              collect (cond
                                       ((stringp command)
