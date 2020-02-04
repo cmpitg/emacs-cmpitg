@@ -190,41 +190,18 @@ If point is already there, moves to the beginning of the line."
   (push-mark (point) t t)
   (end-of-line))
 
-(defun ~append-pos-to-window-on-the-right ()
+(defun ~copy-pos-to-clipboard ()
   "Appends path to the current position to the end of window on
 the right so that it could be open with `~smart-open-file' later
 on."
   (interactive)
-  (require 'windmove)
-  (save-mark-and-excursion
-    (let* ((line-number-or-pattern (if (~is-selecting?)
-                                       (s-concat "/" (~current-selection) "/")
-                                     (line-number-at-pos)))
-           (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
-      (windmove-right)
-      (save-mark-and-excursion
-        (end-of-buffer)
-        (insert path "\n"))
-      (windmove-left)
-      (message path))))
-
-(defun ~append-pos-to-command-palette ()
-  "Appends path to the current position to the end of the command
-palette window so that it could be open with `~smart-open-file'
-later on."
-  (interactive)
-  (require 'windmove)
-  (save-mark-and-excursion
-    (let* ((line-number-or-pattern (if (~is-selecting?)
-                                       (s-concat "/" (~current-selection) "/")
-                                     (line-number-at-pos)))
-           (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
-      (windmove-up)  ;; The command palette is the immedicate upper window
-      (save-mark-and-excursion
-        (end-of-buffer)
-        (insert path "\n"))
-      (windmove-left)
-      (message path))))
+  (let* ((selection (thread-last (~get-selection)
+                      (s-replace "/" "\\/")))
+         (line-number-or-pattern (if (~is-selecting?)
+                                     (s-concat "/" selection "/")
+                                   (line-number-at-pos)))
+         (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
+    (~copy-to-clipboard path)))
 
 (defun* ~file-pattern? (str &key (must-exists t))
   "Determines if a string is a file pattern \(`path' or
@@ -1059,8 +1036,7 @@ first occurrence of a pattern.  E.g.
                       default-directory
                     (buffer-file-name))))
     (when filename
-      (kill-new filename)
-      (message "Copied '%s' to the clipboard." filename))))
+      (~copy-to-clipboard filename))))
 
 (defun ~parse-tramp-argument (connection-string)
   "Returns an alist with
