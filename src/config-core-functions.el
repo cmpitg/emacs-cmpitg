@@ -159,10 +159,9 @@ Source: http://stackoverflow.com/a/4717026/219881"
         (forward-char pos)))))
 
 (defun ~move-to-beginning-of-line ()
-  "Moves point back to indentation of beginning of line.
-
-Moves point to the first non-whitespace character on this line.
-If point is already there, moves to the beginning of the line."
+  "Moves the point to the first non-whitespace character on this line.
+If the point is already there, moves to the beginning of the
+line."
   (interactive)
   (let ((orig-point (point)))
     (unless visual-line-mode
@@ -179,13 +178,6 @@ If point is already there, moves to the beginning of the line."
   "Scrolls down `n-lines'."
   (interactive)
   (forward-line n-lines))
-
-(defun ~mark-line ()
-  "Marks current line."
-  (interactive)
-  (beginning-of-line)
-  (push-mark (point) t t)
-  (end-of-line))
 
 (defun ~copy-pos-to-clipboard ()
   "Appends path to the current position to the end of window on

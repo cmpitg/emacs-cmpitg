@@ -73,7 +73,6 @@
   (bind-key "x" #'delete-region evil-visual-state-map)
 
   ;; Selection/region
-  (bind-key "s-_" #'~mark-line)
   (bind-key "s-=" #'er/expand-region)
 
   ;; Searching
