@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2017-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2017-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,16 +16,6 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
-
-(defun ~jekyll-add-last-updated ()
-  "Adds `last_update' timestamp with `date -R` format for
-Jekyll."
-  (interactive)
-  (save-excursion
-    (goto-point (point-min))
-    (if (re-search-forward "^last_updated:.*$")
-        (replace-match (format "last_updated: %s"
-                               (string-trim (~exec "date -R")))))))
 
 (defun* ~get-project-toolbox-path (&key (dir (~current-project-root))
                                         (file-name ".rmacs-toolbox"))
