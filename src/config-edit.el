@@ -494,7 +494,9 @@ might need manual refreshing."
     (setq alchemist-test-display-compilation-output t)))
 
 ;; Ref: https://github.com/elixir-editors/emacs-elixir
-(use-package elixir-mode)
+(use-package elixir-mode
+  :defer t
+  :mode ("\\.ex$" "\\.exs$"))
 
 ;; Ref: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
 (use-package erlang-start)
