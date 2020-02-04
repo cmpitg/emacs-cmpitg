@@ -316,14 +316,17 @@ might need manual refreshing."
 ;;
 
 (use-package dired+
+  :disabled t
   :init (progn
           (setq dired-listing-switches "-lahF")
           ;; Reuse current buffer when opening file/dir
           (toggle-diredp-find-file-reuse-dir 1)))
 
-(use-package dired-single)
+(use-package dired-single
+  :disabled t)
 
 (use-package dired-details+
+  :disabled t
   :after (dired-single)
   :config
   (setq dired-listing-switches "-lhFgG --group-directories-first"))
@@ -821,7 +824,9 @@ the sequence, and its index within the sequence."
     (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
     (bind-key "M-q"        #'~cider-format-defun       cider-mode-map)))
 
-(use-package clojurescript-mode)
+(use-package clojurescript-mode
+  :defer t
+  :mode "\\.cljs\\'")
 
 (use-package midje-mode
   :diminish midje-mode
