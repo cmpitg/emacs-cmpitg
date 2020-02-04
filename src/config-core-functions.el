@@ -450,7 +450,7 @@ Returns the toolbox window."
           (selected-window))))))
 
 (defun ~toggle-maximize-buffer ()
-  "Toggles maximization of current buffer."
+  "Toggles maximizing current buffer."
   (interactive)
   (if (= 1 (length (window-list)))
       (jump-to-register '_)
