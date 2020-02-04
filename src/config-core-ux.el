@@ -545,7 +545,8 @@ selection or end-of-line."
 
 ;; Most-recently-used (MRU) buffer behavior
 ;; Ref: https://github.com/jrosdahl/iflipb
-(use-package iflipb)
+(use-package iflipb
+  :config (custom-set-variables `(iflipb-ignore-buffers nil)))
 
 ;; Allow text drap-and-drop with mouse
 (custom-set-variables `(mouse-drag-and-drop-region t))
