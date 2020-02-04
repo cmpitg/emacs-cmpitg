@@ -63,6 +63,56 @@
   :mode "\\.toml\\'")
 
 ;;
+;; Asciidoc mode
+;;
+;; Ref: https://github.com/sensorflo/adoc-mode
+;;
+
+(use-package adoc-mode
+  :mode ("\\.adoc\\'" . adoc-mode)
+  :after (evil)
+  :config
+  (progn
+    (defun ~asciidoc/render (html-path)
+      "Renders current file with AsciiDoctor in HTML format."
+      (interactive "FHTML output path: ")
+      (let ((cmd (format "asciidoctor --out-file %s %s"
+                         (shell-quote-argument html-path)
+                         (shell-quote-argument (~current-file-full-path)))))
+        (~run-process cmd)
+        (message "'%s' has finished running" cmd)
+        (message "Check %s for output" html-path)))
+
+    (defun ~asciidoc/preview ()
+      "Renders and previews current AsciiDoc file in HTML
+format."
+      (interactive)
+      (let ((html-path (~asciidoc/current-temporary-html-path)))
+        (~asciidoc/render html-path)
+        (~firefox html-path :new-window? t)))
+
+    (defun ~asciidoc/current-temporary-html-path ()
+      "Returns the HTML path corresponding to the current
+AsciiDoc buffer.  The path is stored in a buffer local variable
+named `asciidoc-html-path' and generated if not yet exists"
+      (let ((asciidoc-html-path/symbol (make-local-variable 'asciidoc-html-path)))
+        (unless (boundp asciidoc-html-path/symbol)
+          (set asciidoc-html-path/symbol (make-temp-file (f-filename (buffer-file-name))
+                                                         nil
+                                                         ".html")))
+        (buffer-local-value 'asciidoc-html-path (current-buffer))))
+
+    (defun ~asciidoc/update-preview ()
+      "Re-renders current AsciiDoc file for preview.  The browser
+might need manual refreshing."
+      (interactive)
+      (~asciidoc/render (~asciidoc/current-temporary-html-path)))
+
+    (~bind-key-with-prefix "d r" #'~asciidoc/render :keymap adoc-mode-map)
+    (~bind-key-with-prefix "d p" #'~asciidoc/preview :keymap adoc-mode-map)
+    (~bind-key-with-prefix "d u" #'~asciidoc/update-preview :keymap adoc-mode-map)))
+
+;;
 ;; Pairs management
 ;;
 ;; Ref: https://github.com/cute-jumper/embrace.el
