@@ -119,11 +119,8 @@ convenient wrapper of `join-line'."
 (defun* ~show-buffer-chooser ()
   "Shows the buffer chooser tool."
   (interactive)
-  (with-current-buffer (if (and (fboundp 'command-palette:is-command-palette-window?)
-                                (command-palette:is-command-palette-window?))
-                           local/main-buffer
-                         (current-buffer))
-    (call-interactively #'bl:show-buffer-chooser)))
+  (require 'rmacs:config-module-simple-buffer-list)
+  (call-interactively #'bl:show-buffer-chooser))
 
 (defun ~delete-line ()
   "Deletes the current line."
