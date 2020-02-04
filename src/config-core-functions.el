@@ -478,12 +478,6 @@ Returns the toolbox window."
           (delete-frame frame))
       (kill-buffer buffer))))
 
-(defun* ~count-non-sticky-windows ()
-  "Counts the number of non-sticky windows."
-  (loop for window being the windows
-        unless (window-dedicated-p window)
-        count window))
-
 (defun* ~kill-buffer-and-window (&optional (window (selected-window)))
   "Kills the a buffer along with its window (if exists)."
   (interactive)
@@ -491,6 +485,12 @@ Returns the toolbox window."
     (if (= (~count-non-sticky-windows) 1)
         (kill-buffer)
       (kill-buffer-and-window))))
+
+(defun* ~count-non-sticky-windows ()
+  "Counts the number of non-sticky windows."
+  (loop for window being the windows
+        unless (window-dedicated-p window)
+        count window))
 
 (defun ~one-window ()
   "Deletes all other non-dedicated windows and makes current
