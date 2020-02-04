@@ -334,6 +334,7 @@ directory to the current buffer."
         (destructuring-bind (x1 y1 x2 y2) (window-edges)
           (set-mouse-position frame (+ x1 1) y1))))))
 
+;; TODO: Revise
 (defun* ~read-input-string-async (&key prompt callback default-value (size 70))
   "Displays a separate buffer to read input string.  The input is
 accepted with `C-c C-c' and discarded with `C-c C-k'.  When the
@@ -365,6 +366,7 @@ The buffered used for input uses `prompt' as it title and
       (set-window-dedicated-p (selected-window) t))
     current-buffer))
 
+;; TODO: Revise
 (defun* ~read-multiple-input-strings-async (&key prompts
                                                  callback
                                                  (title "Prompting")

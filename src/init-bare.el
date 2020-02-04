@@ -17,6 +17,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+
 ;; TODO: https://github.com/tjarvstrand/edts and Erlang integration
 ;; TODO: https://wiki.haskell.org/Emacs#Scion for Haskell integration
 
@@ -34,6 +35,7 @@
 ;; TODO: company mode
 ;; TODO: Make backward/forward kill word deletes, not kills
 
+;; Doc: Don't use setq to customize, use `custom-set-variables'
 ;; Doc: To add a file variable to the prop line: add-file-local-variable-prop-line
 ;; Doc: g f → find-file-at-point
 ;; Doc: internal-temp-output-buffer-show
