@@ -126,7 +126,7 @@ convenient wrapper of `join-line'."
   "Deletes the current line."
   (interactive)
   (save-excursion
-   (delete-region (point-at-bol) (point-at-eol))))
+    (delete-region (point-at-bol) (point-at-eol))))
 
 ;; TODO cleanup
 (defun ~duplicate-line-or-region (&optional n)
