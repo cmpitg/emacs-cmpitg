@@ -244,22 +244,20 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
 (defun* ~gui/insert-file-path ()
   "Inserts a file path at point."
   (interactive)
-  (let ((path (thread-first "zenity --file-selection --filename=%s 2>/dev/null"
-                (format (thread-first default-directory shell-quote-argument))
-                ~exec
-                string-trim)))
-    (unless (string-empty-p path)
-      (insert path))))
+  (~exec|-async ("zenity" "--file-selection" "--filename=%s" "2>/dev/null")
+                #'string-trim
+                #'(lambda (text)
+                    (unless (string-empty-p text)
+                      (insert text)))))
 
 (defun* ~gui/insert-dir-path ()
   "Inserts a dir path at point."
   (interactive)
-  (let ((path (thread-first "zenity --file-selection --directory --filename=%s 2>/dev/null"
-                (format (thread-first default-directory shell-quote-argument))
-                ~exec
-                string-trim)))
-    (unless (string-empty-p path)
-      (insert path))))
+  (~exec|-async ("zenity" "--file-selection" "--directory" "--filename=%s" "2>/dev/null")
+                #'string-trim
+                #'(lambda (text)
+                    (unless (string-empty-p text)
+                      (insert text)))))
 
 (defun ~insert-full-line-comment ()
   "Inserts a line full of comment characters until `fill-column' is reached."
