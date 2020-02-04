@@ -1260,6 +1260,11 @@ fallback to current directory if project root is not found."
 ;; Emacs Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun ~copy-to-clipboard (text)
+  "Copies text to clipboard."
+  (kill-new text)
+  (message "Copied '%s' to the clipboard." text))
+
 (defun ~ansi-colorize-region ()
   "ANSI-colorizes a region."
   (interactive)
