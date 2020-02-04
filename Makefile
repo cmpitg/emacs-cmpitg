@@ -1,4 +1,4 @@
-.PHONY: install-deps install-bin archive-elpa open-package-installation
+.PHONY: install-deps install-bin archive-elpa profile open-package-installation
 
 install-deps:
 	emacs --quick --batch \
@@ -18,3 +18,6 @@ archive-elpa:
 		--load src/bootstrap-config.el \
 		--load src/package-install.el \
 		--eval "(elpamr-create-mirror-for-installed)"
+
+profile:
+	bin/profile-ee
