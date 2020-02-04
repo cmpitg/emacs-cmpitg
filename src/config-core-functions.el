@@ -27,6 +27,7 @@ a new window or a new frame.  Possible values: `:window',
 ;; Menu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: Context-sensitive right-click menu
 (defun ~right-click-menu ()
   "Returns a list to build a context menu."
   `(""
@@ -35,8 +36,10 @@ a new window or a new frame.  Possible values: `:window',
     ["Paste" yank t]
     ["Delete" delete-region (~is-selecting?)]
     ["--" ignore]
-    ["Exec (other window)" ~exec-in-other-window (~is-selecting?)]
-    ["Exec in Tmux" emamux:send-region (~is-selecting?)]
+    ;; TODO: Include exec functions
+    ;; ["Exec (other window)" ~exec-in-other-window (~is-selecting?)]
+    ;; ["Exec in Tmux" emamux:send-region (~is-selecting?)]
+    ;; TODO: Include buffer list, new temp buffer, ...
     ["--" ignore]
     ["Undo" undo-tree-undo t]
     ["Redo" undo-tree-redo t]
