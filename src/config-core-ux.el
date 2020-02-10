@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -286,18 +286,8 @@
   (setq frame-title-format title-format)
   (setq icon-title-format title-format))
 
-;; To make the behavior of `display-buffer' consistent, do not allow it to
-;; split/create a new window by setting to `nil'
-(setq pop-up-windows nil)
-;; Display some buffers in a separate frame so that they don't steal the
-;; current window
-(dolist (buffer-regex (list (rx bol "*Help*" eol)
-                            (rx bol "*compilation*" eol)
-                            (rx bol "*cider-result*" eol)
-                            (rx bol "*cider-doc*" eol)
-                            (rx bol "*Org Agenda*" eol)
-                            (rx bol "*ivy-occur")))
-  (add-to-list 'display-buffer-alist (cons buffer-regex (cons #'special-display-popup-frame nil))))
+;; Buffers are popped up in a separate frame or window
+(~set-pop-up-buffer-mode :window)
 
 ;; Make window combinations resize proportionally
 (setq window-combination-resize t)
@@ -319,9 +309,6 @@
 
 ;; Simple buffer listing
 (require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
-
-;; Buffers are popped up in a separate frame
-(setq *popup-buffer-in* :frame)
 
 ;; Better display of header-line
 (set-face-attribute 'header-line nil

@@ -548,6 +548,30 @@ If the found window is the mini-buffer, returns `nil'."
       (set-window-buffer next-window current-buffer)
       (set-window-buffer current-window next-buffer))))
 
+(defun ~set-pop-up-buffer-mode (mode)
+  "Sets mode for pop-up buffer.  MODE should either be :WINDOW or :FRAME."
+  (case mode
+    (:window
+     (custom-set-variables `(*popup-buffer-in* :window)
+                           `(display-buffer-alist nil)
+                           `(pop-up-windows t)))
+    (:frame
+     (custom-set-variables `(*popup-buffer-in* :frame))
+
+     ;; To make the behavior of `display-buffer' consistent, do not allow it
+     ;; to split/create a new window by setting to `nil'
+     (setq pop-up-windows nil)
+
+     ;; Display some buffers in a separate frame so that they don't steal the
+     ;; current window
+     (dolist (buffer-regex (list (rx bol "*Help*" eol)
+                                 (rx bol "*compilation*" eol)
+                                 (rx bol "*cider-result*" eol)
+                                 (rx bol "*cider-doc*" eol)
+                                 (rx bol "*Org Agenda*" eol)
+                                 (rx bol "*ivy-occur")))
+       (add-to-list 'display-buffer-alist (cons buffer-regex (cons #'special-display-popup-frame nil)))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; File & buffer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
