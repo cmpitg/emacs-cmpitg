@@ -21,6 +21,8 @@
 ;; FIXME: Support local state & multiple narrowing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'ht)
+
 ;;
 ;; Enhance narrow to region in ASCIIDoc mode.
 ;; Doesn't support multiple narrowing, yet.

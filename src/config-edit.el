@@ -23,8 +23,6 @@
 ;; Ref: https://github.com/abo-abo/hydra
 ;;
 
-(use-package hydra)
-
 (use-package ivy-hydra
   :after (ivy counsel))
 
@@ -118,7 +116,8 @@ might need manual refreshing."
 ;; Ref: https://github.com/cute-jumper/embrace.el
 ;;
 
-(use-package embrace)
+(use-package embrace
+  :disabled t)
 
 ;;
 ;; Just-work jump-to-definition
@@ -244,6 +243,8 @@ might need manual refreshing."
 ;;
 
 (use-package chruby
+  :mode ("\\.rb\\'" "Rakefile")
+  :defer t
   :config
   (let ((ruby-version (or (getenv "CHRUBY_VERSION") "ruby-2.5.1")))
     (chruby ruby-version)))
@@ -255,6 +256,7 @@ might need manual refreshing."
 ;;
 
 (use-package vdiff
+  :commands (vdiff-mode vdiff-files vdiff-files3)
   :config
   (progn
     (with-eval-after-load "evil"
@@ -707,6 +709,8 @@ might need manual refreshing."
   :mode "\\.clj\\'")
 
 (use-package flycheck-clj-kondo
+  :after clojure-mode
+  :defer t
   :init
   (progn
     (defun my/enable-clj-syntax-check ()
@@ -858,6 +862,8 @@ the sequence, and its index within the sequence."
 ;;
 
 (use-package geiser-mode
+  :after paredit-mode
+  :mode "\\.scm\\'"
   :config
   (progn
     (custom-set-variables `(geiser-repl-use-other-window nil))))

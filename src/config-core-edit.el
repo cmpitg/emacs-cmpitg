@@ -52,7 +52,8 @@
 ;; Ref: https://github.com/Wilfred/ht.el
 ;;
 
-(use-package ht)
+(use-package ht
+  :defer t)
 
 ;;
 ;; Async processing by spawning subordinate processes
@@ -68,7 +69,8 @@
 ;; Ref: https://github.com/mola-T/timp
 ;;
 
-(use-package timp)
+(use-package timp
+  :defer t)
 
 ;;
 ;; Tramp for remote & sudo access
@@ -84,6 +86,15 @@
 
 (use-package expand-region
   :commands er/expand-region)
+
+;;
+;; Interactive menu
+;;
+;; Ref: https://github.com/abo-abo/hydra
+;;
+
+(use-package hydra
+  :demand t)
 
 ;;
 ;; grep command
