@@ -511,7 +511,7 @@ selection or end-of-line."
 (use-package resize-window
   :config
   (progn
-    (setq resize-window-fine-argument 10)
+    (setq resize-window-fine-argument 3)
 
     (dolist (action (list (list ?n #'resize-window--enlarge-horizontally " Resize - horizontally" t)
                           (list ?h #'resize-window--shrink-horizontally " Resize - shrink horizontally" t)
