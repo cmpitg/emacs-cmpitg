@@ -32,13 +32,15 @@
       (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
       (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
       (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
-      (font-lock-mode 1))
+      (font-lock-mode -1))
 
     ;; Add timestamp when an item is done
     (setq org-log-done 'time)
 
     (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
                              (f-glob "*.org")))
+    
+    (custom-set-variables `(org-startup-indented t))
 
     ;; No folding by default
     ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
