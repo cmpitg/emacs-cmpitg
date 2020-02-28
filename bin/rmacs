@@ -262,6 +262,8 @@ switch $mainCommand {
 		makeSureServerIsRunning [array get args]
 		if {$args(with-buffer) ne ""} {
 			set mainArgs [::struct::list mapfor x $mainArgs {expr {"(with-current-buffer $args(with-buffer) $x)"}}]
+		} else {
+			set mainArgs [::struct::list mapfor x $mainArgs {expr {"(with-current-buffer (window-buffer) $x)"}}]
 		}
 		rmacsEval $args(name) $args(client-opts) $mainArgs $args(verbose)
 	}
