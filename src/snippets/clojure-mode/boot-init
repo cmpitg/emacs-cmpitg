@@ -17,30 +17,36 @@
 
 (defn read-deps-edn
   "Reads tools.deps's deps.edn."
-  [aliases-to-include]
-  (let [{:keys [paths deps aliases]}
-        (-> "deps.edn" slurp clojure.edn/read-string)
-        deps (->> (select-keys aliases aliases-to-include)
-                  vals
-                  (mapcat :extra-deps)
-                  (into deps)
-                  (reduce
-                   (fn [deps [artifact info]]
-                     (if-let [version (:mvn/version info)]
-                       (conj deps
-                             (transduce cat conj [artifact version]
-                                        (select-keys info [:scope :exclusions])))
-                       deps))
-                   []))]
-    {:dependencies   deps
-     :source-paths   (set paths)
-     :resource-paths (set paths)}))
+  ([aliases-to-include]
+   (let [{:keys [paths deps aliases]}
+         (-> "deps.edn" slurp clojure.edn/read-string)
+         deps (->> (select-keys aliases aliases-to-include)
+                   vals
+                   (mapcat :extra-deps)
+                   (into deps)
+                   (reduce
+                    (fn [deps [artifact info]]
+                      (if-let [version (:mvn/version info)]
+                        (conj deps
+                              (transduce cat conj [artifact version]
+                                         (select-keys info [:scope :exclusions])))
+                        deps))
+                    []))]
+     {:dependencies   deps
+      :source-paths   (set paths)
+      :resource-paths (set paths)}))
+  ([]
+   (read-deps-edn [])))
 
 (defn set-env-from-deps-edn!
   "Sets all necessary environment definitions."
-  [aliases-to-include]
-  (doseq [[env val] (read-deps-edn aliases-to-include)]
-    (set-env! env val)))
+  ([aliases-to-include]
+   (let [deps (read-deps-edn aliases-to-include)]
+    (doseq [[env val] deps]
+      (set-env! env val))
+    deps))
+  ([]
+   (set-env-from-deps-edn! [])))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tasks
