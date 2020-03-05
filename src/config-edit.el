@@ -393,7 +393,7 @@ might need manual refreshing."
 ;; Ref: https://github.com/dominikh/go-mode.el
 ;;
 
-(use-package go-mode-autoloads
+(use-package go-mode
   :mode "\\.go\\'")
 
 ;;
@@ -706,7 +706,21 @@ might need manual refreshing."
 
 (use-package clojure-mode
   :after paredit-mode
-  :mode "\\.clj\\'")
+  :mode "\\.clj\\'"
+  :init
+  (progn
+    (define-clojure-indent
+      (defroutes 'defun)
+      (GET 2)
+      (POST 2)
+      (PUT 2)
+      (DELETE 2)
+      (HEAD 2)
+      (ANY 2)
+      (context 2)
+      (tabular '(2 1))
+      (are '(2 1))
+      (keep-focused 1))))
 
 (use-package flycheck-clj-kondo
   :after clojure-mode
@@ -784,18 +798,6 @@ the sequence, and its index within the sequence."
     (setq nrepl-buffer-name-show-port t)
 
     (setq cider-repl-history-size 9999)
-
-    (define-clojure-indent
-      (defroutes 'defun)
-      (GET 2)
-      (POST 2)
-      (PUT 2)
-      (DELETE 2)
-      (HEAD 2)
-      (ANY 2)
-      (context 2)
-      (tabular '(2 1))
-      (are '(2 1)))
 
     ;; Do not pop up REPL after connecting
     (setq cider-repl-pop-to-buffer-on-connect nil)

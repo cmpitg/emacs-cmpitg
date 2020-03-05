@@ -1,12 +1,83 @@
 # -*- mode: snippet -*-
 # name: boot-init - Init build.boot
-# key: boot-init
+# key: ;boot-init
 # --
-(set-env! :dependencies '[[org.clojure/clojure "${1:1.8.0}"]
-                          [integrant "${2:0.6.1}"]]
-          :source-paths #{"src/"})
+(ns boot.user)
 
-(task-options! pom {:project '$3
-                    :version "${4:latest}"}
+(def ^:const +project+ {:project '$1
+                        :version "${2:0.0.1-SNAPSHOT}"})
+
+(task-options! pom +project+
                aot {:all true}
-               jar {:main '${3:$(s-concat yas-text ".core")}})
+               jar {:main '$3})
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utils
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn read-deps-edn
+  "Reads tools.deps's deps.edn."
+  ([aliases-to-include]
+   (let [{:keys [paths deps aliases]}
+         (-> "deps.edn" slurp clojure.edn/read-string)
+         deps (->> (select-keys aliases aliases-to-include)
+                   vals
+                   (mapcat :extra-deps)
+                   (into deps)
+                   (reduce
+                    (fn [deps [artifact info]]
+                      (if-let [version (:mvn/version info)]
+                        (conj deps
+                              (transduce cat conj [artifact version]
+                                         (select-keys info [:scope :exclusions])))
+                        deps))
+                    []))]
+     {:dependencies   deps
+      :source-paths   (set paths)
+      :resource-paths (set paths)}))
+  ([]
+   (read-deps-edn [])))
+
+(defn set-env-from-deps-edn!
+  "Sets all necessary environment definitions."
+  ([aliases-to-include]
+   (let [deps (read-deps-edn aliases-to-include)]
+    (doseq [[env val] deps]
+      (set-env! env val))
+    deps))
+  ([]
+   (set-env-from-deps-edn! [])))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tasks
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftask build-uberjar
+  "Builds an uberjar"
+  []
+  (comp (pom) (aot) (uber) (jar) (target)))
+
+(deftask build-native-image
+  "Builds a native image."
+  []
+  (dosh "native-image"
+        "--report-unsupported-elements-at-runtime"
+        "--initialize-at-build-time"
+        "--static"
+        "-jar" (format "target/%s-%s.jar"
+                       (:project +project+)
+                       (:version +project+))
+        (format "-H:Name=target/%s-%s"
+                (:project +project+)
+                (:version +project+)))
+  identity)
+
+(deftask dev
+  "Adds dev-only deps."
+  []
+  (set-env-from-deps-edn! [:dev])
+  identity)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(set-env-from-deps-edn! [])
