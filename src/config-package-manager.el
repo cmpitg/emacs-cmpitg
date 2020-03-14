@@ -23,7 +23,7 @@
 
 (dolist (package-archive `(("local-elpa-mirror" . ,elpamr-default-output-directory)
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
-                           ("melpa" . "https://melpa.milkbox.net/packages/")
+                           ("melpa" . "https://melpa.org/packages/")
                            ("marmalade" . "https://marmalade-repo.org/packages/")
                            ("gnu" . "https://elpa.gnu.org/packages/")
                            ("elpy" . "https://jorgenschaefer.github.io/packages/")))
