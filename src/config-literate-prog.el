@@ -325,16 +325,16 @@ code block."
          -1)))
 
 (defun ~cl/compile-snippet ()
-  "`eval's the current snippet with Common Lisp's Slime.  Note
-that this function would not work reliably if the current point
-is not inside a snippet."
+  "`eval's the current snippet with Common Lisp's Sly.  Note that
+this function would not work reliably if the current point is not
+inside a snippet."
   (interactive)
   (save-excursion
     (cond ((member major-mode '(lisp-mode common-lisp-mode))
            (beginning-of-buffer)
            (let ((start (point)))
              (end-of-buffer)
-             (slime-compile-region start (point))))
+             (sly-compile-region start (point))))
           (t
            (re-search-backward "^----$")
            (next-line)
@@ -343,7 +343,7 @@ is not inside a snippet."
              (re-search-forward "^----$")
              (previous-line)
              (end-of-line)
-             (slime-compile-region start (point)))))))
+             (sly-compile-region start (point)))))))
 
 (defun ulqui:tmux-make ()
   "Runs `make' in current Tmux session."

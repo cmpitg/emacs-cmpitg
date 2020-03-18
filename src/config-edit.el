@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -152,7 +152,7 @@ might need manual refreshing."
          ("s-T" . paredit-forward-up)
          ("s-R" . paredit-forward)
          ("s-G" . paredit-backward))
-  :defines slime-repl-mode-map
+  :defines (slime-repl-mode-map sly-mrepl-mode-map)
   :config (progn
             ;; Always try to delete region first
             (put 'paredit-forward-delete 'delete-selection 'supersede)
@@ -179,8 +179,9 @@ might need manual refreshing."
                   (paredit-mode 1)))
             (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
 
-            ;; Use with SLIME REPL
+            ;; Use with Common Lisp REPL
             (add-hook 'slime-repl-mode-hook #'~enable-paredit-mode)
+            (add-hook 'sly-mrepl-mode-hook #'~enable-paredit-mode)
 
             ;; Stop SLIME's REPL from grabbing DEL,
             ;; which is annoying when backspacing over a '('
@@ -427,6 +428,7 @@ might need manual refreshing."
 ;; Ref: https://github.com/joaotavora/sly
 ;;
 
+(remove-hook 'lisp-mode-hook 'slime-lisp-mode-hook)
 (use-package sly
   :commands common-lisp-mode
   :config
@@ -445,11 +447,6 @@ might need manual refreshing."
   :disabled t
   :config
   (progn
-    (defun ~slime-connect-default ()
-      "Connects to default Slime process."
-      (interactive)
-      (slime-connect "localhost" 4005))
-
     ;; Better indentation, see http://www.emacswiki.org/emacs/IndentingLisp
     (put 'define-command 'common-lisp-indent-function 2)
     (put 'if-let 'common-lisp-indent-function 2)

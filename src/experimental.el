@@ -281,8 +281,7 @@ application."
 ;; File navigation
 ;;
 
-(bind-key "C-<home>" '~jekyll-add-last-updated)
-(bind-key "C-@" 'slime-switch-to-output-buffer)
+;; (bind-key "C-<home>" '~jekyll-add-last-updated)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; QML mode
