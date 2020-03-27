@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+# name: setup_deb-repo
+# key: ;setup-deb-repo
+# --
+.file::${1:<component>}/setup-bin/install-${2:<software>}
+[source,sh]
+----
+#!/usr/bin/env bash
+
+## include::robust-bash
+
+## include::bash-meta
+
+add-deb-repo "\${CONFIG_DIR}/${3:<repo-name>}.sources.list" $3.sources.list
+
+prompt-refresh-and-install ${4:<packages>}
+
+----
+
+.file::$1/config/$3.sources.list
+[source,sources.list]
+----
+# wget --quiet ${5:<key-file-url>} -O -| sudo apt-key add -
+${6:<deb-repo-line>}
+----
