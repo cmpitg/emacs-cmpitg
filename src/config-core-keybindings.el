@@ -255,6 +255,7 @@
   (bind-key "<S-f12>" #'~toggle-project-toolbox)
 
   (bind-key "M-/" #'hippie-expand)
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
   (bind-key "M-ESC" #'~keyboard-quit)
   (bind-key "s-SPC s-SPC" #'exchange-point-and-mark)
   (~bind-key-with-prefix "SPC" #'counsel-M-x)
