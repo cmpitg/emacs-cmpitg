@@ -85,7 +85,10 @@
 ;;
 
 (use-package expand-region
-  :commands er/expand-region)
+  :commands (er/expand-region
+             er/mark-outside-pairs
+             er/mark-outside-quotes
+             er/mark-defun))
 
 ;;
 ;; Interactive menu
