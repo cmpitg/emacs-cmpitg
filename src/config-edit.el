@@ -91,7 +91,7 @@
 
 (use-package adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode)
-  :after (evil)
+  :after (evil hydra)
   :config
   (progn
     (defun ~asciidoc/render (html-path)
@@ -129,9 +129,11 @@ might need manual refreshing."
       (interactive)
       (~asciidoc/render (~asciidoc/current-temporary-html-path)))
 
-    (~bind-key-with-prefix "d r" #'~asciidoc/render :keymap adoc-mode-map)
-    (~bind-key-with-prefix "d p" #'~asciidoc/preview :keymap adoc-mode-map)
-    (~bind-key-with-prefix "d u" #'~asciidoc/update-preview :keymap adoc-mode-map)))
+    (defhydra hydra-asciidoc (:exit t)
+      "Asciidoc operations"
+      ("r" #'~asciidoc/render "Render")
+      ("p" #'~asciidoc/preview "Preview")
+      ("u" #'~asciidoc/update-preview "Update preview"))))
 
 ;;
 ;; Pairs management
@@ -755,7 +757,7 @@ might need manual refreshing."
     (add-hook 'clojure-mode-hook #'my/enable-clj-syntax-check)))
 
 (use-package cider
-  :after clojure-mode
+  :after (hydra clojure-mode)
   :init
   (progn
     (require 'seq)
@@ -822,30 +824,30 @@ the sequence, and its index within the sequence."
     ;; Do not pop up REPL after connecting
     (setq cider-repl-pop-to-buffer-on-connect nil)
 
-    (~bind-key-with-prefix "d d e a"   #'~clojure/add-dependency     :keymap cider-mode-map)
-    (~bind-key-with-prefix "d d d"     #'cider-doc                   :keymap cider-mode-map)
-    (~bind-key-with-prefix "d d w"     #'cider-grimoire-web          :keymap cider-mode-map)
-    (~bind-key-with-prefix "d d g"     #'cider-grimoire              :keymap cider-mode-map)
-    (~bind-key-with-prefix "d d a"     #'cider-apropos               :keymap cider-mode-map)
-    (~bind-key-with-prefix "d n s e"   #'cider-eval-ns-form          :keymap cider-mode-map)
-    (~bind-key-with-prefix "d n s b"   #'cider-browse-ns             :keymap cider-mode-map)
-    (~bind-key-with-prefix "d n s v"   #'cider-find-ns               :keymap cider-mode-map)
-    (~bind-key-with-prefix "d n s a r" #'cljr-add-require-to-ns      :keymap cider-mode-map)
-    (~bind-key-with-prefix "d s r"     #'cider-switch-to-repl-buffer :keymap cider-mode-map)
-    (~bind-key-with-prefix "d b l"     #'cider-load-buffer           :keymap cider-mode-map)
-    (~bind-key-with-prefix "d f l"     #'cider-load-file             :keymap cider-mode-map)
-    (~bind-key-with-prefix "d f a"     #'cider-load-all-files        :keymap cider-mode-map)
-    (~bind-key-with-prefix "d a a"     #'clojure-align               :keymap cider-mode-map)
-    (~bind-key-with-prefix "d p p"     #'cider-pprint-eval-last-sexp :keymap cider-mode-map)
-    (~bind-key-with-prefix "d ."       #'cider-find-var              :keymap cider-mode-map)
-    (~bind-key-with-prefix "d ,"       #'cider-pop-back              :keymap cider-mode-map)
-    (~bind-key-with-prefix "d r e"     #'cider-eval-region           :keymap cider-mode-map)
-
-    (~bind-key-with-prefix "d l"     #'cider-repl-clear-buffer :keymap cider-repl-mode-map)
-    (~bind-key-with-prefix "d ."     #'cider-find-var          :keymap cider-repl-mode-map)
-    (~bind-key-with-prefix "d ,"     #'cider-pop-back          :keymap cider-repl-mode-map)
-    (~bind-key-with-prefix "d f a"   #'cider-load-all-files    :keymap cider-repl-mode-map)
-    (~bind-key-with-prefix "d n s s" #'cider-repl-set-ns       :keymap cider-repl-mode-map)
+    (defhydra hydra-clojure (:exit t)
+      "Clojure development"
+      ("dpa" #'~clojure/add-dependency "Dependency: Add")
+      ("ddd" #'cider-doc "Doc: Show")
+      ("dda" #'cider-apropos "Doc: Show symbol that matches the query")
+      ("nse" #'cider-eval-ns-form "Namespace: Eval namespace form")
+      ("nsb" #'cider-browse-ns "Namespace: Browse")
+      ("ns." #'cider-find-ns "Namespace: Jump to")
+      ("nsr" #'cljr-add-require-to-ns "Namespace: Add require")
+      ("bl" #'cider-load-buffer "Buffer: Load")
+      ("fl" #'cider-load-file "File: Load")
+      ("fa" #'cider-load-all-files "File: Load all")
+      ("re" #'cider-eval-region "Region: Eval")
+      ("ls" #'cider-switch-to-repl-buffer "REPL: Switch to")
+      ("lc" #'cider-repl-clear-buffer "REPL: Clear")
+      ("ln" #'cider-repl-set-ns "REPL: Set namespace")
+      ("a" #'clojure-align "Align")
+      ("." #'cider-find-var "Jump to var definition")
+      ("," #'cider-pop-back "Jump back")
+      ("pp" #'cider-pprint-eval-last-sexp "Eval and pretty-print last expression")
+      ("ee" #'cider-eval-last-sexp "Eval last sexp")
+      ("ef" #'cider-eval-defun-at-point "Eval defun")
+      ("es" #'cider-eval-sexp-at-point "Eval current sexp")
+      ("tf" #'~cider-format-defun "Format defun"))
 
     (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
     (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)

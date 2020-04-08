@@ -1,5 +1,4 @@
 ;; -*- lexical-binding: t; -*-
-
 ;;
 ;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
@@ -58,11 +57,6 @@
   (bind-key "s-r" #'forward-word)
   (bind-key "s-R" #'forward-sexp)
   (bind-key "s-l" #'goto-line)
-  (bind-key "C-," #'point-pos-next)
-  (bind-key "C-;" #'point-pos-previous)
-  (bind-key "<M-f2>" #'point-pos-goto)
-  (~bind-key-with-prefix "j" #'ace-jump-mode)
-
 
   ;; Deletion
   (bind-key "s-u" #'delete-char)
@@ -71,6 +65,9 @@
   (bind-key "s-." #'backward-kill-word)
   (bind-key "<C-delete>" #'delete-region)
   (bind-key "x" #'delete-region evil-visual-state-map)
+  (bind-key "M-z" #'evil-normal-state evil-insert-state-map)
+  (bind-key "M-z" #'evil-normal-state evil-visual-state-map)
+  (bind-key "M-z" #'evil-normal-state evil-normal-state-map)
 
   ;; Selection/region
   (bind-key "s-=" #'er/expand-region)
@@ -91,15 +88,8 @@
   (bind-key "s-@" #'~duplicate-line-or-region)
   (bind-key "C-o" #'~open-line)
   (bind-key "C-S-o" #'~open-line-before)
-  (bind-key "C-=" #'align-regexp)
   (bind-key "s-&" #'~join-with-next-line)
-  (bind-key "M-Q" #'~unfill-paragraph)
-  (bind-key "s-; ; ;" #'~insert-full-line-comment)
   (bind-key "s-b" #'pop-to-mark-command)
-  (~bind-key-with-prefix "t p f" #'paredit-reindent-defun)
-  (~bind-key-with-prefix "t t f" #'fill-paragraph)
-
-  (~bind-key-with-prefix "i e" #'~insert-exec)
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
@@ -107,47 +97,19 @@
     (bind-key "M-s" #'sp-splice-sexp)
     (bind-key "M-S" #'sp-split-sexp))
 
-  (~bind-key-with-prefix "c s" #'embrace-commander)
-  (~bind-key-with-prefix "." #'dumb-jump-go)
-  (~bind-key-with-prefix "," #'dumb-jump-back)
-  (~bind-key-with-prefix ";" #'dumb-jump-quick-look)
-
-  ;; Multiple cursors
-  (bind-key "s-+" #'mc/edit-lines)
-  (bind-key "C-#" #'mc/mark-next-like-this)
-  (bind-key "C-!" #'mc/mark-previous-like-this)
-
-  ;; File management
-  (~bind-key-with-prefix "f d" #'~delete-current-file)
-  (~bind-key-with-prefix "f r" #'~rename-current-file)
-  (bind-key "s-z" #'~open-current-file-as-admin)
-
-  ;; Project management
-  (~bind-key-with-prefix "p p" #'treemacs)
-  (~bind-key-with-prefix "p o" #'treemacs-projectile)
-  (~bind-key-with-prefix "p f" #'treemacs-select-window)
-
   ;; Buffer management
   (bind-key "C-<tab>" #'iflipb-next-buffer)
   (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
   (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
-  (~bind-key-with-prefix "b r" #'revert-buffer)
-  (~bind-key-with-prefix "b n" #'~new-buffer)
-  (~bind-key-with-prefix "b s" #'~new-buffer-frame-from-selection)
-  (~bind-key-with-prefix "b m" #'mark-whole-buffer)
-  (~bind-key-with-prefix "b l" #'~show-buffer-chooser)
-  (~bind-key-with-prefix "b p a" #'~append-pos-to-window-on-the-right)
 
-  ;; Execution
-  (bind-key "s-a" #'~exec|)
-  (bind-key "s-A" #'~exec<)
-  (bind-key "M-a" #'~exec>)
+  (bind-key "s-!" #'~execute-text-prompt)
   (bind-key "s-[" #'emamux:send-region)
+  (bind-key "<s-RET>" #'~execute)
+  (bind-key "<S-RET>" #'~execute-line)
   (bind-key "<s-return>" #'~execute)
   (bind-key "<S-return>" #'~execute-line)
   (bind-key "<C-down-mouse-1>" nil)
-  ;; (bind-key "<C-mouse-1>" #'~execute)
   (bind-key "<down-mouse-2>" nil)
   (bind-key "<mouse-2>" #'~execute)
   (bind-key "<mouse-3>" #'~popup-right-click-menu)
@@ -160,45 +122,14 @@
   (bind-key "s-\\" #'counsel-imenu)
   (~bind-key-evil "C-p" #'ivy-imenu-anywhere)
 
-  ;; Window management
-  (~bind-key-with-prefix "z" #'~toggle-maximize-buffer)
-  (bind-key "C-%" #'~one-window)
-  (bind-key "C-7" #'split-window-vertically)
-  (bind-key "C-5" #'split-window-horizontally)
-  (bind-key "<pause>" #'~toggle-sticky-window)
-
-  (bind-key "C-M-v" #'~scroll-other-window)
-  (bind-key "C-M-S-v" #'~scroll-other-window-reverse)
-
-  (~bind-key-with-prefix "n f " #'make-frame)
-  (~bind-key-with-prefix "w w" #'other-window)
-  (~bind-key-with-prefix "w c" #'ace-window)
-  (~bind-key-with-prefix "w s" #'ace-swap-window)
-  (~bind-key-with-prefix "w o" #'~one-window)
-  (~bind-key-with-prefix "w t" #'~transpose-windows)
   (bind-key "<M-left>" #'windmove-left)
   (bind-key "<M-right>" #'windmove-right)
   (bind-key "<M-up>" #'windmove-up)
   (bind-key "<M-down>" #'windmove-down)
 
-  (~bind-key-with-prefix "r" #'resize-window)
-
   ;; Header line
   (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
   (bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)
-
-  ;; Version management
-  (~bind-key-with-prefix "g s" #'magit-status)
-
-  ;; Display
-  (~bind-key-with-prefix "s l" #'linum-mode)
-  (~bind-key-with-prefix "s w" #'~toggle-soft-wrapping)
-  (~bind-key-with-prefix "s f" #'global-font-lock-mode)
-  (~bind-key-with-prefix "s SPC" #'whitespace-mode)
-
-  ;; Marking
-  (~bind-key-with-prefix "m e" #'er/mark-outside-pairs)
-  (~bind-key-with-prefix "m f" #'er/mark-defun)
 
   ;;
   ;; Emacs Lisp
@@ -208,26 +139,22 @@
   (bind-key "<M-return>"   #'eval-defun)
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m" #'~eval-then-replace-region-or-last-sexp)
-  (bind-key "s-#" #'eval-expression)
-  (bind-key "s-!" #'~execute-text-prompt)
 
-  (~bind-key-with-prefix "h f" #'describe-function)
-  (~bind-key-with-prefix "h v" #'describe-variable)
-  (~bind-key-with-prefix "h k" #'describe-key)
-  (~bind-key-with-prefix "h ." #'find-function)
-  (~bind-key-with-prefix "h l" #'find-library)
+  ;; (~bind-key-with-prefix "h f" #'describe-function)
+  ;; (~bind-key-with-prefix "h v" #'describe-variable)
+  ;; (~bind-key-with-prefix "h k" #'describe-key)
+  ;; (~bind-key-with-prefix "h ." #'find-function)
+  ;; (~bind-key-with-prefix "h l" #'find-library)
 
   ;;
   ;; Configuration & quick opening
   ;;
 
-  (~bind-key-with-prefix "v t" #'~open-toolbox)
-  (~bind-key-with-prefix "v b" #'~open-project-toolbox)
-
   ;;
   ;; Function keys & other convenient bindings
   ;;
 
+  ;; TODO: Hydra
   (bind-key "<C-f1>" #'~toggle-scratch)
   (bind-key "<S-f1>" #'~switch-to-messages-buffer)
   (bind-key "<f2>" #'save-buffer)
@@ -258,8 +185,155 @@
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
   (bind-key "M-ESC" #'~keyboard-quit)
   (bind-key "s-SPC s-SPC" #'exchange-point-and-mark)
-  (~bind-key-with-prefix "SPC" #'counsel-M-x)
-  (~bind-key-with-prefix "q q" #'save-buffers-kill-emacs))
+
+  (use-package hydra
+    :config
+    (progn
+      (defhydra hydra-visit (:exit t)
+        "Visiting places"
+        ("n" #'~open-project-notes "Current project notes")
+        ("b" #'~open-project-toolbox "Current project toolbox")
+        ("t" #'~open-toolbox "My global toolbox"))
+
+      (defhydra hydra-file (:exit t)
+        "File operations"
+        ("d" #'~delete-current-file "Delete current file")
+        ("r" #'~rename-current-file "Rename/move current file")
+        ("a" #'~open-current-file-as-admin "Open current file as admin")
+        ("c" #'~copy-file-name-to-clipboard "Copy path to clipboard")
+        ("p" #'~copy-pos-to-clipboard "Copy current position to clipboard"))
+
+      (defhydra hydra-jump (:exit t)
+        "(Semantic) jumping"
+        ("." #'dumb-jump-go "Try jumping to definition")
+        ("," #'dumb-jump-back "Jump back")
+        (";" #'dumb-jump-quick-look "Peek")
+        ("s" #'point-pos-save "Save current point pos")
+        ("n" #'point-pos-next "Next point pos" :exit nil)
+        ("p" #'point-pos-prev "Previous point pos" :exit nil)
+        ("g" #'point-pos-goto "Go to current point pos"))
+
+      (defhydra hydra-cursor nil
+        "Cursor operations"
+        ("l" #'mc/edit-lines "Edit lines")
+        ("n" #'mc/mark-next-like-this "Mark next like this")
+        ("p" #'mc/mark-previous-like-this "Mark previous like this")
+        ("a" #'mc/mark-all-in-region "Mark all in region")
+        ("q" nil "Quit" :exit t))
+
+      (defhydra hydra-buffer (:exit t)
+        "Buffer operations"
+        ("r" #'revert-buffer "Revert")
+        ("n" #'~new-buffer "New")
+        ("m" #'mark-whole-buffer "Mark whole")
+        ("l" #'~show-buffer-chooser "Show buffer chooser")
+        ("kk" #'kill-this-buffer "Kill current buffer")
+        ("kb" #'kill-buffer "Kill a buffer"))
+
+      (defhydra hydra-exec (:exit t)
+        "Text execution"
+        ("|" #'~exec| "Execute, piping region out and output to the current buffer")
+        ("<" #'~exec< "Execute, piping output in")
+        (">" #'~exec> "Execute, piping region out and output to a separate buffer")
+        ("!" #'~execute-text-prompt "Prompt for text to be executed")
+        ("l" #'~execute-line "Execute current line")
+        ("e" #'~execute "Execute thing based on current context"))
+
+      (defhydra hydra-emacs-lisp (:exit t)
+        "Emacs Lisp operations"
+        ("ee" #'~eval-last-sexp-or-region "Eval last sexp or region")
+        ("ep" #'pp-eval-last-sexp "Eval and pretty-print last sexp")
+        ("ew" #'~eval-then-replace-region-or-last-sexp "Eval and replace the last sexp with result")
+        ("ex" #'eval-expression "Eval expression")
+        ("hf" #'describe-function "Describe function")
+        ("hv" #'describe-variable "Describe variable")
+        ("hk" #'describe-key "Describe key binding")
+        ("h." #'find-function "Jump to function definition")
+        ("hl" #'find-library "Jump to library definition"))
+
+      (defhydra hydra-insertion (:exit t)
+        "Insertion operations"
+        (";" #'~insert-full-line-comment "Insert line full of comment")
+        ("e" #'~insert-exec "Insert executable"))
+
+      (defhydra hydra-format (:exit t)
+        "Formatting operations"
+        ("ff" #'fill-paragraph "Format/fill paragraph")
+        ("fp" #'paredit-reindent-defun "Reindent defun with Paredit")
+        ("u" #'~unfill-paragraph "Unfill paragraph"))
+
+      (defhydra hydra-mode (:exit t)
+        "Mode operations"
+        ("SPC" #'whitespace-mode "Toggle whitespace mode")
+        ("gf" #'global-font-lock-mode "Toggle global font lock mode")
+        ("lf" #'font-lock-mode "Toggle local font lock mode")
+        ("w" #'~toggle-soft-wrapping "Toggle soft wrapping mode"))
+
+      (defhydra hydra-window (:exit t)
+        "Window management"
+        ("sh" #'split-window-horizontally "Split window horizontally")
+        ("sv" #'split-window-vertically "Split window vertically")
+        ("kw" #'delete-window "Kill current window")
+        ("kk" #'~kill-buffer-and-window "Kill current window with its buffer")
+        ("T" #'~scroll-other-window "Scroll other window" :exit nil)
+        ("C" #'~scroll-other-window-reverse "Scroll other window (reverse)" :exit nil)
+        ("o" #'~one-window "One window (close others)")
+        ("t" #'~transpose-windows "Transpose windows")
+        ("y" #'~toggle-sticky-window "Toggle stickiness for current window")
+        ("z" #'~toggle-maximize-buffer "Toggle max. for current window")
+        ("r" #'resize-window "Interactive window resize")
+        ("w" #'other-window "Interactive window resize" :exit nil)
+        ("q" nil "Quit"))
+
+      (defhydra hydra-frame (:exit t)
+        "Frame management"
+        ("n" #'make-frame "New frame")
+        ("k" #'delete-frame "Delete current frame"))
+
+      (defhydra hydra-edit (:exit t)
+        "Editing operations"
+        ("ss" #'~search-buffer-interactively "Interactive search")
+        ("qrr" #'query-replace-regexp "Query replace regexp")
+        ("qrq" #'query-replace "Query replace")
+        ("aa" #'align "Align")
+        ("ac" #'align-current "Align current section")
+        ("ar" #'align-regexp "Align regexp")
+        ("gs" #'magit-status "Magit status")
+        ("c" #'comment-or-uncomment-region "Toggle commenting region")
+        ("d" #'~duplicate-line-or-region "Duplicate current line or region")
+        ("k" #'kill-sexp "Kill sexp"))
+
+      (defhydra hydra-mark nil
+        "Mark/region management"
+        ("e" #'er/expand-region "Expand region")
+        ("o" #'er/mark-outside-pairs "Mark outside pairs")
+        ("f" #'er/mark-defun "Mark defun" :exit t)
+        ("SPC" #'mark-sexp "Mark sexp")
+        ("q" nil "Quit" :exit t))
+
+      (defhydra hydra-global (:exit t)
+        "Global operations"
+        ("SPC" #'counsel-M-x "M-x")
+        ("qq" #'save-buffers-kill-emacs "Save buffers and kill Emacs")
+        ("d" #'hydra-edit/body "Editing")
+        ("v" #'hydra-visit/body "Visiting")
+        ("f" #'hydra-file/body "File")
+        ("b" #'hydra-buffer/body "Buffer")
+        ("c" #'hydra-cursor/body "Multiple cursors")
+        ("j" #'hydra-jump/body "(Semantic) jumping")
+        ("e" #'hydra-exec/body "Execution")
+        ("l" #'hydra-emacs-lisp/body "Emacs Lisp operations")
+        ("i" #'hydra-insertion/body "Insertion")
+        ("t" #'hydra-format/body "Formatting")
+        ("s" #'hydra-mode/body "Mode")
+        ("m" #'hydra-mark/body "Marking")
+        ("w" #'hydra-window/body "Window management")
+        ("r" #'hydra-frame/body "Frame management")
+        ("uj" #'hydra-clojure/body "Clojure development"))
+
+      (bind-key "s-SPC" #'hydra-global/body)
+      (evil-define-key 'normal global-map (kbd "SPC") #'hydra-global/body)
+      (evil-define-key 'visual global-map (kbd "SPC") #'hydra-global/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -54,7 +54,7 @@
                    expand-region
                    dumb-jump
                    vdiff
-                   embrace
+                   ;; embrace
                    flx
                    hydra
                    amx
