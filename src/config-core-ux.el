@@ -239,7 +239,7 @@
 (hl-line-mode -1)
 
 ;; Added functionality to hippie-expand
-(add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
+;; (add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
 
 ;; Hide undo-tree from mode line
 (use-package undo-tree
