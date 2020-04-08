@@ -92,8 +92,7 @@
 (use-package saveplace
   :config (save-place-mode 1)
   :init (progn
-          (custom-set-variables `(save-place-file ,(format "~/.emacs.d/places.%s"
-                                                           (~emacs-server-name))))))
+          (custom-set-variables `(save-place-file ,(format "~/.emacs.d/places.%s" server-name)))))
 
 ;; Open last session/visited files from the last session
 ;; Ref: https://github.com/nflath/save-visited-files
@@ -101,8 +100,7 @@
   :config (progn
             ;; Each Emacs server has a different list of visited files
             (setq save-visited-files-location
-                  (format "~/.emacs.d/emacs-visited-files.%s"
-                          (~emacs-server-name)))
+                  (format "~/.emacs.d/emacs-visited-files.%s" server-name))
 
             (unless (file-exists-p save-visited-files-location)
               (write-region "" nil save-visited-files-location))

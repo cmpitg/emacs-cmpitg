@@ -30,18 +30,13 @@
     (setf server-name name)
     (server-start))
 
-  (defun ~emacs-server-name ()
-    "Returns the current server name."
-    server-name)
-
   (defun* ~emacs-server-running? (&optional (name server-name))
     "Determines if there is an Emacs server with `server-name' name
 is currently running."
     (server-running-p name)))
 
-(if (~emacs-server-running? (~emacs-server-name))
-    (message "Emacs server %s is already running, not starting"
-             (~emacs-server-name))
+(if (~emacs-server-running? server-name)
+    (message "Emacs server %s is already running, not starting" server-name)
   (~start-emacs-server))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

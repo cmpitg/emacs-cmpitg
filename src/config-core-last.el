@@ -22,8 +22,7 @@
   :init (progn
           (recentf-mode 1)
           (custom-set-variables `(recentf-max-menu-items 128)
-                                `(recentf-save-file ,(format "~/.emacs.d/recentf.%s"
-                                                             (~emacs-server-name))))))
+                                `(recentf-save-file ,(format "~/.emacs.d/recentf.%s" server-name)))))
 
 (message "Reverting all file-backed buffers")
 (~revert-all-file-buffers-no-confirmation)
