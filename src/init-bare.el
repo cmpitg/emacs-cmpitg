@@ -64,6 +64,9 @@
 ;; TODO: Think about how testing should work
 ;; TODO: config-literate-programming's TODOs
 
+;; TODO: Default vars for machine-specific-init
+;; TOOD: setq to custom-set-variables
+
 ;; Make GC aware that we have a lot of memory
 (setq gc-cons-threshold (* 100 1024 1024))
 
