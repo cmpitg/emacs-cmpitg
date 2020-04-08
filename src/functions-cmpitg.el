@@ -27,6 +27,11 @@
   (interactive)
   (find-file (~get-project-toolbox-path)))
 
+(defun ~open-project-notes ()
+  "Opens current project notes."
+  (interactive)
+  (find-file (~get-project-toolbox-path :file-name ".notes")))
+
 (defun ~format-opened-files ()
   "Formats all currently open files."
   (interactive)
