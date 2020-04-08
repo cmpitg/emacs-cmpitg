@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -73,24 +73,13 @@
 (defun ~load-files (&rest paths)
   "Loads Emacs Lisp source files when they exist."
   (dolist (file-path paths)
-    (loop for possible-file-path in (list file-path
-                                          (concat file-path ".el")
-                                          (concat file-path ".elc"))
-          when (and (file-exists-p possible-file-path)
-                    (file-regular-p possible-file-path))
-          do (progn (load file-path)
-                    (return)))))
+    (load file-path t nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Information
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "
-%s
-Invoke debugger when error: debug-on-error=%s
-Server name: serser-name=%s
-Init file user: init-file-user=%s
-"
+(message "%s :: debug-on-error=%s serser-name=%s init-file-user=%s\n"
          (emacs-version)
          debug-on-error
          server-name
