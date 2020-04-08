@@ -862,10 +862,6 @@ the sequence, and its index within the sequence."
   :diminish midje-mode
   :after cider)
 
-;; Clojure docs lookup
-(use-package cider-grimoire
-  :after cider)
-
 (use-package clj-refactor
   :after cider
   :config
