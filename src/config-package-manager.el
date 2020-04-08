@@ -17,7 +17,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(require 'package)
+(eval-when-compile (require 'package))
 
 (setq elpamr-default-output-directory "/m/src/local-elpa-mirror")
 
@@ -67,8 +67,7 @@
   (package-install 'use-package))
 
 ;; To reduce load time
-(eval-when-compile
-  (require 'use-package))
+(eval-when-compile (require 'use-package))
 (setq use-package-verbose t)
 (use-package diminish
   :demand t)
