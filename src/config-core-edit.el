@@ -110,8 +110,7 @@
 
 (savehist-mode 1)
 (setq savehist-file
-      (format "~/.emacs.d/history.%s"
-              (~emacs-server-name)))
+      (format "~/.emacs.d/history.%s" server-name))
 (dolist (var '(kill-ring
                search-ring
                regexp-search-ring
@@ -135,6 +134,8 @@ recursively."
 ;;
 ;; Ref: https://github.com/bbatsov/projectile
 ;;
+;; TODO: Check filtering & customization
+;;
 
 (use-package projectile
   :diminish projectile-mode
@@ -142,7 +143,7 @@ recursively."
   (progn
     (custom-set-variables `(projectile-known-projects-file ,(format (expand-file-name "projectile-bookmarks.%s.eld"
                                                                                       user-emacs-directory)
-                                                                    (~emacs-server-name)))))
+                                                                    server-name))))
   :config
   (progn
     (projectile-mode)
@@ -219,8 +220,7 @@ project root."
   :config
   (progn
     (amx-mode 1)
-    (setq amx-save-file (format "~/.emacs.d/amx-items.%s"
-                                (~emacs-server-name)))))
+    (setq amx-save-file (format "~/.emacs.d/amx-items.%s" server-name))))
 
 ;;
 ;; Smart completion framework
@@ -418,16 +418,16 @@ with prefix `s-SPC' at the same time."
             (setq evil-want-fine-undo t)
 
             ;; Down mouse 1 should change evil to insert mode
-            (defun ~advice/mouse-1-evil-insert-mode (orig-fun &rest args)
-              (interactive)
-              (let ((res (call-interactively orig-fun))
-                    (old-point (point)))
-                (call-interactively 'evil-insert)
-                ;; After calling evil-insert, the cursor moves the beginning of the region
-                ;; so we need to set it back
-                (when (< (point) old-point)
-                  (call-interactively 'exchange-point-and-mark))
-                res))
+            ;; (defun ~advice/mouse-1-evil-insert-mode (orig-fun &rest args)
+            ;;   (interactive)
+            ;;   (let ((res (call-interactively orig-fun))
+            ;;         (old-point (point)))
+            ;;     (call-interactively 'evil-insert)
+            ;;     ;; After calling evil-insert, the cursor moves the beginning of the region
+            ;;     ;; so we need to set it back
+            ;;     (when (< (point) old-point)
+            ;;       (call-interactively 'exchange-point-and-mark))
+            ;;     res))
             ;; (advice-add 'evil-mouse-drag-region :around #'~advice/mouse-1-evil-insert-mode)
             ;; (advice-remove 'evil-mouse-drag-region #'~advice/mouse-1-evil-insert-mode)
 
@@ -598,29 +598,6 @@ with prefix `s-SPC' at the same time."
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
             (yas-global-mode 1)))
-
-;;
-;; Auto completion framework
-;;
-;; Ref: https://github.com/company-mode/company-mode
-;;
-
-(use-package company
-  :diminish company-mode
-  :bind (:map company-mode-map
-         ("C-/" . company-complete))
-  :demand t
-  :config (progn
-            (global-company-mode 1)
-            (use-package pos-tip)))
-(use-package company-quickhelp
-  :demand t
-  :bind (:map company-active-map
-         ("M-h" . company-quickhelp-manual-begin))
-  :config (progn
-            (company-quickhelp-mode 1)
-            ;; Do not trigger automatically
-            (setq company-quickhelp-delay nil)))
 
 ;;
 ;; Always load man mode
