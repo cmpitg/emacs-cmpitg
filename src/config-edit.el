@@ -221,13 +221,6 @@ might need manual refreshing."
               (ignore-errors
                 (loop do (paredit-forward-up))))))
 
-(use-package evil-paredit
-  :after (evil paredit)
-  :hook ((emacs-lisp-mode
-          lisp-mode
-          clojure-mode
-          scheme-mode) . evil-paredit-mode))
-
 ;;
 ;; Tmux interaction
 ;;

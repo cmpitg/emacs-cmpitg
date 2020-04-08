@@ -78,7 +78,6 @@
                    exec-path-from-shell
                    evil
                    evil-visualstar
-                   evil-paredit
                    evil-surround
                    rust-mode
                    treemacs
@@ -103,7 +102,6 @@
                    dired-single
                    dired-details+
                    color-theme
-                   yasnippet
                    dockerfile-mode
                    nginx-mode
                    coffee-mode
