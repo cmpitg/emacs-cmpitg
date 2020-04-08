@@ -56,23 +56,12 @@ a new window or a new frame.  Possible values: `:window',
 
 (defalias '~is-selecting? 'use-region-p
   "Determines if current there is a selection/active region.")
-(defalias '~selection-start 'region-beginning)
-(defalias '~selection-end 'region-end)
 
 (defun ~get-selection ()
   "Gets the currently selected text."
   (if (~is-selecting?)
-    (buffer-substring (~selection-start)
-                      (~selection-end))
+    (buffer-substring (region-beginning) (region-end))
     ""))
-
-(defun ~activate-selection (pos-1 pos-2)
-  "Activates a selection, also visually, then leaves the point at
-`pos-2'."
-  (interactive)
-  (set-mark pos-1)
-  (goto-char pos-2)
-  (activate-mark))
 
 (defun ~get-secondary-selection ()
   "Gets the secondary selection (activated with `M-Mouse-1' by
@@ -83,11 +72,6 @@ default)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~format-json ()
-  "Formats current selection as JSON.  Requires jq."
-  (interactive)
-  (~exec| "jq ."))
 
 (defun ~join-with-next-line ()
   "Joins next line with the current line.  This is just a
@@ -121,12 +105,6 @@ convenient wrapper of `join-line'."
   (interactive)
   (require 'rmacs:config-module-simple-buffer-list)
   (call-interactively #'bl:show-buffer-chooser))
-
-(defun ~delete-line ()
-  "Deletes the current line."
-  (interactive)
-  (save-excursion
-    (delete-region (point-at-bol) (point-at-eol))))
 
 ;; TODO cleanup
 (defun ~duplicate-line-or-region (&optional n)
@@ -179,19 +157,6 @@ line."
   (interactive)
   (forward-line n-lines))
 
-(defun ~copy-pos-to-clipboard ()
-  "Appends path to the current position to the end of window on
-the right so that it could be open with `~smart-open-file' later
-on."
-  (interactive)
-  (let* ((selection (thread-last (~get-selection)
-                      (s-replace "/" "\\/")))
-         (line-number-or-pattern (if (~is-selecting?)
-                                     (s-concat "/" selection "/")
-                                   (line-number-at-pos)))
-         (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
-    (~copy-to-clipboard path)))
-
 (defun* ~file-pattern? (str &key (must-exists t))
   "Determines if a string is a file pattern \(`path' or
 `path:line-number', or `path:pattern'\).  By default, the
@@ -241,24 +206,6 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
             (values path number)))
       (values path))))
 
-(defun* ~gui/insert-file-path ()
-  "Inserts a file path at point."
-  (interactive)
-  (~exec-|-async ("zenity" "--file-selection" "--filename=%s" "2>/dev/null")
-                #'string-trim
-                #'(lambda (text)
-                    (unless (string-empty-p text)
-                      (insert text)))))
-
-(defun* ~gui/insert-dir-path ()
-  "Inserts a dir path at point."
-  (interactive)
-  (~exec-|-async ("zenity" "--file-selection" "--directory" "--filename=%s" "2>/dev/null")
-                #'string-trim
-                #'(lambda (text)
-                    (unless (string-empty-p text)
-                      (insert text)))))
-
 (defun ~insert-full-line-comment ()
   "Inserts a line full of comment characters until `fill-column' is reached."
   (interactive)
@@ -288,6 +235,7 @@ we might have in the frame."
   "Inserts an executable from PATH or the current working
 directory to the current buffer."
   (interactive)
+  ;; TODO: Save history
   (defvar *~recent-inserted-execs* (list)
     "List of recently inserted executables.")
   (let* ((execs (s-lines (~exec "get-all-execs")))
@@ -296,7 +244,7 @@ directory to the current buffer."
                               (butlast)))
          (all-execs (append *~recent-inserted-execs* current-dir-execs execs))
          (output (ivy-read "Choose exec: " all-execs
-                           :history  '*~recent-inserted-execs*)))
+                           :history '*~recent-inserted-execs*)))
     (unless (s-blank? output)
       (insert output))))
 
@@ -314,113 +262,6 @@ directory to the current buffer."
                  "Window '%s' is now sticky"
                "Window '%s' is now normal")
              (current-buffer))))
-
-(defun ~centralize-mouse-position ()
-  "Centralizes mouse position in the current window."
-  (interactive)
-  (unless (minibufferp (current-buffer))
-    (let ((frame (selected-frame)))
-      (destructuring-bind (x1 y1 x2 y2) (window-edges)
-        (set-mouse-position frame
-                            (+ x1 (/ (window-body-width) 2))
-                            (+ y1 (/ (window-body-height) 2)))))))
-
-(defun ~auto-pos-mouse-position ()
-  "Automatically position mouse in a sensible way."
-  (interactive)
-  (when (eq (current-buffer) (window-buffer (selected-window)))
-    (unless (minibufferp (current-buffer))
-      (let ((frame (selected-frame)))
-        (destructuring-bind (x1 y1 x2 y2) (window-edges)
-          (set-mouse-position frame (+ x1 1) y1))))))
-
-;; TODO: Revise
-(defun* ~read-input-string-async (&key prompt callback default-value (size 70))
-  "Displays a separate buffer to read input string.  The input is
-accepted with `C-c C-c' and discarded with `C-c C-k'.  When the
-input is accepted, The `callback' function, taking the buffer
-string as its only argument, will be called.
-
-The buffered used for input uses `prompt' as it title and
-`default-value' as its default value."
-  (interactive)
-  ;; Make sure the input window doesn't exist in any frame
-  (when-let (wind (get-buffer-window prompt t))
-    (delete-window wind))
-
-  ;; Now create the window
-  (let* ((accept-input #'(lambda ()
-                           (interactive)
-                           (let ((value (buffer-string)))
-                             (kill-buffer-and-window)
-                             (funcall callback value))))
-         (current-buffer (get-buffer-create prompt)))
-    (with-current-buffer current-buffer
-      (~clean-up-buffer)
-      (when default-value (insert default-value))
-      (~bind-key-with-prefix "RET" accept-input :keymap (current-local-map))
-      (bind-key "C-c C-c" accept-input (current-local-map))
-      (bind-key "C-c C-k" #'kill-buffer-and-window (current-local-map))
-      (split-window (selected-window) size 'left)
-      (switch-to-buffer current-buffer)
-      (set-window-dedicated-p (selected-window) t))
-    current-buffer))
-
-;; TODO: Revise
-(defun* ~read-multiple-input-strings-async (&key prompts
-                                                 callback
-                                                 (title "Prompting")
-                                                 (size 70))
-  "Displays a separate buffer to input multiple strings.  The
-input is accepted with `C-c C-c' and discarded with `C-c C-k'.
-When the input is accepted, The `callback' function, taking the
-buffer string as its only argument, will be called.
-
-`prompts' is an alist, each element has the format of `(<prompt>
-. <default-value>)', denoting the prompt and its default value."
-  (interactive)
-  ;; Make sure the input window doesn't exist in any frame
-  (when-let (wind (get-buffer-window title t))
-    (delete-window wind))
-
-  ;; Now create the window
-  (let* ((accept-input #'(lambda ()
-                           (interactive)
-                           (goto-char 0)
-                           (let ((values (loop
-                                          for i from 1 to (length prompts)
-                                          collect (progn (delete-field)
-                                                         (let ((value (thread-first (field-string-no-properties)
-                                                                        (seq-drop 1))))
-                                                           (delete-field)
-                                                           (delete-field)
-                                                           value)))))
-                             (kill-buffer-and-window)
-                             (apply callback values))))
-         (current-buffer (get-buffer-create title)))
-    (with-current-buffer current-buffer
-      ;; Display the content
-      (~clean-up-buffer)
-      (dolist (prompt&default-value prompts)
-        (let ((prompt (car prompt&default-value))
-              (default-value (cdr prompt&default-value)))
-          (insert (propertize prompt
-                              'field prompt)
-                  (propertize (s-concat " " default-value)
-                              'field (s-concat prompt "-value"))
-                  (propertize "\n"
-                              'field "newline"))))
-
-      ;; Bind keys
-      (~bind-key-with-prefix "RET" accept-input :keymap (current-local-map))
-      (bind-key "C-c C-c" accept-input (current-local-map))
-      (bind-key "C-c C-k" #'kill-buffer-and-window (current-local-map))
-
-      ;; Display the buffer
-      (split-window (selected-window) size 'left)
-      (switch-to-buffer current-buffer)
-      (set-window-dedicated-p (selected-window) t))
-    current-buffer))
 
 (defun* ~toggle-toolbox (&key (path *toolbox-path*)
                               (side 'right)
@@ -611,58 +452,58 @@ If the found window is the mini-buffer, returns `nil'."
       (remove-overlays))))
 
 ;; FIXME: Review these hippie-expand enhancements
-(defun try-expand-flexible-abbrev (old)
-  "Tries to complete word using flexible matching.
+;; (defun try-expand-flexible-abbrev (old)
+;;   "Tries to complete word using flexible matching.
 
-Flexible matching works by taking the search string and then
-interspersing it with a regexp for any character. So, if you try
-to do a flexible match for `foo' it will match the word
-`findOtherOtter' but also `fixTheBoringOrange' and
-`ifthisisboringstopreadingnow'.
+;; Flexible matching works by taking the search string and then
+;; interspersing it with a regexp for any character. So, if you try
+;; to do a flexible match for `foo' it will match the word
+;; `findOtherOtter' but also `fixTheBoringOrange' and
+;; `ifthisisboringstopreadingnow'.
 
-The argument OLD has to be nil the first call of this function, and t
-for subsequent calls (for further possible completions of the same
-string).  It returns t if a new completion is found, nil otherwise."
-  (unless old
-    (he-init-string (he-lisp-symbol-beg) (point))
-    (if (not (he-string-member he-search-string he-tried-table))
-        (setq he-tried-table (cons he-search-string he-tried-table)))
-    (setq he-expand-list
-          (and (not (equal he-search-string ""))
-               (he-flexible-abbrev-collect he-search-string))))
+;; The argument OLD has to be nil the first call of this function, and t
+;; for subsequent calls (for further possible completions of the same
+;; string).  It returns t if a new completion is found, nil otherwise."
+;;   (unless old
+;;     (he-init-string (he-lisp-symbol-beg) (point))
+;;     (if (not (he-string-member he-search-string he-tried-table))
+;;         (setq he-tried-table (cons he-search-string he-tried-table)))
+;;     (setq he-expand-list
+;;           (and (not (equal he-search-string ""))
+;;                (he-flexible-abbrev-collect he-search-string))))
 
-  (while (and he-expand-list
-              (he-string-member (car he-expand-list) he-tried-table))
-    (setq he-expand-list (cdr he-expand-list)))
+;;   (while (and he-expand-list
+;;               (he-string-member (car he-expand-list) he-tried-table))
+;;     (setq he-expand-list (cdr he-expand-list)))
 
-  (cond ((null he-expand-list)
-         (if old
-             (he-reset-string))
-         nil)
-        (t
-         (he-substitute-string (car he-expand-list))
-         (setq he-expand-list (cdr he-expand-list))
-         t)))
+;;   (cond ((null he-expand-list)
+;;          (if old
+;;              (he-reset-string))
+;;          nil)
+;;         (t
+;;          (he-substitute-string (car he-expand-list))
+;;          (setq he-expand-list (cdr he-expand-list))
+;;          t)))
 
-(defun he-flexible-abbrev-collect (str)
-  "Find and collect all words that flex-matches STR.
-See docstring for `try-expand-flexible-abbrev' for information
-about what flexible matching means in this context."
-  (let ((collection nil)
-        (regexp (he-flexible-abbrev-create-regexp str)))
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward-regexp regexp nil t)
-        ;; Is there a better or quicker way than using `thing-at-point' here?
-        (setq collection (cons (thing-at-point 'word) collection))))
-    collection))
+;; (defun he-flexible-abbrev-collect (str)
+;;   "Find and collect all words that flex-matches STR.
+;; See docstring for `try-expand-flexible-abbrev' for information
+;; about what flexible matching means in this context."
+;;   (let ((collection nil)
+;;         (regexp (he-flexible-abbrev-create-regexp str)))
+;;     (save-excursion
+;;       (goto-char (point-min))
+;;       (while (search-forward-regexp regexp nil t)
+;;         ;; Is there a better or quicker way than using `thing-at-point' here?
+;;         (setq collection (cons (thing-at-point 'word) collection))))
+;;     collection))
 
-(defun he-flexible-abbrev-create-regexp (str)
-  "Generate regexp for flexible matching of STR.
-See docstring for `try-expand-flexible-abbrev' for information
-about what flexible matching means in this context."
-  (concat "\\b" (mapconcat (lambda (x) (concat "\\w*" (list x))) str "")
-          "\\w*" "\\b"))
+;; (defun he-flexible-abbrev-create-regexp (str)
+;;   "Generate regexp for flexible matching of STR.
+;; See docstring for `try-expand-flexible-abbrev' for information
+;; about what flexible matching means in this context."
+;;   (concat "\\b" (mapconcat (lambda (x) (concat "\\w*" (list x))) str "")
+;;           "\\w*" "\\b"))
 
 (defvar *electrify-return-match*
   "[\]\)]"
@@ -863,32 +704,6 @@ prefix argument.  Otherwise, it will pop up a buffer frame."
 ;; (defalias '~popup-buffer 'internal-temp-output-buffer-show
 ;;   "Pops up a buffer for temporary display.")
 
-(defun* ~center-frame (width
-                       height
-                       &key
-                       (frame (selected-frame))
-                       (display nil))
-  "Centers a frame with the width & height dimensions in
-characters."
-  (set-frame-size frame width height t)
-  (let* ((screen-width (display-pixel-width display))
-         (screen-height (display-pixel-height display))
-         (desired-x (/ (- screen-width width) 2))
-         (desired-y (/ (- screen-height height) 2)))
-    (set-frame-position frame desired-x desired-y)))
-
-(defun* ~center-frame-in-chars (width-in-chars
-                                height-in-chars
-                                &key
-                                (frame (selected-frame))
-                                (display nil))
-  "Centers a frame with the width & height dimensions in
-characters."
-  (set-frame-size frame width-in-chars height-in-chars)
-  (let* ((width (frame-pixel-width frame))
-         (height (frame-pixel-height frame)))
-    (~center-frame width height frame display)))
-
 (defun ~new-buffer-frame-from-selection ()
   "Opens a new frame with a temporary buffer containing the
   current selection."
@@ -1016,11 +831,6 @@ first occurrence of a pattern.  E.g.
              (re-search-forward pattern))))
     path))
 
-(defun ~visit-init-bare ()
-  "Opens init-bare configuration for Rmacs."
-  (interactive)
-  (find-file (~get-config "init-bare.el")))
-
 (defun ~visit-file (path)
   "Visits a file without opening it and returns the buffer name."
   (buffer-name (find-file-noselect path)))
@@ -1029,6 +839,19 @@ first occurrence of a pattern.  E.g.
   "Opens toolbox file."
   (interactive)
   (~smart-open-file *toolbox-path*))
+
+(defun ~copy-pos-to-clipboard ()
+  "Appends path to the current position to the end of window on
+the right so that it could be open with `~smart-open-file' later
+on."
+  (interactive)
+  (let* ((selection (thread-last (~get-selection)
+                      (s-replace "/" "\\/")))
+         (line-number-or-pattern (if (~is-selecting?)
+                                     (s-concat "/" selection "/")
+                                   (line-number-at-pos)))
+         (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
+    (~copy-to-clipboard path)))
 
 (defun ~copy-file-name-to-clipboard ()
   "Copies current file/dir name to clipboard."
@@ -1267,6 +1090,7 @@ fallback to current directory if project root is not found."
 (defun ~eval-current-sexp ()
   "Evals the current enclosing sexp."
   (interactive)
+  (require 'expand-region)
   (let ((current-point (point)))
     (call-interactively 'er/mark-outside-pairs)
     (let ((res (call-interactively '~eval-region)))
