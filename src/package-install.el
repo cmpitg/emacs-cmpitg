@@ -137,6 +137,7 @@
                    elpy
                    monky
                    magit
+                   evil-magit
                    elpa-mirror
                    resize-window
                    wgrep
