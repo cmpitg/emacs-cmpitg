@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -21,13 +21,29 @@
 ;; Theming
 ;;
 
+(defun ~set-attribute-all-frames (key val)
+  "Sets attribute for all frames."
+  (put 'initial-frame-alist key val) ;; for all frames
+  (put 'default-frame-alist key val)
+  (modify-frame-parameters (selected-frame) (list (cons key val))))
+
 ;; Use this if you don't use any theme
 ;; (set-face-foreground 'font-lock-comment-face "#3a345f")
 ;; (set-background-color "#f6f6f6")
 ;; (set-background-color "#efefef")
+(set-background-color "#ffffdd")
+(~set-attribute-all-frames 'background-color "#ffffdd")
+(~set-attribute-all-frames 'foreground-color "black")
+(set-face-attribute 'cursor nil
+                    :background "#0f0f0f")
+
+(add-to-list 'custom-theme-load-path (~get-config "themes/"))
+;; (~load-files (~get-config "themes/cmpitg-thursday-theme.el"))
+;; (load-theme 'cmpitg-thursday t)
+(load-theme 'cmpitg-random-light t)
 
 ;; Current
-(load-theme 'plan9 t)
+;; (load-theme 'plan9 t)
 ;; (load-theme 'afternoon t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
