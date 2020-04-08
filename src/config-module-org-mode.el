@@ -47,10 +47,7 @@
     ;; Of per file: #+STARTUP: all
     (setq org-startup-folded nil)
 
-    (add-hook 'org-mode-hook #'~my/org-mode-setup)
-
-    (with-eval-after-load "evil"
-      (~bind-key-with-prefix "o a" #'org-agenda))))
+    (add-hook 'org-mode-hook #'~my/org-mode-setup)))
 
 (setq-default initial-major-mode 'org-mode)
 (setq-default major-mode 'org-mode)
