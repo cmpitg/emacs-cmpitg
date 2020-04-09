@@ -189,13 +189,13 @@
   (use-package hydra
     :config
     (progn
-      (defhydra hydra-visit (:exit t)
+      (defhydra hydra-visit (:columns 4 :exit t)
         "Visiting places"
         ("n" #'~open-project-notes "Current project notes")
         ("b" #'~open-project-toolbox "Current project toolbox")
         ("t" #'~open-toolbox "My global toolbox"))
 
-      (defhydra hydra-file (:exit t)
+      (defhydra hydra-file (:columns 4 :exit t)
         "File operations"
         ("d" #'~delete-current-file "Delete current file")
         ("r" #'~rename-current-file "Rename/move current file")
@@ -203,7 +203,7 @@
         ("c" #'~copy-file-name-to-clipboard "Copy path to clipboard")
         ("p" #'~copy-pos-to-clipboard "Copy current position to clipboard"))
 
-      (defhydra hydra-jump (:exit t)
+      (defhydra hydra-jump (:columns 4 :exit t)
         "(Semantic) jumping"
         ("." #'dumb-jump-go "Try jumping to definition")
         ("," #'dumb-jump-back "Jump back")
@@ -213,7 +213,7 @@
         ("p" #'point-pos-prev "Previous point pos" :exit nil)
         ("g" #'point-pos-goto "Go to current point pos"))
 
-      (defhydra hydra-cursor nil
+      (defhydra hydra-cursor (:columns 4)
         "Cursor operations"
         ("l" #'mc/edit-lines "Edit lines")
         ("n" #'mc/mark-next-like-this "Mark next like this")
@@ -221,7 +221,7 @@
         ("a" #'mc/mark-all-in-region "Mark all in region")
         ("q" nil "Quit" :exit t))
 
-      (defhydra hydra-buffer (:exit t)
+      (defhydra hydra-buffer (:columns 4 :exit t)
         "Buffer operations"
         ("r" #'revert-buffer "Revert")
         ("n" #'~new-buffer "New")
@@ -230,80 +230,96 @@
         ("kk" #'kill-this-buffer "Kill current buffer")
         ("kb" #'kill-buffer "Kill a buffer"))
 
-      (defhydra hydra-exec (:exit t)
+      (defhydra hydra-exec (:columns 4 :exit t)
         "Text execution"
-        ("|" #'~exec| "Execute, piping region out and output to the current buffer")
+        ("|" #'~exec| "Execute, piping region out and output in")
         ("<" #'~exec< "Execute, piping output in")
-        (">" #'~exec> "Execute, piping region out and output to a separate buffer")
-        ("!" #'~execute-text-prompt "Prompt for text to be executed")
+        (">" #'~exec> "Execute, piping region out and output to a buffer")
+        ("!" #'~execute-text-prompt "Prompt execution")
         ("l" #'~execute-line "Execute current line")
-        ("e" #'~execute "Execute thing based on current context"))
+        ("e" #'~execute "Execute thing (context-based)"))
 
-      (defhydra hydra-emacs-lisp (:exit t)
+      (defhydra hydra-emacs-lisp (:columns 4 :exit t)
         "Emacs Lisp operations"
-        ("ee" #'~eval-last-sexp-or-region "Eval last sexp or region")
-        ("ep" #'pp-eval-last-sexp "Eval and pretty-print last sexp")
-        ("ew" #'~eval-then-replace-region-or-last-sexp "Eval and replace the last sexp with result")
+        ("ee" #'~eval-last-sexp-or-region "Eval last sexp/region")
+        ("ep" #'pp-eval-last-sexp "Eval and pp last sexp")
+        ("ew" #'~eval-then-replace-region-or-last-sexp "Eval and replace last sexp")
         ("ex" #'eval-expression "Eval expression")
+
         ("hf" #'describe-function "Describe function")
         ("hv" #'describe-variable "Describe variable")
         ("hk" #'describe-key "Describe key binding")
         ("h." #'find-function "Jump to function definition")
         ("hl" #'find-library "Jump to library definition"))
 
-      (defhydra hydra-insertion (:exit t)
+      (defhydra hydra-insertion (:columns 4 :exit t)
         "Insertion operations"
         (";" #'~insert-full-line-comment "Insert line full of comment")
         ("e" #'~insert-exec "Insert executable"))
 
-      (defhydra hydra-format (:exit t)
+      (defhydra hydra-format (:columns 4 :exit t)
         "Formatting operations"
         ("ff" #'fill-paragraph "Format/fill paragraph")
         ("fp" #'paredit-reindent-defun "Reindent defun with Paredit")
+
         ("u" #'~unfill-paragraph "Unfill paragraph"))
 
-      (defhydra hydra-mode (:exit t)
+      (defhydra hydra-mode (:columns 4 :exit t)
         "Mode operations"
         ("SPC" #'whitespace-mode "Toggle whitespace mode")
         ("gf" #'global-font-lock-mode "Toggle global font lock mode")
         ("lf" #'font-lock-mode "Toggle local font lock mode")
         ("w" #'~toggle-soft-wrapping "Toggle soft wrapping mode"))
 
-      (defhydra hydra-window (:exit t)
+      (defhydra hydra-window (:columns 4 :exit t)
         "Window management"
-        ("sh" #'split-window-horizontally "Split window horizontally")
-        ("sv" #'split-window-vertically "Split window vertically")
-        ("kw" #'delete-window "Kill current window")
-        ("kk" #'~kill-buffer-and-window "Kill current window with its buffer")
-        ("T" #'~scroll-other-window "Scroll other window" :exit nil)
-        ("C" #'~scroll-other-window-reverse "Scroll other window (reverse)" :exit nil)
+        ("sh" #'split-window-horizontally "Split horizontally")
+        ("sv" #'split-window-vertically "Split vertically")
+        ("kw" #'delete-window "Kill")
+        ("kk" #'~kill-buffer-and-window "Kill current window & buffer")
+        ("T" #'~scroll-other-window "Scroll other" :exit nil)
+        ("C" #'~scroll-other-window-reverse "Scroll other (reverse)" :exit nil)
         ("o" #'~one-window "One window (close others)")
         ("t" #'~transpose-windows "Transpose windows")
-        ("y" #'~toggle-sticky-window "Toggle stickiness for current window")
-        ("z" #'~toggle-maximize-buffer "Toggle max. for current window")
-        ("r" #'resize-window "Interactive window resize")
-        ("w" #'other-window "Interactive window resize" :exit nil)
+        ("y" #'~toggle-sticky-window "Toggle stickiness")
+        ("z" #'~toggle-maximize-buffer "Toggle max.")
+        ("r" #'resize-window "Interactive resize")
+        ("w" #'other-window "Interactive resize" :exit nil)
         ("q" nil "Quit"))
 
-      (defhydra hydra-frame (:exit t)
+      (defhydra hydra-frame (:columns 4 :exit t)
         "Frame management"
         ("n" #'make-frame "New frame")
         ("k" #'delete-frame "Delete current frame"))
 
-      (defhydra hydra-edit (:exit t)
+      (defhydra hydra-edit (:columns 4 :exit t)
         "Editing operations"
         ("ss" #'~search-buffer-interactively "Interactive search")
+
         ("qrr" #'query-replace-regexp "Query replace regexp")
         ("qrq" #'query-replace "Query replace")
+
         ("aa" #'align "Align")
         ("ac" #'align-current "Align current section")
         ("ar" #'align-regexp "Align regexp")
-        ("gs" #'magit-status "Magit status")
+
+        ("gs" #'magit-status "Git status")
+        ("gb" #'magit-blame "Git blame")
+
+        ("vca" #'vc-annotate "VC annonate")
+
+        ("nr" #'narrow-to-region "Narrow to region")
+        ("nf" #'narrow-to-defun "Narrow to defun")
+        ("nw" #'widen "Widen the narrowed part")
+
+        ("wo" #'just-one-space "Whitespace: Keep one")
+        ("wd" #'delete-horizontal-space "Whitespace: Delete")
+
         ("c" #'comment-or-uncomment-region "Toggle commenting region")
         ("d" #'~duplicate-line-or-region "Duplicate current line or region")
         ("k" #'kill-sexp "Kill sexp"))
 
-      (defhydra hydra-mark nil
+      (defhydra hydra-mark (:columns 4)
         "Mark/region management"
         ("e" #'er/expand-region "Expand region")
         ("o" #'er/mark-outside-pairs "Mark outside pairs")
@@ -311,7 +327,7 @@
         ("SPC" #'mark-sexp "Mark sexp")
         ("q" nil "Quit" :exit t))
 
-      (defhydra hydra-global (:exit t)
+      (defhydra hydra-global (:columns 4 :exit t)
         "Global operations"
         ("SPC" #'counsel-M-x "M-x")
         ("qq" #'save-buffers-kill-emacs "Save buffers and kill Emacs")
