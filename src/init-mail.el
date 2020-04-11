@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -23,7 +23,6 @@
 
 (require 'rmacs:functions-mail    "functions-mail")
 (require 'rmacs:functions-cmpitg  "functions-cmpitg")
-(require 'rmacs:config-themes     "config-themes")
 (require 'rmacs:config-mail       "config-mail")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
