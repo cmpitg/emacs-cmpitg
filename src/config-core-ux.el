@@ -164,6 +164,9 @@
 ;; Hide the toolbar
 (tool-bar-mode -1)
 
+;; Show tooltips in the echo area
+(tooltip-mode -1)
+
 ;; Scroll bar comes in handy with mouse usage
 (set-scroll-bar-mode 'left)
 ;; Not anymore
