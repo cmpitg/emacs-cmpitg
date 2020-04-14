@@ -739,7 +739,6 @@ might need manual refreshing."
 
 (use-package flycheck-clj-kondo
   :after clojure-mode
-  :defer t
   :init
   (progn
     (defun my/enable-clj-syntax-check ()
