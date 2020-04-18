@@ -165,7 +165,7 @@
   (bind-key "<C-f3>" #'~find-files-current-dir)
   (bind-key "<M-f3>" #'~gui/open-file)
   (bind-key "<S-f3>" #'projectile-find-file)
-  (bind-key "<f4>" #'kill-this-buffer)
+  (bind-key "<f4>" #'kill-current-buffer)
   ;; (bind-key "<f4>" #'~kill-buffer-and-frame)
   (bind-key "<C-f4>" #'~kill-buffer-and-window)
   (bind-key "<S-f4>" #'~delete-window)

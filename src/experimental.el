@@ -27,7 +27,7 @@
 (defalias '+buf #'~new-buffer)
 (defalias '+frame #'make-frame)
 (defalias '+-tool #'~toggle-project-toolbox)
-(defalias '-buf #'kill-this-buffer)
+(defalias '-buf #'kill-current-buffer)
 (defalias '-window #'~delete-window)
 (defalias '-me #'~kill-buffer-and-window)
 (defalias '-frame #'~kill-buffer-and-frame)
