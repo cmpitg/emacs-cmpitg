@@ -816,7 +816,7 @@ the sequence, and its index within the sequence."
     ;; Do not pop up REPL after connecting
     (setq cider-repl-pop-to-buffer-on-connect nil)
 
-    (defhydra hydra-clojure (:columns 4 :exit t)
+    (defhydra hydra-dev-clojure (:columns 4 :exit t)
       "Clojure development"
       ("dpa" #'~clojure/add-dependency "Dependency: Add")
       ("ddd" #'cider-doc "Doc: Show")

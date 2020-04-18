@@ -184,7 +184,6 @@
   (bind-key "M-/" #'hippie-expand)
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
   (bind-key "M-ESC" #'~keyboard-quit)
-  (bind-key "s-SPC s-SPC" #'exchange-point-and-mark)
 
   (use-package hydra
     :config
@@ -205,6 +204,7 @@
 
       (defhydra hydra-jump (:columns 4 :exit t)
         "(Semantic) jumping"
+        ("l" #'ace-jump-line-mode "Jump to line")
         ("." #'dumb-jump-go "Try jumping to definition")
         ("," #'dumb-jump-back "Jump back")
         (";" #'dumb-jump-quick-look "Peek")
@@ -227,7 +227,7 @@
         ("n" #'~new-buffer "New")
         ("m" #'mark-whole-buffer "Mark whole")
         ("l" #'~show-buffer-chooser "Show buffer chooser")
-        ("kk" #'kill-this-buffer "Kill current buffer")
+        ("kk" #'kill-current-buffer "Kill current buffer")
         ("kb" #'kill-buffer "Kill a buffer"))
 
       (defhydra hydra-exec (:columns 4 :exit t)
@@ -235,9 +235,14 @@
         ("|" #'~exec| "Execute, piping region out and output in")
         ("<" #'~exec< "Execute, piping output in")
         (">" #'~exec> "Execute, piping region out and output to a buffer")
-        ("!" #'~execute-text-prompt "Prompt execution")
+        ("x" #'~execute-text-prompt "Prompt execution")
         ("l" #'~execute-line "Execute current line")
-        ("e" #'~execute "Execute thing (context-based)"))
+        ("e" #'~execute "Execute thing (context-based)")
+        ;; TODO: buffer shell current dir
+        ;; ("b" #')
+        ("s" #'(lambda ()
+                 (interactive)
+                 (~execute "!! zsh")) "Zsh"))
 
       (defhydra hydra-emacs-lisp (:columns 4 :exit t)
         "Emacs Lisp operations"
@@ -245,6 +250,7 @@
         ("ep" #'pp-eval-last-sexp "Eval and pp last sexp")
         ("ew" #'~eval-then-replace-region-or-last-sexp "Eval and replace last sexp")
         ("ex" #'eval-expression "Eval expression")
+        ("eb" #'eval-buffer "Eval buffer")
 
         ("hf" #'describe-function "Describe function")
         ("hv" #'describe-variable "Describe variable")
@@ -305,8 +311,10 @@
 
         ("gs" #'magit-status "Git status")
         ("gb" #'magit-blame "Git blame")
+        ("gd" #'magit-diff "Git diff")
 
         ("vca" #'vc-annotate "VC annonate")
+        ("vcd" #'vc-diff "VC diff")
 
         ("nr" #'narrow-to-region "Narrow to region")
         ("nf" #'narrow-to-defun "Narrow to defun")
@@ -317,7 +325,8 @@
 
         ("c" #'comment-or-uncomment-region "Toggle commenting region")
         ("d" #'~duplicate-line-or-region "Duplicate current line or region")
-        ("k" #'kill-sexp "Kill sexp"))
+        ("k" #'kill-sexp "Kill sexp")
+        ("z" #'repeat "Repeat last command"))
 
       (defhydra hydra-mark (:columns 4)
         "Mark/region management"
@@ -327,25 +336,71 @@
         ("SPC" #'mark-sexp "Mark sexp")
         ("q" nil "Quit" :exit t))
 
+      (defhydra hydra-org (:columns 4 :exit nil)
+        "Org"
+        ("j" #'org-next-visible-heading "Next heading")
+        ("k" #'org-previous-visible-heading "Prev heading")
+        ("J" #'org-forward-heading-same-level "Next heading (same)")
+        ("K" #'org-backward-heading-same-level "Prev heading (same)")
+
+        ("s" #'org-sparse-tree "Create sparse tree")
+
+        ("m" #'org-mark-subtree "Mark subtree" :exit t)
+
+        ("RET" #'org-insert-heading "Insert heading (same)" :exit t)
+        ("d" #'org-todo "Change TODO state")
+        ("TAB" #'org-cycle "Tab action/Cycle")
+        ("c" #'org-ctrl-c-ctrl-c "Context-based update/align")
+
+        ("ta" #'org-ctrl-c-ctrl-c "Table: Realign" :exit t)
+
+        ("a" #'org-archive-subtree "Archive" :exit t)
+        (">" #'org-metaright "Increase level (current)")
+        ("<" #'org-metaleft "Decrease level (current)")
+        ("r>" #'org-shiftmetaright "Increase level (tree)")
+        ("r<" #'org-shiftmetaleft "Decrease level (tree)")
+        ("P" #'org-shiftmetaup "Move up")
+        ("N" #'org-shiftmetadown "Move down")
+
+        ("q" nil "Quit"))
+
+      ;; TODO
+      (defhydra hydra-paren-edit (:columns 4 :exit t)
+        "Paren-editing mode")
+
+      (defhydra hydra-dev (:columns 4 :exit t)
+        "Dev"
+        ("j" #'hydra-dev-clojure/body "Clojure development"))
+
       (defhydra hydra-global (:columns 4 :exit t)
         "Global operations"
+        ("s-SPC" #'exchange-point-and-mark "Exchange point & mark")
         ("SPC" #'counsel-M-x "M-x")
         ("qq" #'save-buffers-kill-emacs "Save buffers and kill Emacs")
+
+        ("p" #'hydra-paren-edit/body "Paren-editing mode")
+
+        ("u" #'hydra-dev/body "Dev")
+        ("x" #'hydra-exec/body "Execution")
+        ("l" #'hydra-emacs-lisp/body "Emacs Lisp operations")
+
+        ("o" #'hydra-org/body "Org")
+
         ("d" #'hydra-edit/body "Editing")
-        ("v" #'hydra-visit/body "Visiting")
-        ("f" #'hydra-file/body "File")
         ("b" #'hydra-buffer/body "Buffer")
         ("c" #'hydra-cursor/body "Multiple cursors")
+        ("f" #'hydra-file/body "File")
         ("j" #'hydra-jump/body "(Semantic) jumping")
-        ("e" #'hydra-exec/body "Execution")
-        ("l" #'hydra-emacs-lisp/body "Emacs Lisp operations")
+        ("v" #'hydra-visit/body "Visiting")
+        ;; TODO: Univerval eval/dev mode for the current
+        ;; ("e" #'_ )
         ("i" #'hydra-insertion/body "Insertion")
         ("t" #'hydra-format/body "Formatting")
-        ("s" #'hydra-mode/body "Mode")
         ("m" #'hydra-mark/body "Marking")
+        ("s" #'hydra-mode/body "Mode")
+
         ("w" #'hydra-window/body "Window management")
-        ("r" #'hydra-frame/body "Frame management")
-        ("uj" #'hydra-clojure/body "Clojure development"))
+        ("r" #'hydra-frame/body "Frame management"))
 
       (bind-key "s-SPC" #'hydra-global/body)
       (evil-define-key 'normal global-map (kbd "SPC") #'hydra-global/body)
