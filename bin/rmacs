@@ -112,11 +112,6 @@ proc standardizeCmdArgs {cmdArgsList} {
 	if {$cmdArgs(name) eq ""} {
 		array set cmdArgs [list name $cmdArgs(shape)]
 	}
-	if {$cmdArgs(shape) eq "edit"} {
-		array set cmdArgs [list emacs-as "nil"]
-	} else {
-		array set cmdArgs [list emacs-as ":$cmdArgs(shape)"]
-	}
 	if {$cmdArgs(no-wait)} {
 		array set cmdArgs [list client-opts "$cmdArgs(client-opts) --no-wait"]
 	}
@@ -157,9 +152,9 @@ proc rmacsWait {name timeout} {
 	exit 2
 }
 
-proc rmacsStart {name emacsAs shapeInitPath init bgDaemon verbose} {
+proc rmacsStart {name shape shapeInitPath init bgDaemon verbose} {
 	set cmd [list emacs -Q]
-	set cmd [concat $cmd [list --eval "(setq *emacs-as-tool* $emacsAs)"]]
+	set cmd [concat $cmd [list --eval "(setq *rmacs-shape* :$shape)"]]
 	set cmd [concat $cmd [list --eval "(setq server-name \"$name\")"]]
 	set cmd [concat $cmd [list --load $shapeInitPath]]
 	if {$init ne ""} {
@@ -215,7 +210,7 @@ proc rmacsKill {name verbose} {
 proc makeSureServerIsRunning {argList} {
 	array set args $argList
 	if {![isServerRunning $args(name)]} {
-		rmacsStart $args(name) $args(emacs-as) $args(shape-init-path) $args(init) 1 $args(verbose)
+		rmacsStart $args(name) $args(shape) $args(shape-init-path) $args(init) 1 $args(verbose)
 		rmacsWait $args(name) $args(timeout)
 	}
 }
@@ -254,7 +249,7 @@ switch $mainCommand {
 		if {[isServerRunning $args(name)]} {
 			puts stderr "Error: Server '$args(name)' is running..."
 		} else {
-			rmacsStart $args(name) $args(emacs-as) $args(shape-init-path) $args(init) 0 $args(verbose)
+			rmacsStart $args(name) $args(shape) $args(shape-init-path) $args(init) 0 $args(verbose)
 		}
 		exit 15
 	}
