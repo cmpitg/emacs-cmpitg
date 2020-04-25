@@ -1412,7 +1412,7 @@ result, returning the process.  The command is executed
 asynchronously."
   (interactive "MCommand: ")
   (let* ((name command)
-         (process (start-process-shell-command name name (concat "env TERM=dumb PAGER=cat" command)))
+         (process (start-process-shell-command name name (concat "env TERM=dumb PAGER=cat " command)))
          (dir default-directory))
     (~popup-buffer :buffer name)
     (with-current-buffer name
