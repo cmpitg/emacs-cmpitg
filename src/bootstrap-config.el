@@ -74,6 +74,11 @@
   (dolist (file-path paths)
     (load file-path t nil)))
 
+(defun ~reload-config ()
+  "Reloads Rmacs config"
+  (interactive)
+  (~load-files (~get-config "init-" (substring (symbol-name *rmacs-shape*) 1))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Information
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
