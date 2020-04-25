@@ -192,7 +192,8 @@
         "Visiting places"
         ("n" #'~open-project-notes "Current project notes")
         ("b" #'~open-project-toolbox "Current project toolbox")
-        ("t" #'~open-toolbox "My global toolbox"))
+        ("t" #'~open-toolbox "My global toolbox")
+        ("pp" #'projectile-switch-project "Switch to project"))
 
       (defhydra hydra-file (:columns 4 :exit t)
         "File operations"
@@ -347,7 +348,7 @@
 
         ("m" #'org-mark-subtree "Mark subtree" :exit t)
 
-        ("RET" #'org-insert-heading "Insert heading (same)" :exit t)
+        ("RET" #'org-insert-heading "Insert heading (same)")
         ("d" #'org-todo "Change TODO state")
         ("TAB" #'org-cycle "Tab action/Cycle")
         ("c" #'org-ctrl-c-ctrl-c "Context-based update/align")
@@ -365,8 +366,30 @@
         ("q" nil "Quit"))
 
       ;; TODO
-      (defhydra hydra-paren-edit (:columns 4 :exit t)
+      (defhydra hydra-paredit (:columns 4)
+        "Paredit mode"
+        (")" #'paredit-forward-slurp-sexp "Forward slurp")
+        ("(" #'paredit-backward-slurp-sexp "Backward slurp")
+        ("}" #'paredit-forward-barf-sexp "Forward barf")
+        ("{" #'paredit-backward-barf-sexp "Backward barf")
+        ("l" #'paredit-forward "Go forward")
+        ("h" #'paredit-backward "Go backward")
+        ("j" #'paredit-forward-down "Go down")
+        ("k" #'paredit-backward-up "Go up")
+
+        ("es" #'paredit-split-sexp "Split" :exit t)
+        ("eS" #'paredit-splice-sexp "Splice" :exit t)
+        ("ej" #'paredit-join-sexps "Join" :exit t)
+
+        ("q" nil "Quit" :exit t))
+
+      (defhydra hydra-paren-edit nil
         "Paren-editing mode")
+      (setq hydra-paren-edit/hint
+            `(cond
+              ((and (boundp 'paredit-mode) paredit-mode)
+               (progn (setq hydra-paren-edit/keymap hydra-paredit/keymap)
+                      (eval hydra-paredit/hint)))))
 
       (defhydra hydra-dev (:columns 4 :exit t)
         "Dev"
