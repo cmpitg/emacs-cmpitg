@@ -48,8 +48,7 @@
 ;; Important global values
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst *config-dir* (file-name-directory (or (buffer-file-name)
-                                                load-file-name))
+(defconst *config-dir* (concat (getenv "RMACS_INIT_DIR") "/src/")
   "Default configuration directory - the one containing this file.")
 
 (defvar *snippet-dir*

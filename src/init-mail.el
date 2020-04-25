@@ -17,9 +17,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(load (concat (file-name-directory (or (buffer-file-name)
-                                       load-file-name))
-              "init-bare"))
+(load (concat (file-name-directory load-file-name) "init-bare"))
 
 (require 'rmacs:functions-mail    "functions-mail")
 (require 'rmacs:functions-cmpitg  "functions-cmpitg")

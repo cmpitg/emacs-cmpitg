@@ -17,10 +17,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; Load bare Rmacs
-(load (concat (file-name-directory (or (buffer-file-name)
-                                       load-file-name))
-              "init-bare"))
+(load (concat (file-name-directory load-file-name) "init-bare"))
 
 (require 'rmacs:functions-aws          "functions-aws")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")

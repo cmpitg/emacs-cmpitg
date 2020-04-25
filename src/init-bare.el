@@ -71,9 +71,7 @@
 (setq gc-cons-threshold (* 100 1024 1024))
 
 (defvar *bootstrap-config-path*
-  (concat (file-name-directory (or (buffer-file-name)
-                                   load-file-name))
-          "bootstrap-config.el")
+  (concat (concat (getenv "RMACS_INIT_DIR") "/src/") "bootstrap-config.el")
   "Path to the Rmacs boostrap-config file.")
 
 ;; Speed up Emacs startup by ignoring all file name handlers.  Ref:

@@ -18,9 +18,7 @@
 ;;
 
 ;; Load bare Rmacs
-(load (concat (file-name-directory (or (buffer-file-name)
-                                       load-file-name))
-              "init-bare"))
+(load (concat (file-name-directory load-file-name) "init-bare"))
 
 (require 'rmacs:config-functions       "config-functions")
 (require 'rmacs:functions-aws          "functions-aws")
