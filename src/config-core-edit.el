@@ -552,23 +552,23 @@ with prefix `s-SPC' at the same time."
                                   :capture :after
                                   :action #'~exec>)
                 (wand:create-rule :match (rx bol (0+ " ") "!!!")
-                                  :capture :after
-                                  :action #'~exec-with-term-emu)
+                                  :capture :whole
+                                  :action #'~dispatch-action)
                 (wand:create-rule :match (rx bol (0+ " ") "!@")
-                                  :capture :after
-                                  :action #'~exec-with-term-emu-detach)
+                                  :capture :whole
+                                  :action #'~dispatch-action)
                 (wand:create-rule :match (rx bol (0+ " ") "!^")
                                   :capture :after
                                   :action #'~exec-pop-up)
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
-                                  :capture :after
-                                  :action #'~exec-with-pause-in-term-emu)
+                                  :capture :whole
+                                  :action #'~dispatch-action)
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
                                   :action #'~exec<-next-line-separate)
-                ;; (wand:create-rule :match (rx bol (0+ " ") "!")
-                ;;                   :capture :after
-                ;;                   :action #'~exec-pop-up)
+                (wand:create-rule :match (rx bol (0+ " ") "mux://")
+                                  :capture :whole
+                                  :action #'~dispatch-action)
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)

@@ -1524,31 +1524,6 @@ environment variable."
 
                              t)))
 
-(defun* ~exec-with-term-emu (command &key (term-emu "with-term-emu"))
-  "Executes a command in a terminal emulator asynchronously."
-  (interactive "MCommand: ")
-  (let ((process-name (format "term-emu:%s" command)))
-    (async-start-process process-name
-                         term-emu
-                         nil
-                         command)))
-
-(defun* ~exec-with-term-emu-detach (command)
-  "Executes and detachs a command in a terminal emulator asynchronously."
-  (interactive "MCommand: ")
-  (~exec-with-term-emu command :term-emu "with-term-emu-detach"))
-
-(defun* ~exec-with-pause-in-term-emu (command &key (term-emu "with-term-emu"))
-  "Executes a command in a terminal emulator asynchronously and
-pauses after the execution."
-  (interactive "MCommand: ")
-  (let* ((command (concat "with-pause " command))
-        (process-name (format "term-emu:%s" command)))
-    (async-start-process process-name
-                         term-emu
-                         nil
-                         command)))
-
 (defun* ~exec-async (command &key (stdin nil)
                              output-callback
                              output-as-buffer
@@ -1777,6 +1752,11 @@ E.g.
                                          command)))
                                       (t
                                        command)))))
+
+(defun ~dispatch-action (text)
+  "Dispatches action based on text.  Ignore output."
+  (interactive)
+  (~exec-|-async ("dispatch-action" text)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

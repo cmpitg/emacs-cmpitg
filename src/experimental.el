@@ -35,10 +35,6 @@
 (defalias 'save-cp #'command-palette:save-cp)
 (defalias 'ojo #'ojo-mode)
 
-(defalias '!!! '~exec-with-term-emu)
-(defalias '!! '~exec-with-pause-in-term-emu)
-(defalias '!@ '~exec-with-term-emu-detach)
-
 ;;
 ;; Auto-compile Emacs Lisp unless already compiled
 ;;
