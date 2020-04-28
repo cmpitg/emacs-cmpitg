@@ -383,13 +383,33 @@
 
         ("q" nil "Quit" :exit t))
 
+      (defhydra hydra-smartparens (:columns 4)
+        "Smartparens"
+        (")" #'sp-forward-slurp-sexp "Forward slurp")
+        ("(" #'sp-backward-slurp-sexp "Backward slurp")
+        ("}" #'sp-forward-barf-sexp "Forward barf")
+        ("{" #'sp-backward-barf-sexp "Backward barf")
+        ("l" #'sp-forward-sexp "Go forward")
+        ("h" #'sp-backward-sexp "Go backward")
+        ("j" #'sp-down-sexp "Go down")
+        ("k" #'sp-backward-up-sexp "Go up")
+
+        ("es" #'sp-split-sexp "Split" :exit t)
+        ("eS" #'sp-splice-sexp "Splice" :exit t)
+        ("ej" #'sp-join-sexps "Join" :exit t)
+
+        ("q" nil "Quit" :exit t))
+
       (defhydra hydra-paren-edit nil
         "Paren-editing mode")
       (setq hydra-paren-edit/hint
             `(cond
               ((and (boundp 'paredit-mode) paredit-mode)
-               (progn (setq hydra-paren-edit/keymap hydra-paredit/keymap)
-                      (eval hydra-paredit/hint)))))
+               (setq hydra-paren-edit/keymap hydra-paredit/keymap)
+               (eval hydra-paredit/hint))
+              (t
+               (setq hydra-paren-edit/keymap hydra-smartparens/keymap)
+               (eval hydra-smartparens/hint))))
 
       (defhydra hydra-dev (:columns 4 :exit t)
         "Dev"
