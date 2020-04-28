@@ -1459,6 +1459,7 @@ by the `SHELL' environment variable."
         ;; never gets called
         (actual-command (s-concat command "; true"))
         (buffer (current-buffer)))
+    (message "Running: %s" command)
     (async-start-process process-name
                          current-shell
                          #'(lambda (process)
@@ -1470,7 +1471,8 @@ by the `SHELL' environment variable."
                                  (push-mark)
                                  (insert output)
                                  (save-mark-and-excursion
-                                   (~ansi-colorize-region)))))
+                                   (~ansi-colorize-region))
+                                 (message "Finished: %s" command))))
                          "-c"
                          actual-command)))
 
