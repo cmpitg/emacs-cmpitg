@@ -19,8 +19,10 @@
 
 (load (concat (file-name-directory load-file-name) "init-bare"))
 
+(require 'rmacs:config-functions       "config-functions")
 (require 'rmacs:functions-aws          "functions-aws")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")
+(require 'rmacs:commands-cmpitg        "commands-cmpitg")
 (require 'rmacs:config-module-rocket   "config-module-rocket")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
