@@ -415,13 +415,28 @@
         "Dev"
         ("j" #'hydra-dev-clojure/body "Clojure development"))
 
+      (defhydra hydra-current-dev nil
+        "Current dev mode")
+      (setq hydra-current-dev/hint
+            `(cond
+              (cider-mode
+               (setq hydra-current-dev/keymap hydra-dev-clojure/keymap)
+               (eval hydra-dev-clojure/hint))
+              (t
+               (setq hydra-current-dev/keymap hydra-emacs-lisp/keymap)
+               (eval hydra-emacs-lisp/hint))))
+
       (defhydra hydra-global (:columns 4 :exit t)
         "Global operations"
         ("s-SPC" #'exchange-point-and-mark "Exchange point & mark")
         ("SPC" #'counsel-M-x "M-x")
         ("qq" #'save-buffers-kill-emacs "Save buffers and kill Emacs")
 
+        ("RET" #'hydra-read-input-async/body "Read-input mode")
         ("p" #'hydra-paren-edit/body "Paren-editing mode")
+
+        ;; Univerval eval/dev mode for the current buffer
+        ("e" #'hydra-current-dev/body "Dev mode for current buffer" )
 
         ("u" #'hydra-dev/body "Dev")
         ("x" #'hydra-exec/body "Execution")
@@ -435,8 +450,6 @@
         ("f" #'hydra-file/body "File")
         ("j" #'hydra-jump/body "(Semantic) jumping")
         ("v" #'hydra-visit/body "Visiting")
-        ;; TODO: Univerval eval/dev mode for the current
-        ;; ("e" #'_ )
         ("i" #'hydra-insertion/body "Insertion")
         ("t" #'hydra-format/body "Formatting")
         ("m" #'hydra-mark/body "Marking")
