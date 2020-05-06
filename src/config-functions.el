@@ -154,6 +154,8 @@ characters."
   (set-frame-size frame width-in-chars height-in-chars)
   (let* ((width (frame-pixel-width frame))
          (height (frame-pixel-height frame)))
-    (~center-frame width height frame display)))
+    (~center-frame width height
+                   :frame frame
+                   :display display)))
 
 (provide 'rmacs:config-functions)
