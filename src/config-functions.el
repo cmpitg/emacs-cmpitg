@@ -105,6 +105,13 @@ its `PROMPTS', will be called.
 ;; Window & Frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun ~get-current-monitor-workarea (&optional display)
+  "Returns the current position and size of the workarea for the
+current monitor in the format of (X Y WIDTH HEIGHT)"
+  (thread-last (display-monitor-attributes-list display)
+    first
+    (alist-get 'workarea)))
+
 (defun ~centralize-mouse-position ()
   "Centralizes mouse position in the current window."
   (interactive)
@@ -132,11 +139,10 @@ its `PROMPTS', will be called.
   "Centers a frame with the width & height dimensions in
 characters."
   (set-frame-size frame width height t)
-  (let* ((screen-width (display-pixel-width display))
-         (screen-height (display-pixel-height display))
-         (desired-x (/ (- screen-width width) 2))
-         (desired-y (/ (- screen-height height) 2)))
-    (set-frame-position frame desired-x desired-y)))
+  (destructuring-bind (_ _ screen-width screen-height) (~get-current-monitor-workarea display)
+    (let* ((desired-x (/ (- screen-width width) 2))
+           (desired-y (/ (- screen-height height) 2)))
+      (set-frame-position frame desired-x desired-y))))
 
 (defun* ~center-frame-in-chars (width-in-chars
                                 height-in-chars
