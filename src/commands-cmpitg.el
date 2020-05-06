@@ -47,6 +47,17 @@ so that the system could use it as a webcam."
                                          " ")))
                    (~dispatch-action (format "!! %s" cmd))))))
 
+(defun ~start-xephyr-for-testing ()
+  "Starts a Xephyr for WM testing"
+  (interactive)
+  (~read-multiple-inputs-async
+   :prompts `(("DISPLAY" . ":11")
+              ("Resolution" . "800x600"))
+   :callback #'(lambda (display res)
+                 (let ((cmd (string-join (list "Xephyr" "-br" "-ac" "-noreset" "-screen" res display)
+                                         " ")))
+                   (~dispatch-action (format "!! %s" cmd))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'rmacs:commands-cmpitg)
