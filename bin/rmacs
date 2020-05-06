@@ -287,7 +287,8 @@ switch $mainCommand {
 		}
 
 		if {[llength $mainArgs] == 0} {
-			set sexp {(switch-to-buffer "*Blank*")}
+			# set sexp {(switch-to-buffer "*Blank*")}
+			set sexp {(~switch-buffer)}
 		} elseif {$args(new-frame) && !$args(no-wait)} {
 			set sexp "(prog1 ($openFileFunc \"$path\") (setq-local local/delete-frame-on-close (selected-frame)))"
 		} else {
