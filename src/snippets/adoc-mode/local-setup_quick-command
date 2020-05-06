@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: local-setup_quick-command
+# key: ;setup-quick-cmd
+# --
+./with-local-setup-env ${1:category} ${2:command}
+$0

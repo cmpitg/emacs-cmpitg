@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+# name: local-setup_add-deb-installation
+# key: ;setup-add-deb
+# --
+.file::${1:category}/setup-bin/install-${2:software-name}
+[source,sh]
+----
+#!/usr/bin/env bash
+
+## include::robust-bash
+
+## include::bash-meta
+
+add-deb-repo "\${CONFIG_DIR}/sources.list.d/${3:repo}.list" $3.list
+prompt-refresh-and-install ${4:packages}
+
+----
+
+Software source:
+
+.file::$1/config/sources.list.d/$3.list
+[source,sources.list]
+----
+# ${5:sudo apt-key adv --recv-keys --keyserver keys.gnupg.net <key-id>}
+${6:deb-lines}
+
+----
+$0
