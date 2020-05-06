@@ -102,9 +102,10 @@
   (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
   (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
+  (bind-key "C-w" #'kill-current-buffer)
+  (evil-define-key 'normal global-map (kbd "C-w") #'kill-current-buffer)
+  (evil-define-key 'visual global-map (kbd "C-w") #'kill-current-buffer)
 
-  (bind-key "s-!" #'~execute-text-prompt)
-  (bind-key "s-[" #'emamux:send-region)
   (bind-key "<s-RET>" #'~execute)
   (bind-key "<S-RET>" #'~execute-line)
   (bind-key "<s-return>" #'~execute)
@@ -199,7 +200,11 @@
         "File operations"
         ("d" #'~delete-current-file "Delete current file")
         ("r" #'~rename-current-file "Rename/move current file")
-        ("a" #'~open-current-file-as-admin "Open current file as admin")
+        ("s" #'save-buffer "Save file")
+        ("a" #'~save-buffer-as "Save file as")
+        ("o" #'counsel-find-file "Open file")
+        ("f" #'projectile-find-file "Open file in project")
+        ("m" #'~open-current-file-as-admin "Open current file as admin")
         ("c" #'~copy-file-name-to-clipboard "Copy path to clipboard")
         ("p" #'~copy-pos-to-clipboard "Copy current position to clipboard"))
 
