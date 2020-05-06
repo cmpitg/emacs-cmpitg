@@ -222,15 +222,6 @@ might need manual refreshing."
                 (loop do (paredit-forward-up))))))
 
 ;;
-;; Tmux interaction
-;;
-;; https://github.com/syohex/emacs-emamux
-;;
-
-(use-package emamux
-  :commands (emamux:send-command emamux:send-region))
-
-;;
 ;; File explorer and sidebar
 ;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs

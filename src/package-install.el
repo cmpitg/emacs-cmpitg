@@ -73,7 +73,7 @@
                    yasnippet
                    smartparens
                    dtrt-indent
-                   emamux
+                   ;; emamux
                    chruby
                    exec-path-from-shell
                    evil
