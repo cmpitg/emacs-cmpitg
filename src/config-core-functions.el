@@ -962,6 +962,12 @@ This command works on `sudo` *nixes only."
                    port
                    path)))))))
 
+(defun ~save-buffer-as (path)
+  "Saves current file as."
+  (interactive "FPath: ")
+  (unless (string-empty-p path)
+    (write-file path t)))
+
 (defun ~delete-current-file ()
   "Deletes the file associated with the current buffer and kills
 off the buffer."
