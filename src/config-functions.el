@@ -105,12 +105,10 @@ its `PROMPTS', will be called.
 ;; Window & Frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun ~get-current-monitor-workarea (&optional display)
+(defun ~get-current-monitor-workarea (&optional frame)
   "Returns the current position and size of the workarea for the
 current monitor in the format of (X Y WIDTH HEIGHT)"
-  (thread-last (display-monitor-attributes-list display)
-    first
-    (alist-get 'workarea)))
+  (alist-get 'workarea (frame-monitor-attributes frame)))
 
 (defun ~centralize-mouse-position ()
   "Centralizes mouse position in the current window."
@@ -134,28 +132,38 @@ current monitor in the format of (X Y WIDTH HEIGHT)"
 (defun* ~center-frame (width
                        height
                        &key
-                       (frame (selected-frame))
-                       (display nil))
-  "Centers a frame with the width & height dimensions in
-characters."
+                       (frame (selected-frame)))
+  "Centers a frame.  WIDTH and HEIGHT are in pixels."
   (set-frame-size frame width height t)
-  (destructuring-bind (_ _ screen-width screen-height) (~get-current-monitor-workarea display)
-    (let* ((desired-x (/ (- screen-width width) 2))
-           (desired-y (/ (- screen-height height) 2)))
+  (destructuring-bind (x y screen-width screen-height) (~get-current-monitor-workarea frame)
+    (let* ((desired-x (+ x (/ (- screen-width width) 2)))
+           (desired-y (+ y (/ (- screen-height height) 2))))
+      (set-frame-position frame desired-x desired-y))))
+
+(defun* ~center-frame-percent (width%
+                               height%
+                               &key
+                               (frame (selected-frame)))
+  "Centers a frame.  WIDTH% and HEIGHT% are integers
+corresponding to the percentage of the width & height with
+regards to the current screen."
+  (destructuring-bind (x y screen-width screen-height) (~get-current-monitor-workarea frame)
+    (let* ((width (* (/ screen-width 100) width%))
+           (height (* (/ screen-height 100) height%))
+           (desired-x (+ x (/ (- screen-width width) 2)))
+           (desired-y (+ y (/ (- screen-height height) 2))))
+      (set-frame-size frame width height t)
       (set-frame-position frame desired-x desired-y))))
 
 (defun* ~center-frame-in-chars (width-in-chars
                                 height-in-chars
                                 &key
-                                (frame (selected-frame))
-                                (display nil))
+                                (frame (selected-frame)))
   "Centers a frame with the width & height dimensions in
 characters."
   (set-frame-size frame width-in-chars height-in-chars)
   (let* ((width (frame-pixel-width frame))
          (height (frame-pixel-height frame)))
-    (~center-frame width height
-                   :frame frame
-                   :display display)))
+    (~center-frame width height :frame frame)))
 
 (provide 'rmacs:config-functions)
