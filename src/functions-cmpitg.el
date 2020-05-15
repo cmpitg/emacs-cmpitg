@@ -53,6 +53,10 @@
                                   :follow-dir nil)))
     window))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Window manager - WMII
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun* ~wmii/get-frame-id (&optional (frame (selected-frame)))
   "Gets the frame ID in Wmii-readable format."
   (thread-last (frame-parameter frame 'outer-window-id)
@@ -70,6 +74,35 @@
   (interactive)
   (~exec (format "wmiir xwrite /tag/sel/ctl send %s '~'"
                  (~wmii/get-frame-id frame))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Window manager
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro* ~wm/call-awesome-client (args &optional (callback #'~identity))
+  "Calls awesome-client (from Awesome WM)."
+  `(~exec-|-async ("env" "AWESOME_RLWRAP=" "awesome-client" ,@args)
+                  ,callback))
+
+(defmacro* ~wm/call-herbstclient (args &optional (callback #'~identity))
+  "Calls herbstclient (from Herbstluftwm)"
+  `(~exec-|-async ("herbstclient" ,@args) ,callback))
+
+(defun ~wm/get-focused-window-id ()
+  "Gets the ID for the currently focused window."
+  (string-trim (~exec "xdotool getwindowfocus")))
+
+(defun ~wm/focus-window-by-id (window-id)
+  "Focuses a window by its ID."
+  (string-trim (~exec (format "xdotool windowfocus --sync %s" (shell-quote-argument window-id)))))
+
+(defhydra hydra-wm-app (:columns 4 :exit t)
+  "Run application"
+  ("a" #'(lambda () (interactive) (~dispatch-action "!@ config-inputs-cmpitg")) "Config input")
+  ("m" #'(lambda () (interactive) (~dispatch-action "!@ konsole")) "Terminal emulator")
+  ("w" #'(lambda () (interactive) (~dispatch-action "!@ web-browser-gui -ProfileManager")) "Web browser")
+  ("l" #'(lambda () (interactive) (~dispatch-action "!@ lockscreen")) "Lock screen")
+  ("s" #'(lambda () (interactive) (~dispatch-action "!@ suspend-me")) "Suspend"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
