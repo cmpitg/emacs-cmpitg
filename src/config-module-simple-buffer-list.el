@@ -32,7 +32,7 @@ denoted by current text field at the current cursor."
   (save-excursion
     (beginning-of-line)
     (forward-char)
-    (let* ((buffer-name (s-trim (field-string-no-properties)))
+    (let* ((buffer-name (s-trim (get-text-property (point) 'field)))
            (buffer (get-buffer buffer-name)))
       (if (null buffer)
           (message "Buffer %s doesn't exist" buffer-name)
@@ -56,15 +56,10 @@ denoted by current text field at the current cursor."
 
       (dolist (buffer buffers)
         (let ((name (buffer-name buffer))
-              (path (if (buffer-file-name buffer)
-                        (buffer-file-name buffer)
-                      "")))
-          (insert (propertize (format "%-60s" name)
-                              'field name
-                              'help-echo path)
-                  ;; (propertize path
-                  ;;             'field (s-concat "path-" name))
-                  )
+              (path (buffer-file-name buffer)))
+          (insert (if path
+                      (propertize path 'field name)
+                    (propertize name 'field name)))
           (newline)))
 
       (goto-line buffer-index)
