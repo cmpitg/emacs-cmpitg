@@ -17,6 +17,10 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+(defun ~identity (x)
+  "The identity function."
+  x)
+
 (defun* ~get-project-toolbox-path (&key (dir (~current-project-root))
                                         (file-name ".rmacs-toolbox"))
   "Gets the path to the current project toolbox file."

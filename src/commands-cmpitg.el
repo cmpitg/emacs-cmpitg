@@ -17,6 +17,41 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helpers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun* ~create-commander-frame (name &key wm frame-params)
+  "Creates a special frame that is use to execute non-Emacs commands.  TODO"
+  (let* ((f (make-frame `(,@frame-params
+                          (name . ,name)
+                          (user-position . t)
+                          (user-size . t)
+                          (auto-raise . t)
+                          (skip-taskbar . t)
+                          (alpha . 90)
+                          (sticky . t)
+                          (fullscreen . fullboth)
+                          (undecorated . t))))
+         (win-id (frame-parameter f 'parent-id)))
+    (select-frame-set-input-focus f)
+    (when (null (frame-parameter f 'fullscreen))
+      (case wm
+        (:awesome
+         (~wm/call-awesome-client
+          ("client.focus.floating = true; client.focus.ontop = true")
+          #'(lambda (_output)
+              (~center-frame-percent 80 80 :frame f))))
+        (:herbstluft
+         t)
+        (otherwise
+         (~center-frame-percent 80 80 :frame f))))
+    f))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Commands
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun ~start-ip-webcam ()
   "Starts streaming video from an IP webcam to a loopback device
 so that the system could use it as a webcam."
@@ -57,6 +92,25 @@ so that the system could use it as a webcam."
                  (let ((cmd (string-join (list "Xephyr" "-br" "-ac" "-noreset" "-screen" res display)
                                          " ")))
                    (~dispatch-action (format "!! %s" cmd))))))
+
+(defun ~capture-to-local-setup (&optional source dest)
+  "Captures a file/directory to local setup."
+  (interactive)
+  (let* ((source (read-file-name "Source: "))
+         (dest (read-file-name "Destination: " (f-join (getenv "MY_LOCAL_SETUP")
+                                                       "src" "code")
+                               nil
+                               nil))
+         (dest-dir (f-dirname dest))
+         (visit-dest? (y-or-n-p "Visit destination? "))
+         (delete-source? (y-or-n-p "Delete source? ")))
+    (f-mkdir dest-dir)
+    (~write-to-file dest (~read-file source))
+    (when visit-dest? 
+      (find-file dest))
+    (when delete-source?
+      (delete-file source))
+    (message "'%s' captured to '%s'" source dest)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
