@@ -261,8 +261,8 @@
         ("hf" #'describe-function "Describe function")
         ("hv" #'describe-variable "Describe variable")
         ("hk" #'describe-key "Describe key binding")
-        ("h." #'find-function "Jump to function definition")
-        ("hl" #'find-library "Jump to library definition"))
+        ("." #'find-function "Jump to function definition")
+        ("l" #'find-library "Jump to library definition"))
 
       (defhydra hydra-insertion (:columns 4 :exit t)
         "Insertion operations"
