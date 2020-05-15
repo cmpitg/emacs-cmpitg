@@ -26,8 +26,7 @@
 (require 'iflipb)
 
 (defun bl:visit-buffer-at-current-line ()
-  "Visits the buffer at the current line.  The buffer name is
-denoted by current text field at the current cursor."
+  "Visits the buffer at the current line."
   (interactive)
   (save-excursion
     (beginning-of-line)
@@ -39,6 +38,24 @@ denoted by current text field at the current cursor."
         (progn
           (kill-current-buffer)
           (switch-to-buffer buffer))))))
+
+(defun bl:kill-one-or-more-buffers ()
+  "Kills the buffers from the curren region.  If there is no
+active region, kill the buffer at the current line."
+  (interactive)
+  (save-excursion
+    (let* ((first-line-number (line-number-at-pos (region-beginning)))
+           (last-line-number (line-number-at-pos (region-end)))
+           (line-counter (1+ (- last-line-number first-line-number))))
+      (when (y-or-n-p "Kill buffers? ")
+        (loop for line-number from first-line-number to last-line-number
+              for current-point = (point-at-bol (goto-line line-number))
+              for buffer = (get-buffer (s-trim (get-text-property (point) 'field)))
+              unless (null buffer)
+              do (kill-buffer buffer))
+        (goto-line first-line-number)
+        (beginning-of-line)
+        (kill-line line-counter)))))
 
 (defun bl:show-buffer-chooser ()
   "Shows the buffer chooser."
@@ -66,6 +83,8 @@ denoted by current text field at the current cursor."
       (beginning-of-line)
 
       (evil-normal-state)
+      (evil-define-key 'normal 'local (kbd "d") #'bl:kill-one-or-more-buffers)
+      (evil-define-key 'insert 'local (kbd "d") #'bl:kill-one-or-more-buffers)
       (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
       (evil-define-key 'insert 'local (kbd "q") #'kill-current-buffer)
       (evil-define-key 'normal 'local (kbd "RET") #'bl:visit-buffer-at-current-line)
