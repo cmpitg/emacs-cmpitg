@@ -59,7 +59,7 @@ so that the system could use it as a webcam."
   (~read-multiple-inputs-async
    :prompts `(("Webcam device path:" . "/dev/video0")
               ("Source protocol:" . "http")
-              ("Source IP:" . "192.168.1.106")
+              ("Source IP:" . "192.168.1.225")
               ("Source port:" . "8080")
               ("Source path:" . "/videofeed")
               ("Width:" . "1280")
