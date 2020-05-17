@@ -114,6 +114,20 @@ so that the system could use it as a webcam."
       (delete-file source))
     (message "'%s' captured to '%s'" source dest)))
 
+(defun ~capture-to-local-data (&optional source dest)
+  "Captures a file/directory to local data and symlinks back."
+  (interactive)
+  (let* ((source (read-file-name "Source: "))
+         (dest (read-file-name "Destination: " (getenv "MY_DATA")
+                               nil nil nil))
+         (dest-dir (f-dirname dest)))
+    (when (f-exists? dest)
+      (error "'%s' must not exist yet" dest))
+    (f-mkdir dest-dir)
+    (f-move source dest)
+    (f-symlink dest source)
+    (message "'%s' captured to '%s'" source dest)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'rmacs:commands-cmpitg)
