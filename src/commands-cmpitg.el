@@ -102,10 +102,12 @@ so that the system could use it as a webcam."
                                nil
                                nil))
          (dest-dir (f-dirname dest))
+         _ (when (and (f-exists? dest)
+                      (y-or-n-p (format "'%s' exists, continue? " dest))))
          (visit-dest? (y-or-n-p "Visit destination? "))
          (delete-source? (y-or-n-p "Delete source? ")))
     (f-mkdir dest-dir)
-    (~write-to-file dest (~read-file source))
+    (f-copy source dest)
     (when visit-dest? 
       (find-file dest))
     (when delete-source?
