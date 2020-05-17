@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: exec with redirection
+# key: ;exec
+# --
+exec $1 <@ stdin >@ stdout 2>@ stderr
+$0

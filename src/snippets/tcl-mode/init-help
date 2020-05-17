@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: init help text
+# key: ;init-help
+# --
+proc showHelp {} {
+    $0
+}
+
+if {$::argc == 0 || $::argv eq {--help}} {
+    showHelp
+    exit 0
+}
+if {$::argc != ${1:number-of-mandatory-arguments}} {
+    puts stderr "Needs $1 arguments: ${2}"
+    exit 2
+}
