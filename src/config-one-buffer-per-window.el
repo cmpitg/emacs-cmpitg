@@ -110,12 +110,12 @@ visible."
                  (~is-blank-buffer? (first x)))
              (apply orig-fun args)))
 
-(advice-add 'buffer-list
-            :around #'~advice/filter-out-blank-buffer)
-(advice-add 'window-next-buffers
-            :around #'~advice/filter-out-blank-buffer)
-(advice-add 'window-prev-buffers
-            :around #'~advice/filter-out-blank-buffer-for-window-prev-buffers)
+;; (advice-add 'buffer-list
+;;             :around #'~advice/filter-out-blank-buffer)
+;; (advice-add 'window-next-buffers
+;;             :around #'~advice/filter-out-blank-buffer)
+;; (advice-add 'window-prev-buffers
+;;             :around #'~advice/filter-out-blank-buffer-for-window-prev-buffers)
 
 ;;
 ;; switch-to-buffer should focus the corresponding frame & window instead of
@@ -137,8 +137,8 @@ the blank buffer."
         (select-window window))
     (apply orig-fun buffer-or-name args)))
 
-(advice-add 'switch-to-buffer
-            :around #'~advice/change-focus-if-buffer-is-already-visible)
+;; (advice-add 'switch-to-buffer
+;;             :around #'~advice/change-focus-if-buffer-is-already-visible)
 
 ;;
 ;; Sometimes we would like to temporarily disable one-buffer-per-window
@@ -155,12 +155,12 @@ the blank buffer."
 ;; is shown.
 ;;
 
-(advice-add 'split-window-horizontally :after
-            #'~switch-to-blank-buffer-other-window)
-(advice-add 'split-window-vertically :after
-            #'~switch-to-blank-buffer-other-window)
-(add-hook 'after-make-frame-functions
-          #'~switch-to-blank-buffer)
+;; (advice-add 'split-window-horizontally :after
+;;             #'~switch-to-blank-buffer-other-window)
+;; (advice-add 'split-window-vertically :after
+;;             #'~switch-to-blank-buffer-other-window)
+;; (add-hook 'after-make-frame-functions
+;;           #'~switch-to-blank-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setting up & tearing down
