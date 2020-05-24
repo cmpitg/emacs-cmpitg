@@ -607,6 +607,13 @@ with prefix `s-SPC' at the same time."
             (yas-global-mode 1)))
 
 ;;
+;; Showing color based on hex code
+;;
+
+(use-package rainbow-mode
+  :commands (rainbow-mode))
+
+;;
 ;; Always load man mode
 ;;
 
