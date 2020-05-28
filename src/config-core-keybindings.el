@@ -342,23 +342,42 @@
         ("SPC" #'mark-sexp "Mark sexp")
         ("q" nil "Quit" :exit t))
 
+      (defhydra hydra-org-todo (:columns 4 :exit t)
+        "Org TODO operations"
+        ("RET" #'org-insert-todo-heading "Insert TODO heading (same level)")
+        ("c" #'org-todo "Change TODO state" :exit nil)
+        ("s" #'org-schedule "Schedule"))
+
+      (defhydra hydra-org-table (:columns 4 :exit t)
+        "Org table operations"
+        ("a" #'org-ctrl-c-ctrl-c "Table: Align"))
+
+      (defhydra hydra-org-narrow (:columns 4 :exit t)
+        "Org narrow"
+        ("s" #'org-narrow-to-subtree "Narrow to subtree")
+        ("b" #'org-narrow-to-block "Narrow to block")
+        ("w" #'widen "Widen"))
+
       (defhydra hydra-org (:columns 4 :exit nil)
         "Org"
+        ("o" #'hydra-org-todo/body "TODO operations" :exit t)
+        ("t" #'hydra-org-table/body "Table operations" :exit t)
+        ("n" #'hydra-org-narrow/body "Narrowing operations" :exit t)
+
         ("j" #'org-next-visible-heading "Next heading")
         ("k" #'org-previous-visible-heading "Prev heading")
         ("J" #'org-forward-heading-same-level "Next heading (same)")
         ("K" #'org-backward-heading-same-level "Prev heading (same)")
 
-        ("s" #'org-sparse-tree "Create sparse tree")
+        ("g" #'org-goto "Outline-based goto" :exit t)
+        ("s" #'org-sparse-tree "Create sparse tree" :exit t)
 
         ("m" #'org-mark-subtree "Mark subtree" :exit t)
 
-        ("RET" #'org-insert-heading "Insert heading (same)")
-        ("d" #'org-todo "Change TODO state")
+        ("RET" #'org-insert-heading "Insert heading (same level)")
+        ("i" #'org-insert-item "Insert item")
         ("TAB" #'org-cycle "Tab action/Cycle")
         ("c" #'org-ctrl-c-ctrl-c "Context-based update/align")
-
-        ("ta" #'org-ctrl-c-ctrl-c "Table: Realign" :exit t)
 
         ("a" #'org-archive-subtree "Archive" :exit t)
         (">" #'org-metaright "Increase level (current)")
