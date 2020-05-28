@@ -77,6 +77,7 @@ so that the system could use it as a webcam."
                                                "!" "decodebin"
                                                "!" "videoconvert"
                                                "!" "videoscale"
+                                               "!" "videorate"
                                                "!" (format "video/x-raw,format=YUY2,width=%s,height=%s" width height)
                                                "!" "v4l2sink" (format "device=%s" device-path) "sync=false")
                                          " ")))
