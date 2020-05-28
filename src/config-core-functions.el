@@ -1764,7 +1764,8 @@ E.g.
 (defun ~dispatch-action (text)
   "Dispatches action based on text.  Ignore output."
   (interactive)
-  (~exec-|-async ("setsid" "dispatch-action" text)))
+  (message "Dispatching action: %s" text)
+  (~exec-|-async ("setsid" "--fork" "dispatch-action" text)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
