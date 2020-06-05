@@ -17,7 +17,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; TODO: Deprecated, use cl-lib instead 
 (require 'cl)
+(require 'cl-lib)
 
 (if (string= "1" (getenv "EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR"))
     (setq debug-on-error t)
