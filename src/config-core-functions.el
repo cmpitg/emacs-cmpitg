@@ -1302,6 +1302,11 @@ up in a separate frame."
   (interactive)
   (setf *~popup-exec-result?* (not *~popup-exec-result?*)))
 
+(cl-defun ~save-to-history-file (history-path line &key (max-history 1000))
+  "Saves a line to a history file."
+  (~exec-|-async (concat line "\n")
+                 ("add-to-history" "--max-history" (number-to-string max-history) history-path)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Processes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
