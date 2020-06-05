@@ -664,7 +664,6 @@ might need manual refreshing."
 ;;
 
 (use-package elpy
-  :after conda
   :init (progn
           (elpy-enable)
 
@@ -688,19 +687,25 @@ might need manual refreshing."
                 (switch-to-buffer (nth 0 p))
                 (goto-char (nth 1 p)))))
 
-          (setenv "WORKON_HOME" (concat *conda-home-path* "/envs"))
-          (setq elpy-rpc-python-command (concat *conda-home-path* "/bin/python"))
-
           (setq python-shell-interpreter "ipython")
           (setq python-shell-interpreter-args "-i --simple-prompt")
+          (setq elpy-rpc-python-command "python3")
+          (setq elpy-rpc-virtualenv-path 'default)
 
-          ;; (~bind-key-with-prefix "d w"   #'pyvenv-workon                     :keymap elpy-mode-map)
-          (~bind-key-with-prefix "d w"   #'conda-env-activate                :keymap elpy-mode-map)
-          (~bind-key-with-prefix "d z"   #'elpy-shell-switch-to-shell        :keymap elpy-mode-map)
-          (~bind-key-with-prefix "d e r" #'elpy-shell-send-region-or-buffer  :keymap elpy-mode-map)
-          (~bind-key-with-prefix "d e e" #'elpy-shell-send-current-statement :keymap elpy-mode-map)
-          (~bind-key-with-prefix "d ."   #'~python-jump-to-definition        :keymap elpy-mode-map)
-          (~bind-key-with-prefix "d ,"   #'~python-jump-back                 :keymap elpy-mode-map)))
+          (defhydra hydra-dev-python-conda (:columns 4 :exit t)
+            "Python development with Conda"
+            ("a" #'conda-env-activate "Activate virtualenv"))
+
+          (defhydra hydra-dev-python (:columns 4 :exit t)
+            "Python development"
+            ("a" #'pyvenv-activate "Activate virtualenv")
+            ("z" #'elpy-shell-switch-to-shell "Switch to shell")
+            ("r" #'elpy-shell-send-region-or-buffer "Eval region or buffer")
+            ("e" #'elpy-shell-send-current-statement "Eval current statement")
+            ("." #'~python-jump-to-definition "Jump to definition")
+            ("," #'~python-jump-back "Jump back" :exit nil)
+            ("l" #'elpy-config "Config")
+            ("c" #'hydra-dev-python-conda/body "Conda"))))
 
 ;;
 ;; Clojure development

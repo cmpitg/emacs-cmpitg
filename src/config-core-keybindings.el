@@ -437,7 +437,8 @@
 
       (defhydra hydra-dev (:columns 4 :exit t)
         "Dev"
-        ("j" #'hydra-dev-clojure/body "Clojure development"))
+        ("j" #'hydra-dev-clojure/body "Clojure development")
+        ("p" #'hydra-dev-python/body "Python development"))
 
       (defhydra hydra-current-dev nil
         "Current dev mode")
