@@ -392,6 +392,7 @@ with prefix `s-SPC' at the same time."
             ;; Default evil mode
             (setq evil-default-state 'insert)
             ;; (setq evil-default-state 'normal)
+            (custom-set-variables `(evil-kill-on-visual-paste nil))
 
             ;; (with-eval-after-load "evil-vars"
             ;;   (dolist (mode '(term-mode
