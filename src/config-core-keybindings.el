@@ -73,8 +73,9 @@
   (bind-key "s-=" #'er/expand-region)
 
   ;; Searching
-  (bind-key "C-s" #'isearch-forward-regexp)
-  (bind-key "C-r" #'isearch-backward-regexp)
+  (bind-key "C-r" #'~insert-entry-from-exec-history)
+  (bind-key "C-r" #'~insert-entry-from-exec-history evil-normal-state-map)
+  (bind-key "C-r" #'~insert-entry-from-exec-history evil-insert-state-map)
   (bind-key "s-s" #'~search-buffer-interactively)
   (bind-key "s-f" #'query-replace-regexp)
   (bind-key "s-F" #'query-replace)
@@ -304,9 +305,16 @@
         ("n" #'make-frame "New frame")
         ("k" #'delete-frame "Delete current frame"))
 
+      (defhydra hydra-search (:columns 4 :exit t)
+        "Searching"
+        ("s" #'~search-buffer-interactively "Interactively search")
+        ("i" #'counsel-imenu "Symbol-based")
+        ("f" #'isearch-forward-regexp "Forward regexp")
+        ("b" #'isearch-backward-regexp "Backward regexp"))
+
       (defhydra hydra-edit (:columns 4 :exit t)
         "Editing operations"
-        ("ss" #'~search-buffer-interactively "Interactive search")
+        ("s" #'hydra-search/body "Searching")
 
         ("qrr" #'query-replace-regexp "Query replace regexp")
         ("qrq" #'query-replace "Query replace")
