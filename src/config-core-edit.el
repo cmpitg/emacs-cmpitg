@@ -532,43 +532,46 @@ with prefix `s-SPC' at the same time."
       (~open-line 1)
       (beginning-of-line)
       (bs:exec text))
-
+    
     (setq wand:*rules*
-          (list (wand:create-rule :match (rx bol (0+ " ") "|")
+          (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
-                                  :action #'~exec|
-                                  ;; :action #'~exec|-with-cp
-                                  )
-                (wand:create-rule :match (rx bol (0+ " ") "<")
-                                  :capture :after
-                                  :action #'~exec<)
+                                  :action (~record-arg-to-history-fn *~exec-history-path* #'~exec<))
                 (wand:create-rule :match (rx bol (0+ " ") "$<")
                                   :capture :after
                                   :action #'bs:send-complete-string)
                 (wand:create-rule :match (rx bol (0+ " ") "$")
                                   :capture :after
-                                  :action #'~bs:exec-output-to-next-line)
+                                  :action (~record-arg-to-history-fn *~exec-history-path* #'~bs:exec-output-to-next-line))
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
-                                  :action #'~exec>)
+                                  :action (~record-arg-to-history-fn *~exec-history-path* #'~exec>))
                 (wand:create-rule :match (rx bol (0+ " ") "!!!")
-                                  :capture :whole
-                                  :action #'~dispatch-action)
+                                  :capture :after
+                                  :action #'(lambda (text)
+                                              (~save-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "!!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!@")
-                                  :capture :whole
-                                  :action #'~dispatch-action)
+                                  :capture :after
+                                  :action #'(lambda (text)
+                                              (~save-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "!@ " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!^")
                                   :capture :after
-                                  :action #'~exec-pop-up)
+                                  :action (~record-arg-to-history-fn *~exec-history-path* #'~exec-pop-up))
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
-                                  :capture :whole
-                                  :action #'~dispatch-action)
+                                  :capture :after
+                                  :action #'(lambda (text)
+                                              (~save-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
-                                  :action #'~exec<-next-line-separate)
+                                  :action (~record-arg-to-history-fn *~exec-history-path* #'~exec<-next-line-separate))
                 (wand:create-rule :match (rx bol (0+ " ") "mux://")
-                                  :capture :whole
-                                  :action #'~dispatch-action)
+                                  :capture :after
+                                  :action #'(lambda (text)
+                                              (~save-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "mux:// " text))))
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)
