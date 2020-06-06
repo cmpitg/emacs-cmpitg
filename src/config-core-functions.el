@@ -21,28 +21,47 @@
 ;; Menu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Context-sensitive right-click menu
-(defun ~right-click-menu ()
+(defun ~get-context-menu ()
   "Returns a list to build a context menu."
   `(""
+    ["Switch to buffer" ~switch-buffer]
+    ["Buffer list" list-buffers]
+    ["--" ignore]
     ["Cut" clipboard-kill-region (~is-selecting?)]
     ["Copy" kill-ring-save (~is-selecting?)]
-    ["Paste" yank t]
+    ["Paste" ,#'(lambda ()
+                  (interactive)
+                  (when (~is-selecting?)
+                    (call-interactively #'delete-region))
+                  (call-interactively #'yank))]
+    ["Clone" ~duplicate-line-or-region]
     ["Delete" delete-region (~is-selecting?)]
     ["--" ignore]
-    ;; TODO: Include exec functions
-    ;; ["Exec (other window)" ~exec-in-other-window (~is-selecting?)]
-    ;; ["Exec in Tmux" emamux:send-region (~is-selecting?)]
+    ["Exec" ~execute]
+    ["Exec kill buffer" ,#'(lambda ()
+                             (interactive)
+                             (call-interactively #'~execute)
+                             (call-interactively #'kill-current-buffer))]
+    ["Exec line" ~execute-line]
+    ["Exec line and kill buffer" ,#'(lambda ()
+                                      (interactive)
+                                      (call-interactively #'~execute-line)
+                                      (call-interactively #'kill-current-buffer))]
     ;; TODO: Include buffer list, new temp buffer, ...
+    ["--" ignore]
+    ["Horizontal split" split-window-horizontally]
+    ["Vertical split" split-window-vertically]
+    ["One window" ~one-window]
+    ["Delete current window" delete-window]
     ["--" ignore]
     ["Undo" undo-tree-undo t]
     ["Redo" undo-tree-redo t]
     ["--" ignore]))
 
-(defun ~popup-right-click-menu ()
-  "Pops up the right click menu."
+(defun ~popup-context-menu ()
+  "Pops up the context menu."
   (interactive)
-  (popup-menu (~right-click-menu)))
+  (popup-menu (~get-context-menu)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Region: https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Region.html
@@ -346,7 +365,7 @@ prefix arg (`C-u') to force deletion if it is."
            (window-dedicated-p (selected-window))
            (message "Window '%s' is sticky/dedicated, should you want to delete, re-invoke the command with C-u prefix."
                     (current-buffer)))
-      (call-interactively 'delete-window)))
+      (call-interactively #'delete-window)))
 
 (defun* ~get-next-non-dedicated-window (&optional original-window next-window)
   "Gets the next non-dedicated, non-minibuffer window."
@@ -1043,7 +1062,7 @@ variable `local/linked-windows'."
 fallback to current directory if project root is not found."
   (interactive)
   (if current-prefix-arg
-      (call-interactively 'counsel-ag)
+      (call-interactively #'counsel-ag)
     (counsel-ag nil (~current-project-root))))
 
 (defun ~current-dir ()
@@ -1132,8 +1151,8 @@ trimmed after reading."
   (interactive)
   (require 'expand-region)
   (let ((current-point (point)))
-    (call-interactively 'er/mark-outside-pairs)
-    (let ((res (call-interactively '~eval-region)))
+    (call-interactively #'er/mark-outside-pairs)
+    (let ((res (call-interactively #'~eval-region)))
       (prin1 res)
       (goto-char current-point)
       (setq deactivate-mark t)
@@ -1152,8 +1171,8 @@ trimmed after reading."
   "Evals region if active, or evals last sexpr."
   (interactive)
   (if (~is-selecting?)
-      (call-interactively '~eval-region)
-    (call-interactively 'eval-last-sexp)))
+      (call-interactively #'~eval-region)
+    (call-interactively #'eval-last-sexp)))
 
 (defun ~eval-then-replace-region-or-last-sexp ()
   "Evals then replaces region or last sexp with result."

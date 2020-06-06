@@ -130,8 +130,8 @@
   (bind-key "<C-down-mouse-1>" nil)
   (bind-key "<down-mouse-2>" nil)
   (bind-key "<mouse-2>" #'~execute)
-  (bind-key "<mouse-3>" #'~popup-right-click-menu)
-  (bind-key "<C-down-mouse-3>" #'~popup-right-click-menu)
+  (bind-key "<mouse-3>" #'~popup-context-menu)
+  (bind-key "<C-down-mouse-3>" #'~popup-context-menu)
   (bind-key "<f1>" #'~firefox)
   ;; Return in Evil executes commands based on context
   ;; (advice-add 'evil-ret :around #'~advice/evil-ret-execute)
