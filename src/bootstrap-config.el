@@ -63,6 +63,17 @@
    (concat (file-name-as-directory *config-dir*) "scratch"))
   "Default path to Scratch directory.")
 
+(defvar *popup-buffer-in*
+  :window
+  "Determines whether a buffer popped up by `~popup-buffer' is in
+a new window or a new frame.  Possible values: `:window',
+`:frame'.")
+
+(defvar *~exec-history-path* (expand-file-name (format "~/.local/rmacs.%s.exec-history" server-name))
+  "Path to history file that stores executed external commands")
+(defvar *~exec-history-max* 3000
+  "How many entries are saved in `*~EXEC-HISTORY-PATH*'")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

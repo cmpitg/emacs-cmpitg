@@ -17,12 +17,6 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defvar *popup-buffer-in*
-  :window
-  "Determines whether a buffer popped up by `~popup-buffer' is in
-a new window or a new frame.  Possible values: `:window',
-`:frame'.")
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Menu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1306,6 +1300,17 @@ up in a separate frame."
   "Saves a line to a history file."
   (~exec-|-async (concat line "\n")
                  ("add-to-history" "--max-history" (number-to-string max-history) history-path)))
+
+    
+(cl-defun ~record-arg-to-history-fn (history-path action-fn &key (max-history *~exec-history-max*))
+  "Returns a function that records text to a history file, then performs the action defined by ACTION-FN."
+  (lexical-let* ((history-path history-path)
+                 (action-fn action-fn)
+                 (max-history max-history))
+    #'(lambda (text)
+        (~save-to-history-file history-path text
+                               :max-history max-history)
+        (funcall action-fn text))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Processes
