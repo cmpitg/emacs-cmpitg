@@ -534,7 +534,20 @@ with prefix `s-SPC' at the same time."
       (~open-line 1)
       (beginning-of-line)
       (bs:exec text))
-    
+
+    (defvar *~command-pattern-regexp* (rx bol (0+ " ") (or "$" "!" "!^" "!@" "!!" "!!!" "mux://"))
+      "Regexp that determines whether or not a string is a command pattern.")
+
+    (defun ~goto-next-command-pattern ()
+      "Goes to the next line matching one of the command patterns."
+      (interactive)
+      (re-search-forward *~command-pattern-regexp* nil t))
+
+    (defun ~goto-prev-command-pattern ()
+      "Goes to the previous line matching one of the command patterns."
+      (interactive)
+      (re-search-backward *~command-pattern-regexp* nil t))
+
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after

@@ -57,6 +57,14 @@
   (bind-key "s-r" #'forward-word)
   (bind-key "s-R" #'forward-sexp)
   (bind-key "s-l" #'goto-line)
+  (bind-key "M-p" #'~goto-prev-command-pattern)
+  (bind-key "M-p" #'~goto-prev-command-pattern evil-normal-state-map)
+  (bind-key "M-p" #'~goto-prev-command-pattern evil-insert-state-map)
+  (bind-key "M-p" #'~goto-prev-command-pattern evil-visual-state-map)
+  (bind-key "M-n" #'~goto-next-command-pattern)
+  (bind-key "M-n" #'~goto-next-command-pattern evil-normal-state-map)
+  (bind-key "M-n" #'~goto-next-command-pattern evil-insert-state-map)
+  (bind-key "M-n" #'~goto-next-command-pattern evil-visual-state-map)
 
   ;; Deletion
   (bind-key "s-u" #'delete-char)
@@ -73,9 +81,9 @@
   (bind-key "s-=" #'er/expand-region)
 
   ;; Searching
-  (bind-key "C-r" #'~insert-entry-from-exec-history)
-  (bind-key "C-r" #'~insert-entry-from-exec-history evil-normal-state-map)
-  (bind-key "C-r" #'~insert-entry-from-exec-history evil-insert-state-map)
+  (bind-key "M-r" #'~insert-entry-from-exec-history)
+  (bind-key "M-r" #'~insert-entry-from-exec-history evil-normal-state-map)
+  (bind-key "M-r" #'~insert-entry-from-exec-history evil-insert-state-map)
   (bind-key "s-s" #'~search-buffer-interactively)
   (bind-key "s-f" #'query-replace-regexp)
   (bind-key "s-F" #'query-replace)
@@ -245,6 +253,8 @@
         ("x" #'~execute-text-prompt "Prompt execution")
         ("l" #'~execute-line "Execute current line")
         ("e" #'~execute "Execute thing (context-based)")
+        ("p" #'~goto-prev-command-pattern "Go to prev command pattern" :exit nil)
+        ("n" #'~goto-next-command-pattern "Go to next command pattern" :exit nil)
         ;; TODO: buffer shell current dir
         ;; ("b" #')
         ("s" #'(lambda ()
