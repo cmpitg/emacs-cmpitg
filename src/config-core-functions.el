@@ -1451,6 +1451,8 @@ command.  Its value type is one of the following:
 result, returning the process.  The command is executed
 asynchronously."
   (interactive "MCommand: ")
+  (~add-to-history-file *~exec-history-path* command
+                        :max-history *~exec-history-max*)
   (let* ((name command)
          (process (start-process-shell-command name name (concat "env TERM=dumb PAGER=cat " command)))
          (dir default-directory))
@@ -1500,6 +1502,8 @@ by the `SHELL' environment variable."
         (actual-command (s-concat command "; true"))
         (buffer (current-buffer)))
     (message "Running: %s" command)
+    (~add-to-history-file *~exec-history-path* command
+                          :max-history *~exec-history-max*)
     (async-start-process process-name
                          current-shell
                          #'(lambda (process)
@@ -1522,6 +1526,8 @@ pops up a temporary buffer showing result, and returns the exit
 code of the command.  The command is executed synchronously in a
 shell which is determined by the `SHELL' environment variable."
   (interactive "MCommand: ")
+  (~add-to-history-file *~exec-history-path* command
+                        :max-history *~exec-history-max*)
   (prog1 (let ((inhibit-message t))
            (shell-command-on-region (region-beginning)
                                     (region-end)
