@@ -1508,7 +1508,8 @@ result, returing the process.  The command is executed asynchronously."
       (goto-char (point-min)))
     process))
 
-(defun* ~exec< (command)
+(cl-defun ~exec< (command &key (print-output-marker? nil)
+                          (destination nil))
   "Executes a command and replaces the region with the output.
 This function also returns the exit code of the command.  The
 command is executed asynchronously in a shell which is determined
@@ -1523,6 +1524,8 @@ by the `SHELL' environment variable."
     (message "Running: %s" command)
     (~add-to-history-file *~exec-history-path* command
                           :max-history *~exec-history-max*)
+    (when print-output-marker?
+      (insert *~output-beginning-marker* "\n"))
     (async-start-process process-name
                          current-shell
                          #'(lambda (process)
@@ -1535,7 +1538,14 @@ by the `SHELL' environment variable."
                                  (insert output)
                                  (save-mark-and-excursion
                                    (~ansi-colorize-region))
-                                 (message "Finished: %s" command))))
+
+                                 (when print-output-marker?
+                                   (insert *~output-end-marker* "\n"))
+
+                                 (message "Finished: %s" command)
+
+                                 (when (numberp destination)
+                                   (goto-char destination)))))
                          "-c"
                          actual-command)))
 
