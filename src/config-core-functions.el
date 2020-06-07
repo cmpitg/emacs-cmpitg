@@ -1351,6 +1351,20 @@ up in a separate frame."
   (interactive)
   (setf *~popup-exec-result?* (not *~popup-exec-result?*)))
 
+(cl-defun ~get-block-positions (beginning-regexp end-regexp)
+  "Returns multiple values corresponding to the beginning and end
+positions of the current block, defined by the regexps
+BEGINNING-REGEXP and END-REGEXP."
+  (save-excursion)
+  (values (save-mark-and-excursion
+            (end-of-line)
+            (search-backward-regexp beginning-regexp)
+            (point))
+          (save-mark-and-excursion
+            (beginning-of-line)
+            (search-forward-regexp end-regexp)
+            (point))))
+
 (cl-defun ~mark-block (beginning-regexp end-regexp &key
                                         (mark-fences? nil))
   "Marks a block.  The block is fenced with the regexps
@@ -1359,6 +1373,7 @@ up in a separate frame."
 If `MARK-FENCES?' is non-nil, marks the fences as well;
 otherwise, marks only the content of the block."
   (interactive)
+  (beginning-of-line)
   (search-forward-regexp end-regexp)
 
   (if mark-fences?

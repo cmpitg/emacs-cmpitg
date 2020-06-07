@@ -535,8 +535,9 @@ with prefix `s-SPC' at the same time."
                                                    (looking-at *~output-beginning-marker*)))
           (save-excursion
             (next-line)
-            (~mark-current-output-block)
-            (delete-active-region nil)
+            (multiple-value-bind (start end)
+                (~get-block-positions *~output-beginning-marker* *~output-end-marker*)
+              (delete-region start end))
             (kill-line)))
 
         (~exec< text
