@@ -234,7 +234,7 @@
         ("n" #'mc/mark-next-like-this "Mark next like this")
         ("p" #'mc/mark-previous-like-this "Mark previous like this")
         ("a" #'mc/mark-all-in-region "Mark all in region")
-        ("q" nil "Quit" :exit t))
+        ("ESC" nil "Quit" :exit t))
 
       (defhydra hydra-buffer (:columns 4 :exit t)
         "Buffer operations"
@@ -319,7 +319,7 @@
         ("z" #'~toggle-maximize-buffer "Toggle max.")
         ("r" #'resize-window "Interactive resize")
         ("w" #'other-window "Interactive resize" :exit nil)
-        ("q" nil "Quit"))
+        ("ESC" nil "Quit"))
 
       (defhydra hydra-frame (:columns 4 :exit t)
         "Frame management"
@@ -369,7 +369,7 @@
         ("o" #'er/mark-outside-pairs "Mark outside pairs")
         ("f" #'er/mark-defun "Mark defun" :exit t)
         ("SPC" #'mark-sexp "Mark sexp")
-        ("q" nil "Quit" :exit t))
+        ("ESC" nil "Quit" :exit t))
 
       (defhydra hydra-org-todo (:columns 4 :exit t)
         "Org TODO operations"
@@ -416,7 +416,7 @@
         ("P" #'org-shiftmetaup "Move up")
         ("N" #'org-shiftmetadown "Move down")
 
-        ("q" nil "Quit"))
+        ("ESC" nil "Quit"))
 
       ;; TODO
       (defhydra hydra-paredit (:columns 4)
@@ -434,7 +434,7 @@
         ("eS" #'paredit-splice-sexp "Splice" :exit t)
         ("ej" #'paredit-join-sexps "Join" :exit t)
 
-        ("q" nil "Quit" :exit t))
+        ("ESC" nil "Quit" :exit t))
 
       (defhydra hydra-smartparens (:columns 4)
         "Smartparens"
@@ -451,7 +451,7 @@
         ("eS" #'sp-splice-sexp "Splice" :exit t)
         ("ej" #'sp-join-sexps "Join" :exit t)
 
-        ("q" nil "Quit" :exit t))
+        ("ESC" nil "Quit" :exit t))
 
       (defhydra hydra-paren-edit nil
         "Paren-editing mode")
