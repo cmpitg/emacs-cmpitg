@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2019-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,6 +16,21 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
+;; TODO: Doc about bs:local/prompt-regexp
+;;
+
+(defvar bs:*output-beginning-marker* "### ««« ###"
+  "String that marks the beginning of the output from the interpreter.")
+
+(defvar bs:*output-end-marker* "### »»» ###"
+  "String that marks the end of the output from the interpreter.")
+
+(defvar bs:*delete-new-prompt?* t
+  "Boolean value, determines whether or not the new
+  prompt (emitted by the interpreter after each command) is
+  deleted.")
+
+(add-to-list 'safe-local-variable-values '(bs:local/prompt-regexp . t))
 
 (defun* bs:ensure-buffer-process (&key name buffer command prompt-regexp)
   "TODO"
@@ -23,7 +38,9 @@
       (get-buffer-process buffer)
     (save-excursion
       (insert "\n")
-      (lexical-let* ((reg prompt-regexp)
+      (lexical-let* ((reg (if (boundp 'bs:local/prompt-regexp)
+                              bs:local/prompt-regexp
+                            prompt-regexp))
                      (p (make-process
                          :name name
                          :buffer buffer
@@ -34,12 +51,26 @@
                                          (with-current-buffer b
                                            (let* ((moved? (= (point) (process-mark proc))))
                                              (save-excursion
+                                               ;; Go to the place where output
+                                               ;; was lasted written
                                                (goto-char (process-mark proc))
+
+                                               ;; Insert new output, try to colorize
                                                (insert (ansi-color-apply (s-replace "\r" "" str)))
+
+                                               ;; Usually an interpreter emits
+                                               ;; the prompt when the command
+                                               ;; has finished running.  We
+                                               ;; would like to not write that
+                                               ;; prompt to the buffer
                                                (when (looking-back reg nil nil)
-                                                 (let ((beg (match-beginning 0))
-                                                       (end (match-end 0)))
-                                                   (delete-region beg end)))
+                                                 (when bs:*delete-new-prompt?*
+                                                   (let ((beg (match-beginning 0))
+                                                         (end (match-end 0)))
+                                                     (delete-region beg end))
+                                                   (insert bs:*output-end-marker* "\n")))
+
+                                               ;; Record the place where the current output ends
                                                (set-marker (process-mark proc) (point)))
                                              (when moved? (goto-char (process-mark proc)))))))))))
         (set-marker (process-mark p) (point))
@@ -49,6 +80,7 @@
   "TODO"
   (when (buffer-live-p buffer)
     (when-let (p (get-buffer-process buffer))
+      (insert bs:*output-beginning-marker* "\n")
       (set-marker (process-mark p) (point))
       (process-send-string p str))))
 
@@ -61,7 +93,7 @@
   (interactive)
   (when (buffer-live-p buffer)
     (with-current-buffer buffer
-      (when (region-active-p) 
+      (when (region-active-p)
         (bs:send-string (buffer-substring (region-beginning) (region-end))
                         buffer)))))
 
@@ -70,7 +102,7 @@
   (interactive)
   (when (buffer-live-p buffer)
     (with-current-buffer buffer
-      (when (region-active-p) 
+      (when (region-active-p)
         (let* ((str (s-concat (buffer-substring (region-beginning) (region-end))
                               "\n")))
           (goto-char (region-end))
