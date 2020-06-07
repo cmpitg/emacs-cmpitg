@@ -506,21 +506,6 @@ with prefix `s-SPC' at the same time."
               (t
                (wand:eval-string text)))))
 
-    (defun* ~exec|-with-cp (text)
-      "TODO"
-      (interactive)
-      (destructuring-bind (command . buffer)
-          (if (boundp 'local/cp-buffer)
-              (let ((cp-selection (with-current-buffer local/cp-buffer
-                                    (~get-selection))))
-                (if (or (string-empty-p cp-selection)
-                        (string-equal cp-selection text))
-                    (cons text (current-buffer))
-                  (cons cp-selection (current-buffer))))
-            (cons text (current-buffer)))
-        (with-current-buffer buffer
-          (~exec| command))))
-
     (cl-defun ~exec<-next-line-separate (text &key (replace-output? t))
       "Executes TEXT in a newly spawned shell and pipes back the output."
       (interactive)
