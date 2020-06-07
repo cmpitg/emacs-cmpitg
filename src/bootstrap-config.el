@@ -74,6 +74,11 @@ a new window or a new frame.  Possible values: `:window',
 (defvar *~exec-history-max* 3000
   "How many entries are saved in `*~EXEC-HISTORY-PATH*'")
 
+(defvar *~output-beginning-marker* "### ««« ###"
+  "String that marks the beginning of the output from the interpreter.")
+(defvar *~output-end-marker* "### »»» ###"
+  "String that marks the end of the output from the interpreter.")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
