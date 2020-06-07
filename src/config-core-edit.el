@@ -526,9 +526,12 @@ with prefix `s-SPC' at the same time."
       (interactive)
       (~add-to-history-file *~exec-history-path* text
                             :max-history *~exec-history-max*)
-      (~open-line 1)
-      (beginning-of-line)
-      (~exec< text))
+      (let ((current-point (point)))
+        (~open-line 1)
+        (beginning-of-line)
+        (~exec< text
+                :print-output-marker? t
+                :destination current-point)))
 
     (defun* ~bs:exec-output-to-next-line (text)
       (interactive)
