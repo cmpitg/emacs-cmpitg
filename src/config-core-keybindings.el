@@ -344,15 +344,18 @@
         ("f" #'narrow-to-defun "Narrow to defun")
         ("w" #'widen "Widen the narrowed part"))
 
+      (defhydra hydra-align (:columns 4 :exit t)
+        "Aligning"
+        ("a" #'align "Align")
+        ("c" #'align-current "Align current section")
+        ("r" #'align-regexp "Align regexp"))
+
       (defhydra hydra-edit (:columns 4 :exit t)
         "Editing operations"
         ("s" #'hydra-search/body "Searching")
         ("q" #'hydra-replace/body "Replacing")
         ("n" #'hydra-narrow/body "Narrowing")
-
-        ("aa" #'align "Align")
-        ("ac" #'align-current "Align current section")
-        ("ar" #'align-regexp "Align regexp")
+        ("a" #'hydra-align/body "Align")
 
         ("gs" #'magit-status "Git status")
         ("gb" #'magit-blame "Git blame")
@@ -426,7 +429,6 @@
 
         ("ESC" nil "Quit"))
 
-      ;; TODO
       (defhydra hydra-paredit (:columns 4)
         "Paredit mode"
         (")" #'paredit-forward-slurp-sexp "Forward slurp")
