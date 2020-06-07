@@ -869,7 +869,7 @@ on."
 (defun ~copy-file-name-to-clipboard ()
   "Copies current file/dir name to clipboard."
   (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
+  (let ((filename (if (eq major-mode 'dired-mode)
                       default-directory
                     (buffer-file-name))))
     (when filename
