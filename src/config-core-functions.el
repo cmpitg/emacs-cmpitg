@@ -17,6 +17,8 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
+;; TODO: Check: async-start-process → ~exec-|-async
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Menu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,6 +49,8 @@
                                       (interactive)
                                       (call-interactively #'~execute-line)
                                       (call-interactively #'kill-current-buffer))]
+    ["--" ignore]
+    ["Eval last sexp or region" ~eval-last-sexp-or-region]
     ;; TODO: Include buffer list, new temp buffer, ...
     ["--" ignore]
     ["Horizontal split" split-window-horizontally]
@@ -107,6 +111,13 @@ convenient wrapper of `join-line'."
   (beginning-of-line)
   (open-line arg)
   (indent-according-to-mode))
+
+(defun ~delete-blank-lines ()
+  "Deletes all blank lines at the current position."
+  (interactive)
+  (delete-blank-lines)
+  (when (looking-at (rx bol (0+ space) eol))
+    (kill-line)))
 
 (defun* ~search-buffer-interactively ()
   "Searches the current buffer interactively."
@@ -1571,32 +1582,39 @@ result, returing the process.  The command is executed asynchronously."
       (goto-char (point-min)))
     process))
 
-(cl-defun ~exec< (command &key (print-output-marker? nil)
+(cl-defun ~exec< (command &key
+                          (print-output-marker? nil)
+                          (current-position (point))
                           (destination nil))
   "Executes a command and replaces the region with the output.
 This function also returns the exit code of the command.  The
 command is executed asynchronously in a shell which is determined
 by the `SHELL' environment variable."
   (interactive "MCommand: ")
-  (let ((current-shell (getenv "SHELL"))
-        (process-name command)
-        ;; Make sure the command doesn't fail, otherwise the finish function
-        ;; never gets called
-        (actual-command (s-concat command "; true"))
-        (buffer (current-buffer)))
-    (message "Running: %s" command)
-    (~add-to-history-file *~exec-history-path* command
-                          :max-history *~exec-history-max*)
-    (when print-output-marker?
-      (insert *~output-beginning-marker* "\n"))
-    (async-start-process process-name
-                         current-shell
-                         #'(lambda (process)
-                             (let ((output (~get-process-output process)))
+  (~add-to-history-file *~exec-history-path* command
+                        :max-history *~exec-history-max*)
+
+  (message "Running: %s" command)
+  (lexical-let ((current-shell (getenv "SHELL"))
+                (current-position current-position)
+                (buffer (current-buffer))
+                (print-output-marker? print-output-marker?)
+                (destination destination))
+    (~exec-pipe-async (:sh current-shell "-c" command)
+                      (:fn #'(lambda (output)
+                               (message "Finished: %s" command)
+
                                (with-current-buffer buffer
-                                 (when (~is-selecting?)
-                                   (delete-region (region-beginning)
-                                                  (region-end)))
+                                 ;; Delete blank lines and insert output
+                                 ;; marker if necessary
+                                 (goto-char current-position)
+                                 (insert *~output-beginning-marker* "\n")
+                                 (save-mark-and-excursion
+                                   (previous-line 2)
+                                   (~delete-blank-lines))
+                                 (unless print-output-marker?
+                                   (kill-line 1))
+
                                  (push-mark)
                                  (insert output)
                                  (save-mark-and-excursion
@@ -1605,12 +1623,52 @@ by the `SHELL' environment variable."
                                  (when print-output-marker?
                                    (insert *~output-end-marker*))
 
-                                 (message "Finished: %s" command)
-
                                  (when (numberp destination)
-                                   (goto-char destination)))))
-                         "-c"
-                         actual-command)))
+                                   (goto-char destination))))))))
+
+(cl-defun ~exec<-next-line-separate (text &key (replace-output? t))
+  "Executes TEXT in a newly spawned shell and pipes back the
+output to the next line.  The current cursor doesn't change."
+  (interactive)
+  (let ((original-point (point)))
+    ;; Make sure we're an the end of the command
+    (when (region-active-p)
+      (goto-char (region-end))
+      (end-of-line)
+      (deactivate-mark))
+    
+    ;; Make sure we're not at the output marker
+    (when (looking-back (rx bol (0+ space)
+                            (eval *~output-beginning-marker*)
+                            (0+ space) eol)
+                        nil t)
+      (beginning-of-line)
+      (backward-char))
+
+    ;; Create a line to separate the command and the output
+    (~open-line 1)
+    (beginning-of-line)
+
+    ;; Replace current output if necessary
+    (when (and replace-output?
+               (save-excursion
+                 (ignore-errors
+                   (next-line)
+                   (beginning-of-line)
+                   (looking-at (rx bol (0+ space)
+                                   (eval *~output-beginning-marker*)
+                                   (0+ space) eol)))))
+      (save-excursion
+        (next-line)
+        (multiple-value-bind (start end)
+            (~get-block-positions *~output-beginning-marker* *~output-end-marker*)
+          (delete-region start end))
+        (kill-line)))
+
+    (~exec< text
+            :print-output-marker? t
+            :current-position (point)
+            :destination original-point)))
 
 (defun ~exec> (&optional command)
   "Executes a command, taking input from the current region,

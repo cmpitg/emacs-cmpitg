@@ -506,29 +506,6 @@ with prefix `s-SPC' at the same time."
               (t
                (wand:eval-string text)))))
 
-    (cl-defun ~exec<-next-line-separate (text &key (replace-output? t))
-      "Executes TEXT in a newly spawned shell and pipes back the output."
-      (interactive)
-      (~add-to-history-file *~exec-history-path* text
-                            :max-history *~exec-history-max*)
-      (let ((current-point (point)))
-        (~open-line 1)
-        (beginning-of-line)
-
-        (when (and replace-output? (save-excursion (next-line)
-                                                   (beginning-of-line)
-                                                   (looking-at *~output-beginning-marker*)))
-          (save-excursion
-            (next-line)
-            (multiple-value-bind (start end)
-                (~get-block-positions *~output-beginning-marker* *~output-end-marker*)
-              (delete-region start end))
-            (kill-line)))
-
-        (~exec< text
-                :print-output-marker? t
-                :destination current-point)))
-
     (defun* ~bs:exec-output-to-next-line (text)
       (interactive)
       (~open-line 1)
