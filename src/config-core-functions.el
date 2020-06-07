@@ -1588,7 +1588,7 @@ by the `SHELL' environment variable."
                                    (~ansi-colorize-region))
 
                                  (when print-output-marker?
-                                   (insert *~output-end-marker* "\n"))
+                                   (insert *~output-end-marker*))
 
                                  (message "Finished: %s" command)
 

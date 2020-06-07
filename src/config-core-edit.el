@@ -521,14 +521,24 @@ with prefix `s-SPC' at the same time."
         (with-current-buffer buffer
           (~exec| command))))
 
-    (defun* ~exec<-next-line-separate (text)
-      "Separate = in a separate shell"
+    (cl-defun ~exec<-next-line-separate (text &key (replace-output? t))
+      "Executes TEXT in a newly spawned shell and pipes back the output."
       (interactive)
       (~add-to-history-file *~exec-history-path* text
                             :max-history *~exec-history-max*)
       (let ((current-point (point)))
         (~open-line 1)
         (beginning-of-line)
+
+        (when (and replace-output? (save-excursion (next-line)
+                                                   (beginning-of-line)
+                                                   (looking-at *~output-beginning-marker*)))
+          (save-excursion
+            (next-line)
+            (~mark-current-output-block)
+            (delete-active-region nil)
+            (kill-line)))
+
         (~exec< text
                 :print-output-marker? t
                 :destination current-point)))
