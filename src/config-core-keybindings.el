@@ -57,14 +57,6 @@
   (bind-key "s-r" #'forward-word)
   (bind-key "s-R" #'forward-sexp)
   (bind-key "s-l" #'goto-line)
-  (bind-key "M-p" #'~goto-prev-command-pattern)
-  (bind-key "M-p" #'~goto-prev-command-pattern evil-normal-state-map)
-  (bind-key "M-p" #'~goto-prev-command-pattern evil-insert-state-map)
-  (bind-key "M-p" #'~goto-prev-command-pattern evil-visual-state-map)
-  (bind-key "M-n" #'~goto-next-command-pattern)
-  (bind-key "M-n" #'~goto-next-command-pattern evil-normal-state-map)
-  (bind-key "M-n" #'~goto-next-command-pattern evil-insert-state-map)
-  (bind-key "M-n" #'~goto-next-command-pattern evil-visual-state-map)
 
   ;; Deletion
   (bind-key "s-u" #'delete-char)
@@ -296,6 +288,7 @@
       (defhydra hydra-insertion (:columns 4 :exit t)
         "Insertion operations"
         (";" #'~insert-full-line-comment "Insert line full of comment")
+        ("x" #'~insert-entry-from-exec-history "Insert exec from history")
         ("e" #'~insert-exec "Insert executable"))
 
       (defhydra hydra-format (:columns 4 :exit t)
