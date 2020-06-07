@@ -333,12 +333,22 @@
         ("f" #'isearch-forward-regexp "Forward regexp")
         ("b" #'isearch-backward-regexp "Backward regexp"))
 
+      (defhydra hydra-replace (:columns 4 :exit t)
+        "Replacing"
+        ("r" #'query-replace-regexp "Query replace regexp")
+        ("q" #'query-replace "Query replace"))
+
+      (defhydra hydra-narrow (:columns 4 :exit t)
+        "Narrowing"
+        ("r" #'narrow-to-region "Narrow to region")
+        ("f" #'narrow-to-defun "Narrow to defun")
+        ("w" #'widen "Widen the narrowed part"))
+
       (defhydra hydra-edit (:columns 4 :exit t)
         "Editing operations"
         ("s" #'hydra-search/body "Searching")
-
-        ("qrr" #'query-replace-regexp "Query replace regexp")
-        ("qrq" #'query-replace "Query replace")
+        ("q" #'hydra-replace/body "Replacing")
+        ("n" #'hydra-narrow/body "Narrowing")
 
         ("aa" #'align "Align")
         ("ac" #'align-current "Align current section")
@@ -350,10 +360,6 @@
 
         ("vca" #'vc-annotate "VC annonate")
         ("vcd" #'vc-diff "VC diff")
-
-        ("nr" #'narrow-to-region "Narrow to region")
-        ("nf" #'narrow-to-defun "Narrow to defun")
-        ("nw" #'widen "Widen the narrowed part")
 
         ("wo" #'just-one-space "Whitespace: Keep one")
         ("wd" #'delete-horizontal-space "Whitespace: Delete")
@@ -368,6 +374,8 @@
         ("e" #'er/expand-region "Expand region")
         ("o" #'er/mark-outside-pairs "Mark outside pairs")
         ("f" #'er/mark-defun "Mark defun" :exit t)
+        ("b" #'~mark-current-block "Mark block" :exit t)
+        ("t" #'~mark-current-output-block "Mark output block" :exit t)
         ("SPC" #'mark-sexp "Mark sexp")
         ("ESC" nil "Quit" :exit t))
 
