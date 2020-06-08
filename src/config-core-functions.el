@@ -1425,6 +1425,18 @@ otherwise, marks only the content of the block."
     (~mark-block beginning-regexp end-regexp
                  :mark-fences? t)))
 
+(defun ~goto-next-line-matching-marker ()
+  "Goes to the next line matching a visual marker (defined by
+`*~MARKER-REGEXP*')"
+  (interactive)
+  (search-forward-regexp *~marker-regexp* nil t))
+
+(defun ~goto-prev-line-matching-marker ()
+  "Goes to the previous line matching a visual marker (defined by
+`*~MARKER-REGEXP*')"
+  (interactive)
+  (search-backward-regexp *~marker-regexp* nil t))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Processes/Execution
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

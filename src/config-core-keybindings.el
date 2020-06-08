@@ -223,7 +223,11 @@
         ("s" #'point-pos-save "Save current point pos")
         ("n" #'point-pos-next "Next point pos" :exit nil)
         ("p" #'point-pos-prev "Previous point pos" :exit nil)
-        ("g" #'point-pos-goto "Go to current point pos"))
+        ("g" #'point-pos-goto "Go to current point pos")
+        ("i" #'counsel-imenu "Symbol-based")
+        ("j" #'~goto-next-line-matching-marker "Go to next line matching marker" :exit nil)
+        ("k" #'~goto-prev-line-matching-marker "Go to prev line matching marker" :exit nil)
+        ("ESC" nil "Quit" :exit t))
 
       (defhydra hydra-cursor (:columns 4)
         "Cursor operations"

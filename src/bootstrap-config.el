@@ -79,6 +79,12 @@ a new window or a new frame.  Possible values: `:window',
 (defvar *~output-end-marker* "### »»» ###"
   "String that marks the end of the output from the interpreter.")
 
+(defvar *~marker-regexp* (rx bol (0+ " ")
+                             (or "mux://" "$" "!!!" "!!" "!@" "!^" "!"
+                                 (eval *~output-beginning-marker*)
+                                 (eval *~output-end-marker*)))
+  "Regexp that determines visual markers.")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Config helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
