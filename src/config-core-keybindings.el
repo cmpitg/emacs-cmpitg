@@ -500,7 +500,7 @@
         ("RET" #'hydra-read-input-async/body "Read-input mode")
         ("p" #'hydra-paren-edit/body "Paren-editing mode")
 
-        ;; Univerval eval/dev mode for the current buffer
+        ;; Universal eval/dev mode for the current buffer
         ("e" #'hydra-current-dev/body "Dev mode for current buffer" )
 
         ("u" #'hydra-dev/body "Dev")
