@@ -1068,13 +1068,13 @@ variable `local/linked-windows'."
   (or (ignore-errors (projectile-project-root))
       default-directory))
 
-(defun ~counsel-ag-default-project-root ()
-  "Calls `counsel-ag', taking project root by default and
-fallback to current directory if project root is not found."
+(cl-defun ~counsel-grep-default-project-root (&optional (counsel-grep-fn #'counsel-rg))
+  "Calls a counsel-grep function, taking project root by default
+and fallback to current directory if project root is not found."
   (interactive)
   (if current-prefix-arg
-      (call-interactively #'counsel-ag)
-    (counsel-ag nil (~current-project-root))))
+      (call-interactively counsel-grep-fn)
+    (funcall counsel-grep-fn nil (~current-project-root))))
 
 (defun ~current-dir ()
   "Current directory or `$HOME`."
