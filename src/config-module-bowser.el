@@ -56,11 +56,16 @@
          :stdin text))
 
 (defun bowser:is-dir-expanded? (dir)
-  "Checks if the current dir is expanded already."
+  "Checks if a dir is expanded already."
   (let ((dir (file-name-as-directory dir)))
     (unless (local-variable-p 'local/bowser:dirs-expanded?)
       (setq-local local/bowser:dirs-expanded? (make-hash-table :test #'equal)))
     (gethash dir local/bowser:dirs-expanded?)))
+
+(defun bowser:is-path-dir? (path)
+  "Checks if a path is a directory."
+  (or (f-dir? path)
+      (and (s-starts-with? "ssh://" path) (s-ends-with? "/" path))))
 
 (defun bowser:record-dir-expanded (dir expanded?)
   "Records that the current dir is either expanded or not."
@@ -88,52 +93,6 @@
   (next-line)
   (bowser:get-level (thing-at-point 'line)))
 
-(defun* bowser:construct-find-command (dir &key (max-depth 1)
-                                           (type :dir))
-  "Constructs a find command that will be called to list
-directories (with `type' being `:dir') or files (with `type'
-equals `:file')."
-  (let ((dir (file-name-as-directory dir)))
-    (case type
-      (:dir
-       (format "%s %s -maxdepth %s -type d | sort -n"
-               (executable-find "find")
-               (shell-quote-argument dir)
-               (shell-quote-argument (number-to-string max-depth))))
-      (:file
-       (format "%s %s -maxdepth %s -not -type d | sort -n"
-               (executable-find "find")
-               (shell-quote-argument dir)
-               (shell-quote-argument (number-to-string max-depth))))
-      (t
-       (error "The :type argument must be `:dir or `:file'")))))
-
-(defun* bowser:get-dir-paths (dir &key (max-depth 1))
-  "Gets subdirectories under a path."
-  (let* ((dir (file-name-as-directory (substitute-in-file-name (expand-file-name dir))))
-         (find-command (bowser:construct-find-command dir
-                                                      :max-depth max-depth
-                                                      :type :dir)))
-    (loop for path in (thread-first
-                          (~exec find-command)
-                        bowser:strip-newline-from-string
-                        s-lines
-                        rest)
-          collect (file-name-as-directory path))))
-
-(defun* bowser:get-file-paths (dir &key (max-depth 1))
-  "Gets non-dir files under a path."
-  (let* ((dir (file-name-as-directory (substitute-in-file-name (expand-file-name dir))))
-         (find-command (bowser:construct-find-command dir
-                                                      :max-depth max-depth
-                                                      :type :file)))
-    (loop for path in (thread-first
-                          (~exec find-command)
-                        bowser:strip-newline-from-string
-                        s-lines)
-          unless (string-empty-p path)
-          collect path)))
-
 (defun* bowser:insert-paths (dir &key (level 0) (max-depth 1))
   "Inserts paths for a directory at the current place in the current buffer.
 If a path is a directory path and has been expanded before, it
@@ -141,17 +100,21 @@ will be expanded again.  Directories are inserted before non-dir
 files."
   (goto-char (point-at-bol))
   ;; (delete-region (point-at-bol) (point-at-eol))
-  (let ((dir (file-name-as-directory dir))
-        (padding (apply #'concat (make-list level bowser:*level-padding*))))
-    ;; Insert the corresponding subdirectories and expend them if needed
-    (loop for path in (bowser:get-dir-paths dir :max-depth max-depth)
+  (let* ((dir (file-name-as-directory dir))
+         (padding (apply #'concat (make-list level bowser:*level-padding*)))
+         (paths (loop for line in (thread-last
+                                      (~exec (format "dispatch-action %s | rg -v '^\\.{1,2}/$'"
+                                                     (shell-quote-argument dir)))
+                                    bowser:strip-newline-from-string
+                                    s-lines)
+                      collect (concat dir line))))
+    ;; Insert the subpaths and expand them if needed
+    (loop for path in paths
           do (progn
                (insert padding path "\n")
-               (when (bowser:is-dir-expanded? path)
-                 (bowser:insert-paths path :level (1+ level)))))
-    ;; Now, insert the files
-    (loop for path in (bowser:get-file-paths dir :max-depth max-depth)
-          do (insert padding path "\n"))))
+               (when (and (bowser:is-path-dir? path)
+                          (bowser:is-dir-expanded? path))
+                 (bowser:insert-paths path :level (1+ level)))))))
 
 (defun bowser:get-level (str)
   "Gets the indentation level from a string."
@@ -188,10 +151,12 @@ to a level."
               (not (= (point) (point-max))))
     (delete-region (point-at-bol) (1+ (point-at-eol)))))
 
-(defun bowser:expand-dir-here ()
+(defun bowser:expand-dir-here (&optional path)
   "Expands the dir at the current line."
   (interactive)
-  (let ((path (bowser:get-path-current-line))
+  (let ((path (if (null path)
+                  (bowser:get-path-current-line)
+                path))
         (child-level (1+ (bowser:get-level-current-line))))
     (save-excursion
       (bowser:next-line)
@@ -199,10 +164,12 @@ to a level."
       (bowser:insert-paths path :level child-level))
     (bowser:record-dir-expanded path t)))
 
-(defun bowser:collapse-dir-here ()
+(defun bowser:collapse-dir-here (&optional path)
   "Collapses the dir at the current line."
   (interactive)
-  (let ((path (bowser:get-path-current-line))
+  (let ((path (if (null path)
+                  (bowser:get-path-current-line)
+                path))
         (child-level (1+ (bowser:get-level-current-line))))
     (save-excursion
       (bowser:next-line)
@@ -218,15 +185,15 @@ info.  If the line does not correspond to a directory path, does
 nothing and returns `nil'. "
   (interactive)
   (let* ((path (string-trim line)))
-    (when (f-dir? path)
-      (let ((path (file-name-as-directory path)))
+    (when (bowser:is-path-dir? path)
+      (let ((path (string-trim (file-name-as-directory path))))
        (save-excursion
          (if (bowser:is-dir-expanded? path)
-             (bowser:collapse-dir-here)
-           (bowser:expand-dir-here))))
+             (bowser:collapse-dir-here path)
+           (bowser:expand-dir-here path))))
       path)))
 
-(defun bowser:perform-action-here ()
+(cl-defun bowser:perform-action-here (&optional (exec-fn #'~execute))
   "Expands the current directory or opens a file at the current line."
   (interactive)
   (let ((current-point (or (~get-cursor-pos-at-last-mouse-event)
@@ -235,7 +202,7 @@ nothing and returns `nil'. "
       (goto-char current-point)
       (let* ((line (bowser:get-current-line)))
         (unless (bowser:expand-or-collapse-dir)
-          (~execute line))))))
+          (funcall #'exec-fn line))))))
 
 (defun* bowser:browse-dir (&optional (dir (~current-project-root)))
   "Browses a directory."
@@ -263,7 +230,6 @@ nothing and returns `nil'. "
         (evil-define-key 'insert 'local (kbd "<S-return>") #'bowser:perform-action-here)
         (evil-define-key 'normal 'local (kbd "<S-return>") #'bowser:perform-action-here)))
     (switch-to-buffer current-buffer)))
-;; (bowser:browse-dir "/home/hdn/")
 
 (defun bowser:show-command-runner-with-dedicated-frame ()
   "Shows command runner frame.  After running a command, the

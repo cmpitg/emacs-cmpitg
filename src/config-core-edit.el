@@ -526,14 +526,19 @@ with prefix `s-SPC' at the same time."
 - otherwise, executes it as Emacs Lisp code"
       (interactive)
       (let ((text (string-trim text)))
-        (cond ((~file-pattern? text)
-               (if (and (string-equal text (bowser:get-path-current-line))
-                        (f-directory? text)
-                        (f-exists? text))
-                   (bowser:expand-or-collapse-dir)
-                 (~smart-open-file text)))
-              (t
-               (wand:eval-string text)))))
+        (cond
+         ((s-starts-with? "ssh://" text)
+          (if (s-ends-with? "/" text)
+              (bowser:expand-or-collapse-dir)
+            (find-file text)))
+         ((~file-pattern? text)
+          (if (and (string-equal text (bowser:get-path-current-line))
+                   (f-directory? text)
+                   (f-exists? text))
+              (bowser:expand-or-collapse-dir)
+            (~smart-open-file text)))
+         (t
+          (wand:eval-string text)))))
 
     (defun* ~bs:exec-output-to-next-line (text)
       (interactive)
