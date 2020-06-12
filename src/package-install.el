@@ -78,7 +78,7 @@
                    exec-path-from-shell
                    evil
                    evil-visualstar
-                   evil-surround
+                   evil-collection
                    rust-mode
                    treemacs
                    treemacs-evil

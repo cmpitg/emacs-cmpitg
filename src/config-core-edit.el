@@ -441,6 +441,12 @@ with prefix `s-SPC' at the same time."
               (if (cl-member mode-name '("Emacs-Lisp" "Lisp" "Clojure") :test 'equalp)
                   (call-interactively 'paredit-kill)
                 (call-interactively 'kill-line)))))
+
+(use-package evil-collection
+  :after (evil)
+  :demand t
+  :init (evil-collection-init))
+
 (evil-mode 1)
 ;; * to search forward, # to search backward
 (use-package evil-visualstar
