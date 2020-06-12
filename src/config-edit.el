@@ -18,29 +18,6 @@
 ;;
 
 ;;
-;; Auto completion framework
-;;
-;; Ref: https://github.com/company-mode/company-mode
-;;
-
-(use-package company
-  :diminish company-mode
-  :bind (:map company-mode-map
-         ("C-/" . company-complete))
-  :demand t
-  :config (progn
-            (global-company-mode 1)
-            (use-package pos-tip)))
-(use-package company-quickhelp
-  :demand t
-  :bind (:map company-active-map
-         ("M-h" . company-quickhelp-manual-begin))
-  :config (progn
-            (company-quickhelp-mode 1)
-            ;; Do not trigger automatically
-            (setq company-quickhelp-delay nil)))
-
-;;
 ;; Interactive menu
 ;;
 ;; Ref: https://github.com/abo-abo/hydra
