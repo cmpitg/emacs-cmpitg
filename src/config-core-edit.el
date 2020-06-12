@@ -564,7 +564,7 @@ with prefix `s-SPC' at the same time."
                                   :capture :after
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "mux:// " text))))
+                                              (~dispatch-action (concat "mux://" text))))
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)
