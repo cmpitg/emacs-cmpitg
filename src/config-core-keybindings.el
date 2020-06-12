@@ -266,6 +266,7 @@
          "Execute (context-based) & kill buffer")
         ("j" #'~goto-prev-command-pattern "Go to prev command pattern" :exit nil)
         ("k" #'~goto-next-command-pattern "Go to next command pattern" :exit nil)
+        ("r" #'~insert-entry-from-exec-history "Insert from history")
         ;; TODO: buffer shell current dir
         ;; ("b" #')
         ("s" #'(lambda ()
