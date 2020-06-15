@@ -1638,6 +1638,7 @@ by the `SHELL' environment variable."
                                  (when (numberp destination)
                                    (goto-char destination))))))))
 
+;; TODO: Extract the display part out
 (cl-defun ~exec<-next-line-separate (text &key (replace-output? t))
   "Executes TEXT in a newly spawned shell and pipes back the
 output to the next line.  The current cursor doesn't change."

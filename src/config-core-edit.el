@@ -607,6 +607,20 @@ with prefix `s-SPC' at the same time."
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~dispatch-action (concat "mux://" text))))
+                (wand:create-rule :match (rx bol (0+ " ") "ssh://"
+                                             (1+ (not (any "!")))
+                                             "!")
+                                  :capture :whole
+                                  :skip-comment nil
+                                  :action #'(lambda (text)
+                                              (let ((cmd (thread-last (s-split "!" text)
+                                                           rest
+                                                           (s-join "!")
+                                                           string-trim)))
+                                                (~add-to-history-file *~exec-history-path* cmd :max-history *~exec-history-max*))
+                                              ;; TODO Refactor - after the extraction of the display function from ~exec<-next-line-separate
+                                              (~exec<-next-line-separate (format "dispatch-action %s"
+                                                                                 (shell-quote-argument text)))))
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)
