@@ -1612,7 +1612,7 @@ by the `SHELL' environment variable."
                 (buffer (current-buffer))
                 (print-output-marker? print-output-marker?)
                 (destination destination))
-    (~exec-pipe-async (:sh current-shell "-c" command)
+    (~exec-pipe-async (:sh current-shell "-c" (format "env TERM=dumb PAGER=cat %s" command))
                       (:fn #'(lambda (output)
                                (message "Finished: %s" command)
 
@@ -1649,7 +1649,7 @@ output to the next line.  The current cursor doesn't change."
       (goto-char (region-end))
       (end-of-line)
       (deactivate-mark))
-    
+
     ;; Make sure we're not at the output marker
     (when (looking-back (rx bol (0+ space)
                             (eval *~output-beginning-marker*)
