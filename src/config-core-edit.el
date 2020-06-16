@@ -401,6 +401,62 @@ with prefix `s-SPC' at the same time."
             ;; (setq evil-default-state 'normal)
             (setq-default evil-kill-on-visual-paste nil)
 
+            ;; FFS
+            ;; Ref: https://github.com/emacs-evil/evil/issues/1152
+            (evil-define-command evil-visual-paste (count &optional register)
+              "Paste over Visual selection."
+              :suppress-operator t
+              (interactive "*P<x>")
+              (setq count (prefix-numeric-value count))
+              ;; evil-visual-paste is typically called from evil-paste-before or
+              ;; evil-paste-after, but we have to mark that the paste was from
+              ;; visual state
+              (setq this-command 'evil-visual-paste)
+              (let* ((text (if register
+                               (evil-get-register register)
+                             (current-kill 0)))
+                     (yank-handler (car-safe (get-text-property
+                                              0 'yank-handler text)))
+                     new-kill
+                     paste-eob)
+                (evil-with-undo
+                  (let ((kill-ring-yank-pointer (list (current-kill 0))))
+                    (when (evil-visual-state-p)
+                      (evil-visual-rotate 'upper-left)
+                      ;; if we replace the last buffer line that does not end in a
+                      ;; newline, we use `evil-paste-after' because `evil-delete'
+                      ;; will move point to the line above
+                      (when (and (= evil-visual-end (point-max))
+                                 (/= (char-before (point-max)) ?\n))
+                        (setq paste-eob t))
+                      (evil-delete evil-visual-beginning evil-visual-end (evil-visual-type) ?_)
+
+                      (when (and (eq yank-handler #'evil-yank-line-handler)
+                                 (not (eq (evil-visual-type) 'line))
+                                 (not (= evil-visual-end (point-max))))
+                        (insert "\n"))
+                      (evil-normal-state)
+                      (current-kill 1))
+                    (if paste-eob
+                        (evil-paste-after count register)
+                      (evil-paste-before count register)))
+                  (when evil-kill-on-visual-paste
+                    (current-kill -1))
+                  ;; mark the last paste as visual-paste
+                  (setq evil-last-paste
+                        (list (nth 0 evil-last-paste)
+                              (nth 1 evil-last-paste)
+                              (nth 2 evil-last-paste)
+                              (nth 3 evil-last-paste)
+                              (nth 4 evil-last-paste)
+                              t)))))
+            (evil-define-operator evil-delete-char (beg end type register)
+              "Delete next character."
+              :motion evil-forward-char
+              (interactive "<R><x>")
+              (if register (evil-delete beg end type register)
+                (evil-delete beg end type ?_)))
+
             ;; (with-eval-after-load "evil-vars"
             ;;   (dolist (mode '(term-mode
             ;;                   multi-term-mode
