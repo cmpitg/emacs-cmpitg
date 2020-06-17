@@ -59,12 +59,13 @@ so that the system could use it as a webcam."
   (~read-multiple-inputs-async
    :prompts `(("Webcam device path:" . "/dev/video0")
               ("Source protocol:" . "http")
-              ("Source IP:" . "192.168.1.225")
+              ("Source IP:" . "192.168.1.83")
               ("Source port:" . "8080")
               ("Source path:" . "/videofeed")
+              ("Frame rate:" . "24/1")
               ("Width:" . "1280")
               ("Height:" . "720"))
-   :callback #'(lambda (device-path protocol ip port path width height)
+   :callback #'(lambda (device-path protocol ip port path frame-rate width height)
                  (let ((cmd (string-join (list "gst-launch-1.0" "-e" "-vt" "--gst-plugin-spew"
                                                "souphttpsrc" (format "location=%s://%s:%s%s"
                                                                      (downcase protocol)
@@ -78,7 +79,7 @@ so that the system could use it as a webcam."
                                                "!" "videoconvert"
                                                "!" "videoscale"
                                                "!" "videorate"
-                                               "!" (format "video/x-raw,format=YUY2,width=%s,height=%s" width height)
+                                               "!" (format "video/x-raw,format=YUY2,width=%s,height=%s,framerate=%s" width height frame-rate)
                                                "!" "v4l2sink" (format "device=%s" device-path) "sync=false")
                                          " ")))
                    (~dispatch-action (format "!! %s" cmd))))))
