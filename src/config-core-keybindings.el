@@ -476,18 +476,27 @@
                (setq hydra-paren-edit/keymap hydra-smartparens/keymap)
                (eval hydra-smartparens/hint))))
 
+      (defhydra hydra-dev-flycheck (:columns 4 :exit t)
+        "Flycheck"
+        ("v" #'flycheck-verify-setup "Verify setup")
+        ("t" #'flycheck-mode "Toggle"))
+
       (defhydra hydra-dev (:columns 4 :exit t)
         "Dev"
-        ("j" #'hydra-dev-clojure/body "Clojure development")
-        ("p" #'hydra-dev-python/body "Python development"))
+        ("j" #'hydra-dev-clojure/body "Clojure")
+        ("p" #'hydra-dev-python/body "Python")
+        ("y" #'hydra-dev-flycheck/body "Flycheck"))
 
       (defhydra hydra-current-dev nil
         "Current dev mode")
       (setq hydra-current-dev/hint
             `(cond
-              (cider-mode
+              ((and (boundp 'cider-mode) cider-mode)
                (setq hydra-current-dev/keymap hydra-dev-clojure/keymap)
                (eval hydra-dev-clojure/hint))
+              ((and (boundp 'python-mode) python-mode)
+               (setq hydra-current-dev/keymap hydra-dev-python/keymap)
+               (eval hydra-dev-python/hint))
               (t
                (setq hydra-current-dev/keymap hydra-emacs-lisp/keymap)
                (eval hydra-emacs-lisp/hint))))

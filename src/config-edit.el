@@ -544,6 +544,7 @@ might need manual refreshing."
 ;; JavaScript development
 ;;
 ;; Ref: https://github.com/mooz/js2-mode
+;; Ref: https://github.com/ananthakumaran/tide
 ;;
 
 (use-package js2-mode
