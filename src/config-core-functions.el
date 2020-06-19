@@ -1371,6 +1371,69 @@ up in a separate frame."
   (interactive)
   (setf *~popup-exec-result?* (not *~popup-exec-result?*)))
 
+(cl-defun ~get-block-positions (beginning-regexp end-regexp)
+  "Returns multiple values corresponding to the beginning and end
+positions of the current block, defined by the regexps
+BEGINNING-REGEXP and END-REGEXP."
+  (save-excursion)
+  (values (save-mark-and-excursion
+            (end-of-line)
+            (search-backward-regexp beginning-regexp)
+            (point))
+          (save-mark-and-excursion
+            (beginning-of-line)
+            (search-forward-regexp end-regexp)
+            (point))))
+
+(cl-defun ~mark-block (beginning-regexp end-regexp &key
+                                        (mark-fences? nil))
+  "Marks a block.  The block is fenced with the regexps
+`BEGINNING-REGEXP' and `END-REGEXP'.
+
+If `MARK-FENCES?' is non-nil, marks the fences as well;
+otherwise, marks only the content of the block."
+  (interactive)
+  (beginning-of-line)
+  (search-forward-regexp end-regexp)
+
+  (if mark-fences?
+      (end-of-line)
+    (beginning-of-line))
+
+  (push-mark (point) t t)
+  (search-backward-regexp beginning-regexp)
+
+  (if mark-fences?
+      (beginning-of-line)
+    (next-line))
+
+  (beginning-of-line))
+
+(defun ~mark-current-block ()
+  "Marks the current code block."
+  (interactive)
+  (multiple-value-bind
+      (beginning-regexp end-regexp)
+      (cond ((eq 'adoc-mode major-mode)
+             (values (rx bol "----" (0+ " ") eol) (rx bol "----" (0+ " ") eol)))
+            ((eq 'org-mode major-mode)
+             (values (rx "#+BEGIN_SRC") (rx "#+END_SRC")))
+            (t
+             (values (rx "### ««« ###") (rx  "### »»» ###"))))
+    (~mark-block beginning-regexp end-regexp)))
+
+(defun ~mark-current-output-block ()
+  "Marks the current output block, including the fences."
+  (interactive)
+  (let ((beginning-regexp (if (boundp 'local/output-beginning-regexp)
+                              local/output-beginning-regexp
+                            (rx "### ««« ###")))
+        (end-regexp (if (boundp 'local/output-end-regexp)
+                              local/output-end-regexp
+                            (rx "### »»» ###"))))
+    (~mark-block beginning-regexp end-regexp
+                 :mark-fences? t)))
+
 (defun ~goto-next-line-matching-marker ()
   "Goes to the next line matching a visual marker (defined by
 `*~MARKER-REGEXP*')"
