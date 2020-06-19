@@ -68,7 +68,11 @@
                                                    (let ((beg (match-beginning 0))
                                                          (end (match-end 0)))
                                                      (delete-region beg end))
-                                                   (insert bs:*output-end-marker* "\n")))
+                                                   (insert bs:*output-end-marker* "\n"))
+
+                                                 ;; Go to the command
+                                                 (search-backward-regexp bs:*output-beginning-marker*)
+                                                 (previous-line))
 
                                                ;; Record the place where the current output ends
                                                (set-marker (process-mark proc) (point)))
@@ -80,6 +84,18 @@
   "TODO"
   (when (buffer-live-p buffer)
     (when-let (p (get-buffer-process buffer))
+      ;; Delete current output block
+      (when (and bs:*delete-new-prompt?*
+                 (save-mark-and-excursion
+                   (ignore-errors
+                     (next-line)
+                     (beginning-of-line)
+                     (looking-at (rx bol (0+ space)
+                                     (eval bs:*output-beginning-marker*)
+                                     (0+ space) eol)))))
+        (call-interactively '~delete-output-block)
+        (kill-line))
+
       (insert bs:*output-beginning-marker* "\n")
       (set-marker (process-mark p) (point))
       (process-send-string p str))))
