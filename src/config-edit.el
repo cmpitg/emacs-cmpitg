@@ -305,17 +305,14 @@ might need manual refreshing."
 ;;
 
 (use-package dired+
-  :disabled t
   :init (progn
-          (setq dired-listing-switches "-lahF")
+          ;; (setq dired-listing-switches "-lahF")
           ;; Reuse current buffer when opening file/dir
           (toggle-diredp-find-file-reuse-dir 1)))
 
-(use-package dired-single
-  :disabled t)
+(use-package dired-single)
 
 (use-package dired-details+
-  :disabled t
   :after (dired-single)
   :config
   (setq dired-listing-switches "-lhFgG --group-directories-first"))
