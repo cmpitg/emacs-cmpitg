@@ -1558,7 +1558,7 @@ by the `SHELL' environment variable."
                 (buffer (current-buffer))
                 (print-output-marker? print-output-marker?)
                 (destination destination))
-    (~exec-pipe-async (:sh current-shell "-c" (format "env TERM=dumb PAGER=cat %s" command))
+    (~exec-pipe-async (:sh current-shell "-c" (format "env 'TERM=dumb' 'PAGER=cat' %s" command))
                       (:fn #'(lambda (output)
                                (message "Finished: %s" command)
 
