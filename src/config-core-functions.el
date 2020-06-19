@@ -1676,7 +1676,9 @@ environment variable."
 
                              t)))
 
+;; TODO: URGENT: Check docstring of MAKE-PROCESS
 (defun* ~exec-async (command &key (stdin nil)
+                             (coding-system 'undecided)
                              output-callback
                              output-as-buffer
                              keep-output-buffer)
@@ -1745,6 +1747,7 @@ E.g.
                 :name name
                 :buffer buffer-name
                 :command command
+                :coding coding-system
                 :sentinel #'(lambda (proc _event)
                               (when output-callback
                                 (let ((output (if output-as-buffer
