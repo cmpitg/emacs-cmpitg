@@ -279,6 +279,7 @@
         ("ep" #'pp-eval-last-sexp "Eval and pp last sexp")
         ("ew" #'~eval-then-replace-region-or-last-sexp "Eval and replace last sexp")
         ("ex" #'eval-expression "Eval expression")
+        ("er" #'eval-region "Eval region")
         ("eb" #'eval-buffer "Eval buffer")
 
         ("hf" #'describe-function "Describe function")
