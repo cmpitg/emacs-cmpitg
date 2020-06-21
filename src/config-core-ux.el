@@ -275,8 +275,7 @@
 
 ;; Set frame title
 (let ((title-format
-       `("Rmacs"
-         ,(format " @ %s" (or server-name :minimal))
+       `(,(format "Rmacs@%s || %s" (system-name) (or server-name :minimal))
          ;; " \u262f "
          ;; " ☯ "
          " "
