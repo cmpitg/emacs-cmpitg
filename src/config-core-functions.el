@@ -1585,9 +1585,9 @@ result, returing the process.  The command is executed asynchronously."
     process))
 
 (cl-defun ~exec-sh< (command &key
-                          (print-output-marker? nil)
-                          (current-position (point))
-                          (destination nil))
+                             (print-output-marker? nil)
+                             (current-position (point))
+                             (destination nil))
   "Executes a command and replaces the region with the output.
 This function also returns the exit code of the command.  The
 command is executed asynchronously in a shell which is determined
@@ -1663,9 +1663,9 @@ output to the next line.  The current cursor doesn't change."
       (call-interactively '~delete-output-block))
 
     (~exec-sh< text
-            :print-output-marker? t
-            :current-position (point)
-            :destination original-point)))
+               :print-output-marker? t
+               :current-position (point)
+               :destination original-point)))
 
 (defun ~exec-sh> (&optional command)
   "Executes a command, taking input from the current region,
