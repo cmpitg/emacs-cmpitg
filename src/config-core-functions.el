@@ -1135,6 +1135,17 @@ trimmed after reading."
 ;; Emacs Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(cl-defun ~shorten-string (str max-length &optional (ellipsis "..."))
+  "Shortens a string, making sure its length does not exceed
+MAX-LENGTH by truncating and prefixing it with ELLIPSIS if
+necessary."
+  (let ((actual-length (length str)))
+    (if (> actual-length max-length)
+        (s-concat ellipsis (substring str (+ (- actual-length
+                                                max-length)
+                                             (length ellipsis))))
+      str)))
+
 (defun ~copy-to-clipboard (text)
   "Copies text to clipboard."
   (kill-new text)
@@ -1229,27 +1240,29 @@ rules are as follows:
       (and (region-active-p) (~get-selection))
       (~try-getting-current-thing)))
 
-(defun* ~execute (&optional thing
-                            &key
-                            (exec-fn #'wand:execute)
-                            (selection-fn #'~get-thing-to-execute-from-context))
-  "Executes a `thing' which is a piece of text or an sexp using
-`exec-fn'.  If `thing' is not provided, calls and takes the
-return value of `selection-fn' as `thing'.  If the current buffer
-is a command palette buffer, executes `thing' in the main buffer.
+(cl-defun ~execute (&optional thing
+                              &key
+                              (exec-fn #'wand:execute)
+                              (selection-fn #'~get-thing-to-execute-from-context))
+  "Interactively executes THING which is a piece of text or an
+sexp using `exec-fn' and return the result.  If THING is not
+provided, calls and takes the return value of SELECTION-FN as
+THING.
 
-When calling with `*~popup-exec-result?*' being `t', the result
-is popped up in a separate frame."
+If *~POPUP-EXEC-RESULT?* is t, the result is popped up in a
+separate buffer."
   (interactive)
   (defvar *~popup-exec-result?*
     nil
     "Determines whether or not result from an exec function
     should be popped up (in a separate frame).")
+
   (let* ((thing (if (null thing)
                     (funcall selection-fn)
                   thing)))
     (when (null thing)
       (error "Nothing to execute"))
+
     (let* ((result (if (consp thing)
                        (eval thing)
                      (funcall exec-fn thing)))
@@ -1261,7 +1274,7 @@ is popped up in a separate frame."
                        :working-dir dir))
       result)))
 
-(defun* ~execute-text-prompt ()
+(cl-defun ~execute-text-prompt ()
   "Prompts for text and executes it with `~execute'."
   (interactive)
   (defvar *~execute-text-prompt-hist* (list))
@@ -1274,7 +1287,7 @@ is popped up in a separate frame."
   (~execute (string-trim (thing-at-point 'line t))))
 
 (with-eval-after-load "evil"
-  (defun* ~advice/evil-ret-execute (orig-fn &rest args)
+  (cl-defun ~advice/evil-ret-execute (orig-fn &rest args)
     "Prevents `evil-ret' in Evil normal-mode and visual-mode to
 move the cursor but rather to call `~execute'."
     (interactive)
@@ -1305,17 +1318,6 @@ minibuffer."
   (if (and (~get-secondary-selection) (not current-prefix-arg))
       (~get-secondary-selection)
     (read-shell-command "Command: ")))
-
-(defun* ~shorten-string (str max-length &optional (ellipsis "..."))
-  "Shortens a string, making sure its length does not exceed
-`max-length' by truncating and prefixing it with `ellipsis' if
-necessary."
-  (let ((actual-length (length str)))
-    (if (> actual-length max-length)
-        (s-concat ellipsis (substring str (+ (- actual-length
-                                              max-length)
-                                             (length ellipsis))))
-      str)))
 
 (defun ~toggle-popup-exec-result ()
   "Toggles whether or not result from an exec function is popped
@@ -1457,15 +1459,19 @@ quoted with `shell-quote-argument'."
                     ;; Arguments
                     "-c" command))))
 
-(defun* ~exec (command &key (stdin nil))
-  "Executes a shell command then returns its output as string.
+(cl-defun ~exec (command &key stdin)
+  "Executes a *shell* command then returns its output as string.
+
+COMMAND is a string, denoting the shell command, i.e. shell
+operators such as piping are possible.  Beware of argument
+quoting, `shell-quote-argument' could be used in such a case.
 
 STDIN determines where to read standard input for the shell
 command.  Its value type is one of the following:
 
-* NIL → no stdin;
+* nil → no stdin;
 
-* :REGION → stdin is taken from the current region;
+* :region → stdin is taken from the current region;
 
 * any other value → stdin is that value."
   (interactive "MCommand: ")
@@ -1473,6 +1479,7 @@ command.  Its value type is one of the following:
     ('nil (with-temp-buffer
             (shell-command command t nil)
             (buffer-string)))
+
     (:region (let ((inhibit-message t))
                (shell-command-on-region (region-beginning)
                                         (region-end)
@@ -1491,6 +1498,7 @@ command.  Its value type is one of the following:
                  (ansi-color-apply-on-region (point-min)
                                              (point-max))))
              (~get-buffer-content command))
+
     (stdin-value (let ((inhibit-message t))
                    (with-temp-buffer
                      (insert stdin-value)
