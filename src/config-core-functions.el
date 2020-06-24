@@ -1739,34 +1739,41 @@ environment variable."
 
                              t)))
 
-;; TODO: URGENT: Check docstring of MAKE-PROCESS
 (defun* ~exec-async (command &key (stdin nil)
                              (coding-system 'undecided)
+                             (connection-type 'pipe)
                              output-callback
                              output-as-buffer
                              keep-output-buffer)
   "Executes a program asynchronously and returns the
-corresponding async process.  COMMAND is a list of strings
-representing the program and its arguments.  Note that the
-program is executed as-is, not in a shell.  Thus shell operators,
-e.g. piping, don't work.  For piping, please have a look at the
-`~exec-pipe-async', which handles piping for external commands
-and Emacs Lisp function.
+corresponding async process.
 
-STDIN determines where to pipe the standard input (stdin) to the
-program.  It takes one of the following value types:
+COMMAND is a list of strings representing the program and its
+arguments.  Note that the program is NOT executed in a shell (for
+that you would need to specificy the shell command manually).
+Thus shell operators, e.g. piping, don't work.  For piping,
+please have a look at the `~exec-pipe-async', which handles
+piping for external commands and Emacs Lisp function.
 
-* NIL → no stdin is piped;
+STDIN determines where the process can take the standard
+input (stdin).  It takes one of the following value types:
 
-* :REGION → stdin is the current region;
+* nil → empty stdin;
 
-* :2ND-REGION → stdin is the current secondary selection;
+* :region → stdin is the current region;
+
+* :2nd-region → stdin is the current secondary selection;
 
 * a buffer → stdin is the content of that buffer;
 
-* a string → stdin is the corresponding string
+* a string → stdin is that string value
 
-Any other value types of STDIN will result in an error by `make-process'.
+Any other value types of STDIN will result in an error by
+`make-process'.
+
+CODING-SYSTEM and CONNECTION-TYPE share their meaning with those
+from `MAKE-PROCESS' so please check out its documentation for
+futher information.
 
 OUTPUT-CALLBACK is a function taking a single value - the output
 of the program.  OUTPUT-CALLBACK is called when the program
@@ -1777,9 +1784,9 @@ output of the program is passed to OUTPUT-CALLBACK as a string or
 as a buffer.  Note that the buffer connecting to the program's
 standard output (stdout) and standard error (stderr) is always
 created, no matter what value of OUTPUT-AS-BUFFER is.  Hence,
-generally speaking, it's preferred to pass `t' to
-OUTPUT-AS-BUFFER and make OUTPUT-CALLBACK takes that buffer for
-performance reason.
+generally speaking, it's preferred to pass t to OUTPUT-AS-BUFFER
+and make OUTPUT-CALLBACK takes that buffer for better
+performance.
 
 KEEP-OUTPUT-BUFFER is a boolean value, determining whether or not
 the output buffer of the program is killed after the program
@@ -1804,23 +1811,24 @@ E.g.
              :output-callback #'insert\)
 "
   (interactive "MCommand: ")
-  (let* ((name (string-join command " "))
-         (buffer-name (format "*process :: %s :: %s*" name (~gen-uuid)))
-         (proc (make-process
-                :name name
-                :buffer buffer-name
-                :command command
-                :coding coding-system
-                :sentinel #'(lambda (proc _event)
-                              (when output-callback
-                                (let ((output (if output-as-buffer
-                                                  (process-buffer proc)
-                                                (with-current-buffer (process-buffer proc)
-                                                  (buffer-string)))))
-                                  (funcall output-callback output)))
-                              (unless (or keep-output-buffer
-                                          (not (buffer-live-p (process-buffer proc))))
-                                (kill-buffer (process-buffer proc)))))))
+  (lexical-let* ((name (string-join command " "))
+                 (buffer-name (format "*process :: %s :: %s*" name (~gen-uuid)))
+                 (proc (make-process
+                        :name name
+                        :buffer buffer-name
+                        :command command
+                        :coding coding-system
+                        :connection-type connection-type
+                        :sentinel #'(lambda (proc _event)
+                                      (when output-callback
+                                        (let ((output (if output-as-buffer
+                                                          (process-buffer proc)
+                                                        (with-current-buffer (process-buffer proc)
+                                                          (buffer-string)))))
+                                          (funcall output-callback output)))
+                                      (unless (or keep-output-buffer
+                                                  (not (buffer-live-p (process-buffer proc))))
+                                        (kill-buffer (process-buffer proc)))))))
     (pcase stdin
       ('nil t)
       (:region (process-send-region proc (region-beginning) (region-end))
