@@ -626,40 +626,50 @@ with prefix `s-SPC' at the same time."
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'~exec-sh<)
                 (wand:create-rule :match (rx bol (0+ " ") "$<")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'bs:send-complete-string)
                 (wand:create-rule :match (rx bol (0+ " ") "$")
                                   :capture :after
+                                  :skip-comment nil
                                   :action (~add-arg-to-history-fn *~exec-history-path* #'~bs:exec-output-to-next-line
                                                                   :max-history *~exec-history-max*))
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'~exec-sh>)
                 (wand:create-rule :match (rx bol (0+ " ") "!!!")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~dispatch-action (concat "!!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!@")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~dispatch-action (concat "!@ " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!^")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'~exec-sh-pop-up)
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~dispatch-action (concat "!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'~exec-sh<-next-line-separate)
                 (wand:create-rule :match (rx bol (0+ " ") "mux://")
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~dispatch-action (concat "mux://" text))))
@@ -679,6 +689,7 @@ with prefix `s-SPC' at the same time."
                                                                                     (shell-quote-argument text)))))
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
+                                  :skip-comment nil
                                   :action #'~current-snippet->file)
                 (wand:create-rule :match (rx bol (0+ " ") "chrome:")
                                   :capture :after
@@ -688,6 +699,7 @@ with prefix `s-SPC' at the same time."
                                   :action #'~web-browse-gui)
                 (wand:create-rule :match ".*\\.html$"
                                   :capture :whole
+                                  :skip-comment nil
                                   :action #'~web-browse-gui)
                 (wand:create-rule :match (rx bol (0+ " ") "in:")
                                   :capture :after
@@ -697,7 +709,7 @@ with prefix `s-SPC' at the same time."
                                   :action #'~smart-open-file)
                 (wand:create-rule :match (rx (0+ (or any "\n")))
                                   :capture :whole
-                                  :skip-comment t
+                                  :skip-comment nil
                                   :action #'~wand:open-or-eval)))))
 
 ;;
