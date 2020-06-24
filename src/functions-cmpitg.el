@@ -66,14 +66,12 @@
 (defun* ~wmii/toggle-frame-floating (&optional (frame (selected-frame)))
   "Toggles the floating of a frame when using Wmii."
   (interactive)
-  (~exec (format "wmiir xwrite /tag/sel/ctl send %s toggle"
-                 (~wmii/get-frame-id frame))))
+  (~exec-sh (list "wmiir" "xwrite" "/tag/sel/ctl" "send" (~wmii/get-frame-id frame) "toggle")))
 
 (defun* ~wmii/set-frame-floating (&optional (frame (selected-frame)))
   "Sets a frame to floating mode when using Wmii."
   (interactive)
-  (~exec (format "wmiir xwrite /tag/sel/ctl send %s '~'"
-                 (~wmii/get-frame-id frame))))
+  (~exec-sh (list "wmiir" "xwrite" "/tag/sel/ctl" "send" (~wmii/get-frame-id frame) "~")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window manager
@@ -90,11 +88,11 @@
 
 (defun ~wm/get-focused-window-id ()
   "Gets the ID for the currently focused window."
-  (string-trim (~exec "xdotool getwindowfocus")))
+  (string-trim (~exec-sh (list "xdotool" "getwindowfocus"))))
 
 (defun ~wm/focus-window-by-id (window-id)
   "Focuses a window by its ID."
-  (string-trim (~exec (format "xdotool windowfocus --sync %s" (shell-quote-argument window-id)))))
+  (string-trim (~exec-sh (list "xdotool" "windowfocus" "--sync" window-id))))
 
 (defhydra hydra-wm-app (:columns 4 :exit t)
   "Run application"

@@ -271,8 +271,8 @@ directory to the current buffer."
   ;; TODO: Save history
   (defvar *~recent-inserted-execs* (list)
     "List of recently inserted executables.")
-  (let* ((execs (s-lines (~exec "get-all-execs")))
-         (current-dir-execs (thread-first (~exec "find . -type f -maxdepth 1")
+  (let* ((execs (s-lines (~exec-sh "get-all-execs")))
+         (current-dir-execs (thread-first (~exec-sh (list "find" "." "-type" "f" "-maxdepth" "1"))
                               (s-lines)
                               (butlast)))
          (all-execs (append *~recent-inserted-execs* current-dir-execs execs))
@@ -756,7 +756,7 @@ to `nil'."
     (funcall (and initial-major-mode))
     (setq default-directory (or *scratch-dir* temporary-file-directory))
     (set-visited-file-name (thread-first "%s_%s"
-                             (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec "uuidgen"))
+                             (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec-sh "uuidgen"))
                              string-trim))
     (let ((var/symbol (make-local-variable 'local/delete-on-close)))
       (set var/symbol t)
@@ -1216,8 +1216,7 @@ necessary."
 
 (defun ~gen-uuid ()
   "Generates a UUID."
-  (interactive)
-  (string-trim (~exec "uuidgen -r")))
+  (string-trim (~exec-sh (list "uuidgen" "-r"))))
 
 (defun* ~get-thing-to-execute-from-context ()
   "Retrieves the thing to execute from the current context.  The
@@ -1459,12 +1458,14 @@ quoted with `shell-quote-argument'."
                     ;; Arguments
                     "-c" command))))
 
-(cl-defun ~exec (command &key stdin)
+(cl-defun ~exec-sh (command &key stdin)
   "Executes a *shell* command then returns its output as string.
 
-COMMAND is a string, denoting the shell command, i.e. shell
-operators such as piping are possible.  Beware of argument
-quoting, `shell-quote-argument' could be used in such a case.
+COMMAND is either a list of a string, denoting the shell command.
+In case COMMAND is a string, you might need to quote the shell
+arguments inside, e.g. by using `shell-quote-argument'.  If
+COMMAND is a list, it is then quoted with `shell-quote-argument'
+automatically and joined to a string.
 
 STDIN determines where to read standard input for the shell
 command.  Its value type is one of the following:
@@ -1475,77 +1476,90 @@ command.  Its value type is one of the following:
 
 * any other value → stdin is that value."
   (interactive "MCommand: ")
-  (pcase stdin
-    ('nil (with-temp-buffer
-            (shell-command command t nil)
-            (buffer-string)))
+  (lexical-let ((command (typecase command
+                           (string command)
+                           (list (string-join (loop for arg in command
+                                                    collect (shell-quote-argument arg))
+                                              " "))
+                           (t (error "COMMAND must be a string or a list")))))
+    (pcase stdin
+      ('nil (with-temp-buffer
+              (shell-command command t nil)
+              (buffer-string)))
 
-    (:region (let ((inhibit-message t))
-               (shell-command-on-region (region-beginning)
-                                        (region-end)
-                                        command
+      (:region (let ((inhibit-message t))
+                 (shell-command-on-region (region-beginning)
+                                          (region-end)
+                                          command
 
-                                        ;; Output buffer name
-                                        command
+                                          ;; Output buffer name
+                                          command
 
-                                        ;; Don't replace current region
-                                        nil
+                                          ;; Don't replace current region
+                                          nil
 
-                                        ;; Error piped to output
-                                        nil))
-             (save-mark-and-excursion
-               (with-current-buffer command
-                 (ansi-color-apply-on-region (point-min)
-                                             (point-max))))
-             (~get-buffer-content command))
+                                          ;; Error piped to output
+                                          nil))
+               (save-mark-and-excursion
+                 (with-current-buffer command
+                   (ansi-color-apply-on-region (point-min)
+                                               (point-max))))
+               (~get-buffer-content command))
 
-    (stdin-value (let ((inhibit-message t))
-                   (with-temp-buffer
-                     (insert stdin-value)
-                     (shell-command-on-region (point-min)
-                                              (point-max)
-                                              command
+      (stdin-value (let ((inhibit-message t))
+                     (with-temp-buffer
+                       (insert stdin-value)
+                       (shell-command-on-region (point-min)
+                                                (point-max)
+                                                command
 
-                                              ;; Output buffer name
-                                              command
+                                                ;; Output buffer name
+                                                command
 
-                                              ;; Don't replace current region
-                                              nil
+                                                ;; Don't replace current region
+                                                nil
 
-                                              ;; Error piped to output
-                                              nil)))
-                 (save-mark-and-excursion
-                   (with-current-buffer command
-                     (ansi-color-apply-on-region (point-min)
-                                                 (point-max))))
-                 (~get-buffer-content command))))
+                                                ;; Error piped to output
+                                                nil)))
+                   (save-mark-and-excursion
+                     (with-current-buffer command
+                       (ansi-color-apply-on-region (point-min)
+                                                   (point-max))))
+                   (~get-buffer-content command)))))
 
 (defun* ~exec-pop-up (command)
-  "Executes a command & pops up a temporary buffer showing
-result, returning the process.  The command is executed
-asynchronously."
+  "Executes a command asynchronously & pops up a temporary buffer
+showing result.  This function returns the process."
   (interactive "MCommand: ")
   (~add-to-history-file *~exec-history-path* command
                         :max-history *~exec-history-max*)
-  (let* ((name command)
-         (process (start-process-shell-command name name (concat "env TERM=dumb PAGER=cat " command)))
-         (dir default-directory))
-    (~popup-buffer :buffer name)
-    (with-current-buffer name
-      (setq-local default-directory dir)
-      ;; For some weird reason, we need to sleep shortly before we're able to
-      ;; jump to the beginning of the buffer
-      (sleep-for 0 1)
-      (if (process-live-p process)
-          (set-process-sentinel process #'(lambda (process signal)
-                                            (when (memq (process-status process) '(exit signal))
-                                              (ansi-color-apply-on-region (point-min)
-                                                                          (point-max))
-                                              (shell-command-sentinel process signal))))
-        (ansi-color-apply-on-region (point-min)
-                                    (point-max)))
-      (goto-char (point-min)))
-    process))
+  (~exec-async-2 (list "env" "TERM=dumb" "ls" "--color=auto" "/home/cmpitg/tmp/")
+               :output-callback #'(lambda (output-buffer)
+                                    (with-current-buffer output-buffer
+                                      (~ansi-colorize-buffer))
+                                    (pop-to-buffer output-buffer))
+               :output-as-buffer t
+               :keep-output-buffer t)
+  ;; (let* ((name command)
+  ;;        (process (start-process-shell-command name name (concat "env TERM=dumb PAGER=cat " command)))
+  ;;        (dir default-directory))
+  ;;   (~popup-buffer :buffer name)
+  ;;   (with-current-buffer name
+  ;;     (setq-local default-directory dir)
+  ;;     ;; For some weird reason, we need to sleep shortly before we're able to
+  ;;     ;; jump to the beginning of the buffer
+  ;;     (sleep-for 0 1)
+  ;;     (if (process-live-p process)
+  ;;         (set-process-sentinel process #'(lambda (process signal)
+  ;;                                           (when (memq (process-status process) '(exit signal))
+  ;;                                             (ansi-color-apply-on-region (point-min)
+  ;;                                                                         (point-max))
+  ;;                                             (shell-command-sentinel process signal))))
+  ;;       (ansi-color-apply-on-region (point-min)
+  ;;                                   (point-max)))
+  ;;     (goto-char (point-min)))
+  ;;   process)
+  )
 
 (defun* ~exec-pop-up.old (command)
   "Executes a command & pops up a temporary buffer showing

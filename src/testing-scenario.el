@@ -47,17 +47,17 @@
 
 ;; Execute a command and return the output as string.
 ;; Quick pattern: <not-possible>
-(~exec "ls")
+(~exec-sh "ls")
 
 ;; Execute a command synchronously, taking current region as stdin and return
 ;; the output as string.
 ;; Quick pattern: <not-possible>
-(~exec "cat" :stdin :region)
+(~exec-sh "cat" :stdin :region)
 
 ;; Execute a command synchronously, taking current region as stdin and return
 ;; the output as string.
 ;; Quick pattern: <not-possible>
-(~exec "cat" :stdin "Some\ncrap")
+(~exec-sh "cat" :stdin "Some\ncrap")
 
 ;; Execute a command and pop up a temporary buffer showing result.
 ;; Quick pattern: ls

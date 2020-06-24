@@ -40,10 +40,10 @@
 
 (defun rocket:save-to-history (text)
   "Saves the current text to history."
-  (~exec (format "add-to-history --max-history %s %s"
-                 rocket:*history-max*
-                 (shell-quote-argument rocket:*history-path*))
-         :stdin text))
+  (~exec-sh (list "add-to-history" "--max-history" 
+                  rocket:*history-max*
+                  rocket:*history-path*)
+            :stdin text))
 
 (defun rocket:insert-history (history-path)
   "Inserts history to the current buffer."
@@ -75,8 +75,7 @@
     (let* ((default-directory path)
            (find-command (executable-find "find"))
            (strip-from (length "./"))
-           (lines (thread-last (~exec (format "%s . -maxdepth 1 -type f,l -executable"
-                                              (shell-quote-argument find-command)))
+           (lines (thread-last (~exec-sh (list find-command "." "-maxdepth" "1" "-type" "f,l" "-executable"))
                     string-trim
                     s-lines)))
       (loop for line in lines

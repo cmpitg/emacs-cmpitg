@@ -32,7 +32,7 @@
 (defun ~format-json ()
   "Formats current selection as JSON.  Requires jq."
   (interactive)
-  (~exec| "jq ."))
+  (~exec| (list "jq" ".")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Better UX

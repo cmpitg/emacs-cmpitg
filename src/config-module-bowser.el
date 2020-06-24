@@ -50,9 +50,9 @@
 
 (defun bowser:save-to-history (text)
   "Saves the current text to history."
-  (~exec (format "add-to-history --max-history %s %s"
+  (~exec-sh (list "add-to-history" "--max-history"
                  bowser:*history-max*
-                 (shell-quote-argument bowser:*history-path*))
+                 bowser:*history-path*)
          :stdin text))
 
 (defun bowser:is-dir-expanded? (dir)
@@ -103,8 +103,8 @@ files."
   (let* ((dir (file-name-as-directory dir))
          (padding (apply #'concat (make-list level bowser:*level-padding*)))
          (paths (loop for line in (thread-last
-                                      (~exec (format "dispatch-action %s | rg -v '^\\.{1,2}/$'"
-                                                     (shell-quote-argument dir)))
+                                      (~exec-sh (format "dispatch-action %s | rg -v '^\\.{1,2}/$'"
+                                                        (shell-quote-argument dir)))
                                     bowser:strip-newline-from-string
                                     s-lines)
                       collect (concat dir line))))
