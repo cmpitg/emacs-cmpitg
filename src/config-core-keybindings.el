@@ -248,9 +248,10 @@
 
       (defhydra hydra-exec (:columns 3 :exit t)
         "Text execution"
-        ("|" #'~exec| "Execute, piping region out and output in")
-        ("<" #'~exec< "Execute, piping output in")
-        (">" #'~exec> "Execute, piping region out and output to a buffer")
+        ("|" #'~exec-sh| "Run sh command, piping region out and output in")
+        ("<" #'~exec-sh< "Run sh command, piping output in")
+        (">" #'~exec-sh> "Run sh command, piping region out and popping up output")
+        ("p" #'~exec-sh-pop-up "Run sh command, popping up output")
         ("x" #'~execute-text-prompt "Prompt execution")
         ("l" #'~execute-line "Execute line")
         ("L" #'(lambda ()
@@ -272,7 +273,7 @@
         ("s" #'(lambda ()
                  (interactive)
                  (~execute "!! zsh")) "Zsh"))
-
+      
       (defhydra hydra-emacs-lisp (:columns 4 :exit t)
         "Emacs Lisp operations"
         ("ee" #'~eval-last-sexp-or-region "Eval last sexp/region")

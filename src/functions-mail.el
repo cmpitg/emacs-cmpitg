@@ -23,8 +23,8 @@
                      " | "
                      (format " sed -n 's/^%s: \\(.*\\)$/\\1/Ip' " header))))
     (--> (if from-path
-             (~exec cmd)
-           (~exec cmd :stdin msg-or-path))
+             (~exec-sh cmd)
+           (~exec-sh cmd :stdin msg-or-path))
          (replace-regexp-in-string "[ \t\n]*$" "" it))))
 
 (defun* ~get-mail-user-agent (msg-or-path &key (from-path nil))

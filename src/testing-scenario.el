@@ -61,22 +61,22 @@
 
 ;; Execute a command and pop up a temporary buffer showing result.
 ;; Quick pattern: ls
-(~exec-pop-up "ls -lahF / /mnt")
+(~exec-pop-up (list "ls" "-lahF" "--color=yes" "/" "/mnt"))
 
 ;; Execute a command, taking input from the current region and pop up a
 ;; temporary buffer showing result.
 ;; Test: select any text in any window, then `eval-expression` the following.
 ;; Quick pattern: >cat
-(~exec> "cat")
-(~exec> "no-command")
+(~exec-sh> "cat")
+(~exec-sh> "no-command")
 
 ;; Execute a command, taking input from the current region replace it with
 ;; result once the command is done.
 ;; Test: select any text in any window, then `eval-expression` the following.
 ;; Quick pattern: |sort
-(~exec| "cat")
-(~exec| "sort")
-(~exec| "no-command")
+(~exec-sh| "cat")
+(~exec-sh| "sort")
+(~exec-sh| "no-command")
 
 ;; b
 ;; a
@@ -87,8 +87,8 @@
 ;; command is done.
 ;; Test: Place the cursor 
 ;; Quick pattern: <ls
-(~exec< "date")
-(~exec< "date -R")
+(~exec-sh< "date")
+(~exec-sh< "date -R")
 
 ;; Run an external processes
 (~run-process (format "web-browser-gui %s"

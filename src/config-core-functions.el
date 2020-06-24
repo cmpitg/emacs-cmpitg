@@ -657,12 +657,12 @@ reference."
       (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer))
     (bind-key "q" #'kill-current-buffer (current-local-map))))
 
-(defun* ~popup-buffer-frame (&key (buffer "*Temp*")
-                                  content
-                                  working-dir)
+(cl-defun ~popup-buffer-frame (&key (buffer "*Temp*")
+                                    content
+                                    working-dir)
   "Pops up a buffer in a new frame, useful for workflows with
-tiling window manager.  If `content' is non-`nil', it serves as
-the content of the buffer.  When the buffer is closed, the
+tiling window manager.  If CONTENT is non-nil, it serves as the
+content of the buffer.  When the buffer is closed, the
 corresponding frame is deleted."
   (interactive)
   (let* ((buffer (get-buffer-create buffer)))
@@ -677,12 +677,13 @@ corresponding frame is deleted."
       (setq-local default-directory working-dir)
       (setq-local local/delete-frame-on-close (selected-frame)))))
 
-(defun* ~popup-buffer-window (&key (buffer "*Temp*")
-                                   content
-                                   working-dir
-                                   (size 80))
-  "Pops up a buffer in a new window.  If `content' is non-`nil',
-it serves as the content of the buffer.  `size' defines the width
+;; TODO: Check if keymap exists
+(cl-defun ~popup-buffer-window (&key (buffer "*Temp*")
+                                     content
+                                     working-dir
+                                     (size 80))
+  "Pops up a buffer in a new window.  If CONTENT is non-nil,
+it serves as the content of the buffer.  SIZE defines the width
 threshold which the window receives.  When the buffer is closed,
 the corresponding window is deleted."
   (interactive)
@@ -705,19 +706,19 @@ the corresponding window is deleted."
       (switch-to-buffer buffer))
     buffer))
 
-(defun* ~popup-buffer (&key (buffer "*Temp*")
-                            content
-                            working-dir
-                            (size 80))
-  "Pops up a buffer in a new window or frame.  If `content' is non-`nil',
-it serves as the content of the buffer.  `size' defines the width
+(cl-defun ~popup-buffer (&key (buffer "*Temp*")
+                              content
+                              working-dir
+                              (size 80))
+  "Pops up a buffer in a new window or frame.  If CONTENT is non-nil,
+it serves as the content of the buffer.  SIZE defines the width
 threshold which the window receives in case a new window is
 popped up.  When the buffer is closed, the corresponding
 window/frame is deleted.
 
 This function will pop up a buffer window if the variable
-`*popup-buffer-in*' is `:window' and it is called without a
-prefix argument.  Otherwise, it will pop up a buffer frame."
+*POPUP-BUFFER-IN* is :window and it is called without a prefix
+argument.  Otherwise, it will pop up a buffer frame."
   (interactive)
   (cond
    ((or (eq :frame *popup-buffer-in*)
@@ -1246,19 +1247,11 @@ rules are as follows:
   "Interactively executes THING which is a piece of text or an
 sexp using `exec-fn' and return the result.  If THING is not
 provided, calls and takes the return value of SELECTION-FN as
-THING.
-
-If *~POPUP-EXEC-RESULT?* is t, the result is popped up in a
-separate buffer."
+THING."
   (interactive)
-  (defvar *~popup-exec-result?*
-    nil
-    "Determines whether or not result from an exec function
-    should be popped up (in a separate frame).")
-
-  (let* ((thing (if (null thing)
-                    (funcall selection-fn)
-                  thing)))
+  (let ((thing (if (null thing)
+                   (funcall selection-fn)
+                 thing)))
     (when (null thing)
       (error "Nothing to execute"))
 
@@ -1268,9 +1261,6 @@ separate buffer."
            (result-str (if (stringp result)
                            result
                          (format "%s" result))))
-      (when *~popup-exec-result?*
-        (~popup-buffer :content result-str
-                       :working-dir dir))
       result)))
 
 (cl-defun ~execute-text-prompt ()
@@ -1284,6 +1274,25 @@ separate buffer."
   "Executes current line with `~execute'."
   (interactive)
   (~execute (string-trim (thing-at-point 'line t))))
+
+(cl-defun ~execute-pop-up (&optional thing
+                                     &key
+                                     (exec-fn #'wand:execute)
+                                     (selection-fn #'~get-thing-to-execute-from-context))
+  "Interactively executes THING which is a piece of text or an
+sexp using `exec-fn' and pops up the result when done.  If THING
+is not provided, calls and takes the return value of SELECTION-FN
+as THING."
+  (interactive)
+  (lexical-let ((output-buffer (format "* output :: %s :: %s *"
+                                       thing
+                                       (~gen-uuid)))
+                (workdir default-directory)
+                (result (~execute thing :exec-fn exec-fn
+                                  :selection-fn selection-fn)))
+    (~popup-buffer :buffer output-buffer
+                   :content result
+                   :working-dir workdir)))
 
 (with-eval-after-load "evil"
   (cl-defun ~advice/evil-ret-execute (orig-fn &rest args)
@@ -1461,7 +1470,7 @@ quoted with `shell-quote-argument'."
 (cl-defun ~exec-sh (command &key stdin)
   "Executes a *shell* command then returns its output as string.
 
-COMMAND is either a list of a string, denoting the shell command.
+COMMAND is either a list or a string, denoting the shell command.
 In case COMMAND is a string, you might need to quote the shell
 arguments inside, e.g. by using `shell-quote-argument'.  If
 COMMAND is a list, it is then quoted with `shell-quote-argument'
@@ -1527,39 +1536,37 @@ command.  Its value type is one of the following:
                                                    (point-max))))
                    (~get-buffer-content command)))))
 
-(defun* ~exec-pop-up (command)
+(cl-defun ~exec-pop-up (command)
   "Executes a command asynchronously & pops up a temporary buffer
-showing result.  This function returns the process."
+showing result when done.  COMMAND is a list of strings, denoting
+the command.
+
+This function returns corresponding asynch process."
+  (interactive)
+  (lexical-let ((command-str (thread-first (loop for arg in command
+                                                 collect (shell-quote-argument arg))
+                               (string-join " ")
+                               string-trim)))
+    (~add-to-history-file *~exec-history-path* command-str
+                          :max-history *~exec-history-max*)
+    (~exec-async command
+                 :output-callback #'(lambda (output-buffer)
+                                      (with-current-buffer output-buffer
+                                        (~ansi-colorize-buffer))
+                                      (pop-to-buffer output-buffer))
+                 :output-as-buffer t
+                 :keep-output-buffer t)))
+
+(cl-defun ~exec-sh-pop-up (command)
+  "Similar to `~exec-pop-up' but COMMAND is a string denoting a
+shell command.  This allows the use of shell operators in
+COMMAND.  Note that shell arguments might need quoting, e.g. with
+`shell-quote-argument'."
   (interactive "MCommand: ")
-  (~add-to-history-file *~exec-history-path* command
-                        :max-history *~exec-history-max*)
-  (~exec-async-2 (list "env" "TERM=dumb" "ls" "--color=auto" "/home/cmpitg/tmp/")
-               :output-callback #'(lambda (output-buffer)
-                                    (with-current-buffer output-buffer
-                                      (~ansi-colorize-buffer))
-                                    (pop-to-buffer output-buffer))
-               :output-as-buffer t
-               :keep-output-buffer t)
-  ;; (let* ((name command)
-  ;;        (process (start-process-shell-command name name (concat "env TERM=dumb PAGER=cat " command)))
-  ;;        (dir default-directory))
-  ;;   (~popup-buffer :buffer name)
-  ;;   (with-current-buffer name
-  ;;     (setq-local default-directory dir)
-  ;;     ;; For some weird reason, we need to sleep shortly before we're able to
-  ;;     ;; jump to the beginning of the buffer
-  ;;     (sleep-for 0 1)
-  ;;     (if (process-live-p process)
-  ;;         (set-process-sentinel process #'(lambda (process signal)
-  ;;                                           (when (memq (process-status process) '(exit signal))
-  ;;                                             (ansi-color-apply-on-region (point-min)
-  ;;                                                                         (point-max))
-  ;;                                             (shell-command-sentinel process signal))))
-  ;;       (ansi-color-apply-on-region (point-min)
-  ;;                                   (point-max)))
-  ;;     (goto-char (point-min)))
-  ;;   process)
-  )
+  (lexical-let ((command (string-trim command)))
+    (~add-to-history-file *~exec-history-path* command
+                          :max-history *~exec-history-max*)
+    (~exec-pop-up (list shell-file-name "-c" command))))
 
 (defun* ~exec-pop-up.old (command)
   "Executes a command & pops up a temporary buffer showing
@@ -1577,7 +1584,7 @@ result, returing the process.  The command is executed asynchronously."
       (goto-char (point-min)))
     process))
 
-(cl-defun ~exec< (command &key
+(cl-defun ~exec-sh< (command &key
                           (print-output-marker? nil)
                           (current-position (point))
                           (destination nil))
@@ -1590,12 +1597,11 @@ by the `SHELL' environment variable."
                         :max-history *~exec-history-max*)
 
   (message "Running: %s" command)
-  (lexical-let ((current-shell (getenv "SHELL"))
-                (current-position current-position)
+  (lexical-let ((current-position current-position)
                 (buffer (current-buffer))
                 (print-output-marker? print-output-marker?)
                 (destination destination))
-    (~exec-pipe-async (:sh current-shell "-c" (format "env 'TERM=dumb' 'PAGER=cat' %s" command))
+    (~exec-pipe-async (:sh shell-file-name "-c" (format "env 'TERM=dumb' 'PAGER=cat' %s" command))
                       (:fn #'(lambda (output)
                                (message "Finished: %s" command)
 
@@ -1622,7 +1628,7 @@ by the `SHELL' environment variable."
                                    (goto-char destination))))))))
 
 ;; TODO: Extract the display part out
-(cl-defun ~exec<-next-line-separate (text &key (replace-output? t))
+(cl-defun ~exec-sh<-next-line-separate (text &key (replace-output? t))
   "Executes TEXT in a newly spawned shell and pipes back the
 output to the next line.  The current cursor doesn't change."
   (interactive)
@@ -1656,12 +1662,12 @@ output to the next line.  The current cursor doesn't change."
                                    (0+ space) eol)))))
       (call-interactively '~delete-output-block))
 
-    (~exec< text
+    (~exec-sh< text
             :print-output-marker? t
             :current-position (point)
             :destination original-point)))
 
-(defun ~exec> (&optional command)
+(defun ~exec-sh> (&optional command)
   "Executes a command, taking input from the current region,
 pops up a temporary buffer showing result, and returns the exit
 code of the command.  The command is executed synchronously in a
@@ -1688,12 +1694,10 @@ shell which is determined by the `SHELL' environment variable."
                                     (point-max))))
     (~popup-buffer :buffer command)))
 
-(defun ~exec| (&optional command)
-  "Executes a command, taking input from the current region,
+(defun ~exec-sh| (&optional command)
+  "Executes a shell command, taking input from the current region,
 and replaces the region with the output.  This function also
-returns the exit code of the command.  The command is executed
-synchronously in a shell which is determined by the `SHELL'
-environment variable."
+returns the exit code of the command."
   (interactive "MCommand: ")
   (let ((inhibit-message t))
     (shell-command-on-region (region-beginning)
@@ -1816,7 +1820,7 @@ E.g.
                    (process-send-eof proc)))
     proc))
 
-(defmacro* ~exec-pipe-async (&rest commands)
+(cl-defmacro ~exec-pipe-async (&rest commands)
   "Executes commands in sequence, piping output (and possible
 standard error) from one command to the next one.
 
@@ -1902,7 +1906,7 @@ performance reasons."
                    finally (return next-output-callback))
             nil))
 
-(defmacro* ~exec-|-async (&rest commands)
+(cl-defmacro ~exec-|-async (&rest commands)
   "Wrapper for `~exec-pipe-async', does exactly what
 `~exec-pipe-async' does but with simplified syntax - each command
 from COMMANDS has its type inferred from the value type:

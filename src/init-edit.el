@@ -21,7 +21,6 @@
 (load (concat (file-name-directory load-file-name) "init-bare"))
 
 (require 'rmacs:config-functions       "config-functions")
-(require 'rmacs:functions-aws          "functions-aws")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")
 (require 'rmacs:config-literate-prog   "config-literate-prog")
 (require 'rmacs:config-edit            "config-edit")

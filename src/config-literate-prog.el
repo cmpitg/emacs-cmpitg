@@ -305,13 +305,13 @@ code block."
   "Generates HTML from and to current directory."
   (interactive)
   (message "Generating HTML...")
-  (~exec-pop-up "ulqui generate-html --from . --to generated-html/"))
+  (~exec-pop-up (list "ulqui" "generate-html" "--from" "." "--to" "generated-html/")))
 
 (defun ulqui:generate-src-current-dir ()
   "Generates source code from and to current directory."
   (interactive)
   (message "Generating source...")
-  (~exec-pop-up "ulqui generate-src --from . --to generated-src/"))
+  (~exec-pop-up (list "ulqui" "generate-src" "--from" "." "--to" "generated-src/")))
 
 (defun ~cl/next-snippet ()
   "Jumps to the next `eval'-able AsciiDoc snippet."

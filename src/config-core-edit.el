@@ -626,7 +626,7 @@ with prefix `s-SPC' at the same time."
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
-                                  :action #'~exec<)
+                                  :action #'~exec-sh<)
                 (wand:create-rule :match (rx bol (0+ " ") "$<")
                                   :capture :after
                                   :action #'bs:send-complete-string)
@@ -636,7 +636,7 @@ with prefix `s-SPC' at the same time."
                                                                   :max-history *~exec-history-max*))
                 (wand:create-rule :match (rx bol (0+ " ") ">")
                                   :capture :after
-                                  :action #'~exec>)
+                                  :action #'~exec-sh>)
                 (wand:create-rule :match (rx bol (0+ " ") "!!!")
                                   :capture :after
                                   :action #'(lambda (text)
@@ -649,7 +649,7 @@ with prefix `s-SPC' at the same time."
                                               (~dispatch-action (concat "!@ " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!^")
                                   :capture :after
-                                  :action #'~exec-pop-up)
+                                  :action #'~exec-sh-pop-up)
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :action #'(lambda (text)
@@ -657,7 +657,7 @@ with prefix `s-SPC' at the same time."
                                               (~dispatch-action (concat "!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
-                                  :action #'~exec<-next-line-separate)
+                                  :action #'~exec-sh<-next-line-separate)
                 (wand:create-rule :match (rx bol (0+ " ") "mux://")
                                   :capture :after
                                   :action #'(lambda (text)
@@ -674,9 +674,9 @@ with prefix `s-SPC' at the same time."
                                                            (s-join "!")
                                                            string-trim)))
                                                 (~add-to-history-file *~exec-history-path* cmd :max-history *~exec-history-max*))
-                                              ;; TODO Refactor - after the extraction of the display function from ~exec<-next-line-separate
-                                              (~exec<-next-line-separate (format "dispatch-action %s"
-                                                                                 (shell-quote-argument text)))))
+                                              ;; TODO Refactor - after the extraction of the display function from ~exec-sh<-next-line-separate
+                                              (~exec-sh<-next-line-separate (format "dispatch-action %s"
+                                                                                    (shell-quote-argument text)))))
                 (wand:create-rule :match "----\n[^ ]* +"
                                   :capture :after
                                   :action #'~current-snippet->file)
