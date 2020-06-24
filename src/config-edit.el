@@ -677,6 +677,7 @@ might need manual refreshing."
             ("z" #'elpy-shell-switch-to-shell "Switch to shell")
             ("r" #'elpy-shell-send-region-or-buffer "Eval region or buffer")
             ("e" #'elpy-shell-send-current-statement "Eval current statement")
+            ("f" #'elpy-format-code "Format code")
             ("." #'~python-jump-to-definition "Jump to definition")
             ("," #'~python-jump-back "Jump back" :exit nil)
             ("l" #'elpy-config "Config")
