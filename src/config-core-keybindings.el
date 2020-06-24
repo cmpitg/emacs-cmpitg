@@ -243,6 +243,7 @@
         ("n" #'~new-buffer "New")
         ("m" #'mark-whole-buffer "Mark whole")
         ("l" #'~show-buffer-chooser "Show buffer chooser")
+        ("b" #'list-buffers "Show buffer list management")
         ("kk" #'kill-current-buffer "Kill current buffer")
         ("kb" #'kill-buffer "Kill a buffer"))
 
