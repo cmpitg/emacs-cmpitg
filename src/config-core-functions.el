@@ -1171,6 +1171,18 @@ trimmed after reading."
 ;; Emacs Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun ~is-next-line-output-block? ()
+  "Determines if the next line is the start of an output block.
+The output block is defined as everything between
+*~OUTPUT-BEGINNING-MARKER* and *~OUTPUT-END-MARKER*."
+  (save-mark-and-excursion
+    (ignore-errors
+      (next-line)
+      (beginning-of-line)
+      (looking-at (rx bol (0+ space)
+                      (eval *~output-beginning-marker*)
+                      (0+ space) eol)))))
+
 (cl-defun ~shorten-string (str max-length &optional (ellipsis "..."))
   "Shortens a string, making sure its length does not exceed
 MAX-LENGTH by truncating and prefixing it with ELLIPSIS if
