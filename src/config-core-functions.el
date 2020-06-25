@@ -1634,11 +1634,19 @@ result, returing the process.  The command is executed asynchronously."
 (cl-defun ~exec-sh< (command &key
                              (print-output-marker? nil)
                              (current-position (point))
-                             (destination nil))
-  "Executes a command and replaces the region with the output.
-This function also returns the exit code of the command.  The
-command is executed asynchronously in a shell which is determined
-by the `SHELL' environment variable."
+                             (destination (point)))
+  "Executes a *shell* command and replaces the region with the output.
+This function also returns the exit code of the command.
+
+PRINT-OUTPUT-MARKER? is a boolean value, determining whether or
+not to print the output markers (defined by
+*~OUTPUT-BEGINNING-MARKER* and *~OUTPUT-END-MARKER*)
+
+CURRENT-POSITION is a number, determining the position at which
+the output is printed.
+
+DESTINATION is a number or nil, determining the position at which
+the cursor is moved to after the output is printed."
   (interactive "MCommand: ")
   (~add-to-history-file *~exec-history-path* command
                         :max-history *~exec-history-max*)
@@ -1653,31 +1661,19 @@ by the `SHELL' environment variable."
                                (message "Finished: %s" command)
 
                                (with-current-buffer buffer
-                                 ;; Delete blank lines and insert output
-                                 ;; marker if necessary
                                  (goto-char current-position)
-                                 (insert *~output-beginning-marker* "\n")
-                                 (save-mark-and-excursion
-                                   (previous-line 2)
-                                   (~delete-blank-lines))
-                                 (unless print-output-marker?
-                                   (kill-line 1))
 
-                                 (push-mark)
-                                 (insert output)
-                                 (save-mark-and-excursion
-                                   (~ansi-colorize-region))
-
-                                 (when print-output-marker?
-                                   (insert *~output-end-marker*))
+                                 (~insert-output-block output
+                                                       :print-output-marker? print-output-marker?
+                                                       :colorize-with :overlay)
 
                                  (when (numberp destination)
                                    (goto-char destination))))))))
 
-;; TODO: Extract the display part out
-(cl-defun ~exec-sh<-next-line-separate (text &key (replace-output? t))
-  "Executes TEXT in a newly spawned shell and pipes back the
-output to the next line.  The current cursor doesn't change."
+(cl-defun ~exec-sh<-next-line-separate (command &key (replace-output? t))
+  "Executes a *shell* command in a newly spawned shell and pipes
+back the output to the next line.  The current cursor doesn't
+change."
   (interactive)
   (let ((original-point (point)))
     ;; Make sure we're an the end of the command
@@ -1699,26 +1695,18 @@ output to the next line.  The current cursor doesn't change."
     (beginning-of-line)
 
     ;; Delete the current output block if necessary
-    (when (and replace-output?
-               (save-mark-and-excursion
-                 (ignore-errors
-                   (next-line)
-                   (beginning-of-line)
-                   (looking-at (rx bol (0+ space)
-                                   (eval *~output-beginning-marker*)
-                                   (0+ space) eol)))))
-      (call-interactively '~delete-output-block))
+    (when (and replace-output? (~is-next-line-output-block?))
+      (call-interactively #'~delete-output-block))
 
-    (~exec-sh< text
+    (~exec-sh< command
                :print-output-marker? t
                :current-position (point)
                :destination original-point)))
 
-(defun ~exec-sh> (&optional command)
-  "Executes a command, taking input from the current region,
+(defun ~exec-sh> (command)
+  "Executes a *shell* command, taking input from the current region,
 pops up a temporary buffer showing result, and returns the exit
-code of the command.  The command is executed synchronously in a
-shell which is determined by the `SHELL' environment variable."
+code of the command."
   (interactive "MCommand: ")
   (~add-to-history-file *~exec-history-path* command
                         :max-history *~exec-history-max*)
@@ -1741,8 +1729,8 @@ shell which is determined by the `SHELL' environment variable."
                                     (point-max))))
     (~popup-buffer :buffer command)))
 
-(defun ~exec-sh| (&optional command)
-  "Executes a shell command, taking input from the current region,
+(defun ~exec-sh| (command)
+  "Executes a *shell* command, taking input from the current region,
 and replaces the region with the output.  This function also
 returns the exit code of the command."
   (interactive "MCommand: ")
