@@ -1200,17 +1200,17 @@ necessary."
   (message "Copied '%s' to the clipboard." text))
 
 (defun ~ansi-colorize-region ()
-  "ANSI-colorizes a region."
+  "ANSI-colorizes a region using overlays."
   (interactive)
   (ansi-color-apply-on-region (region-beginning) (region-end)))
 
 (defun ~ansi-colorize-buffer ()
-  "ANSI-colorizes current buffer."
+  "ANSI-colorizes current buffer using overlays."
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
 (defalias '~ansi-colorize 'ansi-color-apply
-  "ANSI-colorizes a string.")
+  "ANSI-colorizes a string with text properties.")
 
 (defun ~eval-string (str)
   "Evals a string."
