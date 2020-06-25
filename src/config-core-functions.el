@@ -240,7 +240,8 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
       (values path))))
 
 (defun ~insert-full-line-comment ()
-  "Inserts a line full of comment characters until `fill-column' is reached."
+  "Inserts a line full of comment characters until `fill-column'
+is reached."
   (interactive)
   (let ((comment (s-trim comment-start)))
     (thread-first
