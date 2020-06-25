@@ -250,6 +250,40 @@ is reached."
       (string-join "")
       insert)))
 
+(cl-defun ~insert-output-block (content
+                                &key replace-current-block?
+                                print-output-marker?
+                                (colorize-with :overlay))
+  "Inserts an output block.
+
+If REPLACE-CURRENT-BLOCK? is t, try replacing the current output
+block.
+
+If PRINT-OUTPUT-MARKER? is t, print also the output
+markers (defined by *~OUTPUT-BEGINNING-MARKER* and
+*~OUTPUT-END-MARKER*).
+
+COLORIZE-WITH is one of the following keywords:
+· :overlay - the content is ANSI-colorized using overlays
+· :text-properties - the content is ANSI-colorized using text properties
+Invalid values has no effects."
+  (when replace-current-block?
+    (call-interactively #'~delete-output-block))
+  
+  ;; Deliberately use setq here for readability.  let-only bindings look ugly.
+  (let (start-point
+        end-point
+        (content (if (eq :text-property colorize-with)
+                     (~ansi-colorize content)
+                   content)))
+    (when print-output-marker? (insert *~output-beginning-marker* "\n"))
+    (setq start-point (point))
+    (insert content)
+    (setq end-point (point))
+    (when print-output-marker? (insert "\n" *~output-end-marker*))
+
+    (when (eq :overlay colorize-with) (ansi-color-apply-on-region start-point end-point))))
+
 (defun ~keyboard-quit ()
   "Escapes the minibuffer or cancels region consistently using 'Control-g'.
 Normally if the minibuffer is active but we lost focus (say, we
