@@ -647,6 +647,12 @@ with prefix `s-SPC' at the same time."
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~dispatch-action (concat "!!! " text))))
+                (wand:create-rule :match (rx bol (0+ " ") "!#")
+                                  :capture :after
+                                  :skip-comment nil
+                                  :action #'(lambda (text)
+                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "!# " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!@")
                                   :capture :after
                                   :skip-comment nil
