@@ -333,10 +333,12 @@
 
       (defhydra hydra-search (:columns 4 :exit t)
         "Searching"
-        ("s" #'~search-buffer-interactively "Interactively search")
+        ("/" #'~search-buffer-interactively "Interactively search")
         ("i" #'counsel-imenu "Symbol-based")
         ("f" #'isearch-forward-regexp "Forward regexp")
-        ("b" #'isearch-backward-regexp "Backward regexp"))
+        ("b" #'isearch-backward-regexp "Backward regexp")
+        ("g" #'counsel-rg "Grep")
+        ("p" #'~counsel-grep-default-project-root "Grep in project"))
 
       (defhydra hydra-replace (:columns 4 :exit t)
         "Replacing"
@@ -357,7 +359,6 @@
 
       (defhydra hydra-edit (:columns 4 :exit t)
         "Editing operations"
-        ("s" #'hydra-search/body "Searching")
         ("q" #'hydra-replace/body "Replacing")
         ("n" #'hydra-narrow/body "Narrowing")
         ("a" #'hydra-align/body "Align")
@@ -372,6 +373,7 @@
         ("wo" #'just-one-space "Whitespace: Keep one")
         ("wd" #'delete-horizontal-space "Whitespace: Delete")
 
+        ("i" #'indent-rigidly "Indent rigidly")
         ("c" #'comment-or-uncomment-region "Toggle commenting region")
         ("d" #'~duplicate-line-or-region "Duplicate current line or region")
         ("k" #'kill-sexp "Kill sexp")
@@ -415,7 +417,7 @@
         ("K" #'org-backward-heading-same-level "Prev heading (same)")
 
         ("g" #'org-goto "Outline-based goto" :exit t)
-        ("s" #'org-sparse-tree "Create sparse tree" :exit t)
+        ("/" #'org-sparse-tree "Create sparse tree" :exit t)
 
         ("m" #'org-mark-subtree "Mark subtree" :exit t)
 
@@ -522,6 +524,7 @@
 
         ("o" #'hydra-org/body "Org")
 
+        ("/" #'hydra-search/body "Searching")
         ("d" #'hydra-edit/body "Editing")
         ("b" #'hydra-buffer/body "Buffer")
         ("c" #'hydra-cursor/body "Multiple cursors")
@@ -531,7 +534,7 @@
         ("i" #'hydra-insertion/body "Insertion")
         ("t" #'hydra-format/body "Formatting")
         ("m" #'hydra-mark/body "Marking")
-        ("s" #'hydra-mode/body "Mode")
+        ("c" #'hydra-mode/body "Mode")
 
         ("w" #'hydra-window/body "Window management")
         ("r" #'hydra-frame/body "Frame management"))
