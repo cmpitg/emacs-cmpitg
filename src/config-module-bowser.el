@@ -103,7 +103,7 @@ files."
   (let* ((dir (file-name-as-directory dir))
          (padding (apply #'concat (make-list level bowser:*level-padding*)))
          (paths (loop for line in (thread-last
-                                      (~exec-sh (format "dispatch-action %s | rg -v '^\\.{1,2}/$'"
+                                      (~exec-sh (format "dispatch-action %s 2> /dev/null | rg -v '^\\.{1,2}/$'"
                                                         (shell-quote-argument dir)))
                                     bowser:strip-newline-from-string
                                     s-lines)
