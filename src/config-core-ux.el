@@ -19,6 +19,7 @@
 
 ;; Don't follow symlink, use the path as-is
 (setq vc-follow-symlinks nil)
+(setq find-file-visit-truename nil)
 
 ;; 3 lines at a time normally, 5 lines at a time with shift
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 5)))
