@@ -792,7 +792,7 @@ to `nil'."
     (funcall (and initial-major-mode))
     (setq default-directory (or *scratch-dir* temporary-file-directory))
     (set-visited-file-name (thread-first "%s_%s"
-                             (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~exec-sh "uuidgen"))
+                             (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~gen-filename))
                              string-trim))
     (let ((var/symbol (make-local-variable 'local/delete-on-close)))
       (set var/symbol t)
@@ -1266,6 +1266,13 @@ necessary."
   "Generates a UUID."
   (string-trim (~exec-sh (list "uuidgen" "-r"))))
 
+(cl-defun ~gen-filename (&key (separator "-")
+                              (word-counter 4))
+  "Generates a random file name."
+  (string-trim (~exec-sh (list "gen-filename"
+                               (number-to-string word-counter)
+                               separator))))
+
 (defun* ~get-thing-to-execute-from-context ()
   "Retrieves the thing to execute from the current context.  The
 rules are as follows:
@@ -1333,7 +1340,7 @@ as THING."
   (interactive)
   (lexical-let ((output-buffer (format "* output :: %s :: %s *"
                                        thing
-                                       (~gen-uuid)))
+                                       (~gen-filename)))
                 (workdir default-directory)
                 (result (~execute thing :exec-fn exec-fn
                                   :selection-fn selection-fn)))
@@ -1825,7 +1832,7 @@ E.g.
 "
   (interactive "MCommand: ")
   (lexical-let* ((name (string-join command " "))
-                 (buffer-name (format "*process :: %s :: %s*" name (~gen-uuid)))
+                 (buffer-name (format "*process :: %s :: %s*" name (~gen-filename)))
                  (proc (make-process
                         :name name
                         :buffer buffer-name
