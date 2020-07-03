@@ -623,6 +623,10 @@ with prefix `s-SPC' at the same time."
       (interactive)
       (re-search-backward *~command-pattern-regexp* nil t))
 
+    (defun ~build-|rmacs-tee-cmd (cmd)
+      "Builds command to pipe output to the current buffer using rmacs-tee."
+      (format "%s |& rmacs-tee" cmd server-name))
+
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
@@ -646,7 +650,8 @@ with prefix `s-SPC' at the same time."
                                   :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!!! " text))))
+                                              (~prepare-for-output-block t)
+                                              (~dispatch-action (~build-|rmacs-tee-cmd (concat "!!! " text)))))
                 (wand:create-rule :match (rx bol (0+ " ") "!#")
                                   :capture :after
                                   :skip-comment nil
@@ -668,7 +673,8 @@ with prefix `s-SPC' at the same time."
                                   :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!! " text))))
+                                              (~prepare-for-output-block t)
+                                              (~dispatch-action (~build-|rmacs-tee-cmd (concat "!! " text)))))
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
                                   :skip-comment nil
