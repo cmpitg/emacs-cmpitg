@@ -1,0 +1,103 @@
+#!/usr/bin/env tclsh
+
+package require Tcl 8
+package require fileutil 1.15
+
+proc spit {path content} {
+    set fd [open $path w]
+    puts -nonewline $fd $content
+    close $fd
+}
+
+proc rmacsEval {rmacsServerName cmd} {
+    return [exec rmacs --name $rmacsServerName eval $cmd]
+}
+
+##############################################################################
+
+if {[info exists ::env(RMACS_TEE_READ_BUFFER_MODE)]} {
+    set bufferMode $::env(RMACS_TEE_READ_BUFFER_MODE)
+} else {
+    set bufferMode line
+}
+
+if {[info exists ::env(RMACS_TEE_READ_BUFFER_SIZE)]} {
+    set bufferSize $::env(RMACS_TEE_READ_BUFFER_SIZE)
+} else {
+    set bufferSize 4096
+}
+
+if {[info exists ::env(RMACS_SERVER_NAME)]} {
+    set rmacsServerName $::env(RMACS_SERVER_NAME)
+} else {
+    set rmacsServerName edit
+}
+
+if {[info exists ::env(RMACS_BUFFER_NAME)]} {
+    set rmacsBuffer $::env(RMACS_BUFFER_NAME)
+} else {
+    set rmacsBuffer [rmacsEval $rmacsServerName {(buffer-name (current-buffer))}]
+}
+
+# Make sure the buffer exists
+rmacsEval $rmacsServerName "(get-buffer-create $rmacsBuffer)"
+
+if {[info exists ::env(RMACS_CURRENT_POINT)]} {
+    set rmacsCurrentPoint $::env(RMACS_CURRENT_POINT)
+} else {
+    set rmacsCurrentPoint [rmacsEval $rmacsServerName "(with-current-buffer $rmacsBuffer (point))"]
+}
+
+set localTeeMarkVar "local/rmacs-tee-marker_[exec gen-filename]"
+
+rmacsEval $rmacsServerName "
+(with-current-buffer $rmacsBuffer
+  (save-excursion
+    (goto-char $rmacsCurrentPoint)
+    (insert *~output-beginning-marker* \"\\n\")
+    (setq-local $localTeeMarkVar (point-marker))))"
+
+##############################################################################
+
+set tempPath [::fileutil::tempfile]
+
+while {1} {
+    if {[eof stdin]} {
+        break
+    }
+
+    if {$bufferMode eq "line"} {
+        if {[gets stdin input] < 0} {
+            break
+        }
+
+        # Pad with a EOL of not EOF
+        if {![eof stdin]} {
+            set input "$input\n"
+        }
+    } else {
+        set input [read stdin $bufferSize]
+    }
+
+    puts -nonewline $input
+
+    # Use a temporary file to maintain the input structure
+    spit $tempPath $input
+
+    rmacsEval $rmacsServerName "
+(with-current-buffer $rmacsBuffer
+  (save-excursion
+    (goto-char $localTeeMarkVar)
+    (~insert-file-contents-and-goto-end \"$tempPath\")
+    (setq-local $localTeeMarkVar (point-marker))))"
+
+    # Reset the temporary file so that no other processes could read
+    spit $tempPath $input
+}
+
+file delete $tempPath
+
+rmacsEval $rmacsServerName "(with-current-buffer $rmacsBuffer
+  (save-excursion
+    (goto-char $localTeeMarkVar)
+    (insert \"\\n\" *~output-end-marker*)))"
