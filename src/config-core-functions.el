@@ -1677,34 +1677,38 @@ the cursor is moved to after the output is printed."
                                  (when (numberp destination)
                                    (goto-char destination))))))))
 
+(cl-defun ~prepare-for-output-block (&optional (replace-output? t))
+  "TODO"
+  (interactive)
+  ;; Make sure we're an the end of the command
+  (when (region-active-p)
+    (goto-char (region-end))
+    (end-of-line)
+    (deactivate-mark))
+
+  ;; Make sure we're not at the end of the output marker
+  (when (looking-back (rx bol (0+ space)
+                          (eval *~output-beginning-marker*)
+                          (0+ space) eol)
+                      nil t)
+    (beginning-of-line)
+    (backward-char))
+
+  ;; Create a line to separate the command and the output
+  (~open-line 1)
+  (beginning-of-line)
+
+  ;; Delete the current output block if necessary
+  (when (and replace-output? (~is-next-line-output-block?))
+    (call-interactively #'~delete-output-block)))
+
 (cl-defun ~exec-sh<-next-line-separate (command &key (replace-output? t))
   "Executes a *shell* command in a newly spawned shell and pipes
 back the output to the next line.  The current cursor doesn't
 change."
   (interactive)
   (let ((original-point (point)))
-    ;; Make sure we're an the end of the command
-    (when (region-active-p)
-      (goto-char (region-end))
-      (end-of-line)
-      (deactivate-mark))
-
-    ;; Make sure we're not at the end of the output marker
-    (when (looking-back (rx bol (0+ space)
-                            (eval *~output-beginning-marker*)
-                            (0+ space) eol)
-                        nil t)
-      (beginning-of-line)
-      (backward-char))
-
-    ;; Create a line to separate the command and the output
-    (~open-line 1)
-    (beginning-of-line)
-
-    ;; Delete the current output block if necessary
-    (when (and replace-output? (~is-next-line-output-block?))
-      (call-interactively #'~delete-output-block))
-
+    (~prepare-for-output-block replace-output?)
     (~exec-sh< command
                :print-output-marker? t
                :current-position (point)
