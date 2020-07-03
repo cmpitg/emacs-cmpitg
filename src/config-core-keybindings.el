@@ -534,7 +534,7 @@
         ("i" #'hydra-insertion/body "Insertion")
         ("t" #'hydra-format/body "Formatting")
         ("m" #'hydra-mark/body "Marking")
-        ("c" #'hydra-mode/body "Mode")
+        ("n" #'hydra-mode/body "Mode")
 
         ("w" #'hydra-window/body "Window management")
         ("r" #'hydra-frame/body "Frame management"))
