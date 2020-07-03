@@ -194,7 +194,7 @@ returns `nil'."
                 (emacs-lisp-mode))
               (evil-mode 1)
               (if (f-exists? cp-path)
-                  (insert-file cp-path)
+                  (insert-file-contents cp-path)
                 (insert (command-palette:construct-content main-buffer main-path))))
           (progn
             (goto-char (point-min))

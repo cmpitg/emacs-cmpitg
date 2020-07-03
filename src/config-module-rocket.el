@@ -47,7 +47,7 @@
 
 (defun rocket:insert-history (history-path)
   "Inserts history to the current buffer."
-  (insert-file history-path))
+  (insert-file-contents history-path))
 
 (defun rocket:run-text-from-context ()
   "Runs text from the current context."
