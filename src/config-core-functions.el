@@ -250,6 +250,13 @@ is reached."
       (string-join "")
       insert)))
 
+(cl-defun ~insert-file-contents-and-goto-end (filepath)
+  "Inserts the contents of a file and go to the end of the
+content in buffer."
+  (lexical-let ((current-pos (point))) 
+    (destructuring-bind (_ n-chars) (insert-file-contents filepath)
+      (goto-char (+ n-chars current-pos)))))
+
 (cl-defun ~insert-output-block (content
                                 &key replace-current-block?
                                 print-output-marker?
