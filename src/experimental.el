@@ -51,6 +51,24 @@
 ;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; File utils
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~choose-path-and-act ()
+  "Interactively chooses a path and does something with it."
+  (interactive)
+  (lexical-let ((path (read-file-name "Path: " nil nil 'confirm)))
+    (unless (string-empty-p path)
+      (defhydra local-hydra-act-on-path (:columns 4 :exit t)
+        "What to do?"
+        ("c" #'(lambda () (interactive) (~copy-to-clipboard path)) "Copy")
+        ("o" #'(lambda () (interactive) (find-file path)) "Open")
+        ("i" #'(lambda () (interactive) (insert path)) "Insert here")
+        ;; TODO: Open with external program
+        )
+      (local-hydra-act-on-path/body))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Widget and rendering
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
