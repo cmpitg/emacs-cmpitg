@@ -113,6 +113,12 @@ recursively."
     ad-do-it))
 
 ;;
+;; Enhacing different Things at point
+;;
+
+(put 'wand-text 'bounds-of-thing-at-point '~bounds-of-wand-text-at-point)
+
+;;
 ;; Project management
 ;;
 ;; Ref: https://github.com/bbatsov/projectile
@@ -618,6 +624,12 @@ with prefix `s-SPC' at the same time."
                                   :capture :after
                                   :skip-comment nil
                                   :action #'~exec-sh>)
+                (wand:create-rule :match (rx bol (0+ " ") "!!!#")
+                                  :capture :after
+                                  :skip-comment nil
+                                  :action #'(lambda (text)
+                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "!!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!!!")
                                   :capture :after
                                   :skip-comment nil
@@ -641,6 +653,12 @@ with prefix `s-SPC' at the same time."
                                   :capture :after
                                   :skip-comment nil
                                   :action #'~exec-sh-pop-up)
+                (wand:create-rule :match (rx bol (0+ " ") "!!#")
+                                  :capture :after
+                                  :skip-comment nil
+                                  :action #'(lambda (text)
+                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                              (~dispatch-action (concat "!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :skip-comment nil
@@ -651,7 +669,12 @@ with prefix `s-SPC' at the same time."
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
                                   :skip-comment nil
-                                  :action #'~exec-sh<-next-line-separate)
+                                  :action #'(lambda (text)
+                                              (~exec-sh<-next-line-separate text
+                                                                            :callback #'(lambda (&rest _args)
+                                                                                          (end-of-thing 'wand-text)
+                                                                                          (forward-line)
+                                                                                          (call-interactively #'~mark-current-output-block)))))
                 (wand:create-rule :match (rx bol (0+ " ") "mux://")
                                   :capture :after
                                   :skip-comment nil
