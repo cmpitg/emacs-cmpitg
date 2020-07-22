@@ -273,14 +273,12 @@ project root, not ignoring anything."
                                                     swiper-multi
                                                     swiper-query-replace)))
 
-            (use-package flx)
+            (require 'flx)
             ;; Default matching
-            (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus) (t . ivy--regex-fuzzy)))
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)
-            ;;                               (t . ivy--regex-fuzzy)
-            ;;                               (t . ivy--regex-ignore-order)))
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
+            (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+            ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+            (setq ivy-initial-inputs-alist nil)
 
             (defun* ~ivy-next-line+ (&optional (n-lines 5))
               (interactive)
