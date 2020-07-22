@@ -104,11 +104,12 @@
       (delete-duplicate-lines (point-min) (point-max))
 
       (goto-char (point-min))
-      (evil-normal-state)
-      (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
-      
-      (evil-define-key 'insert 'local (kbd "<S-return>") #'rocket:run-text-from-context)
-      (evil-define-key 'normal 'local (kbd "<S-return>") #'rocket:run-text-from-context))
+      (with-eval-after-load "evil"
+        (evil-normal-state)
+        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        
+        (evil-define-key 'insert 'local (kbd "<S-return>") #'rocket:run-text-from-context)
+        (evil-define-key 'normal 'local (kbd "<S-return>") #'rocket:run-text-from-context)))
     (switch-to-buffer current-buffer)))
 
 (defun rocket:show-command-runner-with-dedicated-frame ()

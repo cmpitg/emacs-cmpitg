@@ -221,14 +221,15 @@ nothing and returns `nil'. "
         ;; (bowser:insert-path dir :level 0)
 
         (goto-char starting-pos)
-        (evil-normal-state)
-        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        (with-eval-after-load "evil"
+          (evil-normal-state)
+          (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
 
-        (evil-define-key 'normal 'local (kbd "<mouse-2>") #'bowser:perform-action-here)
-        (evil-define-key 'insert 'local (kbd "<mouse-2>") #'bowser:perform-action-here)
+          (evil-define-key 'normal 'local (kbd "<mouse-2>") #'bowser:perform-action-here)
+          (evil-define-key 'insert 'local (kbd "<mouse-2>") #'bowser:perform-action-here)
 
-        (evil-define-key 'insert 'local (kbd "<S-return>") #'bowser:perform-action-here)
-        (evil-define-key 'normal 'local (kbd "<S-return>") #'bowser:perform-action-here)))
+          (evil-define-key 'insert 'local (kbd "<S-return>") #'bowser:perform-action-here)
+          (evil-define-key 'normal 'local (kbd "<S-return>") #'bowser:perform-action-here))))
     (switch-to-buffer current-buffer)))
 
 (defun bowser:show-command-runner-with-dedicated-frame ()

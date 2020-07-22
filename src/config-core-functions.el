@@ -112,6 +112,54 @@ convenient wrapper of `join-line'."
   (open-line arg)
   (indent-according-to-mode))
 
+;; TODO: To implement properly: lines should be selected regardless of where the cursor is?
+(defun ~select-line ()
+  "Selects a line."
+  (interactive)
+  (beginning-of-line)
+  (call-interactively #'set-mark-command)
+  (end-of-line))
+
+(defun ~kill-whole-line ()
+  "Kills the whole line."
+  (interactive)
+  (beginning-of-line)
+  (kill-line 1))
+
+;; BUG: Doesn't work with subwords
+(defun ~forward-word-boundary ()
+  "Forwards to the next word boundary."
+  (interactive)
+  (destructuring-bind (_ . word-end-pos)
+      (if (bounds-of-thing-at-point 'word)
+          (bounds-of-thing-at-point 'word)
+        (cons nil nil))
+    (forward-word)
+    (when (and (not (null word-end-pos))
+               (< word-end-pos (point)))
+      (backward-word))))
+
+;; BUG: Doesn't work with subwords
+(defun ~backward-word-boundary ()
+  "Backwards to the previous word boundary."
+  (interactive)
+  (destructuring-bind (word-start-pos . _)
+      (if (bounds-of-thing-at-point 'word)
+          (bounds-of-thing-at-point 'word)
+        (cons nil nil))
+    (backward-word)
+    (when (and (not (null word-start-pos))
+               (< (point) word-start-pos))
+      (forward-word))))
+
+(defun ~select-word ()
+  "Selects current word."
+  (interactive)
+  (when (bounds-of-thing-at-point 'word)
+    (forward-word)
+    (call-interactively #'set-mark-command)
+    (backward-word)))
+
 (defun ~delete-blank-lines ()
   "Deletes all blank lines at the current position."
   (interactive)
@@ -125,8 +173,7 @@ convenient wrapper of `join-line'."
   (save-mark-and-excursion
     (beginning-of-line)
     (call-interactively '~mark-current-output-block)
-    (delete-region (region-beginning) (region-end))
-    (kill-line)))
+    (delete-region (region-beginning) (region-end))))
 
 (defun* ~search-buffer-interactively ()
   "Searches the current buffer interactively."
@@ -253,7 +300,7 @@ is reached."
 (cl-defun ~insert-file-contents-and-goto-end (filepath)
   "Inserts the contents of a file and go to the end of the
 content in buffer."
-  (lexical-let ((current-pos (point))) 
+  (lexical-let ((current-pos (point)))
     (destructuring-bind (_ n-chars) (insert-file-contents filepath)
       (goto-char (+ n-chars current-pos)))))
 
@@ -276,7 +323,7 @@ COLORIZE-WITH is one of the following keywords:
 Invalid values has no effects."
   (when replace-current-block?
     (call-interactively #'~delete-output-block))
-  
+
   ;; Deliberately use setq here for readability.  let-only bindings look ugly.
   (let (start-point
         end-point
@@ -695,8 +742,9 @@ reference."
   "Sets up a temporary buffer."
   (interactive)
   (with-current-buffer buffer
-    (when evil-mode
-      (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer))
+    (with-eval-after-load "evil"
+      (when evil-mode
+        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)))
     (bind-key "q" #'kill-current-buffer (current-local-map))))
 
 (cl-defun ~popup-buffer-frame (&key (buffer "*Temp*")
@@ -712,7 +760,8 @@ corresponding frame is deleted."
       (when content
         (~clean-up-buffer)
         (insert content)
-        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        (with-eval-after-load "evil"
+          (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer))
         (bind-key "q" #'kill-current-buffer (current-local-map)))
 
       (switch-to-buffer-other-frame buffer)
@@ -738,9 +787,7 @@ the corresponding window is deleted."
     (with-current-buffer buffer
       (when content
         (~clean-up-buffer)
-        (insert content)
-        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
-        (bind-key "q" #'kill-current-buffer (current-local-map)))
+        (insert content))
 
       (split-window (selected-window) size 'left)
       (setq-local default-directory working-dir)

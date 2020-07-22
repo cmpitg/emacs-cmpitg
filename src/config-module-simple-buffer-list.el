@@ -82,15 +82,23 @@ active region, kill the buffer at the current line."
       (goto-line buffer-index)
       (beginning-of-line)
 
-      (evil-normal-state)
-      (evil-define-key 'normal 'local (kbd "d") #'bl:kill-one-or-more-buffers)
-      (evil-define-key 'insert 'local (kbd "d") #'bl:kill-one-or-more-buffers)
-      (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
-      (evil-define-key 'insert 'local (kbd "q") #'kill-current-buffer)
-      (evil-define-key 'normal 'local (kbd "RET") #'bl:visit-buffer-at-current-line)
-      (evil-define-key 'insert 'local (kbd "RET") #'bl:visit-buffer-at-current-line)
-      (evil-define-key 'insert 'local (kbd "<double-mouse-1>") #'bl:visit-buffer-at-current-line)
-      (evil-define-key 'normal 'local (kbd "<double-mouse-1>") #'bl:visit-buffer-at-current-line)
+      ;; (bind-key "q" #'kill-current-buffer (current-local-map))
+      ;; (bind-key "RET" #'bl:visit-buffer-at-current-line (current-local-map))
+      ;; (bind-key "<double-mouse-1>" #'bl:visit-buffer-at-current-line (current-local-map))
+      (local-set-key (kbd "q") #'kill-current-buffer)
+      (local-set-key (kbd "RET") #'bl:visit-buffer-at-current-line)
+      (local-set-key (kbd "<double-mouse-1>") #'bl:visit-buffer-at-current-line)
+
+      (with-eval-after-load "evil"
+        (evil-normal-state)
+        (evil-define-key 'normal 'local (kbd "d") #'bl:kill-one-or-more-buffers)
+        (evil-define-key 'insert 'local (kbd "d") #'bl:kill-one-or-more-buffers)
+        (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
+        (evil-define-key 'insert 'local (kbd "q") #'kill-current-buffer)
+        (evil-define-key 'normal 'local (kbd "RET") #'bl:visit-buffer-at-current-line)
+        (evil-define-key 'insert 'local (kbd "RET") #'bl:visit-buffer-at-current-line)
+        (evil-define-key 'insert 'local (kbd "<double-mouse-1>") #'bl:visit-buffer-at-current-line)
+        (evil-define-key 'normal 'local (kbd "<double-mouse-1>") #'bl:visit-buffer-at-current-line))
 
       (switch-to-buffer current-buffer))))
 
