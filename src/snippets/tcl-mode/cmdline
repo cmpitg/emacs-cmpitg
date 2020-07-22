@@ -5,7 +5,8 @@
 try {
     array set cmdArgs [::cmdline::getoptions ::argv {
         {<arg>.arg "<default-value>" "<help-text>"}
-    } {<help text>}]} trap {CMDLINE USAGE} {msg _o} {
+    } {<help text>}]
+} trap {CMDLINE USAGE} {msg _o} {
     if {[llength $::argv] == 0} {
         puts $msg
         exit 0
