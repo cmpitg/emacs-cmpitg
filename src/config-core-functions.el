@@ -815,6 +815,7 @@ killed.  Returns that buffer."
   (interactive)
   (with-current-buffer (~new-buffer)
     (setq-local local/delete-frame-on-close (selected-frame))
+    (current-buffer)))
 
 (defun ~revert-all-file-buffers-no-confirmation ()
   "Reverts all file-backed buffers without confirmation (by
@@ -2067,6 +2068,13 @@ E.g.
                                          command)))
                                       (t
                                        command)))))
+
+(defun ~exec-current-block ()
+  "Execs the current code block."
+  (interactive)
+  (save-mark-and-excursion
+    (call-interactively #'~mark-current-block)
+    (~exec-sh> "exec-stdin")))
 
 (defun ~insert-entry-from-exec-history ()
   "Inserts an entry from the execution history to the current buffer."
