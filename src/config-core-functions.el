@@ -788,13 +788,13 @@ argument.  Otherwise, it will pop up a buffer frame."
                        :working-dir default-directory))
 
 (defun ~new-buffer ()
-  "Opens a new empty buffer in `*scratch-dir*'.  The
-corresponding file name for the buffer is set to the current time
-and a UUID.  The buffer is save-able and will be deleted upon
-exiting unless the local variable `local/delete-on-close' is set
-to `nil'."
+  "Opens a new empty buffer in *SCRATCH-DIR* and returns it.
+The corresponding file name for the buffer is set to the current
+time and a UUID.  The buffer is save-able and will be deleted
+upon exiting unless the local variable LOCAL/DELETE-ON-CLOSE is
+set to nil."
   (interactive)
-  (let ((buf (generate-new-buffer "untitled")))
+  (lexical-let ((buf (generate-new-buffer "untitled")))
     (switch-to-buffer buf)
     (funcall (and initial-major-mode))
     (setq default-directory (or *scratch-dir* temporary-file-directory))
@@ -805,7 +805,16 @@ to `nil'."
       (set var/symbol t)
       (add-file-local-variable var/symbol t))
     (goto-char (point-min))
-    (setq buffer-offer-save t)))
+    (setq buffer-offer-save t)
+    buf))
+
+(defun ~new-buffer-associated-with-frame ()
+  "Opens a new buffer with `~new-buffer' and associates it with
+the current frame, i.e. the frame is deleted when the buffer is
+killed.  Returns that buffer."
+  (interactive)
+  (with-current-buffer (~new-buffer)
+    (setq-local local/delete-frame-on-close (selected-frame))
 
 (defun ~revert-all-file-buffers-no-confirmation ()
   "Reverts all file-backed buffers without confirmation (by
