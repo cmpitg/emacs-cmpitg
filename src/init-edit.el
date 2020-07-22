@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -22,7 +22,6 @@
 
 (require 'rmacs:config-functions       "config-functions")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")
-;; (require 'rmacs:config-literate-prog   "config-literate-prog")
 (require 'rmacs:config-edit            "config-edit")
 (require 'rmacs:config-module-org-mode "config-module-org-mode")
 (require 'rmacs:commands-cmpitg        "commands-cmpitg")

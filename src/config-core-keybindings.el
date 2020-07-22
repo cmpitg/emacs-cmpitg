@@ -24,7 +24,8 @@
 ;; - When in doubt, leave it out
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(with-eval-after-load "evil"
+;; TODO: Doesn't need with-eval-after-load?
+(with-eval-after-load "modalka"
   ;; (cua-mode t)
   ;; (setq cua-keep-region-after-copy t)
   ;; ;; Don't tabify after rectangle commands
@@ -64,18 +65,12 @@
   (bind-key "s-p" #'kill-word)
   (bind-key "s-." #'backward-kill-word)
   (bind-key "<C-delete>" #'delete-region)
-  (bind-key "x" #'delete-region evil-visual-state-map)
-  (bind-key "M-z" #'evil-normal-state evil-insert-state-map)
-  (bind-key "M-z" #'evil-normal-state evil-visual-state-map)
-  (bind-key "M-z" #'evil-normal-state evil-normal-state-map)
 
   ;; Selection/region
   (bind-key "s-=" #'er/expand-region)
 
   ;; Searching
   (bind-key "M-r" #'~insert-entry-from-exec-history)
-  (bind-key "M-r" #'~insert-entry-from-exec-history evil-normal-state-map)
-  (bind-key "M-r" #'~insert-entry-from-exec-history evil-insert-state-map)
   (bind-key "s-s" #'~search-buffer-interactively)
   (bind-key "s-f" #'query-replace-regexp)
   (bind-key "s-F" #'query-replace)
@@ -104,8 +99,6 @@
   (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
   (bind-key "C-w" #'kill-current-buffer)
-  (evil-define-key 'normal global-map (kbd "C-w") #'kill-current-buffer)
-  (evil-define-key 'visual global-map (kbd "C-w") #'kill-current-buffer)
 
   (bind-key "<s-RET>" #'~execute)
   (bind-key "<S-RET>" #'~execute-line)
@@ -125,12 +118,9 @@
   (bind-key "<mouse-3>" #'~popup-context-menu)
   (bind-key "<C-down-mouse-3>" #'~popup-context-menu)
   (bind-key "<f1>" #'~firefox)
-  ;; Return in Evil executes commands based on context
-  ;; (advice-add 'evil-ret :around #'~advice/evil-ret-execute)
 
   ;; Semantic editting
   (bind-key "s-\\" #'counsel-imenu)
-  (~bind-key-evil "C-p" #'ivy-imenu-anywhere)
 
   (bind-key "<M-left>" #'windmove-left)
   (bind-key "<M-right>" #'windmove-right)
@@ -552,9 +542,7 @@
         ("w" #'hydra-window/body "Window management")
         ("r" #'hydra-frame/body "Frame management"))
 
-      (bind-key "s-SPC" #'hydra-global/body)
-      (evil-define-key 'normal global-map (kbd "SPC") #'hydra-global/body)
-      (evil-define-key 'visual global-map (kbd "SPC") #'hydra-global/body))))
+      (bind-key "s-SPC" #'hydra-global/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

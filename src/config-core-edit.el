@@ -288,34 +288,18 @@ project root, not ignoring anything."
               (interactive)
               (ivy-previous-line n-lines))
 
-            (defun ~bind-key-evil (key func)
-              "Binds key in all evil states."
-              (dolist (map (list evil-normal-state-map
-                                 evil-insert-state-map
-                                 evil-visual-state-map
-                                 evil-replace-state-map
-                                 evil-operator-state-map
-                                 evil-motion-state-map))
-                (bind-key key func map)))
-
             (defun* ~bind-key-with-prefix (key command &key
                                                (keymap global-map))
-              "Binds key in `evil-normal-state-map' and
-`evil-visual-state-map' with prefix `SPC' and in global mode map
-with prefix `s-SPC' at the same time."
+              "Binds key in `evil-normal-state-map' and `evil-visual-state-map' with prefix `SPC' and in global mode map with prefix `s-SPC' at the same time."
               (interactive)
               (eval `(progn
-                       (bind-key ,(format "s-SPC %s" key) command keymap)
-                       (evil-define-key 'normal keymap (kbd ,(format "SPC %s" key)) command)
-                       (evil-define-key 'visual keymap (kbd ,(format "SPC %s" key)) command))))
+                       (bind-key ,(format "s-SPC %s" key) command keymap))))
 
             (defun* ~bind-key-with-prefix-local (key command &key (keymap global-map))
               "Like `~bind-key-with-prefix', except that the binding is local."
               (interactive)
               (eval `(progn
-                       (bind-key ,(format "s-SPC %s" key) command keymap)
-                       (bind-key ,(format "SPC %s" key) command evil-normal-state-local-map)
-                       (bind-key ,(format "SPC %s" key) command evil-visual-state-local-map))))
+                       (bind-key ,(format "s-SPC %s" key) command keymap))))
 
             (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 
@@ -366,150 +350,83 @@ with prefix `s-SPC' at the same time."
   :config (dtrt-indent-mode 1))
 
 ;;
-;; Vim mode
+;; Char-based navigation
 ;;
-;; Ref: https://github.com/emacs-evil/evil
+;; Ref: https://www.emacswiki.org/emacs/FastNav
 ;;
 
-(use-package evil
-  :demand t
-  :bind (("M-ESC"     . '~keyboard-quit)
-         :map evil-insert-state-map
-         ("C-y"       . yank)
-         ("C-o"       . ~open-line)
-         ("C-w"       . kill-region)
-         ("C-a"       . ~move-to-beginning-of-line)
-         ("C-k"       . ~evil-kill-line-or-sexpr)
-         ("<mouse-2>" . nil)
-         :map evil-normal-state-map
-         ("<mouse-2>" . nil)
-         ("u" . undo-tree-undo)
-         :map evil-visual-state-map
-         ("<mouse-2>" . nil))
+(use-package fastnav
   :config (progn
-            (evil-mode t)
+            (defvaralias 'lazy-highlight-face 'isearch-lazy-highlight)))
 
-            ;; Default evil mode
-            (setq evil-default-state 'insert)
-            ;; (setq evil-default-state 'normal)
-            (setq-default evil-kill-on-visual-paste nil)
+;;
+;; Modal editing mode
+;;
+;; Ref: https://github.com/mrkkrp/modalka
+;;
 
-            ;; FFS
-            ;; Ref: https://github.com/emacs-evil/evil/issues/1152
-            (evil-define-command evil-visual-paste (count &optional register)
-              "Paste over Visual selection."
-              :suppress-operator t
-              (interactive "*P<x>")
-              (setq count (prefix-numeric-value count))
-              ;; evil-visual-paste is typically called from evil-paste-before or
-              ;; evil-paste-after, but we have to mark that the paste was from
-              ;; visual state
-              (setq this-command 'evil-visual-paste)
-              (let* ((text (if register
-                               (evil-get-register register)
-                             (current-kill 0)))
-                     (yank-handler (car-safe (get-text-property
-                                              0 'yank-handler text)))
-                     new-kill
-                     paste-eob)
-                (evil-with-undo
-                  (let ((kill-ring-yank-pointer (list (current-kill 0))))
-                    (when (evil-visual-state-p)
-                      (evil-visual-rotate 'upper-left)
-                      ;; if we replace the last buffer line that does not end in a
-                      ;; newline, we use `evil-paste-after' because `evil-delete'
-                      ;; will move point to the line above
-                      (when (and (= evil-visual-end (point-max))
-                                 (/= (char-before (point-max)) ?\n))
-                        (setq paste-eob t))
-                      (evil-delete evil-visual-beginning evil-visual-end (evil-visual-type) ?_)
-
-                      (when (and (eq yank-handler #'evil-yank-line-handler)
-                                 (not (eq (evil-visual-type) 'line))
-                                 (not (= evil-visual-end (point-max))))
-                        (insert "\n"))
-                      (evil-normal-state)
-                      (current-kill 1))
-                    (if paste-eob
-                        (evil-paste-after count register)
-                      (evil-paste-before count register)))
-                  (when evil-kill-on-visual-paste
-                    (current-kill -1))
-                  ;; mark the last paste as visual-paste
-                  (setq evil-last-paste
-                        (list (nth 0 evil-last-paste)
-                              (nth 1 evil-last-paste)
-                              (nth 2 evil-last-paste)
-                              (nth 3 evil-last-paste)
-                              (nth 4 evil-last-paste)
-                              t)))))
-            (evil-define-operator evil-delete-char (beg end type register)
-              "Delete next character."
-              :motion evil-forward-char
-              (interactive "<R><x>")
-              (if register (evil-delete beg end type register)
-                (evil-delete beg end type ?_)))
-
-            ;; (with-eval-after-load "evil-vars"
-            ;;   (dolist (mode '(term-mode
-            ;;                   multi-term-mode
-            ;;                   ansi-term-mode
-            ;;                   magit-log-edit-mode
-            ;;                   magit-popup-mode
-            ;;                   magit-file-mode
-            ;;                   dired-mode
-            ;;                   nav-mode
-            ;;                   grep-mode
-            ;;                   bs-mode
-            ;;                   cider-repl-mode
-            ;;                   cider-popup-buffer-mode
-            ;;                   cider--debug-mode
-            ;;                   cider-temp-mode
-            ;;                   help-mode
-            ;;                   compilation-mode
-            ;;                   ivy-occur-mode))
-            ;;     (evil-set-initial-state mode 'emacs))
-            ;;   (evil-set-initial-state 'ibuffer-mode 'normal))
-
-            (setq evil-emacs-state-cursor 'bar)
-            (setq-default cursor-type 'bar)
-
-            ;; Better granularity for undo-tree
-            (setq evil-want-fine-undo t)
-
-            ;; Down mouse 1 should change evil to insert mode
-            ;; (defun ~advice/mouse-1-evil-insert-mode (orig-fun &rest args)
-            ;;   (interactive)
-            ;;   (let ((res (call-interactively orig-fun))
-            ;;         (old-point (point)))
-            ;;     (call-interactively 'evil-insert)
-            ;;     ;; After calling evil-insert, the cursor moves the beginning of the region
-            ;;     ;; so we need to set it back
-            ;;     (when (< (point) old-point)
-            ;;       (call-interactively 'exchange-point-and-mark))
-            ;;     res))
-            ;; (advice-add 'evil-mouse-drag-region :around #'~advice/mouse-1-evil-insert-mode)
-            ;; (advice-remove 'evil-mouse-drag-region #'~advice/mouse-1-evil-insert-mode)
-
-            (defun ~evil-kill-line-or-sexpr ()
-              "Kills current line or sexp using Paredit in Evil mode."
-              (interactive)
-              (if (cl-member mode-name '("Emacs-Lisp" "Lisp" "Clojure") :test 'equalp)
-                  (call-interactively 'paredit-kill)
-                (call-interactively 'kill-line)))))
-
-(use-package evil-collection
-  :after (evil company-mode)
+(use-package modalka
   :demand t
-  :init (evil-collection-init))
+  :bind* (:map
+          modalka-mode-map
+          ("SPC" . #'hydra-global/body)
+          ("u" . #'forward-char)
+          ("o" . #'backward-char)
+          ("e" . #'next-line)
+          ("." . #'previous-line)
+          ("," . #'~backward-word-boundary)
+          ("p" . #'~forward-word-boundary)
+          ("a" . #'beginning-of-line)
+          ("i" . #'end-of-line)
 
-(evil-mode 1)
-;; * to search forward, # to search backward
-(use-package evil-visualstar
-  :after (evil)
-  :init (progn
-          (global-evil-visualstar-mode)
-          (setq evil-visualstar/persistent nil)))
+          ("J" . #'~join-with-next-line)
+          ("d" . #'kill-line)
+          ("D" . #'~kill-whole-line)
+          ("#" . #'er/expand-region)
+          ("y" . #'~open-line)
+          ("Y" . #'~open-line-before)
+
+          ("v" . #'set-mark-command)
+          ("V" . #'~select-line)
+          ("w" . #'~select-word)
+
+          ("s" . #'~search-buffer-interactively)
+          ("/" . #'isearch-forward)
+          ("?" . #'isearch-backward)
+          ("r" . #'query-replace)
+          ("R" . #'query-replace-regexp)
+          ("h" . #'highlight-regexp)
+          ("H" . #'unhighlight-regexp)
+          ("z" . #'fastnav-sprint-forward)
+          ("Z" . #'fastnav-sprint-backward)
+
+          ("x" . #'~execute-current-wand-text)
+
+          (">" . #'beginning-of-buffer)
+          ("E" . #'end-of-buffer)
+          (";" . #'kill-current-buffer)
+          (":" . #'~kill-buffer-and-window)
+
+          ("(" . #'kmacro-start-macro)
+          (")" . #'kmacro-end-or-call-macro)
+
+          ("'" . #'undo-tree-undo)
+          ("\"" . #'undo-tree-redo)
+          ("q" . #'cua-cut-region)
+          ("j" . #'cua-copy-region)
+          ("k" . #'cua-paste)
+          :map
+          global-map
+          ("C-e" . #'modalka-mode))
+  :config (progn
+            (setq modalka-cursor-type 'box)
+            (modalka-global-mode 1)))
+
+;;
+;; TODO: keybinding
+;; * Text object manipulation
+;; * Mark inner/outer <, (, [, {, ', "
+;;
 
 ;;
 ;; Auto completion framework
