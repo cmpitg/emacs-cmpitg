@@ -122,7 +122,8 @@ might need manual refreshing."
 (use-package dumb-jump
   :config
   (progn
-    (setq dumb-jump-selector 'ivy)))
+    (setq dumb-jump-selector 'ivy)
+    (setq dumb-jump-prefer-searcher 'rg)))
 
 ;;
 ;; Bracket-based structured editing
