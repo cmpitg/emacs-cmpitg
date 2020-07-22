@@ -1190,6 +1190,12 @@ The output block is defined as everything between
                       (eval *~output-beginning-marker*)
                       (0+ space) eol)))))
 
+(defun ~current-line-continues? ()
+  "Determines if the current line has a continuation line."
+  (thread-last (thing-at-point 'line)
+    string-trim
+    (s-matches? (rx "\\" (0+ space) eol))))
+
 (cl-defun ~shorten-string (str max-length &optional (ellipsis "..."))
   "Shortens a string, making sure its length does not exceed
 MAX-LENGTH by truncating and prefixing it with ELLIPSIS if
@@ -1336,6 +1342,12 @@ THING."
   (interactive)
   (~execute (string-trim (thing-at-point 'line t))))
 
+(defun* ~execute-current-wand-text ()
+  "Executes current Wand text with `~execute'."
+  (interactive)
+  (end-of-thing 'wand-text)
+  (~execute (string-trim (thing-at-point 'wand-text t))))
+
 (cl-defun ~execute-pop-up (&optional thing
                                      &key
                                      (exec-fn #'wand:execute)
@@ -1388,6 +1400,34 @@ minibuffer."
       (~get-secondary-selection)
     (read-shell-command "Command: ")))
 
+;; TODO: Parameterize the hard-coded "!" character.
+(defun ~bounds-of-wand-text-at-point ()
+  "Returns boundaries for a wand-text thing.  See
+`THING-AT-POINT' for futher information."
+  (lexical-let* ((start (ignore-errors
+                          (save-mark-and-excursion
+                            (end-of-line)
+                            (re-search-backward (rx bol "!"))
+                            (point))))
+                 (end (ignore-errors
+                        (save-mark-and-excursion
+                          (cond
+                           (;; When there's no line continuation
+                            (not (~current-line-continues?))
+                            (save-mark-and-excursion
+                              (end-of-line)
+                              (point)))
+                           (t
+                            (while (~current-line-continues?)
+                              (re-search-forward (rx "\\" (0+ space) eol) nil t)
+                              (forward-line))
+                            (end-of-line)
+                            (point)))))))
+    (if (or (null start) (null end))
+        nil
+      (cons start end))))
+(put 'wand-text 'bounds-of-thing-at-point '~bounds-of-wand-text-at-point)
+
 (defun ~toggle-popup-exec-result ()
   "Toggles whether or not result from an exec function is popped
 up in a separate frame."
@@ -1416,11 +1456,12 @@ BEGINNING-REGEXP and END-REGEXP."
 If `MARK-FENCES?' is non-nil, marks the fences as well;
 otherwise, marks only the content of the block."
   (interactive)
+  ;; Start from the end of the block
   (beginning-of-line)
   (search-forward-regexp end-regexp)
 
   (if mark-fences?
-      (end-of-line)
+      (forward-line)
     (beginning-of-line))
 
   (push-mark (point) t t)
@@ -1646,9 +1687,11 @@ result, returing the process.  The command is executed asynchronously."
     process))
 
 (cl-defun ~exec-sh< (command &key
+                             (move-cursor? t)
                              (print-output-marker? nil)
                              (current-position (point))
-                             (destination (point)))
+                             (destination (point))
+                             (callback #'identity))
   "Executes a *shell* command and replaces the region with the output.
 This function also returns the exit code of the command.
 
