@@ -1669,7 +1669,8 @@ the cursor is moved to after the output is printed."
   (lexical-let ((current-position current-position)
                 (buffer (current-buffer))
                 (print-output-marker? print-output-marker?)
-                (destination destination))
+                (destination destination)
+                (move-cursor? move-cursor?))
     (~exec-pipe-async (:sh shell-file-name "-c" (format "env 'TERM=dumb' 'PAGER=cat' %s" command))
                       (:fn #'(lambda (output)
                                (message "Finished: %s" command)
@@ -1681,8 +1682,9 @@ the cursor is moved to after the output is printed."
                                                        :print-output-marker? print-output-marker?
                                                        :colorize-with :overlay)
 
-                                 (when (numberp destination)
-                                   (goto-char destination))))))))
+                                 (when (and move-cursor? (numberp destination))
+                                   (goto-char destination)))))
+                      (:fn callback))))
 
 (cl-defun ~prepare-for-output-block (&optional (replace-output? t))
   "TODO"
@@ -1709,17 +1711,21 @@ the cursor is moved to after the output is printed."
   (when (and replace-output? (~is-next-line-output-block?))
     (call-interactively #'~delete-output-block)))
 
-(cl-defun ~exec-sh<-next-line-separate (command &key (replace-output? t))
+(cl-defun ~exec-sh<-next-line-separate (command &key (replace-output? t)
+                                                (original-point (point))
+                                                (move-cursor? t)
+                                                (callback #'identity))
   "Executes a *shell* command in a newly spawned shell and pipes
 back the output to the next line.  The current cursor doesn't
 change."
   (interactive)
-  (let ((original-point (point)))
-    (~prepare-for-output-block replace-output?)
-    (~exec-sh< command
-               :print-output-marker? t
-               :current-position (point)
-               :destination original-point)))
+  (~prepare-for-output-block replace-output?)
+  (~exec-sh< command
+             :print-output-marker? t
+             :current-position (point)
+             :destination original-point
+             :move-cursor? move-cursor?
+             :callback callback))
 
 (defun ~exec-sh> (command)
   "Executes a *shell* command, taking input from the current region,
