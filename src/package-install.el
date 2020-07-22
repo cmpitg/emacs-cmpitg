@@ -76,6 +76,8 @@
                    ;; emamux
                    chruby
                    exec-path-from-shell
+                   modalka
+                   fastnav
                    evil
                    evil-visualstar
                    evil-collection
