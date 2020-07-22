@@ -40,6 +40,7 @@
 ;; Ref: https://www.emacswiki.org/emacs/YamlMode
 ;;
 
+;; TODO: Reevaluate
 (use-package yaml-mode)
 
 ;;
@@ -111,15 +112,6 @@ might need manual refreshing."
       ("r" #'~asciidoc/render "Render")
       ("p" #'~asciidoc/preview "Preview")
       ("u" #'~asciidoc/update-preview "Update preview"))))
-
-;;
-;; Pairs management
-;;
-;; Ref: https://github.com/cute-jumper/embrace.el
-;;
-
-(use-package embrace
-  :disabled t)
 
 ;;
 ;; Just-work jump-to-definition
@@ -398,6 +390,7 @@ might need manual refreshing."
 ;;
 
 (use-package lua-mode
+  :mode "\\.lua\\'"
   :config
   (progn
     ;; Freaking stupid indentation rule...
@@ -518,6 +511,7 @@ might need manual refreshing."
 ;;
 
 (use-package julia-mode
+  :mode "\\.jl\\'"
   :commands julia-mode)
 
 ;;
@@ -534,8 +528,8 @@ might need manual refreshing."
 ;;
 
 (use-package delphi-mode
-  :mode (("\\.pas$" . delphi-mode)
-         ("\\.pp$"  . delphi-mode)))
+  :mode (("\\.pas\\'" . delphi-mode)
+         ("\\.pp\\'"  . delphi-mode)))
 
 ;;
 ;; JavaScript development
@@ -569,6 +563,7 @@ might need manual refreshing."
       (tide-hl-identifier-mode 1))
 
     (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+    (flycheck-add-mode 'javascript-eslint 'typescript-mode)
 
     (add-hook 'js2-mode-hook #'my/setup-javascript-dev)
     (add-hook 'js2-jsx-mode-hook #'my/setup-javascript-dev)
@@ -582,8 +577,8 @@ might need manual refreshing."
 
 (use-package ruby-mode
   :commands ruby-mode
-  :mode (("\\Rakefile$" . ruby-mode)
-         ("\\.mab$"     . ruby-mode))
+  :mode (("\\Rakefile\\'" . ruby-mode)
+         ("\\.mab\\'"     . ruby-mode))
   :config (progn
             (use-package ruby-dev
               :init (progn
@@ -595,7 +590,7 @@ might need manual refreshing."
 ;;
 
 (use-package python
-  :mode ("\\.py$" . python-mode)
+  :mode ("\\.py\\'" . python-mode)
   :config
   (progn
     ;; Ref: https://www.emacswiki.org/emacs/IndentingPython
@@ -922,15 +917,9 @@ the sequence, and its index within the sequence."
 ;;            (lambda (&key data &allow-other-keys)
 ;;              (message "I sent: %S" (assoc-default 'form data)))))
 
-(use-package request
-  :disabled t
-  :commands request)
-
-;;
-;; Keybindings
-;;
-
-(bind-key "s-v" #'package-list-packages)
+;; (use-package request
+;;   :disabled t
+;;   :commands request)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

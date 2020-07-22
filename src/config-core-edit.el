@@ -29,16 +29,6 @@
 (use-package s)
 
 ;;
-;; List processing, use with care since it's generally slower than Emacs Lisp primitives
-;;
-;; Ref: https://github.com/magnars/dash.el
-;;
-
-(use-package dash
-  :disabled t
-  :config (dash-enable-font-lock))
-
-;;
 ;; File/filesystem library
 ;;
 ;; Ref: https://github.com/rejeep/f.el
@@ -47,30 +37,12 @@
 (use-package f)
 
 ;;
-;; Hashtable processing
-;;
-;; Ref: https://github.com/Wilfred/ht.el
-;;
-
-(use-package ht
-  :defer t)
-
-;;
 ;; Async processing by spawning subordinate processes
 ;;
 ;; Ref: https://github.com/jwiegley/emacs-async
 ;;
 
 (use-package async)
-
-;;
-;; Threading (Yay!)
-;;
-;; Ref: https://github.com/mola-T/timp
-;;
-
-(use-package timp
-  :defer t)
 
 ;;
 ;; Tramp for remote & sudo access
@@ -233,7 +205,7 @@ project root."
     (setq amx-save-file (format "~/.emacs.d/amx-items.%s" server-name))))
 
 ;;
-;; Smart completion framework
+;; Fuzzy finding
 ;;
 ;; Ref: https://github.com/abo-abo/swiper
 ;;
@@ -327,7 +299,7 @@ with prefix `s-SPC' at the same time."
             (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 
 ;;
-;; Temporarily save points
+;; Temporary save points
 ;;
 ;; Ref: https://github.com/alezost/point-pos.el
 ;;
