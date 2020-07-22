@@ -308,7 +308,7 @@ might need manual refreshing."
 (use-package dired-details+
   :after (dired-single)
   :config
-  (setq dired-listing-switches "-lhFgG --group-directories-first"))
+  (setq dired-listing-switches "-lahFgG --group-directories-first"))
 
 ;;
 ;; Rc shell mode
