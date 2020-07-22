@@ -210,16 +210,23 @@
         ("a" #'~save-buffer-as "Save file as")
         ("o" #'counsel-find-file "Open file")
         ("f" #'projectile-find-file "Open file in project")
+        ("e" #'~find-files-current-dir "Open file in current dir")
+        ("i" #'~find-files-current-dir-not-ignoring "Open file in current dir, no ignore")
         ("m" #'~open-current-file-as-admin "Open current file as admin")
         ("c" #'~copy-file-name-to-clipboard "Copy path to clipboard")
-        ("p" #'~copy-pos-to-clipboard "Copy current position to clipboard"))
+        ("p" #'~copy-pos-to-clipboard "Copy current position to clipboard")
+        ("t" #'~choose-path-and-act "Choose path and act"))
 
       (defhydra hydra-jump (:columns 4 :exit t)
         "(Semantic) jumping"
+        ("a" #'ace-jump-mode "Jump to a char")
         ("l" #'ace-jump-line-mode "Jump to line")
-        ("." #'dumb-jump-go "Try jumping to definition")
+
+        ("'" #'dumb-jump-go-other-window "Try jumping to def (other window)")
+        ("." #'dumb-jump-go "Try jumping to def")
         ("," #'dumb-jump-back "Jump back")
         (";" #'dumb-jump-quick-look "Peek")
+
         ("s" #'point-pos-save "Save current point pos")
         ("n" #'point-pos-next "Next point pos" :exit nil)
         ("p" #'point-pos-previous "Previous point pos" :exit nil)
@@ -227,6 +234,7 @@
         ("i" #'counsel-imenu "Symbol-based")
         ("j" #'~goto-next-line-matching-marker "Go to next line matching marker" :exit nil)
         ("k" #'~goto-prev-line-matching-marker "Go to prev line matching marker" :exit nil)
+
         ("ESC" nil "Quit" :exit t))
 
       (defhydra hydra-cursor (:columns 4)
@@ -255,6 +263,8 @@
         ("p" #'~exec-sh-pop-up "Run sh command, popping up output")
         ("x" #'~execute-text-prompt "Prompt execution")
         ("l" #'~execute-line "Execute line")
+        ("w" #'~execute-current-wand-text "Execute current Wand text")
+        ("b" #'~exec-current-block "Execute current block")
         ("L" #'(lambda ()
                  (interactive)
                  (call-interactively #'~execute-line)
@@ -274,7 +284,7 @@
         ("s" #'(lambda ()
                  (interactive)
                  (~execute "!! zsh")) "Zsh"))
-      
+
       (defhydra hydra-emacs-lisp (:columns 4 :exit t)
         "Emacs Lisp operations"
         ("ee" #'~eval-last-sexp-or-region "Eval last sexp/region")
@@ -293,6 +303,9 @@
       (defhydra hydra-insertion (:columns 4 :exit t)
         "Insertion operations"
         (";" #'~insert-full-line-comment "Insert line full of comment")
+        ("<" #'(lambda () (interactive) (insert *~output-beginning-marker*)) "Output marker (start)")
+        (">" #'(lambda () (interactive) (insert *~output-end-marker*)) "Output marker (end)")
+        ("b" #'(lambda () (interactive) (insert *~output-beginning-marker* "\n" *~output-end-marker*) (previous-line)) "Output markers")
         ("x" #'~insert-entry-from-exec-history "Insert exec from history")
         ("e" #'~insert-exec "Insert executable"))
 
@@ -391,7 +404,7 @@
 
       (defhydra hydra-org-todo (:columns 4 :exit t)
         "Org TODO operations"
-        ("RET" #'org-insert-todo-heading "Insert TODO heading (same level)")
+        ("i" #'org-insert-todo-heading "Insert TODO heading (same level)")
         ("c" #'org-todo "Change TODO state" :exit nil)
         ("s" #'org-schedule "Schedule"))
 
@@ -421,8 +434,8 @@
 
         ("m" #'org-mark-subtree "Mark subtree" :exit t)
 
-        ("RET" #'org-insert-heading "Insert heading (same level)")
-        ("i" #'org-insert-item "Insert item")
+        ("i" #'org-insert-heading "Insert heading (same level)")
+        ("I" #'org-insert-item "Insert item")
         ("TAB" #'org-cycle "Tab action/Cycle")
         ("c" #'org-ctrl-c-ctrl-c "Context-based update/align")
 
@@ -448,8 +461,8 @@
         ("k" #'paredit-backward-up "Go up")
 
         ("es" #'paredit-split-sexp "Split" :exit t)
-        ("eS" #'paredit-splice-sexp "Splice" :exit t)
-        ("ej" #'paredit-join-sexps "Join" :exit t)
+        ("eS" #'paredit-splice-sexp "Splice")
+        ("ej" #'paredit-join-sexps "Join")
 
         ("ESC" nil "Quit" :exit t))
 
@@ -465,8 +478,8 @@
         ("k" #'sp-backward-up-sexp "Go up")
 
         ("es" #'sp-split-sexp "Split" :exit t)
-        ("eS" #'sp-splice-sexp "Splice" :exit t)
-        ("ej" #'sp-join-sexps "Join" :exit t)
+        ("eS" #'sp-splice-sexp "Splice")
+        ("ej" #'sp-join-sexps "Join")
 
         ("ESC" nil "Quit" :exit t))
 
