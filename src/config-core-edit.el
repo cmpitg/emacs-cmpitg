@@ -190,14 +190,30 @@ project root."
                    (projectile-sort-files files))))
         (call-interactively 'projectile-find-file)))
 
+    (defun ~find-files-current-dir-not-ignoring ()
+      "Activates `projectile-find-files', taking current directory as
+project root, not ignoring anything."
+      (interactive)
+      ;; Ignore the obsolete, we do need the powerful dynamic binding capability
+      ;; of flet that neither cl-flet nor cl-letf provides
+      (let ((projectile-generic-command "fdfind . --type f | tr \"\\n\" \"\\0\""))
+        (cl-flet ((projectile-project-root () default-directory)
+                  (projectile-current-project-files
+                   ()
+                   (let (files)
+                     (setq files (-mapcat #'projectile-dir-files
+                                          (projectile-get-project-directories)))
+                     (projectile-sort-files files))))
+          (call-interactively 'projectile-find-file))))
+
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
     (setq projectile-enable-caching t)
 
-    ;; (setq projectile-indexing-method 'hybrid)
+    (setq projectile-indexing-method 'hybrid)
 
-    (setq projectile-indexing-method 'alien)
-    (setq projectile-generic-command "find . -type f | grep -v -f <(grep . .projectile) | tr \"\\n\" \"\\0\"")))
+    ;; (setq projectile-indexing-method 'alien)
+    (setq projectile-generic-command "fdfind . --type f | grep -v -f <(grep . .projectile) | tr \"\\n\" \"\\0\"")))
 
 ;;
 ;; Enhanced M-x
