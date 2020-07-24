@@ -2,6 +2,7 @@
 
 # TODO: Documentation
 # TODO: Non-blocking IO?
+# TODO: Write timer, instead of based on the input
 
 package require Tcl 8
 package require Tclx 8
@@ -22,6 +23,7 @@ proc scheduleWritingToRmacs {writerThread rmacsServerName $rmacsBuffer $localTee
     uplevel 1 {
         thread::send -async $writerThread "writeToRmacs $rmacsServerName {$rmacsBuffer} $localTeeMarkVar $tempPath" writeResult
         incr writeResultCounter
+        set lastWrittenTimeMs [clock milliseconds]
     }
 }
 
@@ -45,13 +47,16 @@ proc endWriting {rmacsServerName rmacsBuffer localTeeMarkVar} {
 if {[info exists ::env(RMACS_TEE_READ_BUFFER_MODE)]} {
     set bufferMode $::env(RMACS_TEE_READ_BUFFER_MODE)
 } else {
-    set bufferMode line
+    set bufferMode byte
 }
 
 if {[info exists ::env(RMACS_TEE_READ_BUFFER_SIZE)]} {
     set bufferSize $::env(RMACS_TEE_READ_BUFFER_SIZE)
 } else {
-    set bufferSize 4096
+    set bufferSize 1
+}
+if {$bufferSize <= 0} {
+    error "RMACS_TEE_READ_BUFFER_SIZE must be a positive integer"
 }
 
 if {[info exists ::env(RMACS_SERVER_NAME)]} {
@@ -84,6 +89,10 @@ thread::send $writerThread {
     package require Thread 2
 
     proc writeToRmacs {rmacsServerName rmacsBuffer localTeeMarkVar filepath} {
+        # TODO debug mode
+        # puts "$filepath: [exec cat $filepath]"
+        # flush stdout
+
         return [exec rmacs --name $rmacsServerName eval "
 (with-current-buffer $rmacsBuffer
   (save-excursion
@@ -151,6 +160,7 @@ while {1} {
     }
 
     puts -nonewline $input
+    flush stdout
 
     # Use a temporary file to maintain the input structure
     if {$doneWithCurrentTempFile} {
