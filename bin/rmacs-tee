@@ -1,13 +1,15 @@
 #!/usr/bin/env tclsh
 
-# TODO: Documentation
-# TODO: Non-blocking IO?
-# TODO: Write timer, instead of based on the input
+# TODO: Remove beginWriting & endWriting
+# TODO: listToSexp
 
 package require Tcl 8
 package require Tclx 8
 package require fileutil 1.15
-package require Thread 2
+
+##############################################################################
+# Helpers
+##############################################################################
 
 proc fileAppend {path content} {
     set fd [open $path a]
@@ -15,167 +17,136 @@ proc fileAppend {path content} {
     close $fd
 }
 
-proc rmacsEval {rmacsServerName cmd} {
-    return [exec rmacs --name $rmacsServerName eval $cmd]
+proc rmacsEval {cmd} {
+    return [exec rmacs --name $::RMACS_SERVER_NAME eval $cmd]
 }
 
-proc scheduleWritingToRmacs {writerThread rmacsServerName $rmacsBuffer $localTeeMarkVar $tempPath} {
-    uplevel 1 {
-        thread::send -async $writerThread "writeToRmacs $rmacsServerName {$rmacsBuffer} $localTeeMarkVar $tempPath" writeResult
-        incr writeResultCounter
-        set lastWrittenTimeMs [clock milliseconds]
+proc writeToRmacsRepeatedly {} {
+    # TODO debug mode
+    # puts "$filepath: [exec cat $filepath]"
+    # flush stdout
+
+    # Only write if file is not empty
+    if {[file size $::TEMP_PATH] > 0} {
+        rmacsEval "
+          (with-current-buffer $::RMACS_BUFFER
+            (save-excursion
+              (goto-char $::LOCAL_TEE_MARK_VAR)
+              (~insert-file-contents-and-goto-end \"$::TEMP_PATH\")
+              (setq-local $::LOCAL_TEE_MARK_VAR (point-marker))
+              (~write-to-file \"$::TEMP_PATH\" \"\")))"
+    }
+    
+    if {[info exists ::NO_NEW_INPUT] && $::NO_NEW_INPUT} {
+        endWriting
+    } else {
+        after $::WRITE_INTERVAL_MS [list writeToRmacsRepeatedly]
     }
 }
 
-
-proc releaseWriter {writerThread writeResultCounter writeResultVar} {
-    for {set i 0} {$i < $writeResultCounter} {incr i} {
-        vwait $writeResultVar
-    }
-    thread::release $writerThread
+proc beginWriting {} {
+    rmacsEval "
+      (with-current-buffer $::RMACS_BUFFER
+        (save-excursion
+          (goto-char $::RMACS_CURRENT_POINT)
+          (insert *~output-beginning-marker* \"\\n\")
+          (setq-local $::LOCAL_TEE_MARK_VAR (point-marker))))"
 }
 
-proc endWriting {rmacsServerName rmacsBuffer localTeeMarkVar} {
-    rmacsEval $rmacsServerName "(with-current-buffer $rmacsBuffer
-    (save-excursion
-        (goto-char $localTeeMarkVar)
-        (insert \"\\n\" *~output-end-marker*)))"
+proc endWriting {} {
+    rmacsEval "
+      (with-current-buffer $::RMACS_BUFFER
+        (save-excursion
+          (goto-char $::LOCAL_TEE_MARK_VAR)
+          (insert \"\\n\" *~output-end-marker*)))"
+}
+
+proc readAndSaveInputRepeatedly {chan readSizeInChars} {
+    set input [read $chan $readSizeInChars]
+
+    if {$input ne ""} {
+        puts -nonewline "$input"
+        flush stdout
+
+        fileAppend $::TEMP_PATH $input
+    }
+
+    if {[eof $chan]} {
+        # No more new input coming
+        set ::NO_NEW_INPUT 1
+        return
+    }
+
+    after $::READ_INTERVAL_MS [list readAndSaveInputRepeatedly stdin $readSizeInChars]
 }
 
 ##############################################################################
+# Setup
+##############################################################################
 
-if {[info exists ::env(RMACS_TEE_READ_BUFFER_MODE)]} {
-    set bufferMode $::env(RMACS_TEE_READ_BUFFER_MODE)
+fconfigure stdin -blocking 0 -buffering none
+
+if {[info exists ::env(RMACS_TEE_READ_INTERVAL_MS)]} {
+    set ::READ_INTERVAL_MS $::env(RMACS_TEE_READ_INTERVAL_MS)
 } else {
-    set bufferMode byte
+    set ::READ_INTERVAL_MS 100
+}
+
+if {[info exists ::env(RMACS_TEE_WRITE_INTERVAL_MS)]} {
+    set ::WRITE_INTERVAL_MS $::env(RMACS_TEE_WRITE_INTERVAL_MS)
+} else {
+    set ::WRITE_INTERVAL_MS 100
 }
 
 if {[info exists ::env(RMACS_TEE_READ_BUFFER_SIZE)]} {
-    set bufferSize $::env(RMACS_TEE_READ_BUFFER_SIZE)
+    set ::READ_SIZE $::env(RMACS_TEE_READ_BUFFER_SIZE)
 } else {
-    set bufferSize 1
+    set ::READ_SIZE 4096
 }
-if {$bufferSize <= 0} {
+if {$::READ_SIZE <= 0} {
     error "RMACS_TEE_READ_BUFFER_SIZE must be a positive integer"
 }
 
 if {[info exists ::env(RMACS_SERVER_NAME)]} {
-    set rmacsServerName $::env(RMACS_SERVER_NAME)
+    set ::RMACS_SERVER_NAME $::env(RMACS_SERVER_NAME)
 } else {
-    set rmacsServerName edit
+    set ::RMACS_SERVER_NAME edit
 }
 
 if {[info exists ::env(RMACS_BUFFER_NAME)]} {
-    set rmacsBuffer $::env(RMACS_BUFFER_NAME)
+    set ::RMACS_BUFFER $::env(RMACS_BUFFER_NAME)
 } else {
-    set rmacsBuffer [rmacsEval $rmacsServerName {(buffer-name (current-buffer))}]
+    set ::RMACS_BUFFER [rmacsEval {(buffer-name (current-buffer))}]
 }
 
 # Make sure the buffer exists
-rmacsEval $rmacsServerName "(get-buffer-create $rmacsBuffer)"
+rmacsEval "(get-buffer-create $::RMACS_BUFFER)"
 
 if {[info exists ::env(RMACS_CURRENT_POINT)]} {
-    set rmacsCurrentPoint $::env(RMACS_CURRENT_POINT)
+    set ::RMACS_CURRENT_POINT $::env(RMACS_CURRENT_POINT)
 } else {
-    set rmacsCurrentPoint [rmacsEval $rmacsServerName "(with-current-buffer $rmacsBuffer (point))"]
+    set ::RMACS_CURRENT_POINT [rmacsEval "(with-current-buffer $::RMACS_BUFFER (point))"]
 }
 
 # Rmacs local variable to save the end position of the current command output
-set localTeeMarkVar "local/rmacs-tee-marker_[exec gen-filename]"
+set ::LOCAL_TEE_MARK_VAR "local/rmacs-tee-marker_[exec gen-filename]"
 
-# Since emacsclient has high latency, we use another thread to schedule the write to the Rmacs buffer
-set writerThread [thread::create]
-thread::send $writerThread {
-    package require Thread 2
+# Temp file, used to insert content to Rmacs buffer
+set ::TEMP_PATH [::fileutil::tempfile]
 
-    proc writeToRmacs {rmacsServerName rmacsBuffer localTeeMarkVar filepath} {
-        # TODO debug mode
-        # puts "$filepath: [exec cat $filepath]"
-        # flush stdout
-
-        return [exec rmacs --name $rmacsServerName eval "
-(with-current-buffer $rmacsBuffer
-  (save-excursion
-    (goto-char $localTeeMarkVar)
-    (~insert-file-contents-and-goto-end \"$filepath\")
-    (setq-local $localTeeMarkVar (point-marker))
-    (delete-file \"$filepath\")))
-"]
-    }
+# If the process dies, write what's left from temp file
+signal -restart trap {SIGINT SIGHUP} {
+    set ::NO_NEW_INPUT 1
+    writeToRmacsRepeatedly
+    exit 0
 }
 
 ##############################################################################
 
-# Write the beginning marker
-rmacsEval $rmacsServerName "
-(with-current-buffer $rmacsBuffer
-  (save-excursion
-    (goto-char $rmacsCurrentPoint)
-    (insert *~output-beginning-marker* \"\\n\")
-    (setq-local $localTeeMarkVar (point-marker))))"
+beginWriting
+after 0 [list readAndSaveInputRepeatedly stdin $::READ_SIZE]
+after 0 [list writeToRmacsRepeatedly]
+vwait ::NO_NEW_INPUT
 
-
-set lastWrittenTimeMs [clock milliseconds]
-set timeoutMs 100
-set doneWithCurrentTempFile 1
-set writeResultCounter 0
-
-# If the process dies, write the rest
-signal -restart trap {SIGINT SIGHUP} {
-    # Write the rest of the stdin
-    set tempPath [::fileutil::tempfile]
-    while {![eof stdin]} {
-        set input [read stdin $bufferSize]
-        fileAppend $tempPath $input
-    }
-    scheduleWritingToRmacs $writerThread $rmacsServerName $rmacsBuffer $localTeeMarkVar $tempPath
-
-    releaseWriter $writerThread $writeResultCounter writeResult
-    endWriting $rmacsServerName $rmacsBuffer $localTeeMarkVar
-    exit 0
-}
-
-while {1} {
-    if {[eof stdin]} {
-        if {!$doneWithCurrentTempFile} {
-            scheduleWritingToRmacs $writerThread $rmacsServerName $rmacsBuffer $localTeeMarkVar $tempPath
-        }
-        break
-    }
-
-    if {$bufferMode eq "line"} {
-        if {[gets stdin input] < 0} {
-            if {!$doneWithCurrentTempFile} {
-                scheduleWritingToRmacs $writerThread $rmacsServerName $rmacsBuffer $localTeeMarkVar $tempPath
-            }
-            break
-        }
-
-        # Pad with a EOL if not EOF
-        if {![eof stdin]} {
-            set input "$input\n"
-        }
-    } else {
-        set input [read stdin $bufferSize]
-    }
-
-    puts -nonewline $input
-    flush stdout
-
-    # Use a temporary file to maintain the input structure
-    if {$doneWithCurrentTempFile} {
-        # Only create a new temp file when done with the current temp file
-        set tempPath [::fileutil::tempfile]
-        set doneWithCurrentTempFile 0
-    }
-    fileAppend $tempPath $input
-
-    set currentTimeMs [clock milliseconds]
-    if {$currentTimeMs - $lastWrittenTimeMs >= $timeoutMs} {
-        scheduleWritingToRmacs $writerThread $rmacsServerName $rmacsBuffer $localTeeMarkVar $tempPath
-        set doneWithCurrentTempFile 1
-    }
-}
-
-releaseWriter $writerThread $writeResultCounter writeResult
-endWriting $rmacsServerName $rmacsBuffer $localTeeMarkVar
+# Last call, try to see if there's any input left
+writeToRmacsRepeatedly
