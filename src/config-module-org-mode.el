@@ -21,8 +21,8 @@
 ;; Org-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'org)
 (use-package org
-  :after (evil)
   :demand t
   :config
   (progn

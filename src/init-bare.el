@@ -81,6 +81,7 @@
   (require 'rmacs:config-package-manager                "config-package-manager")
   (require 'rmacs:config-ipc                            "config-ipc")
   (require 'rmacs:config-core-functions                 "config-core-functions")
+  (require 'rmacs:config-module-org-mode                "config-module-org-mode")
   (require 'rmacs:config-core-edit                      "config-core-edit")
   (require 'rmacs:config-core-ux                        "config-core-ux")
   (require 'rmacs:config-themes                         "config-themes")

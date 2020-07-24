@@ -23,7 +23,6 @@
 (require 'rmacs:config-functions       "config-functions")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")
 (require 'rmacs:config-edit            "config-edit")
-(require 'rmacs:config-module-org-mode "config-module-org-mode")
 (require 'rmacs:commands-cmpitg        "commands-cmpitg")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
