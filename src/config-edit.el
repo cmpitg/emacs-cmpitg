@@ -69,7 +69,7 @@
 
 (use-package adoc-mode
   :mode ("\\.adoc\\'" . adoc-mode)
-  :after (evil hydra)
+  :after (hydra)
   :config
   (progn
     (defun ~asciidoc/render (html-path)
