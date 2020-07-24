@@ -378,7 +378,7 @@ project root, not ignoring anything."
           ("p" . #'~forward-word-boundary)
           ("a" . #'beginning-of-line)
           ("i" . #'end-of-line)
-
+         
           ("J" . #'~join-with-next-line)
           ("d" . #'kill-line)
           ("D" . #'~kill-whole-line)
@@ -415,12 +415,15 @@ project root, not ignoring anything."
           ("q" . #'cua-cut-region)
           ("j" . #'cua-copy-region)
           ("k" . #'cua-paste)
+         
+          ("ff" . #'projectile-find-file)
+          ("fo" . #'find-file)
           :map
           global-map
           ("C-e" . #'modalka-mode))
   :config (progn
             (setq modalka-cursor-type 'box)
-            (modalka-global-mode 1)))
+            (modalka-global-mode)))
 
 ;;
 ;; TODO: keybinding
