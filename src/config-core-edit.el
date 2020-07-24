@@ -570,7 +570,7 @@ project root, not ignoring anything."
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~prepare-for-output-block t)
-                                              (~dispatch-action (~build-|rmacs-tee-cmd (concat "!!! " text)))))
+                                              (~dispatch-action (~build-|rmacs-tee-cmd (concat "!!! exec-and-echo-stdin " text)))))
                 (wand:create-rule :match (rx bol (0+ " ") "!#")
                                   :capture :after
                                   :skip-comment nil
@@ -592,7 +592,7 @@ project root, not ignoring anything."
                                   :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!! " text))))
+                                              (~dispatch-action (concat "!! exec-and-echo-stdin " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :skip-comment nil
