@@ -538,7 +538,7 @@ project root, not ignoring anything."
 
     (defun ~build-|rmacs-tee-cmd (cmd)
       "Builds command to pipe output to the current buffer using rmacs-tee."
-      (format "%s |& rmacs-tee" cmd server-name))
+      (format "{ exec-and-echo-stdin %s } |& rmacs-tee" cmd server-name))
 
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
@@ -570,7 +570,7 @@ project root, not ignoring anything."
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~prepare-for-output-block t)
-                                              (~dispatch-action (~build-|rmacs-tee-cmd (concat "!!! exec-and-echo-stdin " text)))))
+                                              (~dispatch-action (concat "!!! " (~build-|rmacs-tee-cmd text)))))
                 (wand:create-rule :match (rx bol (0+ " ") "!#")
                                   :capture :after
                                   :skip-comment nil
@@ -592,14 +592,14 @@ project root, not ignoring anything."
                                   :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!! exec-and-echo-stdin " text))))
+                                              (~dispatch-action (concat "!! " text))))
                 (wand:create-rule :match (rx bol (0+ " ") "!!")
                                   :capture :after
                                   :skip-comment nil
                                   :action #'(lambda (text)
                                               (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
                                               (~prepare-for-output-block t)
-                                              (~dispatch-action (~build-|rmacs-tee-cmd (concat "!! " text)))))
+                                              (~dispatch-action (concat "!! " (~build-|rmacs-tee-cmd text)))))
                 (wand:create-rule :match (rx bol (0+ " ") "!")
                                   :capture :after
                                   :skip-comment nil
