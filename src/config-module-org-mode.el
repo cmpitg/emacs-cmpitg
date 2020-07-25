@@ -22,33 +22,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'org)
-(use-package org
-  :demand t
-  :config
-  (progn
-    (defun ~my/org-mode-setup ()
-      (bind-key "<S-return>" #'~execute-line org-mode-map)
-      (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)
-      (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
-      (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
-      (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
-      (bind-key "C-e" nil org-mode-map)
-      (font-lock-mode -1))
+(defun ~my/org-mode-setup ()
+  (bind-key "<S-return>" #'~execute-line org-mode-map)
+  (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)
+  (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
+  (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
+  (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
+  (bind-key "C-e" nil org-mode-map)
+  (font-lock-mode -1))
 
-    ;; Add timestamp when an item is done
-    (setq org-log-done 'time)
+;; Add timestamp when an item is done
+(setq org-log-done 'time)
 
-    (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
-                             (f-glob "*.org")))
-    
-    (setq org-startup-indented t)
+(setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
+                         (f-glob "*.org")))
 
-    ;; No folding by default
-    ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
-    ;; Of per file: #+STARTUP: all
-    (setq org-startup-folded nil)
+(setq org-startup-indented t)
 
-    (add-hook 'org-mode-hook #'~my/org-mode-setup)))
+;; No folding by default
+;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
+;; Of per file: #+STARTUP: all
+(setq org-startup-folded nil)
+
+(add-hook 'org-mode-hook #'~my/org-mode-setup)
 
 (setq-default initial-major-mode 'org-mode)
 (setq-default major-mode 'org-mode)
