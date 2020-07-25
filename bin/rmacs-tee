@@ -59,13 +59,22 @@ proc endWriting {} {
 }
 
 proc readAndSaveInputRepeatedly {chan readSizeInChars} {
-    set input [read $chan $readSizeInChars]
+    if {$::INPUT_MODE eq "line"} {
+        if {[gets $chan input] > 0} {
+            puts "$input"
+            flush stdout
 
-    if {$input ne ""} {
-        puts -nonewline "$input"
-        flush stdout
+            fileAppend $::TEMP_PATH "$input\n"
+        }
+    } else {
+        set input [read $chan $readSizeInChars]
 
-        fileAppend $::TEMP_PATH $input
+        if {$input ne ""} {
+            puts -nonewline "$input"
+            flush stdout
+
+            fileAppend $::TEMP_PATH $input
+        }
     }
 
     if {[eof $chan]} {
@@ -82,6 +91,12 @@ proc readAndSaveInputRepeatedly {chan readSizeInChars} {
 ##############################################################################
 
 fconfigure stdin -blocking 0 -buffering none
+
+if {[info exists ::env(RMACS_TEE_INPUT_MODE)]} {
+    set ::INPUT_MODE $::env(RMACS_TEE_INPUT_MODE)
+} else {
+    set ::INPUT_MODE chars
+}
 
 if {[info exists ::env(RMACS_TEE_READ_INTERVAL_MS)]} {
     set ::READ_INTERVAL_MS $::env(RMACS_TEE_READ_INTERVAL_MS)
