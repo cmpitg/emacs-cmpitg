@@ -341,7 +341,7 @@
         mode-line-frame-identification ;; Describes current frame
         ~mode-line-simplified-position ;; Show column & line numbers
         mode-line-buffer-identification
-        (:eval evil-mode-line-tag)
+        ;; (:eval evil-mode-line-tag)
         mode-line-modes
         mode-line-misc-info))
 (setq-default mode-line-format ~mode-line-format)
