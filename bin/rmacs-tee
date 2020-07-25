@@ -27,7 +27,7 @@ proc writeToRmacsRepeatedly {} {
     # flush stdout
 
     # Only write if file is not empty
-    if {[file size $::TEMP_PATH] > 0} {
+    if {[file exists $::TEMP_PATH] && [file size $::TEMP_PATH] > 0} {
         rmacsEval "
           (with-current-buffer $::RMACS_BUFFER
             (save-excursion
@@ -36,7 +36,7 @@ proc writeToRmacsRepeatedly {} {
               (setq-local $::LOCAL_TEE_MARK_VAR (point-marker))
               (~write-to-file \"$::TEMP_PATH\" \"\")))"
     }
-    
+
     if {[info exists ::NO_NEW_INPUT] && $::NO_NEW_INPUT} {
         endWriting
     } else {
