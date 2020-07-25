@@ -50,15 +50,12 @@ proc beginWriting {} {
         (save-excursion
           (goto-char $::RMACS_CURRENT_POINT)
           (insert *~output-beginning-marker* \"\\n\")
-          (setq-local $::LOCAL_TEE_MARK_VAR (point-marker))))"
+          (setq-local $::LOCAL_TEE_MARK_VAR (point-marker))
+          (insert \"\\n\" *~output-end-marker*)))"
 }
 
 proc endWriting {} {
-    rmacsEval "
-      (with-current-buffer $::RMACS_BUFFER
-        (save-excursion
-          (goto-char $::LOCAL_TEE_MARK_VAR)
-          (insert \"\\n\" *~output-end-marker*)))"
+    file delete $::TEMP_PATH
 }
 
 proc readAndSaveInputRepeatedly {chan readSizeInChars} {
