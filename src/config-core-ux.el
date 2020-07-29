@@ -268,6 +268,12 @@
 ;; Track recently closed files
 (add-hook 'kill-buffer-hook #'~track-closed-file)
 
+;; Track frame focus
+(cl-defun ~save-frame-focus-time (&optional (frame (selected-frame)))
+  "Saves the focus time for a frame."
+  (set-frame-parameter frame :custom/focus-time (time-to-seconds (current-time))))
+(add-hook 'focus-in-hook #'~save-frame-focus-time)
+
 ;; FIXME
 ;; Focus follows mouse
 (setq mouse-autoselect-window t)
