@@ -676,6 +676,20 @@ event is a mouse event, or `nil' otherwise."
           (thing-at-point 'symbol)
           (~get-last-sexp)))))
 
+(defun ~get-buffer-list ()
+  "Gets the current buffer list, ordered by last visited."
+  (let ((res (iflipb-interesting-buffers)))
+    (concatenate 'list
+                 res
+                 (loop for b in (buffer-list)
+                       unless (member b res)
+                       collect b))))
+
+(defun ~get-current-buffer-index ()
+  "Gets index of the current buffer in the buffer list returned
+by `~get-buffer-list'."
+  iflipb-current-buffer-index)
+
 (defun ~get-buffer-content (buffer-or-name)
   "Gets the content of a buffer."
   (with-current-buffer buffer-or-name
