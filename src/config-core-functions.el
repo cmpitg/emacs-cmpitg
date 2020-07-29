@@ -678,9 +678,9 @@ event is a mouse event, or `nil' otherwise."
 
 (defun ~get-buffer-list ()
   "Gets the current buffer list, ordered by last visited."
-  (let ((res (iflipb-interesting-buffers)))
+  (lexical-let ((res (iflipb-interesting-buffers)))
     (concatenate 'list
-                 res
+                 (iflipb-interesting-buffers)
                  (loop for b in (buffer-list)
                        unless (member b res)
                        collect b))))
