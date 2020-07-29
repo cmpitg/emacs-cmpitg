@@ -425,6 +425,17 @@ project root, not ignoring anything."
             (setq modalka-cursor-type 'box)
             (modalka-global-mode)))
 
+(defun ~delete-line ()
+  "Deletes the current line."
+  (interactive)
+  (delete-region (point-at-bol) (point-at-eol)))
+
+(defun ~replace-line ()
+  "Replaces the current line."
+  (interactive)
+  (~delete-line)
+  (modalka-mode -1))
+
 ;;
 ;; TODO: keybinding
 ;; * Text object manipulation
