@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2019-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -32,6 +32,7 @@
 ;; * Expand all
 ;;
 
+(require 'cl)
 (require 'dash)
 (require 's)
 (require 'thingatpt)
@@ -77,7 +78,7 @@
 (defun bowser:format-buffer-name (path)
   (format bowser:*buffer-name-format* path))
 
-(defun* bowser:strip-newline-from-string (str)
+(cl-defun bowser:strip-newline-from-string (str)
   (if (string-empty-p str)
       str
     (substring str 0 -1)))
@@ -93,7 +94,7 @@
   (next-line)
   (bowser:get-level (thing-at-point 'line)))
 
-(defun* bowser:insert-paths (dir &key (level 0) (max-depth 1))
+(cl-defun bowser:insert-paths (dir &key (level 0) (max-depth 1))
   "Inserts paths for a directory at the current place in the current buffer.
 If a path is a directory path and has been expanded before, it
 will be expanded again.  Directories are inserted before non-dir
@@ -176,7 +177,7 @@ to a level."
       (bowser:delete-consecutive-lines child-level))
     (bowser:record-dir-expanded path nil)))
 
-(defun* bowser:expand-or-collapse-dir (&optional (line (bowser:get-current-line)))
+(cl-defun bowser:expand-or-collapse-dir (&optional (line (bowser:get-current-line)))
   "Expands or collapses the directory and returns the path to the
 directory.  The action (expand/collapse) depends on whether the
 directory has been expanded before in the current buffer.
@@ -204,7 +205,7 @@ nothing and returns `nil'. "
         (unless (bowser:expand-or-collapse-dir)
           (funcall #'exec-fn line))))))
 
-(defun* bowser:browse-dir (&optional (dir (~current-project-root)))
+(cl-defun bowser:browse-dir (&optional (dir (~current-project-root)))
   "Browses a directory."
   (interactive)
   (let* ((buffer-name (bowser:format-buffer-name dir))
@@ -220,16 +221,7 @@ nothing and returns `nil'. "
         (bowser:perform-action-here)
         ;; (bowser:insert-path dir :level 0)
 
-        (goto-char starting-pos)
-        (with-eval-after-load "evil"
-          (evil-normal-state)
-          (evil-define-key 'normal 'local (kbd "q") #'kill-current-buffer)
-
-          (evil-define-key 'normal 'local (kbd "<mouse-2>") #'bowser:perform-action-here)
-          (evil-define-key 'insert 'local (kbd "<mouse-2>") #'bowser:perform-action-here)
-
-          (evil-define-key 'insert 'local (kbd "<S-return>") #'bowser:perform-action-here)
-          (evil-define-key 'normal 'local (kbd "<S-return>") #'bowser:perform-action-here))))
+        (goto-char starting-pos)))
     (switch-to-buffer current-buffer)))
 
 (defun bowser:show-command-runner-with-dedicated-frame ()
