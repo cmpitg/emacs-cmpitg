@@ -968,8 +968,9 @@ automatically."
 then visits if there is no previous frame."
   (interactive "GPath: ")
   (when-let (frame (~get-previous-frame))
-    (select-frame frame)
-    (find-file path)))
+    (lexical-let ((dir default-directory))
+      (select-frame frame)
+      (find-file (f-join dir path)))))
 
 (defun* ~open-file-specialized (file-pattern &key (new-frame? nil))
   "Opens a path and jumps to a line based on number or a the
