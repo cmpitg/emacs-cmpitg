@@ -374,6 +374,16 @@ directory to the current buffer."
 ;; Window & Frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun ~get-previous-frame ()
+  "Gets the previously focused frame."
+  (if (= 1 (length (frame-list)))
+      nil
+    (lexical-let ((sorted-frames (sort (frame-list)
+                                       #'(lambda (x y)
+                                           (> (or (frame-parameter x :custom/focus-time) 0)
+                                              (or (frame-parameter y :custom/focus-time) 0))))))
+      (second sorted-frames))))
+
 (defun ~toggle-sticky-window ()
   "Toggles stickiness of the currently active window."
   (interactive)
@@ -952,6 +962,14 @@ automatically."
   (let ((frame (make-frame)))
     (select-frame frame)
     (find-file path wildcards)))
+
+(defun ~find-file-in-previous-frame (path)
+  "Visits a file in the previous frame, or creates a new frame
+then visits if there is no previous frame."
+  (interactive "GPath: ")
+  (when-let (frame (~get-previous-frame))
+    (select-frame frame)
+    (find-file path)))
 
 (defun* ~open-file-specialized (file-pattern &key (new-frame? nil))
   "Opens a path and jumps to a line based on number or a the

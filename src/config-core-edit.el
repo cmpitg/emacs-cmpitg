@@ -380,6 +380,7 @@ project root, not ignoring anything."
           ("i" . #'end-of-line)
          
           ("J" . #'~join-with-next-line)
+          ("c" . #'~replace-line)
           ("d" . #'kill-line)
           ("D" . #'~kill-whole-line)
           ("#" . #'er/expand-region)
@@ -520,10 +521,14 @@ project root, not ignoring anything."
             (let ((ssh-expr (substring text (length "ssh://"))))
               (find-file (format "/ssh:%s" ssh-expr)))))
          ((~file-pattern? text)
-          (if (and (string-equal text (bowser:get-path-current-line))
-                   (f-directory? text)
+          (if (and (string-equal text (bowser:get-path-current-line))  ;; Current line is a path
                    (f-exists? text))
-              (bowser:expand-or-collapse-dir)
+              ;; Expand or collapse dir if is dir, or visit the file in
+              ;; another frame if not.  This effectively makes it possible to
+              ;; use Bowser as a poor man's file browser.
+              (if (f-directory? text)
+                  (bowser:expand-or-collapse-dir)
+                (~find-file-in-previous-frame text))
             (~smart-open-file text)))
          (t
           (wand:eval-string text)))))
