@@ -17,7 +17,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(load (concat (file-name-directory load-file-name) "init-bare"))
+(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-bare"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))

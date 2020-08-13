@@ -17,7 +17,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(load (concat (file-name-directory load-file-name) "init-bare"))
+(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-bare"))
 
 (require 'rmacs:config-functions       "config-functions")
 (require 'rmacs:functions-aws          "functions-aws")

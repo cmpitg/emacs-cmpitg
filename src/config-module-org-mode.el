@@ -21,6 +21,7 @@
 ;; Org-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'f)
 (require 'org)
 (defun ~my/org-mode-setup ()
   (bind-key "<S-return>" #'~execute-line org-mode-map)
