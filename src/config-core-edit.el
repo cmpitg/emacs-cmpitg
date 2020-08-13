@@ -378,7 +378,7 @@ project root, not ignoring anything."
           ("p" . #'~forward-word-boundary)
           ("a" . #'beginning-of-line)
           ("i" . #'end-of-line)
-         
+
           ("J" . #'~join-with-next-line)
           ("c" . #'~replace-line)
           ("d" . #'kill-line)
@@ -402,6 +402,7 @@ project root, not ignoring anything."
           ("Z" . #'fastnav-sprint-backward)
 
           ("x" . #'~execute-current-wand-text)
+          ("X" . #'~execute-line)
 
           (">" . #'beginning-of-buffer)
           ("E" . #'end-of-buffer)
@@ -416,7 +417,7 @@ project root, not ignoring anything."
           ("q" . #'cua-cut-region)
           ("j" . #'cua-copy-region)
           ("k" . #'cua-paste)
-         
+
           ("ff" . #'projectile-find-file)
           ("fo" . #'find-file)
           :map
