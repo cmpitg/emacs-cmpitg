@@ -145,6 +145,7 @@
                    iflipb
                    sublimity
                    smooth-scrolling
-                   rainbow-mode))
+                   rainbow-mode
+                   geiser))
   (unless (package-installed-p package)
     (package-install package)))

@@ -846,7 +846,8 @@ the sequence, and its index within the sequence."
   :mode "\\.scm\\'"
   :config
   (progn
-    (custom-set-variables `(geiser-repl-use-other-window nil))))
+    (setq geiser-repl-use-other-window nil)
+    (setq geiser-default-implementation 'guile)))
 
 ;;
 ;; Zig mode
