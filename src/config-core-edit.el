@@ -552,8 +552,9 @@ project root, not ignoring anything."
 
     (defun ~build-|rmacs-tee-cmd (cmd)
       "Builds command to pipe output to the current buffer using rmacs-tee."
-      (format "{ exec-and-echo-stdin %s } |& rmacs-tee" cmd server-name))
-
+      (format "{ exec-and-echo-stdin %s } |& env RMACS_BUFFER_NAME='%s' RMACS_SERVER_NAME='%s' rmacs-tee"
+              cmd (buffer-name) server-name))
+    
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
