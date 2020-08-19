@@ -170,7 +170,7 @@
   (bind-key "<M-f8>" #'switch-to-buffer-other-frame)
   (bind-key "<S-f8>" #'counsel-bookmark)
   (bind-key "<f9>" #'compile)
-  (bind-key "<f10>" #'counsel-rg)
+  (bind-key "<f10>" #'~counsel-rg)
   (bind-key "<M-f10>" #'ivy-resume)
   (bind-key "<S-f10>" #'~counsel-grep-default-project-root)
   (bind-key "<C-f10>" #'swiper-all)

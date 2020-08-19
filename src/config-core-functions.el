@@ -1233,6 +1233,14 @@ and fallback to current directory if project root is not found."
   (or (expand-file-name buffer-file-name)
       ""))
 
+(defun ~counsel-rg ()
+  "Executes `counsel-rg' with pre-selected input from current
+selection."
+  (interactive)
+  (if (~is-selecting?)
+      (counsel-rg (~get-selection))
+    (call-interactively #'counsel-rg)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; History management
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
