@@ -126,7 +126,7 @@ if {[info exists ::env(RMACS_SERVER_NAME)]} {
 }
 
 if {[info exists ::env(RMACS_BUFFER_NAME)]} {
-    set ::RMACS_BUFFER $::env(RMACS_BUFFER_NAME)
+    set ::RMACS_BUFFER "\"$::env(RMACS_BUFFER_NAME)\""
 } else {
     set ::RMACS_BUFFER [rmacsEval {(buffer-name (current-buffer))}]
 }
