@@ -460,9 +460,14 @@ Returns the toolbox window."
       (kill-buffer-and-window))))
 
 (defun* ~count-non-sticky-windows ()
-  "Counts the number of non-sticky windows."
+  "Counts the number of non-sticky windows in the current frame."
   (loop for window being the windows
         unless (window-dedicated-p window)
+        count window))
+
+(defun* ~count-windows ()
+  "Counts the number of windows in the current frame."
+  (loop for window being the windows
         count window))
 
 (defun ~one-window ()
