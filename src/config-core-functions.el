@@ -1503,6 +1503,27 @@ minibuffer."
       (~get-secondary-selection)
     (read-shell-command "Command: ")))
 
+(defun ~read-command-or-get-from-selection (history-file &optional cmd)
+  "Reads a free-from text-based command from the minibuffer.  If
+secondary selection or primary selection is active, returns one
+of them (in that order) instead of reading from the minibuffer."
+  (interactive)
+  (lexical-let ((history (thread-last (~read-file history-file)
+                           string-trim
+                           (s-split "\n"))))
+    (string-trim
+     (if (not (null cmd))
+         cmd
+       (or (if (string-empty-p (~get-secondary-selection))
+               nil
+             (~get-secondary-selection))
+           (if (string-empty-p (~get-selection))
+               nil
+             (~get-selection))
+           (read-shell-command "Command: "
+                               nil
+                               'history))))))
+
 ;; TODO: Parameterize the hard-coded "!" character.
 (defun ~bounds-of-wand-text-at-point ()
   "Returns boundaries for a wand-text thing.  See
@@ -1517,9 +1538,8 @@ minibuffer."
                           (cond
                            (;; When there's no line continuation
                             (not (~current-line-continues?))
-                            (save-mark-and-excursion
-                              (end-of-line)
-                              (point)))
+                            (end-of-line)
+                            (point))
                            (t
                             (while (~current-line-continues?)
                               (re-search-forward (rx "\\" (0+ space) eol) nil t)
