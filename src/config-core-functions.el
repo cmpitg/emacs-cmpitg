@@ -1286,10 +1286,17 @@ The output block is defined as everything between
                       (0+ space) eol)))))
 
 (defun ~current-line-continues? ()
-  "Determines if the current line has a continuation line."
+  "Determines if the current line has a continuation marker."
   (thread-last (thing-at-point 'line)
     string-trim
     (s-matches? (rx "\\" (0+ space) eol))))
+
+(defun ~previous-line-continues? ()
+  "Determines if the previous line has a continuation marker."
+  (unless (zerop (line-number-at-pos))
+    (save-mark-and-excursion
+      (forward-line -1)
+      (~current-line-continues?))))
 
 (cl-defun ~shorten-string (str max-length &optional (ellipsis "..."))
   "Shortens a string, making sure its length does not exceed
@@ -1483,6 +1490,7 @@ move the cursor but rather to call `~execute'."
           (t
            (apply orig-fn args)))))
 
+;; TODO: History
 (defun ~read-command-or-get-from-secondary-selection ()
   "Without prefix argument, if there is an active selection,
 returns it (assuming that it denotes a shell command); otherwise,
@@ -1522,6 +1530,40 @@ minibuffer."
         nil
       (cons start end))))
 (put 'wand-text 'bounds-of-thing-at-point '~bounds-of-wand-text-at-point)
+
+(defun ~bounds-of-exec-text-at-point ()
+  "Returns boundaries for a possibly multiline piece of text that
+could be executed.  See `THING-AT-POINT' for futher information."
+  (lexical-let* ((start (ignore-errors
+                          (save-mark-and-excursion
+                            (cond
+                             (;; When there's no line continuation on the
+                              ;; previous line
+                              (not (~previous-line-continues?))
+                              (beginning-of-line)
+                              (point))
+                             (t
+                              (while (~previous-line-continues?)
+                                (forward-line -1))
+                              (beginning-of-line)
+                              (point))))))
+                 (end (ignore-errors
+                        (save-mark-and-excursion
+                          (cond
+                           (;; When there's no line continuation
+                            (not (~current-line-continues?))
+                            (end-of-line)
+                            (point))
+                           (t
+                            (while (~current-line-continues?)
+                              (re-search-forward (rx "\\" (0+ space) eol) nil t)
+                              (forward-line))
+                            (end-of-line)
+                            (point)))))))
+    (if (or (null start) (null end))
+        nil
+      (cons start end))))
+(put 'exec-text 'bounds-of-thing-at-point '~bounds-of-exec-text-at-point)
 
 (defun ~toggle-popup-exec-result ()
   "Toggles whether or not result from an exec function is popped
