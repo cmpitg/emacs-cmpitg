@@ -113,12 +113,6 @@ recursively."
     ad-do-it))
 
 ;;
-;; Enhacing different Things at point
-;;
-
-(put 'wand-text 'bounds-of-thing-at-point '~bounds-of-wand-text-at-point)
-
-;;
 ;; Project management
 ;;
 ;; Ref: https://github.com/bbatsov/projectile
