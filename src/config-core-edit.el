@@ -384,6 +384,7 @@ project root, not ignoring anything."
           ("v" . #'set-mark-command)
           ("V" . #'~select-line)
           ("w" . #'~select-word)
+          ("mm" . #'~mark-current-output-block)
 
           ("s" . #'~search-buffer-interactively)
           ("/" . #'isearch-forward)
@@ -395,8 +396,9 @@ project root, not ignoring anything."
           ("z" . #'fastnav-sprint-forward)
           ("Z" . #'fastnav-sprint-backward)
 
-          ("x" . #'~execute-current-wand-text)
-          ("X" . #'~execute-line)
+          ("X" . #'~execute-current-wand-text)
+          ("xx" . #'hydra-pattern-exec/body)
+          ("I" . #'bowser:expand-dir-here)
 
           (">" . #'beginning-of-buffer)
           ("E" . #'end-of-buffer)
@@ -404,7 +406,8 @@ project root, not ignoring anything."
           (":" . #'~kill-buffer-and-window)
 
           ("(" . #'kmacro-start-macro)
-          (")" . #'kmacro-end-or-call-macro)
+          (")" . #'kmacro-end-macro)
+          ("@" . #'kmacro-call-macro)
 
           ("'" . #'undo-tree-undo)
           ("\"" . #'undo-tree-redo)
