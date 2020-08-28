@@ -75,7 +75,7 @@
 (eval-when-compile (require 'wid-edit))
 (require 'widget)
 
-(defun* ui:render-widgets (&key buffer func (keep-local-vars? nil))
+(cl-defun ui:render-widgets (&key buffer func (keep-local-vars? nil))
   "Does book-keeping and handles the render of widgets in a
 buffer.  All the processing and insertions of widgets should be
 in `func'."
@@ -89,7 +89,7 @@ in `func'."
       (goto-char (point-min))
       (switch-to-buffer buffer))))
 
-(defun* ui:render-buffer (&key buffer func (keep-local-vars? nil))
+(cl-defun ui:render-buffer (&key buffer func (keep-local-vars? nil))
   "Does book-keeping and handles the render of text in a buffer.
 All the processing and insertions of text should be in `func'.
 This function is useful when building text-based interactive
@@ -128,19 +128,19 @@ application."
               'point-entered
               'mb-kick-cursor))
 
-(defun* ui:text/insert-hline (&optional (trailing-lines t))
+(cl-defun ui:text/insert-hline (&optional (trailing-lines t))
   "Inserts a horizontal line."
   (insert (ui:text/hline))
   (when trailing-lines
     (insert "\n")))
 
-(defun* ui:text/insert-line (&optional (text "") (trailing-lines t))
+(cl-defun ui:text/insert-line (&optional (text "") (trailing-lines t))
   "Inserts a line of text."
   (insert text)
   (when trailing-lines
     (insert "\n")))
 
-(defun* ui:text/insert-title (&optional (text "")
+(cl-defun ui:text/insert-title (&optional (text "")
                                         (title-style 'info-title-1)
                                         (trailing-lines t))
   "Inserts a title."
@@ -148,13 +148,13 @@ application."
   (when trailing-lines
     (insert "\n\n")))
 
-(defun* ui:text/insert-paragraph (&optional (text "") (trailing-lines t))
+(cl-defun ui:text/insert-paragraph (&optional (text "") (trailing-lines t))
   "Inserts a paragraph."
   (insert text)
   (when trailing-lines
     (insert "\n\n")))
 
-(defun* ui:text/insert-comment (text &optional (trailing-lines t))
+(cl-defun ui:text/insert-comment (text &optional (trailing-lines t))
   "Inserts comment text."
   (insert (ui:text/comment text))
   (when trailing-lines

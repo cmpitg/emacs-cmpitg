@@ -53,7 +53,7 @@ is the beginning of the eval result.")
 ;; Implementation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ojo:add-eval-result (result
+(cl-defun ojo:add-eval-result (result
                              &key
                              (max-length ojo:*result-length-threshold*))
   "Adds eval result after the current

@@ -175,12 +175,12 @@ convenient wrapper of `join-line'."
     (call-interactively '~mark-current-output-block)
     (delete-region (region-beginning) (region-end))))
 
-(defun* ~search-buffer-interactively ()
+(cl-defun ~search-buffer-interactively ()
   "Searches the current buffer interactively."
   (interactive)
   (swiper (~get-selection)))
 
-(defun* ~show-buffer-chooser ()
+(cl-defun ~show-buffer-chooser ()
   "Shows the buffer chooser tool."
   (interactive)
   (require 'rmacs:config-module-simple-buffer-list)
@@ -227,17 +227,17 @@ line."
     (when (= orig-point (point))
       (beginning-of-visual-line nil))))
 
-(defun* ~previous-line+ (&optional (n-lines 5))
+(cl-defun ~previous-line+ (&optional (n-lines 5))
   "Scrolls up `n-lines'."
   (interactive)
   (forward-line (- n-lines)))
 
-(defun* ~next-line+ (&optional (n-lines 5))
+(cl-defun ~next-line+ (&optional (n-lines 5))
   "Scrolls down `n-lines'."
   (interactive)
   (forward-line n-lines))
 
-(defun* ~file-pattern? (str &key (must-exists t))
+(cl-defun ~file-pattern? (str &key (must-exists t))
   "Determines if a string is a file pattern \(`path' or
 `path:line-number', or `path:pattern'\).  By default, the
 corresponding file must exist for this function to return `t'.
@@ -395,7 +395,7 @@ directory to the current buffer."
                "Window '%s' is now normal")
              (current-buffer))))
 
-(defun* ~toggle-toolbox (&key (path *toolbox-path*)
+(cl-defun ~toggle-toolbox (&key (path *toolbox-path*)
                               (side 'right)
                               (size -78)
                               (follow-dir t))
@@ -431,17 +431,17 @@ Returns the toolbox window."
       (window-configuration-to-register '_)
       (delete-other-windows))))
 
-(defun* ~scroll-other-window (&key (nlines 5))
+(cl-defun ~scroll-other-window (&key (nlines 5))
   "Scrolls the other window."
   (interactive)
   (scroll-other-window nlines))
 
-(defun* ~scroll-other-window-reverse (&key (nlines 5))
+(cl-defun ~scroll-other-window-reverse (&key (nlines 5))
   "Scrolls the other window in reverse direction."
   (interactive)
   (scroll-other-window (- nlines)))
 
-(defun* ~kill-buffer-and-frame (&optional (buffer (current-buffer)))
+(cl-defun ~kill-buffer-and-frame (&optional (buffer (current-buffer)))
   "Kills the a buffer along with its frame (if exists)."
   (interactive)
   (unless (null buffer)
@@ -451,7 +451,7 @@ Returns the toolbox window."
           (delete-frame frame))
       (kill-buffer buffer))))
 
-(defun* ~kill-buffer-and-window (&optional (window (selected-window)))
+(cl-defun ~kill-buffer-and-window (&optional (window (selected-window)))
   "Kills the a buffer along with its window (if exists)."
   (interactive)
   (with-selected-window window
@@ -459,13 +459,13 @@ Returns the toolbox window."
         (kill-buffer)
       (kill-buffer-and-window))))
 
-(defun* ~count-non-sticky-windows ()
+(cl-defun ~count-non-sticky-windows ()
   "Counts the number of non-sticky windows in the current frame."
   (loop for window being the windows
         unless (window-dedicated-p window)
         count window))
 
-(defun* ~count-windows ()
+(cl-defun ~count-windows ()
   "Counts the number of windows in the current frame."
   (loop for window being the windows
         count window))
@@ -491,7 +491,7 @@ prefix arg (`C-u') to force deletion if it is."
                     (current-buffer)))
       (call-interactively #'delete-window)))
 
-(defun* ~get-next-non-dedicated-window (&optional original-window next-window)
+(cl-defun ~get-next-non-dedicated-window (&optional original-window next-window)
   "Gets the next non-dedicated, non-minibuffer window."
   (cond
    ((equal original-window next-window)
@@ -503,7 +503,7 @@ prefix arg (`C-u') to force deletion if it is."
    (t
     next-window)))
 
-(defun* ~get-non-minibuffer-window-in-dir (dir)
+(cl-defun ~get-non-minibuffer-window-in-dir (dir)
   "Gets the next non-minibuffer in a direction.
 If the found window is the mini-buffer, returns `nil'."
   (require 'windmove)
@@ -511,7 +511,7 @@ If the found window is the mini-buffer, returns `nil'."
     (unless (minibufferp (window-buffer window))
       window)))
 
-(defun* ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
+(cl-defun ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
   "Transposes the current window with the next one."
   (interactive)
   (when (window-dedicated-p (selected-window))
@@ -577,7 +577,7 @@ If the found window is the mini-buffer, returns `nil'."
 (defalias '~switch-buffer '~show-buffer-chooser
   "Switches to a buffer and focus the corresponding window & frame.")
 
-(defun* ~clean-up-buffer (&key (buffer (current-buffer))
+(cl-defun ~clean-up-buffer (&key (buffer (current-buffer))
                                (keep-local-vars? nil))
   "Cleans up buffer."
   (interactive)
@@ -749,7 +749,7 @@ in the `*scratch-dir*' directory."
          (scratch-file (s-concat scratch-dir "scratch.el")))
     (~toggle-toolbox :path scratch-file :size -80)))
 
-(defun* ~switch-to-messages-buffer (&key (in-other-window nil))
+(cl-defun ~switch-to-messages-buffer (&key (in-other-window nil))
   "Switches to the `*Messages*' buffer."
   (interactive)
   (if in-other-window
@@ -767,7 +767,7 @@ reference."
     (fill-paragraph nil region)))
 
 ;; TODO: Thinking
-(defun* ~setup-temp-buffer (&optional (buffer (current-buffer)))
+(cl-defun ~setup-temp-buffer (&optional (buffer (current-buffer)))
   "Sets up a temporary buffer."
   (interactive)
   (with-current-buffer buffer
@@ -906,7 +906,7 @@ which is loaded lazily get loaded."
                             (revert-buffer t t)))))
 
 ;; TODO: Remove the 'open with' logic, replacing it with dispatch-action?
-(defun* ~smart-open-file (path &key (new-frame? nil))
+(cl-defun ~smart-open-file (path &key (new-frame? nil))
   "Opens path and with external program if necessary.  `path' is
 expanded using `expand-file-name', then
 `substitute-in-file-name'."
@@ -977,7 +977,7 @@ then visits if there is no previous frame."
       (select-frame frame)
       (find-file (f-join dir path)))))
 
-(defun* ~open-file-specialized (file-pattern &key (new-frame? nil))
+(cl-defun ~open-file-specialized (file-pattern &key (new-frame? nil))
   "Opens a path and jumps to a line based on number or a the
 first occurrence of a pattern.  E.g.
 
@@ -1340,7 +1340,7 @@ necessary."
   (interactive "sString: ")
   (eval (first (read-from-string (concat "(progn " str ")")))))
 
-(defun* ~eval-region ()
+(cl-defun ~eval-region ()
   "Evals region and returns value."
   (interactive)
   (if (~is-selecting?)
@@ -1396,7 +1396,7 @@ necessary."
                                (number-to-string word-counter)
                                separator))))
 
-(defun* ~get-thing-to-execute-from-context ()
+(cl-defun ~get-thing-to-execute-from-context ()
   "Retrieves the thing to execute from the current context.  The
 rules are as follows:
 
@@ -1447,12 +1447,12 @@ THING."
   (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
     (~execute text)))
 
-(defun* ~execute-line ()
+(cl-defun ~execute-line ()
   "Executes current line with `~execute'."
   (interactive)
   (~execute (string-trim (thing-at-point 'line t))))
 
-(defun* ~execute-current-wand-text ()
+(cl-defun ~execute-current-wand-text ()
   "Executes current Wand text with `~execute'."
   (interactive)
   (end-of-thing 'wand-text)
@@ -1679,7 +1679,7 @@ otherwise, marks only the content of the block."
 ;; Processes/Execution
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ~firefox (url &key (new-window? nil))
+(cl-defun ~firefox (url &key (new-window? nil))
   "Opens a URL in Firefox."
   (interactive
    (list (read-string "URL: " (cond
@@ -1699,7 +1699,7 @@ otherwise, marks only the content of the block."
   (with-current-buffer (process-buffer process)
     (buffer-string)))
 
-(defun* ~run-process (command &key (async t))
+(cl-defun ~run-process (command &key (async t))
   "Runs an external process.  If `async' is non-`nil' the process
 is not terminated when Emacs exits and the output is discarded;
 otherwise, both output from stdout and stderr are direceted to
@@ -1835,7 +1835,7 @@ COMMAND.  Note that shell arguments might need quoting, e.g. with
                           :max-history *~exec-history-max*)
     (~exec-pop-up (list shell-file-name "-c" command))))
 
-(defun* ~exec-pop-up.old (command)
+(cl-defun ~exec-pop-up.old (command)
   "Executes a command & pops up a temporary buffer showing
 result, returing the process.  The command is executed asynchronously."
   (interactive "MCommand: ")
@@ -1984,7 +1984,7 @@ returns the exit code of the command."
 
                              t)))
 
-(defun* ~exec-async (command &key (stdin nil)
+(cl-defun ~exec-async (command &key (stdin nil)
                              (coding-system 'undecided)
                              (connection-type 'pipe)
                              output-callback

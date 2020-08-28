@@ -159,7 +159,7 @@
     (setq mu4e-user-mail-address-list (list))
     (setq mu4e-contexts (list))
 
-    (defun* cmpitg:add-mu4e-account (&key context-name
+    (cl-defun cmpitg:add-mu4e-account (&key context-name
                                           full-name
                                           mail-address
                                           match-recipients

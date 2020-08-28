@@ -32,7 +32,7 @@
 ;; * Expand all
 ;;
 
-(require 'cl)
+(require 'cl-lib)
 (require 'dash)
 (require 's)
 (require 'thingatpt)

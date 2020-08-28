@@ -98,7 +98,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* command-palette:construct-content (main-buffer main-path)
+(cl-defun command-palette:construct-content (main-buffer main-path)
   "Constructs the content for a command palette buffer."
   (with-current-buffer main-buffer
     (let ((conditional-content (thread-last
@@ -111,29 +111,29 @@
           (format "%s\n%s" main-path command-palette:*default-content*)
         (format "%s\n%s %s" main-path command-palette:*default-content* conditional-content)))))
 
-(defun* command-palette:is-buffer-exception? (buffer-or-name)
+(cl-defun command-palette:is-buffer-exception? (buffer-or-name)
   "Determines if the buffer is not supposed to have a command-palette window."
   (-any? (lambda (regexp)
            (s-matches? regexp (buffer-name (get-buffer buffer-or-name))))
          command-palette:*buffer-exception-regexp-list*))
 
-(defun* command-palette:is-command-palette-window? (&optional (window (selected-window)))
+(cl-defun command-palette:is-command-palette-window? (&optional (window (selected-window)))
   "Determines if `window' is a command palette window."
   (and (window-dedicated-p window)
        (-contains? (window-parameter window :local/window-features) :command-palette)
        (not (null (window-parameter window :local/main-window)))))
 
-(defun* command-palette:command-palette-window-exists? (&optional (window (selected-window)))
+(cl-defun command-palette:command-palette-window-exists? (&optional (window (selected-window)))
   "Determines if a command palette window exists for a specific
 window."
   (when-let (cp-window (~get-non-minibuffer-window-in-dir 'up))
     (command-palette:is-command-palette-window? cp-window)))
 
-(defun* command-palette:get-main-window (&optional (cp-window (selected-window)))
+(cl-defun command-palette:get-main-window (&optional (cp-window (selected-window)))
   "Gets the main window for a command palette window."
   (window-parameter cp-window :local/main-window))
 
-(defun* command-palette:setup-command-palette-window (main-window cp-window)
+(cl-defun command-palette:setup-command-palette-window (main-window cp-window)
   "Sets up necessary parameters for a pair of main & command
 palette windows."
   (set-window-parameter cp-window :local/window-features '(:command-palette))
@@ -147,7 +147,7 @@ palette windows."
    (buffer-face-set command-palette:*cp-window-face*))
   (set-window-dedicated-p cp-window t))
 
-(defun* command-palette:get-command-palette-window (&optional (window (selected-window)))
+(cl-defun command-palette:get-command-palette-window (&optional (window (selected-window)))
   "Gets the corresponding command palette window.  The command
 palette window if exists is always the immediate window above.
 If the current window doesn't have a command palette window,
@@ -155,7 +155,7 @@ returns `nil'."
   (when (command-palette:command-palette-window-exists? window)
     (~get-non-minibuffer-window-in-dir 'up)))
 
-(defun* command-palette:fit-command-palette-window (&optional (cp-window (selected-window)))
+(cl-defun command-palette:fit-command-palette-window (&optional (cp-window (selected-window)))
   "Refits the command palette window."
   (interactive)
   (with-selected-window cp-window
@@ -174,7 +174,7 @@ returns `nil'."
   (set-window-dedicated-p (selected-window) t)
   cp-buffer)
 
-(defun* command-palette:ensure-command-palette-buffer (&optional (main-buffer (current-buffer)))
+(cl-defun command-palette:ensure-command-palette-buffer (&optional (main-buffer (current-buffer)))
   "Ensures a command palette buffer exists for a main buffer."
   (interactive)
   (unless (command-palette:is-buffer-exception? main-buffer)
@@ -219,7 +219,7 @@ returns `nil'."
         (setq this-command this-command.saved))
       cp-buffer)))
 
-(defun* command-palette:save-cp (&optional (main-buffer (current-buffer)))
+(cl-defun command-palette:save-cp (&optional (main-buffer (current-buffer)))
   "Saves the current command palette buffer."
   (interactive)
   (save-excursion
@@ -232,7 +232,7 @@ returns `nil'."
       (with-current-buffer cp-buffer
         (~write-to-file local/cp-path (buffer-string))))))
 
-(defun* command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
+(cl-defun command-palette:ensure-command-palette-window (&optional (main-window (selected-window)))
   "Ensures that a command palette window exists for a main window."
   (interactive)
   (require 'windmove)
@@ -250,7 +250,7 @@ returns `nil'."
            (command-palette:fit-command-palette-window (selected-window))
            (selected-window)))))
 
-(defun* command-palette:ensure-command-palette (&optional (main-window (selected-window)))
+(cl-defun command-palette:ensure-command-palette (&optional (main-window (selected-window)))
   "Ensures that a command palette window and buffer for the
 current main window is properly set up.  If the current main
 window contains an exceptional buffer, delete the existing
@@ -349,12 +349,12 @@ windows is greater than 1."
       (delete-window cp-window))
     res))
 
-(defun* command-palette:advice/fit-command-palette-window (orig-fun &rest args)
+(cl-defun command-palette:advice/fit-command-palette-window (orig-fun &rest args)
   "Fits the command palette window."
   (command-palette:try-fitting-cp-window)
   (apply orig-fun args))
 
-(defun* command-palette:enable ()
+(cl-defun command-palette:enable ()
   "TODO"
   (interactive)
   (add-variable-watcher 'default-directory #'command-palette:default-dir-watcher)
@@ -370,7 +370,7 @@ windows is greater than 1."
   (advice-add 'other-window :around #'command-palette:advice/fit-command-palette-window)
   (add-hook 'mouse-leave-buffer-hook #'command-palette:try-fitting-cp-window))
 
-(defun* command-palette:disable ()
+(cl-defun command-palette:disable ()
   "TODO"
   (interactive)
   (remove-variable-watcher 'default-directory #'command-palette:default-dir-watcher)
@@ -391,14 +391,14 @@ windows is greater than 1."
 ;; TODO: This is a hack.  I haven't yet found a better way.
 (let ((catching?-hash (make-hash-table :test #'equal))
       (new-dirs-hash (make-hash-table :test #'equal)))
-  (defun* command-palette:default-dir-watcher (symbol new-val operation buffer)
+  (cl-defun command-palette:default-dir-watcher (symbol new-val operation buffer)
     (when (and (eq 'default-directory symbol)
                (eq 'set operation)
                (gethash buffer catching?-hash))
       (message "default-directory is modified in buffer=%s" buffer)
       (puthash buffer new-val new-dirs-hash)))
 
-  (defun* command-palette:call-with-current-dir (dir fn)
+  (cl-defun command-palette:call-with-current-dir (dir fn)
     "Calls `fn' with `dir' being the current working directory.
 This function makes sure that the `default-directory' is not
 shadowed when the call ends."
@@ -418,7 +418,7 @@ shadowed when the call ends."
       (puthash (current-buffer) nil catching?-hash)
       result)))
 
-(defun* command-palette:execute (&optional expr)
+(cl-defun command-palette:execute (&optional expr)
   "TODO"
   (interactive)
   (require 'wand)

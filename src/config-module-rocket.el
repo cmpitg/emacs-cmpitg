@@ -65,11 +65,11 @@
     (delete-frame)
     res))
 
-(defun* rocket:get-paths (&optional (path-env-var-name "PATH"))
+(cl-defun rocket:get-paths (&optional (path-env-var-name "PATH"))
   (thread-last (getenv path-env-var-name)
     (s-split ":")))
 
-(defun* rocket:get-executables (path)
+(cl-defun rocket:get-executables (path)
   "Gets the list of executables with relative to a path."
   (when (file-exists-p path)
     (let* ((default-directory path)

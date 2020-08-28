@@ -24,13 +24,13 @@
 (use-package server)
 
 (eval-and-compile
-  (defun* ~start-emacs-server (&optional (name server-name))
+  (cl-defun ~start-emacs-server (&optional (name server-name))
     "Starts the Emacs server."
     (message "Setting Emacs server name to %s and starting" name)
     (setf server-name name)
     (server-start))
 
-  (defun* ~emacs-server-running? (&optional (name server-name))
+  (cl-defun ~emacs-server-running? (&optional (name server-name))
     "Determines if there is an Emacs server with `server-name' name
 is currently running."
     (server-running-p name)))

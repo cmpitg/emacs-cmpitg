@@ -274,22 +274,22 @@ project root, not ignoring anything."
             ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
             (setq ivy-initial-inputs-alist nil)
 
-            (defun* ~ivy-next-line+ (&optional (n-lines 5))
+            (cl-defun ~ivy-next-line+ (&optional (n-lines 5))
               (interactive)
               (ivy-next-line n-lines))
 
-            (defun* ~ivy-prev-line+ (&optional (n-lines 5))
+            (cl-defun ~ivy-prev-line+ (&optional (n-lines 5))
               (interactive)
               (ivy-previous-line n-lines))
 
-            (defun* ~bind-key-with-prefix (key command &key
+            (cl-defun ~bind-key-with-prefix (key command &key
                                                (keymap global-map))
               "Binds key in `evil-normal-state-map' and `evil-visual-state-map' with prefix `SPC' and in global mode map with prefix `s-SPC' at the same time."
               (interactive)
               (eval `(progn
                        (bind-key ,(format "s-SPC %s" key) command keymap))))
 
-            (defun* ~bind-key-with-prefix-local (key command &key (keymap global-map))
+            (cl-defun ~bind-key-with-prefix-local (key command &key (keymap global-map))
               "Like `~bind-key-with-prefix', except that the binding is local."
               (interactive)
               (eval `(progn
@@ -498,14 +498,14 @@ project root, not ignoring anything."
   :after (rmacs:config-module-bowser rmacs:config-module-convenient-buffer-shell f)
   :config
   (progn
-    (defun* ~wand:set-current-dir (&optional
+    (cl-defun ~wand:set-current-dir (&optional
                                    (text (thing-at-point 'line)))
       (interactive)
       (let ((text (string-trim text)))
         (when (f-dir? text)
           (setq-local default-directory text))))
 
-    (defun* ~wand:open-or-eval (&optional text)
+    (cl-defun ~wand:open-or-eval (&optional text)
       "Performs an action based on what `text' represents:
 - if `text' is a path to a directory, expands or collapses it with Bowser;
 - if `text' is a file pattern, smartly opens it with `~smart-open-file';
@@ -531,7 +531,7 @@ project root, not ignoring anything."
          (t
           (wand:eval-string text)))))
 
-    (defun* ~bs:exec-output-to-next-line (text)
+    (cl-defun ~bs:exec-output-to-next-line (text)
       (interactive)
       (~open-line 1)
       (beginning-of-line)

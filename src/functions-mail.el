@@ -16,7 +16,7 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(defun* ~get-mail-header (header msg-or-path &key (from-path nil))
+(cl-defun ~get-mail-header (header msg-or-path &key (from-path nil))
   "Retrieves a specific header field from a full mail."
   (let ((cmd (concat (format " sed -n '/^%s:/I{:loop t;h;n;/^ /{H;x;s/\\n//;t loop};x;p}' " header)
                      (if from-path msg-or-path "")
@@ -27,7 +27,7 @@
            (~exec-sh cmd :stdin msg-or-path))
          (replace-regexp-in-string "[ \t\n]*$" "" it))))
 
-(defun* ~get-mail-user-agent (msg-or-path &key (from-path nil))
+(cl-defun ~get-mail-user-agent (msg-or-path &key (from-path nil))
   "Retrieves the User-Agent of the mail sender."
   (let ((x-mailer   (~get-mail-header "x-mailer" msg-or-path :from-path from-path))
         (user-agent (~get-mail-header "user-agent" msg-or-path :from-path from-path)))
@@ -37,7 +37,7 @@
      ((string= user-agent "")       x-mailer)
      (t (format "%s (x-mailer)\n%s (user-agent)" x-mailer user-agent)))))
 
-(defun* ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
+(cl-defun ~send-mail-with-thunderbird (&key (to "") (subject "") (body ""))
   "Sends email with Thunderbird."
   (~run-process (format "thunderbird-bin -compose \"to='%s',subject='%s'\",body=\"'%s'\""
                         to

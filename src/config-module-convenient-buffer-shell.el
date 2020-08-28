@@ -32,7 +32,7 @@
 
 (add-to-list 'safe-local-variable-values '(bs:local/prompt-regexp . t))
 
-(defun* bs:ensure-buffer-process (&key name buffer command prompt-regexp)
+(cl-defun bs:ensure-buffer-process (&key name buffer command prompt-regexp)
   "TODO"
   (if (process-live-p (get-buffer-process buffer))
       (get-buffer-process buffer)
@@ -80,7 +80,7 @@
         (set-marker (process-mark p) (point))
         p))))
 
-(defun* bs:send-string (str &optional (buffer (current-buffer)))
+(cl-defun bs:send-string (str &optional (buffer (current-buffer)))
   "TODO"
   (when (buffer-live-p buffer)
     (when-let (p (get-buffer-process buffer))
@@ -100,11 +100,11 @@
       (set-marker (process-mark p) (point))
       (process-send-string p str))))
 
-(defun* bs:send-complete-string (str &optional (buffer (current-buffer)))
+(cl-defun bs:send-complete-string (str &optional (buffer (current-buffer)))
   "TODO"
   (bs:send-string (s-concat str "\n") buffer))
 
-(defun* bs:send-region (&optional (buffer (current-buffer)))
+(cl-defun bs:send-region (&optional (buffer (current-buffer)))
   "TODO"
   (interactive)
   (when (buffer-live-p buffer)
@@ -113,7 +113,7 @@
         (bs:send-string (buffer-substring (region-beginning) (region-end))
                         buffer)))))
 
-(defun* bs:send-complete-region (&optional (buffer (current-buffer)))
+(cl-defun bs:send-complete-region (&optional (buffer (current-buffer)))
   "TODO"
   (interactive)
   (when (buffer-live-p buffer)
@@ -125,7 +125,7 @@
           (insert "\n")
           (bs:send-string str buffer))))))
 
-(defun* bs:ensure-buffer-process-shell (&key (name (s-concat "shell::" (buffer-name)))
+(cl-defun bs:ensure-buffer-process-shell (&key (name (s-concat "shell::" (buffer-name)))
                                              (buffer (current-buffer))
                                              (shell "bash")
                                              (prompt-regexp (rx bol
@@ -139,7 +139,7 @@
                             :command (list "/usr/bin/env" "TERM=dumb" "PAGER=cat" shell)
                             :prompt-regexp prompt-regexp))
 
-(defun* bs:exec (str &optional (buffer (current-buffer)))
+(cl-defun bs:exec (str &optional (buffer (current-buffer)))
   "TODO"
   (bs:ensure-buffer-process-shell)
   (bs:send-complete-string str))

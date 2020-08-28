@@ -866,7 +866,7 @@ the sequence, and its index within the sequence."
   :init
   (progn
     (defvar *~tcl-version* "8.7")
-    (defun* ~tcl/browse-doc (&optional (version *~tcl-version*))
+    (cl-defun ~tcl/browse-doc (&optional (version *~tcl-version*))
       "Browses Tcl documentation."
       (interactive)
       (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))))

@@ -28,11 +28,11 @@ disabled.")
 ;; Helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ~is-buffer-visible? (buffer-or-name)
+(cl-defun ~is-buffer-visible? (buffer-or-name)
   "Determines if a buffer is current visible."
   (not (null (get-buffer-window buffer-or-name 0))))
 
-(defun* ~count-buffer-appearances (buffer-or-name)
+(cl-defun ~count-buffer-appearances (buffer-or-name)
   "Counts the number of windows where a buffer appearances."
   (length (get-buffer-window-list buffer-or-name nil 0)))
 
@@ -51,7 +51,7 @@ does not yet exist, create it."
   "Determines if a buffer is the blank buffer."
   (eq (get-buffer buffer-or-name) (~get-blank-buffer)))
 
-(defun* ~switch-to-blank-buffer (&optional frame)
+(cl-defun ~switch-to-blank-buffer (&optional frame)
   "Switches to the blank buffer."
   (interactive)
   (when frame (select-frame frame))
@@ -63,13 +63,13 @@ does not yet exist, create it."
   (call-interactively 'other-window)
   (call-interactively '~switch-to-blank-buffer))
 
-(defun* ~disable-one-buffer-per-window-for (funcs)
+(cl-defun ~disable-one-buffer-per-window-for (funcs)
   "Disables one-buffer-per-window for certain functions."
   (dolist (func funcs)
     (advice-add func :around
                 #'~advice/disable-one-buffer-per-window)))
 
-(defun* ~enable-one-buffer-per-window-for (funcs)
+(cl-defun ~enable-one-buffer-per-window-for (funcs)
   "Enables one-buffer-per-window for certain functions."
   (dolist (func funcs)
     (advice-remove func #'~advice/disable-one-buffer-per-window)))
@@ -145,7 +145,7 @@ the blank buffer."
 ;; behavior.
 ;;
 
-(defun* ~advice/disable-one-buffer-per-window (orig-fun &rest args)
+(cl-defun ~advice/disable-one-buffer-per-window (orig-fun &rest args)
   "Advice to temporarily disable one-buffer-per-window."
   (let ((*one-buffer-per-window-temporarily-disabled?* t))
     (apply orig-fun args)))

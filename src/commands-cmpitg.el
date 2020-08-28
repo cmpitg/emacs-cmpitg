@@ -21,7 +21,7 @@
 ;; Helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ~create-commander-frame (name &key wm frame-params)
+(cl-defun ~create-commander-frame (name &key wm frame-params)
   "Creates a special frame that is use to execute non-Emacs commands.  TODO"
   (let* ((f (make-frame `(,@frame-params
                           (name . ,name)

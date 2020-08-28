@@ -92,7 +92,6 @@
                    markdown-mode
                    yaml-mode
                    json-mode
-                   json
                    scroll-restore
                    visual-fill-column
                    company

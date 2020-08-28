@@ -47,7 +47,7 @@
 ;; TODO: Revise and improve docstring
 ;; TODO: Support tooltip
 ;; TODO: History
-(defun* ~read-multiple-inputs-async (&key prompts
+(cl-defun ~read-multiple-inputs-async (&key prompts
                                           callback
                                           (title "Prompting")
                                           (size 70))
@@ -129,7 +129,7 @@ current monitor in the format of (X Y WIDTH HEIGHT)"
         (destructuring-bind (x1 y1 x2 y2) (window-edges)
           (set-mouse-position frame (+ x1 1) y1))))))
 
-(defun* ~center-frame (width
+(cl-defun ~center-frame (width
                        height
                        &key
                        (frame (selected-frame)))
@@ -140,7 +140,7 @@ current monitor in the format of (X Y WIDTH HEIGHT)"
            (desired-y (+ y (/ (- screen-height height) 2))))
       (set-frame-position frame desired-x desired-y))))
 
-(defun* ~center-frame-percent (width%
+(cl-defun ~center-frame-percent (width%
                                height%
                                &key
                                (frame (selected-frame)))
@@ -155,7 +155,7 @@ regards to the current screen."
       (set-frame-size frame width height t)
       (set-frame-position frame desired-x desired-y))))
 
-(defun* ~center-frame-in-chars (width-in-chars
+(cl-defun ~center-frame-in-chars (width-in-chars
                                 height-in-chars
                                 &key
                                 (frame (selected-frame)))

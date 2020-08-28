@@ -21,15 +21,25 @@
   "The identity function."
   x)
 
-(defun* ~get-project-toolbox-path (&key (dir (~current-project-root))
+(cl-defun ~get-project-toolbox-path (&key (dir (~current-project-root))
                                         (file-name ".rmacs-toolbox"))
   "Gets the path to the current project toolbox file."
   (f-join dir file-name))
 
-(defun* ~open-project-toolbox ()
+(cl-defun ~get-project-sh-output-path (&key (dir (~current-project-root)))
+  "Gets the path to the current project SH output file."
+  (~get-project-toolbox-path :dir dir
+                             :file-name ".rmacs-sh-output"))
+
+(cl-defun ~open-project-toolbox ()
   "Opens the current project's toolbox file."
   (interactive)
   (find-file (~get-project-toolbox-path)))
+
+(cl-defun ~open-project-sh-output ()
+  "Opens the current project's SH output file."
+  (interactive)
+  (find-file (~get-project-sh-output-path)))
 
 (defun ~open-project-notes ()
   "Opens current project notes."
@@ -44,7 +54,7 @@
                      collect (buffer-file-name b))
                "\n"))
 
-(defun* ~toggle-project-toolbox (&key (side 'right)
+(cl-defun ~toggle-project-toolbox (&key (side 'right)
                                       (size -78))
   "Toggles display of the project toolbox file."
   (interactive)
@@ -57,18 +67,18 @@
 ;; Window manager - WMII
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* ~wmii/get-frame-id (&optional (frame (selected-frame)))
+(cl-defun ~wmii/get-frame-id (&optional (frame (selected-frame)))
   "Gets the frame ID in Wmii-readable format."
   (thread-last (frame-parameter frame 'outer-window-id)
     string-to-number
     (format "0x%x")))
 
-(defun* ~wmii/toggle-frame-floating (&optional (frame (selected-frame)))
+(cl-defun ~wmii/toggle-frame-floating (&optional (frame (selected-frame)))
   "Toggles the floating of a frame when using Wmii."
   (interactive)
   (~exec-sh (list "wmiir" "xwrite" "/tag/sel/ctl" "send" (~wmii/get-frame-id frame) "toggle")))
 
-(defun* ~wmii/set-frame-floating (&optional (frame (selected-frame)))
+(cl-defun ~wmii/set-frame-floating (&optional (frame (selected-frame)))
   "Sets a frame to floating mode when using Wmii."
   (interactive)
   (~exec-sh (list "wmiir" "xwrite" "/tag/sel/ctl" "send" (~wmii/get-frame-id frame) "~")))

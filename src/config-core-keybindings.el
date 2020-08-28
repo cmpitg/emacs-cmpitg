@@ -340,7 +340,7 @@
         ("i" #'counsel-imenu "Symbol-based")
         ("f" #'isearch-forward-regexp "Forward regexp")
         ("b" #'isearch-backward-regexp "Backward regexp")
-        ("g" #'counsel-rg "Grep")
+        ("g" #'~counsel-rg "Grep")
         ("p" #'~counsel-grep-default-project-root "Grep in project"))
 
       (defhydra hydra-replace (:columns 4 :exit t)
