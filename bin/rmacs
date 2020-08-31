@@ -191,10 +191,7 @@ proc rmacsEval {name clientOpts argList verbose} {
 }
 
 proc rmacsList {} {
-	set uid [exec id -u]
-	exec mkdir -p /tmp/emacs$uid <@ stdin >@ stderr 2>@ stderr
-	exec chmod 700 /tmp/emacs$uid <@ stdin >@ stderr 2>@ stderr
-	return [exec ls -1 /tmp/emacs$uid/ <@ stdin >@ stderr 2>@ stderr]
+	return [exec ls -1 $::env(XDG_RUNTIME_DIR)/emacs <@ stdin >@ stderr 2>@ stderr]
 }
 
 proc rmacsKill {name verbose} {
