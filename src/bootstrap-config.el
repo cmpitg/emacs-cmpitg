@@ -17,33 +17,9 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-;; TODO: cl is deprecated, use cl-lib instead 
 (require 'cl-lib)
 
-(if (string= "1" (getenv "EMACS_FORCE_TOGGLE_DEBUG_ON_ERROR"))
-    (setq debug-on-error t)
-  (setq debug-on-error nil))
-
 (setq init-file-user (user-login-name))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Make sure to spawn an Emacs frame when there is interactive prompt
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (when (daemonp)
-;;   (defun ~advice/ensure-frame (&rest _)
-;;     "Ensures a frame on display :0.0 and ignore args."
-;;     (let* ((display-list (x-display-list))
-;;            (display-re (and display-list (regexp-opt display-list)))
-;;            (term (and display-re (cl-some (lambda (term) (and (string-match display-re (terminal-name term)) term)) (terminal-list))))
-;;            (frame (and term (cl-some (lambda (frame) (and (frame-live-p frame) frame)) (frames-on-display-list term)))))
-;;       (unless frame
-;;         (select-frame (make-frame-on-display (getenv "DISPLAY"))))
-;;       ;; (select-frame (or frame (make-frame-on-display (getenv "DISPLAY"))))
-;;       ))
-;;   (advice-add 'y-or-n-p :before #'~advice/ensure-frame)
-;;   (advice-add 'yes-or-no-p :before #'~advice/ensure-frame)
-;;   (advice-add 'read-passwd :before #'~advice/ensure-frame))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Important global values
@@ -96,7 +72,7 @@ a new window or a new frame.  Possible values: `:window',
   (apply 'concat *config-dir* paths))
 
 (defun ~load-files (&rest paths)
-  "Loads Emacs Lisp source files when they exist."
+  "Loads Emacs Lisp files when they exist."
   (dolist (file-path paths)
     (load file-path t nil)))
 
@@ -106,7 +82,7 @@ a new window or a new frame.  Possible values: `:window',
   (~load-files (~get-config "init-" (substring (symbol-name *rmacs-shape*) 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Information
+;; Logging current Rmacs information
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "%s :: debug-on-error=%s serser-name=%s init-file-user=%s\n"

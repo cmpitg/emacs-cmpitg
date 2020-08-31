@@ -15,10 +15,10 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(use-package cl-lib)
-(use-package misc)
-(use-package thingatpt)
-(use-package subr-x)
+(require 'cl-lib)
+(require 'misc)
+(require 'thingatpt)
+(require 'subr-x)
 
 ;;
 ;; String processing
@@ -227,6 +227,8 @@ project root, not ignoring anything."
 ;; Ref: https://github.com/abo-abo/swiper
 ;;
 
+(use-package flx-ido)
+
 (use-package counsel
   :diminish ivy-mode
   :bind (:map ivy-minibuffer-map
@@ -331,8 +333,11 @@ project root, not ignoring anything."
 ;;
 
 ;; Cheat sheet: M-x sp-cheat-sheet
-(use-package smartparens-config
-  :config (smartparens-global-mode))
+(use-package smartparens
+  :config
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode)))
 
 ;;
 ;; Adjust indentation based on current file

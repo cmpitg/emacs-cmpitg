@@ -528,7 +528,7 @@ If the found window is the mini-buffer, returns `nil'."
 
 (defun ~set-pop-up-buffer-mode (mode)
   "Sets mode for pop-up buffer.  MODE should either be :WINDOW or :FRAME."
-  (case mode
+  (cl-case mode
     (:window
      (custom-set-variables `(*popup-buffer-in* :window)
                            `(display-buffer-alist nil)

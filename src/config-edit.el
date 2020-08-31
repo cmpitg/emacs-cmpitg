@@ -290,8 +290,8 @@ might need manual refreshing."
 ;;    -*- epa-file-encrypt-to: ("your@email.address") -*-
 ;;
 
-(use-package epa-file
-  :config (epa-file-enable))
+(require 'epa-file)
+(epa-file-enable)
 
 ;;
 ;; Enhanced file management with Dired
@@ -474,9 +474,6 @@ might need manual refreshing."
   :defer t
   :mode ("\\.ex$" "\\.exs$"))
 
-;; Ref: http://erlang.org/doc/apps/tools/erlang_mode_chapter.html
-(use-package erlang-start)
-
 ;; Ref: https://github.com/tjarvstrand/edts
 ;; edts-man-setup to setup documentation
 ;; Make sure you have `rebar' 2.0.1+ installed, then
@@ -498,7 +495,7 @@ might need manual refreshing."
 (use-package haskell-mode
   :mode "\\.hs\\'"
   :config (progn
-            (use-package inf-haskell)
+            (require 'inf-haskell)
             ;; (use-package hs-lint)
             ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
             ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
@@ -527,10 +524,14 @@ might need manual refreshing."
 ;;
 ;; Delphi and Pascal development
 ;;
+;; Ref: https://github.com/ki11men0w/emacs-delphi-mode
+;;
 
-(use-package delphi-mode
-  :mode (("\\.pas\\'" . delphi-mode)
-         ("\\.pp\\'"  . delphi-mode)))
+(use-package opascal-mode
+  :straight
+  (opascal-mode :type git :host github :repo "ki11men0w/emacs-delphi-mode")
+  :mode (("\\.pas\\'" . opascal-mode)
+         ("\\.pp\\'"  . opascal-mode)))
 
 ;;
 ;; JavaScript development
@@ -814,10 +815,6 @@ the sequence, and its index within the sequence."
     (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
     (bind-key "M-q"        #'~cider-format-defun       cider-mode-map)))
 
-(use-package clojurescript-mode
-  :defer t
-  :mode "\\.cljs\\'")
-
 (use-package midje-mode
   :diminish midje-mode
   :after cider)
@@ -841,8 +838,7 @@ the sequence, and its index within the sequence."
 ;; Ref: https://www.nongnu.org/geiser/
 ;;
 
-(use-package geiser-mode
-  :after paredit-mode
+(use-package geiser
   :mode "\\.scm\\'"
   :config
   (progn

@@ -21,8 +21,9 @@
 ;; Org-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'f)
-(require 'org)
+(use-package f)
+(require 'misc)
+(use-package org)
 (defun ~my/org-mode-setup ()
   (bind-key "<S-return>" #'~execute-line org-mode-map)
   (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)

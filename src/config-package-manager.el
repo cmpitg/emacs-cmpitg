@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,45 +17,27 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(eval-when-compile (require 'package))
-
-(setq elpamr-default-output-directory "/m/src/local-elpa-mirror")
-
-(dolist (package-archive `(("local-elpa-mirror" . ,elpamr-default-output-directory)
-                           ("melpa-stable" . "https://stable.melpa.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/")
-                           ("marmalade" . "https://marmalade-repo.org/packages/")
-                           ("gnu" . "https://elpa.gnu.org/packages/")
-                           ("elpy" . "https://jorgenschaefer.github.io/packages/")))
-  (add-to-list 'package-archives package-archive))
-
-(package-initialize nil)
-
-;; Fetch the list of available packages
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
 ;;
-;; el-get
+;; Use straight.el for reproducible builds
 ;;
-;; Ref: https://github.com/dimitri/el-get
+;; Ref: https://github.com/raxod502/straight.el
 ;;
 
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+;; Use use-package with straight.el
+(setq straight-use-package-by-default t)
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
-
-(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-
-(el-get-bundle acme-mouse :type github :pkgname "cmpitg/acme-mouse")
-(el-get-bundle mu4e :type github :pkgname "djcb/mu")
-
-(el-get 'sync)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 ;;
 ;; use-package
@@ -63,8 +45,9 @@
 ;; Ref: https://github.com/jwiegley/use-package
 ;;
 
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+(straight-use-package 'use-package)
+;; Always install missing packages with use-package
+(setq use-package-always-ensure t)
 
 ;; To reduce load time
 (eval-when-compile (require 'use-package))
@@ -73,16 +56,6 @@
   :demand t)
 (use-package bind-key
   :demand t)
-
-;;
-;; Local packages
-;;
-
-(dolist (pkg (let ((local-packages-dir (~get-config "local-packages/")))
-               (if (file-exists-p local-packages-dir)
-                   (directory-files local-packages-dir)
-                 '())))
-  (add-to-list 'load-path (~get-config "local-packages/" pkg)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

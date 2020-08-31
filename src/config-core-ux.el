@@ -109,8 +109,8 @@
             (turn-on-save-visited-files-mode)))
 
 ;; Custom unique naming method
-(use-package uniquify
-  :init (setq uniquify-buffer-name-style 'forward))
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
 
 ;; Disable Tramp autosave
 (setq tramp-auto-save-directory "/tmp/")
@@ -247,7 +247,8 @@
 
 ;; Hide undo-tree from mode line
 (use-package undo-tree
-  :diminish undo-tree-mode)
+  :diminish undo-tree-mode
+  :config (global-undo-tree-mode))
 
 ;; Make shebang-ed files executable
 (add-hook 'after-save-hook #'~maybe-make-current-file-executable)
@@ -313,6 +314,13 @@
 ;; Ojo - Inserting eval result back to current buffer
 (require 'rmacs:config-module-ojo "config-module-ojo")
 (ojo:enable)
+
+;; Most-recently-used (MRU) buffer behavior
+;; Ref: https://github.com/jrosdahl/iflipb
+(use-package iflipb
+  ;; :straight
+  ;; (iflipb :type git :host github :repo "jrosdahl/iflipb")
+  :config (custom-set-variables `(iflipb-ignore-buffers nil)))
 
 ;; Simple buffer listing
 (require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
@@ -534,11 +542,6 @@ selection or end-of-line."
   (progn
     (acme-mouse-mode)
     (global-acme-mouse-mode)))
-
-;; Most-recently-used (MRU) buffer behavior
-;; Ref: https://github.com/jrosdahl/iflipb
-(use-package iflipb
-  :config (custom-set-variables `(iflipb-ignore-buffers nil)))
 
 ;; Allow text drap-and-drop with mouse
 (custom-set-variables `(mouse-drag-and-drop-region t))
