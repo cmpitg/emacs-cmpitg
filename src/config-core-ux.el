@@ -99,6 +99,10 @@
 ;; Ref: https://github.com/nflath/save-visited-files
 (use-package save-visited-files
   :config (progn
+            ;; Temporarily set default Scheme implementation to prevent
+            ;; interactive prompt on startup
+            (setq geiser-default-implementation 'guile)
+
             ;; Each Emacs server has a different list of visited files
             (setq save-visited-files-location
                   (format "~/.emacs.d/emacs-visited-files.%s" server-name))
