@@ -402,7 +402,7 @@ project root, not ignoring anything."
           ("Z" . #'fastnav-sprint-backward)
 
           ("X" . #'~execute-current-wand-text)
-          ("xx" . #'hydra-pattern-exec/body)
+          ("xx" . #'hydra-freeform-exec/body)
           ("I" . #'bowser:expand-dir-here)
 
           (">" . #'beginning-of-buffer)

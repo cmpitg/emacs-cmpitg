@@ -69,6 +69,147 @@
       (local-hydra-act-on-path/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Command palette utils
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro ~with-output-to-next-window (goto-beginning? &rest body)
+  "TODO"
+  (when (= 1 (~count-windows))
+    (error "Must have must than one window to output"))
+
+  `(with-current-buffer (window-buffer (next-window))
+     (when ,goto-beginning?
+       (beginning-of-buffer))
+     (open-line 2)
+     ,@body))
+(put '~with-output-to-next-window 'lisp-indent-function 1)
+
+(defmacro ~with-output-to-buffer-file (path goto-beginning? &rest body)
+  "TODO"
+  `(with-current-buffer (~visit-file ,path)
+     (when ,goto-beginning?
+       (beginning-of-buffer))
+     (open-line 2)
+     ,@body))
+(put '~with-output-to-buffer-file 'lisp-indent-function 2)
+
+(defun ~palette/ensure-prefix (text prefix)
+  "Makes sure text has a prefix."
+  (lexical-let* ((text (concat prefix (~palette/trim-garbage text)))
+                 (padding (first (s-match (rx bos (0+ blank)) text))))
+    (concat padding text)))
+
+;; (~palette/ensure-prefix "         ls \\\n" "$ ")
+;; (~palette/ensure-prefix "ls \\\n" "$ ")
+;; (~palette/ensure-prefix "ls \\" "$ ")
+;; (~palette/ensure-prefix "   $!! hello world !!$ aa" "$ ")
+;; (~palette/ensure-prefix "   hello !!! world" "$ ")
+;; (~palette/ensure-prefix "         pwd" "$ ")
+;; (~palette/ensure-prefix "         ls\\\n" "$ ")
+
+(defun ~palette/trim-garbage (text)
+  "TODO. TODO: Customize garbage"
+  (lexical-let ((elements (s-split-up-to (rx bos (1+ (any " ;!$#/"))) text 1)))
+    (if (> (length elements) 1)
+        (string-trim (second elements))
+      (first elements))))
+
+;; (~palette/trim-garbage "ls \\\n")
+;; (~palette/trim-garbage "   ls \\\n")
+;; (~palette/trim-garbage "!!$   ls \\\n")
+;; (~palette/trim-garbage "   ls $  sss $\\\n")
+;; (~palette/trim-garbage "ls \\\n -1 ~/tmp/")
+
+(defun ~palette/decorate-exec-text-at-point ()
+  "Decorates executable text at current point.  Executable
+text is multiline text that could be executed with Wand."
+  (interactive)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
+    (save-mark-and-excursion
+      (goto-char (car (bounds-of-thing-at-point 'exec-text)))
+      (lexical-let ((text (~palette/ensure-prefix (string-trim-right (thing-at-point 'line))
+                                                  "$ ")))
+        (kill-line)
+        (insert text)))))
+
+(defun ~palette/exec-sh-in-term-mux (&optional cmd)
+  "Executes a shell command in a terminal multiplexer."
+  (interactive)
+  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd)))
+    (~add-to-history-file *~exec-history-path* cmd
+                          :max-history *~exec-history-max*)
+    (~dispatch-action (concat "!!! " cmd))))
+
+(defun ~palette/exec-sh-in-term-mux-piping-to-sh-output-file (&optional cmd)
+  "Executes a shell command in a terminal multiplexer, piping output to the next window."
+  (interactive)
+  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd)))
+    (~add-to-history-file *~exec-history-path* cmd
+                          :max-history *~exec-history-max*)
+    (~with-output-to-buffer-file (~get-project-sh-output-path) t
+      (insert (format "$ %s" cmd))
+      (beginning-of-line)
+      (~prepare-for-output-block t)
+      (~dispatch-action (concat "!!! " (~build-|rmacs-tee-cmd cmd))))))
+
+(defun ~palette/exec-sh-piping-to-sh-output-file (&optional cmd)
+  "Executes a shell command, piping output to the next window."
+  (interactive)
+  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd)))
+    (~add-to-history-file *~exec-history-path* cmd
+                          :max-history *~exec-history-max*)
+    (~with-output-to-buffer-file (~get-project-sh-output-path) t
+      (insert (format "$ %s" cmd))
+      (beginning-of-line)
+      (~exec-sh<-next-line-separate cmd))))
+
+(defun ~palette/exec-sh-piping-here (&optional cmd)
+  "TODO"
+  (lexical-let ((text (thread-last (~read-command-or-get-from-selection *~exec-history-path* cmd)
+                        ~palette/trim-garbage)))
+    (end-of-thing 'exec-text)
+    (~exec-sh<-next-line-separate text
+                                  :callback #'(lambda (&rest _args)
+                                                (end-of-thing 'exec-text)
+                                                (forward-line)
+                                                (call-interactively #'~mark-current-output-block)
+                                                (call-interactively #'~ansi-colorize-region)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~ansi-colorize-current-output-block ()
+  "ANSI-colorizes current output block."
+  (interactive)
+  (call-interactively #'~mark-current-output-block)
+  (call-interactively #'~ansi-colorize-region))
+
+(defun ~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file ()
+  "TODO - Add prefix, then exec"
+  (interactive)
+  (when-let (text (thing-at-point 'exec-text))
+    (~palette/exec-sh-in-term-mux-piping-to-sh-output-file text)))
+
+(defun ~palette/point/exec-sh-in-term-mux-piping-here ()
+  "TODO - Add prefix, then exec"
+  (interactive)
+  (when-let (text (thing-at-point 'exec-text))
+    (~palette/exec-sh-in-term-mux-piping-here text)))
+
+(defun ~palette/point/exec-sh-piping-to-sh-output-file ()
+  "TODO - Add prefix, then exec.  TODO: Customize garbage"
+  (interactive)
+  (~palette/decorate-exec-text-at-point)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
+    (~palette/exec-sh-piping-to-sh-output-file text)))
+
+(defun ~palette/point/exec-sh-piping-here ()
+  "TODO"
+  (interactive)
+  (~palette/decorate-exec-text-at-point)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
+    (~palette/exec-sh-piping-here text)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Widget and rendering
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

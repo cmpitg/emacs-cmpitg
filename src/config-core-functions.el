@@ -374,6 +374,7 @@ directory to the current buffer."
 ;; Window & Frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO URGENT Fix this
 (defun ~get-previous-frame ()
   "Gets the previously focused frame."
   (if (= 1 (length (frame-list)))
@@ -1592,6 +1593,11 @@ could be executed.  See `THING-AT-POINT' for futher information."
         nil
       (cons start end))))
 (put 'exec-text 'bounds-of-thing-at-point '~bounds-of-exec-text-at-point)
+
+(defun ~select-multiline-exec-text ()
+  "Selects multiline exec text."
+  (interactive)
+  (mark-things 'exec-text))
 
 (defun ~toggle-popup-exec-result ()
   "Toggles whether or not result from an exec function is popped
