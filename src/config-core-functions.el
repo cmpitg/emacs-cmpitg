@@ -912,19 +912,20 @@ which is loaded lazily get loaded."
 expanded using `expand-file-name', then
 `substitute-in-file-name'."
   (let ((path (string-trim (expand-file-name path))))
-    (dolist (regexp&action (append (if (boundp '*open-with-regexps*)
-                                       *open-with-regexps*
-                                     (list))
-                                   (list `(".*" . (lambda (path)
-                                                    (~open-file-specialized path
-                                                                            :new-frame? ,new-frame?))))))
+    (cl-dolist (regexp&action
+                (append (if (boundp '*open-with-regexps*)
+                            *open-with-regexps*
+                          (list))
+                        (list `(".*" . (lambda (path)
+                                         (~open-file-specialized path
+                                                                 :new-frame? ,new-frame?))))))
       (let ((regexp (car regexp&action))
             (action (cdr regexp&action)))
         (when (s-matches-p regexp path)
-          (return (typecase action
-                    (function   (funcall action path))
-                    (string     (~open-with path action))
-                    (otherwise  (error "Invalid program %s" action)))))))))
+          (cl-return (typecase action
+                       (function   (funcall action path))
+                       (string     (~open-with path action))
+                       (otherwise  (error "Invalid program %s" action)))))))))
 
 (defun ~gui/open-file ()
   (interactive)
