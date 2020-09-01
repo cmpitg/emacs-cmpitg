@@ -374,16 +374,20 @@ directory to the current buffer."
 ;; Window & Frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO URGENT Fix this
+(defun ~get-frames-mru ()
+  "Gets the list of frames is most-recently-used order."
+  (sort (frame-list)
+        #'(lambda (x y)
+            (> (or (frame-parameter x :custom/focus-time) 0)
+               (or (frame-parameter y :custom/focus-time) 0)))))
+
 (defun ~get-previous-frame ()
-  "Gets the previously focused frame."
+  "Gets the previously focused frame that is not the current one."
   (if (= 1 (length (frame-list)))
       nil
-    (lexical-let ((sorted-frames (sort (frame-list)
-                                       #'(lambda (x y)
-                                           (> (or (frame-parameter x :custom/focus-time) 0)
-                                              (or (frame-parameter y :custom/focus-time) 0))))))
-      (second sorted-frames))))
+    (cl-loop for frame in (~get-frames-mru)
+             unless (equalp frame (selected-frame))
+             return frame)))
 
 (defun ~toggle-sticky-window ()
   "Toggles stickiness of the currently active window."
