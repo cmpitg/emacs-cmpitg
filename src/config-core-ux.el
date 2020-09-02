@@ -430,8 +430,9 @@
 
 ;; Displaying eval result in an overlay after eval'ing
 ;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
-;; TODO - Clean up the following code
+;; TODO - URGENT Clean up the following code
 
+(use-package cider)
 (autoload 'cider--make-result-overlay "cider-overlays")
 
 (defun blink:display-value (value point)
