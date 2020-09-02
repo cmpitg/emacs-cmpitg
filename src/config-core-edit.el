@@ -359,6 +359,117 @@ project root, not ignoring anything."
             (defvaralias 'lazy-highlight-face 'isearch-lazy-highlight)))
 
 ;;
+;; Bracket-based structured editing
+;;
+;; Ref: https://www.emacswiki.org/emacs/ParEdit
+;; Ref: https://github.com/DogLooksGood/parinfer-mode
+;; Ref: https://github.com/abo-abo/lispy
+;;
+
+(use-package parinfer
+  :hook ((emacs-lisp-mode
+          scheme-mode
+          common-lisp-mode
+          lisp-mode
+          clojure-mode
+          cider-repl-mode
+          sly-mrepl-mode
+          slime-repl-mode) . parinfer-mode)
+  :bind
+  (("C-," . parinfer-toggle-mode))
+  :config
+  (progn
+    (setq parinfer-extensions
+          '(defaults
+             pretty-parens
+             evil
+             lispy
+             smart-tab
+             smart-yank))))
+
+(use-package lispy
+  :hook ((emacs-lisp-mode
+          scheme-mode
+          common-lisp-mode
+          lisp-mode
+          clojure-mode
+          cider-repl-mode
+          sly-mrepl-mode
+          slime-repl-mode) . lispy-mode)
+  :demand t
+  :config
+  (progn
+    (defun ~conditionally-enable-lispy ()
+      (when (eq this-command 'eval-expression)
+        (lispy-mode 1)))
+    (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
+
+    (defun ~lispy-update-keybindings ()
+      (define-key lispy-mode-map (kbd "C-e") #'modalka-mode))
+    (add-hook 'lisp-mode-hook #'~lispy-update-keybindings)
+
+    (~lispy-update-keybindings)))
+
+(use-package paredit
+  :disabled t
+  :hook ((emacs-lisp-mode
+          scheme-mode
+          common-lisp-mode
+          lisp-mode
+          clojure-mode
+          cider-repl-mode
+          sly-mrepl-mode
+          slime-repl-mode) . paredit-mode)
+  :bind (:map paredit-mode-map
+              ("s-." . paredit-backward-kill-word)
+              ("s-p" . paredit-forward-kill-word)
+              ("s-r" . forward-word)
+              ("s-g" . backward-word)
+              ("s-C" . paredit-backward-up)
+              ("s-T" . paredit-forward-up)
+              ("s-R" . paredit-forward)
+              ("s-G" . paredit-backward))
+  :defines (slime-repl-mode-map sly-mrepl-mode-map)
+  :config (progn
+            ;; Always try to delete region first
+            (put 'paredit-forward-delete 'delete-selection 'supersede)
+            (put 'paredit-backward-delete 'delete-selection 'supersede)
+
+            (defun ~enable-paredit-mode ()
+              "Enables paredit mode"
+              (interactive)
+              (paredit-mode 1))
+
+            (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
+              (when (apply orig-fun args)
+                (when (fboundp 'autopair-mode)
+                  (autopair-mode -1))
+                (when (fboundp 'smartparens-mode)
+                  (smartparens-mode -1))))
+            (advice-add 'paredit-mode
+                        :around #'~advice/disable-other-parens-modes-in-paredit)
+
+            ;; Use in minibuffer
+            (defun conditionally-enable-paredit-mode ()
+              "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
+              (if (eq this-command 'eval-expression)
+                  (paredit-mode 1)))
+            (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
+
+            ;; Stop SLIME's REPL from grabbing DEL,
+            ;; which is annoying when backspacing over a '('
+            (defun override-slime-repl-bindings-with-paredit ()
+              (define-key slime-repl-mode-map
+                (read-kbd-macro paredit-backward-delete-key) nil))
+            (add-hook 'slime-repl-mode-hook
+                      #'override-slime-repl-bindings-with-paredit)
+
+            (defun ~paredit-up-all ()
+              (interactive)
+              (ignore-errors
+                (loop do (paredit-forward-up))))))
+
+;;
 ;; Modal editing mode
 ;;
 ;; Ref: https://github.com/mrkkrp/modalka
@@ -366,6 +477,8 @@ project root, not ignoring anything."
 
 (use-package modalka
   :demand t
+  ;; Must load after Lisp for the keybindings to take precendence
+  :after (lispy parinfer)
   :bind* (:map
           modalka-mode-map
           ("SPC" . #'hydra-global/body)
@@ -443,7 +556,7 @@ project root, not ignoring anything."
 ;;
 ;; TODO: keybinding
 ;; * Text object manipulation
-;; * Mark inner/outer <, (, [, {, ', "
+;; * Mark inner/outer <, (, [, {, \', \"
 ;;
 
 ;;
@@ -504,7 +617,7 @@ project root, not ignoring anything."
   :config
   (progn
     (cl-defun ~wand:set-current-dir (&optional
-                                   (text (thing-at-point 'line)))
+                                     (text (thing-at-point 'line)))
       (interactive)
       (let ((text (string-trim text)))
         (when (f-dir? text)
@@ -559,7 +672,7 @@ project root, not ignoring anything."
       "Builds command to pipe output to the current buffer using rmacs-tee."
       (format "{ exec-and-echo-stdin %s } |& env RMACS_BUFFER_NAME='%s' RMACS_SERVER_NAME='%s' rmacs-tee"
               cmd (buffer-name) server-name))
-    
+
     (setq wand:*rules*
           (list (wand:create-rule :match (rx bol (0+ " ") "<")
                                   :capture :after
