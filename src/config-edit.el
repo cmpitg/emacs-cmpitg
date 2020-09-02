@@ -281,13 +281,7 @@ might need manual refreshing."
   :ensure t
   :init (progn
           ;; (smart-tabs-insinuate 'c 'javascript 'python)
-          (setq-default tab-width 4)
-          ;; (add-hook 'python-mode-hook
-          ;;           (lambda ()
-          ;;             (setq indent-tabs-mode t)
-          ;;             (setq tab-width (default-value 'tab-width))
-          ;;             (setq whitespace-style '(trailing empty))))
-          ))
+          (setq-default tab-width 4)))
 
 ;;
 ;; Rust
@@ -766,6 +760,11 @@ the sequence, and its index within the sequence."
 ;;
 ;; Ref: https://www.nongnu.org/geiser/
 ;;
+
+(use-package guix-devel
+  :straight
+  (guix :type git :host github :repo "alezost/guix.el")
+  :mode "\\.scm\\'")
 
 (use-package geiser
   :mode "\\.scm\\'"
