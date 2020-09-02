@@ -719,6 +719,10 @@ might need manual refreshing."
 
 (use-package cider
   :after (hydra clojure-mode)
+  :hook (((clojure-mode) . midje-mode)
+         ((cider-repl-mode) . subword-mode)
+         ((clojure-mode)
+          cider-mode) . eldoc-mode)
   :init
   (progn
     (require 'seq)
@@ -748,18 +752,8 @@ the sequence, and its index within the sequence."
       (save-excursion
         (call-interactively 'cider-format-defun)))
 
-    ;; (add-hook 'clojure-mode-hook #'cider-mode)
-    (add-hook 'clojure-mode-hook #'~enable-paredit-mode)
-    (add-hook 'clojure-mode-hook #'midje-mode)
-
     ;; Only display eldoc for current function/macro, not current symbol
     (setq cider-eldoc-display-for-symbol-at-point nil)
-    (add-hook 'cider-mode-hook 'eldoc-mode)
-
-    (add-hook 'cider-repl-mode-hook #'~enable-paredit-mode)
-
-    ;; Moving inside subword
-    (add-hook 'cider-repl-mode-hook #'subword-mode)
 
     ;; Hide *nrepl-connection* and *nrepl-server*
     (setq nrepl-hide-special-buffers t)
