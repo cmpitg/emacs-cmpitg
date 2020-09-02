@@ -362,7 +362,7 @@ might need manual refreshing."
 ;;
 
 (use-package rust-mode
-  :mode ("\\.rs$" . rust-mode))
+  :mode ("\\.rs\\'" . rust-mode))
 
 ;;
 ;; Golang
@@ -459,8 +459,8 @@ might need manual refreshing."
 
 ;; Ref: https://github.com/tonini/alchemist.el
 (use-package alchemist
-  :mode (("\\.ex$"  . alchemist-mode)
-         ("\\.exs$" . alchemist-mode))
+  :mode (("\\.ex\\'"  . alchemist-mode)
+         ("\\.exs\\'" . alchemist-mode))
   :init
   (progn
     ;; Don't ask to save changes before running tests
@@ -472,7 +472,8 @@ might need manual refreshing."
 ;; Ref: https://github.com/elixir-editors/emacs-elixir
 (use-package elixir-mode
   :defer t
-  :mode ("\\.ex$" "\\.exs$"))
+  :mode ("\\.ex\\'"
+         "\\.exs\\'"))
 
 ;; Ref: https://github.com/tjarvstrand/edts
 ;; edts-man-setup to setup documentation
@@ -519,7 +520,7 @@ might need manual refreshing."
 ;;
 
 (use-package scss-mode
-  :mode "\\.scss\\$")
+  :mode "\\.scss\\'")
 
 ;;
 ;; Delphi and Pascal development
