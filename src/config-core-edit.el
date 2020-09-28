@@ -382,16 +382,27 @@ project root, not ignoring anything."
           sly-mrepl-mode
           slime-repl-mode) . parinfer-mode)
   :bind
-  (("C-," . parinfer-toggle-mode))
+  (("C-a" . #'parinfer-toggle-mode))
   :config
   (progn
     (setq parinfer-extensions
           '(defaults
              pretty-parens
              evil
-             lispy
+             ;; lispy
              smart-tab
-             smart-yank))))
+             smart-yank))
+    
+    (defun ~parinfer-update-keybindings ()
+      (define-key parinfer-mode-map (kbd "C-e") #'modalka-mode)
+      (define-key parinfer-mode-map (kbd "C-a") #'parinfer-toggle-mode)
+      (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
+      (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
+      (define-key parinfer-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
+      (define-key parinfer-mode-map (kbd "<C-RET>") #'~eval-last-sexp-or-region))
+    (add-hook 'lisp-mode-hook #'~parinfer-update-keybindings)
+
+    (~parinfer-update-keybindings)))
 
 (use-package lispy
   :hook ((emacs-lisp-mode
@@ -411,7 +422,12 @@ project root, not ignoring anything."
     (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
 
     (defun ~lispy-update-keybindings ()
-      (define-key lispy-mode-map (kbd "C-e") #'modalka-mode))
+      (define-key lispy-mode-map (kbd "C-e") #'modalka-mode)
+      (define-key lispy-mode-map (kbd "C-a") #'parinfer-toggle-mode)
+      (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
+      (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
+      (define-key lispy-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
+      (define-key lispy-mode-map (kbd "<C-RET>") #'~eval-last-sexp-or-region))
     (add-hook 'lisp-mode-hook #'~lispy-update-keybindings)
 
     (~lispy-update-keybindings)))
