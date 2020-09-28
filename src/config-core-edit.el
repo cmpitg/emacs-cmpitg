@@ -45,6 +45,12 @@
 (use-package async)
 
 ;;
+;; Editable grep'ing
+;;
+
+(use-package wgrep)
+
+;;
 ;; Tramp for remote & sudo access
 ;;
 
