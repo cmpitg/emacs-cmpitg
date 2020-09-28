@@ -136,6 +136,7 @@
   ;;
 
   (bind-key "<C-return>"   #'~eval-last-sexp-or-region)
+  ;; TODO: Keybinding for eval upper sexp 
   (bind-key "<M-return>"   #'eval-defun)
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m"          #'~eval-then-replace-region-or-last-sexp)
@@ -527,7 +528,7 @@
         ("p" #'hydra-paren-edit/body "Paren-editing mode")
 
         ;; Universal eval/dev mode for the current buffer
-        ("e" #'hydra-current-dev/body "Dev mode for current buffer" )
+        ("e" #'hydra-current-dev/body "Dev mode for current buffer")
 
         ("u" #'hydra-dev/body "Dev")
         ("x" #'hydra-exec/body "Execution")
