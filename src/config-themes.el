@@ -40,7 +40,12 @@
 (add-to-list 'custom-theme-load-path (~get-config "themes/"))
 ;; (~load-files (~get-config "themes/cmpitg-thursday-theme.el"))
 ;; (load-theme 'cmpitg-thursday t)
-(load-theme 'cmpitg-random-light t)
+;; (load-theme 'cmpitg-random-light t)
+
+(use-package modus-operandi-theme
+  :init
+  (progn
+    (load-theme 'modus-operandi t)))
 
 ;; Current
 ;; (load-theme 'plan9 t)
