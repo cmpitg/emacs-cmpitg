@@ -650,8 +650,8 @@ might need manual refreshing."
   :after (hydra clojure-mode)
   :hook (((clojure-mode) . midje-mode)
          ((cider-repl-mode) . subword-mode)
-         ((clojure-mode)
-          cider-mode) . eldoc-mode)
+         ((clojure-mode
+           cider-mode) . eldoc-mode))
   :init
   (progn
     (require 'seq)
