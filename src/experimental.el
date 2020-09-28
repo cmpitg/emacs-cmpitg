@@ -186,14 +186,23 @@ text is multiline text that could be executed with Wand."
 (defun ~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file ()
   "TODO - Add prefix, then exec"
   (interactive)
-  (when-let (text (thing-at-point 'exec-text))
+  (~palette/decorate-exec-text-at-point)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
     (~palette/exec-sh-in-term-mux-piping-to-sh-output-file text)))
 
 (defun ~palette/point/exec-sh-in-term-mux-piping-here ()
   "TODO - Add prefix, then exec"
   (interactive)
-  (when-let (text (thing-at-point 'exec-text))
+  (~palette/decorate-exec-text-at-point)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
     (~palette/exec-sh-in-term-mux-piping-here text)))
+
+(defun ~palette/point/exec-sh-in-term-mux ()
+  "TODO - Add prefix, then exec"
+  (interactive)
+  (~palette/decorate-exec-text-at-point)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
+    (~palette/exec-sh-in-term-mux text)))
 
 (defun ~palette/point/exec-sh-piping-to-sh-output-file ()
   "TODO - Add prefix, then exec.  TODO: Customize garbage"
