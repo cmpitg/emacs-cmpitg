@@ -191,7 +191,10 @@ proc rmacsEval {name clientOpts argList verbose} {
 }
 
 proc rmacsList {} {
-	return [exec ls -1 $::env(XDG_RUNTIME_DIR)/emacs <@ stdin >@ stderr 2>@ stderr]
+	catch {
+		return [exec ls -1 $::env(XDG_RUNTIME_DIR)/emacs <@ stdin >@ stderr 2>@ stderr]
+	}
+	return {}
 }
 
 proc rmacsKill {name verbose} {
