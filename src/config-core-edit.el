@@ -352,7 +352,7 @@ project root, not ignoring anything."
 ;;
 
 (use-package dtrt-indent
-  :config (dtrt-indent-mode 1))
+  :config (dtrt-indent-global-mode 1))
 
 ;;
 ;; Char-based navigation
