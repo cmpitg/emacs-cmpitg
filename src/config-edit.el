@@ -483,12 +483,18 @@ might need manual refreshing."
 
 (use-package tide
   :after (flycheck company)
+  :mode (("\\.tsx\\'" . typescript-mode))
   :config
   (progn
+    (with-eval-after-load "dtrt-indent"
+      (add-to-list 'dtrt-indent-hook-mapping-list
+                   '(typescript-mode javascript typescript-indent-level)))
+
     (defun my/setup-javascript-dev ()
       (interactive)
       (tide-setup)
       (eldoc-mode 1)
+      (dtrt-indent-mode 1)
       (flycheck-mode 1)
       (setq flycheck-check-syntax-automatically '(save mode-enabled))
       (tide-hl-identifier-mode 1))
