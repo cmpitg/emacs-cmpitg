@@ -136,7 +136,7 @@
   ;;
 
   (bind-key "<C-return>"   #'~eval-last-sexp-or-region)
-  ;; TODO: Keybinding for eval upper sexp 
+  ;; TODO: Keybinding for eval upper sexp
   (bind-key "<M-return>"   #'eval-defun)
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m"          #'~eval-then-replace-region-or-last-sexp)
@@ -502,7 +502,8 @@
         "Dev"
         ("j" #'hydra-dev-clojure/body "Clojure")
         ("p" #'hydra-dev-python/body "Python")
-        ("y" #'hydra-dev-flycheck/body "Flycheck"))
+        ("y" #'hydra-dev-flycheck/body "Flycheck")
+        ("t" #'hydra-dev-tcl/body "Tcl"))
 
       (defhydra hydra-current-dev nil
         "Current dev mode")

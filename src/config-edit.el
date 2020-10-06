@@ -793,7 +793,12 @@ the sequence, and its index within the sequence."
     (cl-defun ~tcl/browse-doc (&optional (version *~tcl-version*))
       "Browses Tcl documentation."
       (interactive)
-      (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))))
+      (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))
+
+    (defhydra hydra-dev-tcl (:columns 4 :exit t)
+      "Python development"
+      ("z" #'switch-to-tcl "Switch to shell")
+      ("r" #'tcl-eval-region "Eval region"))))
 
 ;;
 ;; Language server mode
