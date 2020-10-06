@@ -470,7 +470,7 @@ might need manual refreshing."
 ;;
 
 (use-package js2-mode
-  :mode (("\\.js\\'"   . js2-mode)
+  :mode (("\\.js\\'"   . js2-minor-mode)
          ("\\.jsx?\\'" . js2-jsx-mode))
   :interpreter "node")
 
