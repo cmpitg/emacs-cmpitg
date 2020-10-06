@@ -388,11 +388,11 @@ project root, not ignoring anything."
     (setq parinfer-extensions
           '(defaults
              pretty-parens
-             evil
+             ;; evil
              ;; lispy
              smart-tab
              smart-yank))
-    
+
     (defun ~parinfer-update-keybindings ()
       (define-key parinfer-mode-map (kbd "C-e") #'modalka-mode)
       (define-key parinfer-mode-map (kbd "C-a") #'parinfer-toggle-mode)
