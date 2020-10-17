@@ -519,7 +519,9 @@ might need manual refreshing."
   :config (progn
             (use-package robe
               :init (progn
-                      (add-hook 'ruby-mode-hook 'robe-mode)))))
+                      (add-hook 'ruby-mode-hook 'robe-mode)
+                      (with-eval-after-load "company-mode"
+                        (push 'company-robe company-backends))))))
 
 ;;
 ;; Python development
