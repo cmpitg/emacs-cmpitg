@@ -517,10 +517,9 @@ might need manual refreshing."
   :mode (("\\Rakefile\\'" . ruby-mode)
          ("\\.mab\\'"     . ruby-mode))
   :config (progn
-            (use-package ruby-dev
+            (use-package robe
               :init (progn
-                      (autoload 'turn-on-ruby-dev "ruby-dev" nil t)
-                      (add-hook 'ruby-mode-hook 'turn-on-ruby-dev)))))
+                      (add-hook 'ruby-mode-hook 'robe-mode)))))
 
 ;;
 ;; Python development

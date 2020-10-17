@@ -58,7 +58,7 @@
 ;; TODO: Refactor using buffer-local-value
 ;; TODO: Refactor: get-buffer-window -> selected-window
 ;; TODO: See how the performance of the loop is, then refactor with links from the main buffer
-;; TODO: Implement ~current-project-root here
+;; TODO: Implement ~get-current-project-root here
 ;; TODO: Implement ~count-non-sticky-windows here
 
 (require 'wand)
@@ -181,7 +181,7 @@ returns `nil'."
     (let* ((main-path (if (buffer-file-name main-buffer)
                           (buffer-file-name main-buffer)
                         (buffer-name)))
-           (main-dir (with-current-buffer main-buffer (~current-project-root)))
+           (main-dir (with-current-buffer main-buffer (~get-current-project-root)))
            (cp-path (f-join main-dir ".rmacs-cp"))
            (cp-buffer-name (format "*cp:%s*" main-dir))
            (cp-buffer (get-buffer-create cp-buffer-name))
@@ -212,7 +212,7 @@ returns `nil'."
 
         (setq-local local/main-path main-path)
         (setq-local local/cp-path cp-path)
-        (setq-local default-directory (~current-project-root))
+        (setq-local default-directory (~get-current-project-root))
 
         ;; We don't want to record possible buffer manipulations as part of
         ;; the current command

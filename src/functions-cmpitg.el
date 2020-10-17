@@ -21,12 +21,12 @@
   "The identity function."
   x)
 
-(cl-defun ~get-project-toolbox-path (&key (dir (~current-project-root))
+(cl-defun ~get-project-toolbox-path (&key (dir (~get-current-project-root))
                                         (file-name ".rmacs-toolbox"))
   "Gets the path to the current project toolbox file."
   (f-join dir file-name))
 
-(cl-defun ~get-project-sh-output-path (&key (dir (~current-project-root)))
+(cl-defun ~get-project-sh-output-path (&key (dir (~get-current-project-root)))
   "Gets the path to the current project SH output file."
   (~get-project-toolbox-path :dir dir
                              :file-name ".rmacs-sh-output"))

@@ -361,13 +361,13 @@ application."
                         keymap))
   (insert "\n")
   (insert "Project path: "
-          (propertize (~current-project-root)
+          (propertize (~get-current-project-root)
                       'keymap
                       (let ((keymap (make-sparse-keymap)))
                         (bind-key "<mouse-3>"
                                   #'(lambda ()
                                       (interactive)
-                                      (dir-browser:render-dir (~current-project-root)))
+                                      (dir-browser:render-dir (~get-current-project-root)))
                                   keymap)
                         keymap)))
   (insert "\n\n"))

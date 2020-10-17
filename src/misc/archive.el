@@ -37,7 +37,7 @@ started, change the directory."
   "Starts Eshell in the current project directory or the current
 directory."
   (interactive)
-  (~eshell-dir (~current-project-root)))
+  (~eshell-dir (~get-current-project-root)))
 
 (defun ~eshell-quit ()
   "Quits Eshell when current command is empty."

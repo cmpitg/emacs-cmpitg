@@ -205,7 +205,7 @@ nothing and returns `nil'. "
         (unless (bowser:expand-or-collapse-dir)
           (funcall #'exec-fn line))))))
 
-(cl-defun bowser:browse-dir (&optional (dir (~current-project-root)))
+(cl-defun bowser:browse-dir (&optional (dir (~get-current-project-root)))
   "Browses a directory."
   (interactive)
   (let* ((buffer-name (bowser:format-buffer-name dir))

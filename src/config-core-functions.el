@@ -1216,10 +1216,10 @@ variable `local/linked-windows'."
   (tramp-cleanup-all-connections)
   (tramp-cleanup-all-buffers))
 
-(defun ~current-project-root ()
+(defun ~get-current-project-root ()
   "Returns the current project root or current directory."
-  (or (destructuring-bind (_ . dir) (project-current)
-        dir)
+  (or (ignore-errors (destructuring-bind (_ . dir) (project-current)
+                       dir))
       default-directory))
 
 (cl-defun ~counsel-grep-default-project-root (&optional (counsel-grep-fn #'counsel-rg))
@@ -1228,7 +1228,7 @@ and fallback to current directory if project root is not found."
   (interactive)
   (if current-prefix-arg
       (call-interactively counsel-grep-fn)
-    (funcall counsel-grep-fn nil (~current-project-root))))
+    (funcall counsel-grep-fn nil (~get-current-project-root))))
 
 (defun ~current-dir ()
   "Current directory or `$HOME`."
