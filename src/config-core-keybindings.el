@@ -438,6 +438,8 @@
         ("TAB" #'org-cycle "Tab action/Cycle")
         ("c" #'org-ctrl-c-ctrl-c "Context-based update/align")
 
+        ("s" #'org-insert-structure-template "Insert structure template" :exit t)
+
         ("a" #'org-archive-subtree "Archive" :exit t)
         (">" #'org-metaright "Increase level (current)")
         ("<" #'org-metaleft "Decrease level (current)")
