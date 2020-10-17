@@ -1218,7 +1218,8 @@ variable `local/linked-windows'."
 
 (defun ~current-project-root ()
   "Returns the current project root or current directory."
-  (or (ignore-errors (projectile-project-root))
+  (or (destructuring-bind (_ . dir) (project-current)
+        dir)
       default-directory))
 
 (cl-defun ~counsel-grep-default-project-root (&optional (counsel-grep-fn #'counsel-rg))
