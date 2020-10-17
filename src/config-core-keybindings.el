@@ -554,7 +554,8 @@
         ("w" #'hydra-window/body "Window management")
         ("r" #'hydra-frame/body "Frame management"))
 
-      (bind-key "s-SPC" #'hydra-global/body))))
+      (bind-key "s-SPC" #'hydra-global/body)
+      (bind-key "M-SPC" #'hydra-global/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
