@@ -248,10 +248,10 @@
 
       (defhydra hydra-freeform-exec (:columns 2 :exit t)
         "Pattern-based text"
-        ("i" #'~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file "SH in term mux, piping output to file")
-        ("I" #'~palette/point/exec-sh-in-term-mux "SH in term mux")
-        ("x" #'~palette/point/exec-sh-piping-to-sh-output-file "SH, piping output to file")
+        ("i" #'~palette/point/exec-sh-in-term-mux "SH in term mux")
+        ("I" #'~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file "SH in term mux, piping output to file")
         ("k" #'~palette/point/exec-sh-piping-here "SH, piping output here")
+        ("x" #'~palette/point/exec-sh-in-term-mux-then-pause "SH in term mux, then pause")
         ("a" #'~ansi-colorize-current-output-block "Colorize output block"))
 
       (defhydra hydra-exec (:columns 3 :exit t)
@@ -554,7 +554,7 @@
         ("w" #'hydra-window/body "Window management")
         ("r" #'hydra-frame/body "Frame management"))
 
-      (bind-key "s-SPC" #'hydra-global/body)
+      ;; (bind-key "s-SPC" #'hydra-global/body)
       (bind-key "M-SPC" #'hydra-global/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -140,6 +140,15 @@ text is multiline text that could be executed with Wand."
                           :max-history *~exec-history-max*)
     (~dispatch-action (concat "!!! " cmd))))
 
+(defun ~palette/exec-sh-in-term-mux-then-pause (&optional cmd)
+  "Executes a shell command in a terminal multiplexer, pauses
+after command has finished running."
+  (interactive)
+  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd)))
+    (~add-to-history-file *~exec-history-path* cmd
+                          :max-history *~exec-history-max*)
+    (~dispatch-action (concat "!! " cmd))))
+
 (defun ~palette/exec-sh-in-term-mux-piping-to-sh-output-file (&optional cmd)
   "Executes a shell command in a terminal multiplexer, piping output to the next window."
   (interactive)
@@ -203,6 +212,13 @@ text is multiline text that could be executed with Wand."
   (~palette/decorate-exec-text-at-point)
   (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
     (~palette/exec-sh-in-term-mux text)))
+
+(defun ~palette/point/exec-sh-in-term-mux-then-pause ()
+  "TODO - Add prefix, then exec"
+  (interactive)
+  (~palette/decorate-exec-text-at-point)
+  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
+    (~palette/exec-sh-in-term-mux-then-pause text)))
 
 (defun ~palette/point/exec-sh-piping-to-sh-output-file ()
   "TODO - Add prefix, then exec.  TODO: Customize garbage"
