@@ -109,16 +109,22 @@
 
 (defun ~palette/trim-garbage (text)
   "TODO. TODO: Customize garbage"
-  (lexical-let ((elements (s-split-up-to (rx bos (1+ (any " ;!$#/"))) text 1)))
-    (if (> (length elements) 1)
-        (string-trim (second elements))
-      (first elements))))
+  (lexical-let* ((elements (s-split-up-to (rx bos (1+ (any " ;!$#"))) text 1))
+                 (text (if (> (length elements) 1)
+                           (string-trim (second elements))
+                         (first elements)))
+                 (pass-2 (s-split-up-to (rx bos (>= 2 "/")) text 1))
+                 (res (if (> (length pass-2) 1)
+                          (string-trim (second pass-2))
+                        (first pass-2))))
+    res))
 
 ;; (~palette/trim-garbage "ls \\\n")
 ;; (~palette/trim-garbage "   ls \\\n")
 ;; (~palette/trim-garbage "!!$   ls \\\n")
 ;; (~palette/trim-garbage "   ls $  sss $\\\n")
 ;; (~palette/trim-garbage "ls \\\n -1 ~/tmp/")
+;; (~palette/trim-garbage "/usr/bin/ls \\\n -1 ~/tmp/")
 
 (defun ~palette/decorate-exec-text-at-point ()
   "Decorates executable text at current point.  Executable
