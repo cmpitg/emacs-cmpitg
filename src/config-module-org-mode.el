@@ -55,11 +55,13 @@
 ;; Babel
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq org-babel-load-languages
+      '((emacs-lisp . t)
+        (python . t)
+        (R . t)
+        (clojure . t)))
 (org-babel-do-load-languages 'org-babel-load-languages
-                             '((emacs-lisp . nil)
-                               (python . t)
-                               (R . t)
-                               (clojure . t)))
+                             org-babel-load-languages)
 (setq org-confirm-babel-evaluate nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
