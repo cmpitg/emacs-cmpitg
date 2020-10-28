@@ -37,9 +37,12 @@
 ;; Use system font by default
 (setq font-use-system-font t)
 ;; But do customize current font
-(set-frame-font "Go Mono-10.5" nil t)
+(set-frame-font "Cascadia Code-11" nil t)
+;; (set-frame-font "Go Mono-10.5" nil t)
 (add-to-list 'default-frame-alist
-             '(font . "Go Mono-10.5"))
+             '(font . "Cascadia Code-11"))
+;; (add-to-list 'default-frame-alist
+;;              '(font . "Go Mono-10.5"))
 
 ;; Set line spacing
 (setq-default line-spacing 2)
