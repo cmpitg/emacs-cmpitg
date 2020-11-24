@@ -35,7 +35,7 @@
   (~exec| "jq ."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Better UX
+;; High-level functions for better UX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: Revise
@@ -48,9 +48,9 @@
 ;; TODO: Support tooltip
 ;; TODO: History
 (cl-defun ~read-multiple-inputs-async (&key prompts
-                                          callback
-                                          (title "Prompting")
-                                          (size 70))
+                                            callback
+                                            (title "Prompting")
+                                            (size 70))
   "Displays a separate buffer to input multiple strings.  The
 input is accepted with `C-c C-c' and discarded with `C-c C-k'.
 When the input is accepted, The `callback' function, taking as

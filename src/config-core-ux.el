@@ -532,6 +532,7 @@ selection or end-of-line."
 ;; Resize window
 ;; Ref: https://github.com/dpsutton/resize-window
 (use-package resize-window
+  :ensure t
   :config
   (progn
     (setq resize-window-fine-argument 3)
@@ -541,6 +542,14 @@ selection or end-of-line."
                           (list ?t #'resize-window--enlarge-down " Resize - Expand down" t)
                           (list ?c #'resize-window--enlarge-up " Resize - Expand up" t)))
       (add-to-list 'resize-window-dispatch-alist action))))
+
+;; Window jumping
+;; Ref: https://github.com/abo-abo/ace-window
+(use-package ace-window
+  :ensure t
+  :config
+  (progn
+    (custom-set-variables `(aw-keys (list ?u ?e ?o ?a ?i ?h ?t ?n ?s ?k ?j ?q ?' ?x ?m ?w ?v ?z ?b)))))
 
 ;; Acme-mouse
 ;; Ref: https://github.com/cmpitg/acme-mouse
