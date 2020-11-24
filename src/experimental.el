@@ -98,7 +98,6 @@
 ;; Ref: https://github.com/Ladicle/hydra-posframe
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(package-install 'hydra-posframe)
 (use-package hydra-posframe
   :straight
   (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
