@@ -326,8 +326,8 @@
 
       (defhydra hydra-window (:columns 4 :exit t)
         "Window management"
-        ("sh" #'split-window-horizontally "Split horizontally")
-        ("sv" #'split-window-vertically "Split vertically")
+        ("sh" #'(lambda () (interactive) (~split-window :right)) "Split right")
+        ("sv" #'(lambda () (interactive) (~split-window :beblow)) "Split down")
         ("kw" #'delete-window "Kill")
         ("kk" #'~kill-buffer-and-window "Kill current window & buffer")
         ("T" #'~scroll-other-window "Scroll other" :exit nil)
@@ -335,7 +335,9 @@
         ("o" #'~one-window "One window (close others)")
         ("t" #'~transpose-windows "Transpose windows")
         ("y" #'~toggle-sticky-window "Toggle stickiness")
-        ("z" #'~toggle-maximize-buffer "Toggle max.")
+        ("z" #'~toggle-maximize-buffer "Toggle maximizing")
+        ("p" #'ace-swap-window "Swap")
+        ("p" #'ace-window "Jump")
         ("r" #'resize-window "Interactive resize")
         ("w" #'other-window "Interactive resize" :exit nil)
         ("ESC" nil "Quit"))
