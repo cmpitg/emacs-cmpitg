@@ -23,38 +23,74 @@
 
 (use-package f)
 (require 'misc)
-(use-package org)
-(defun ~my/org-mode-setup ()
-  (bind-key "<S-return>" #'~execute-line org-mode-map)
-  (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)
-  (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
-  (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
-  (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
-  (bind-key "C-e" nil org-mode-map)
-  (font-lock-mode -1))
+(use-package org
+  :init (progn
+          (require 'org-archive)
+          (defun ~org-set-fold-entry ()
+            (interactive)
+            (org-set-property "~fold?" "true"))
 
-;; Add timestamp when an item is done
-(setq org-log-done 'time)
+          (defun ~org-is-entry-folded? (&optional pom)
+            (or (string= (org-entry-get pom "~fold?") "true")
+                (ignore-errors (org-entry-is-done-p))))
 
-(setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
-                         (f-glob "*.org")))
+          (defun ~org-fold-entry ()
+            (interactive)
+            (org-flag-subtree t))
 
-(setq org-startup-indented t)
+          (defun ~org-unfold-entry ()
+            (interactive)
+            (org-flag-subtree nil))
 
-;; No folding by default
-;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
-;; Of per file: #+STARTUP: all
-(setq org-startup-folded nil)
+          (defun ~org-unfold-all ()
+            (interactive)
+            (org-show-all '(headings block)))
 
-(add-hook 'org-mode-hook #'~my/org-mode-setup)
+          (defun ~org-refresh-fold-state ()
+            (interactive)
+            (save-excursion
+              (beginning-of-buffer)
+              (while (not (eobp))
+                (when (~org-is-entry-folded?)
+                  (~org-fold-entry))
+                (~org-to-next-entry))))
 
-(setq-default initial-major-mode 'org-mode)
-(setq-default major-mode 'org-mode)
+          (defalias '~org-to-next-entry #'outline-next-heading)
+          (defalias '~org-to-prev-entry #'outline-previous-heading)
+
+          (defun ~my/org-mode-setup ()
+            (bind-key "<S-return>" #'~execute-line org-mode-map)
+            (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)
+            (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
+            (bind-key "C-S-<tab>" #'iflipb-previous-buffer org-mode-map)
+            (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer org-mode-map)
+            (bind-key "C-e" nil org-mode-map)
+            (~org-refresh-fold-state)
+            (font-lock-mode t))
+
+          ;; Add timestamp when an item is done
+          (setq org-log-done 'time)
+
+          (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
+                                   (f-glob "*.org")))
+
+          (setq org-startup-indented t)
+
+          ;; No folding by default
+          ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
+          ;; Of per file: #+STARTUP: all
+          (setq org-startup-folded nil)
+
+          (add-hook 'org-mode-hook #'~my/org-mode-setup)
+
+          (setq-default initial-major-mode 'org-mode)
+          (setq-default major-mode 'org-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Babel
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'org)
 (setq org-babel-load-languages
       '((emacs-lisp . t)
         (python . t)
