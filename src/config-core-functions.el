@@ -547,8 +547,13 @@ If the found window is the mini-buffer, returns `nil'."
   (cl-case mode
     (:window
      (custom-set-variables `(*popup-buffer-in* :window)
-                           `(display-buffer-alist nil)
-                           `(pop-up-windows t)))
+                           `(display-buffer-alist nil))
+
+     ;; Prefer creating a new window
+     ;; (custom-set-variables `(pop-up-windows t))
+
+     ;; Prefer reusing the current window
+     (custom-set-variables `(pop-up-windows nil)))
     (:frame
      (custom-set-variables `(*popup-buffer-in* :frame))
 
