@@ -63,10 +63,51 @@
         "What to do?"
         ("c" #'(lambda () (interactive) (~copy-to-clipboard path)) "Copy")
         ("o" #'(lambda () (interactive) (find-file path)) "Open")
-        ("i" #'(lambda () (interactive) (insert path)) "Insert here")
+        ("i" #'(lambda () (interactive) (insert path)) "Insert here"))
         ;; TODO: Open with external program
-        )
+        
       (local-hydra-act-on-path/body))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Posframe: Child frame utils
+;; Ref: https://github.com/tumashu/posframe
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package posframe
+  :ensure t)
+
+;; TODO: Review all the custom-set-variables -> customize-set-variable
+;; TODO: https://github.com/abo-abo/hydra/blob/master/hydra.el - read docs thoroughly
+;; TODO: Use defhydra+
+;; TODO: Check out https://github.com/honmaple/emacs-maple-minibuffer
+;; TODO: Check out https://github.com/tumashu/ivy-posframe
+;; TODO: Ref https://github.com/tumashu/posframe
+;; TODO: Check out https://www.reddit.com/r/emacs/comments/cdfr20/ann_majormodehydra_prettyhydra_020/
+;; TODO: Emacs Lucid's set-frame-position is too slow: https://github.com/tumashu/posframe/issues/45
+;; TODO: Check out https://git.savannah.gnu.org/cgit/emacs.git/commit/?h=emacs-27&id=c49d379f17bcb0ce82604def2eaa04bda00bd5ec
+;; TODO: Check out https://github.com/tumashu/company-posframe/issues/2
+;; TODO: Check out https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic
+
+(customize-set-variable 'hydra-hint-display-type 'posframe)
+(customize-set-variable 'hydra-hint-display-type 'lv)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Using Hydra in Posframe
+;; Ref: https://github.com/Ladicle/hydra-posframe
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(package-install 'hydra-posframe)
+(use-package hydra-posframe
+  :straight
+  (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
+  :after (posframe)
+  :config
+  (progn
+    (hydra-posframe-mode)
+    (customize-set-variable 'hydra-posframe-border-width 3)
+    (customize-set-variable 'hydra-posframe-border-face 'black)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Command palette utils
