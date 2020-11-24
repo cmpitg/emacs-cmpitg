@@ -214,9 +214,11 @@
         ("l" #'ace-jump-line-mode "Jump to line")
 
         ("'" #'dumb-jump-go-other-window "Try jumping to def (other window)")
-        ("." #'dumb-jump-go "Try jumping to def")
-        ("," #'dumb-jump-back "Jump back")
+        ;; ("." #'dumb-jump-go "Try jumping to def")
+        ;; ("," #'dumb-jump-back "Jump back")
         (";" #'dumb-jump-quick-look "Peek")
+        ("." #'smart-jump-go "Try jumping to def")
+        ("," #'smart-jump-back "Jump back")
 
         ("s" #'point-pos-save "Save current point pos")
         ("n" #'point-pos-next "Next point pos" :exit nil)

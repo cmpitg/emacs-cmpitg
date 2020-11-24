@@ -125,6 +125,10 @@ might need manual refreshing."
     (setq dumb-jump-selector 'ivy)
     (setq dumb-jump-prefer-searcher 'rg)))
 
+(use-package smart-jump
+  :ensure t
+  :config (smart-jump-setup-default-registers))
+
 ;;
 ;; File explorer and sidebar
 ;;
