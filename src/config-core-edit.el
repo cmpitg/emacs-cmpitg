@@ -373,6 +373,7 @@ project root, not ignoring anything."
 ;;
 
 (use-package parinfer
+  :disabled t
   :hook ((emacs-lisp-mode
           scheme-mode
           common-lisp-mode
@@ -500,7 +501,8 @@ project root, not ignoring anything."
 (use-package modalka
   :demand t
   ;; Must load after Lisp for the keybindings to take precendence
-  :after (lispy parinfer)
+  ;; :after (lispy parinfer)
+  :after (lispy)
   :bind* (:map
           modalka-mode-map
           ("SPC" . #'hydra-global/body)
