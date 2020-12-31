@@ -21,8 +21,12 @@
   "The identity function."
   x)
 
+(defmacro ~comment (&rest body)
+  "Ignores the body."
+  nil)
+
 (cl-defun ~get-project-toolbox-path (&key (dir (~get-current-project-root))
-                                        (file-name ".rmacs-toolbox"))
+                                          (file-name ".rmacs-toolbox"))
   "Gets the path to the current project toolbox file."
   (f-join dir file-name))
 
