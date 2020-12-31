@@ -532,6 +532,20 @@ selection or end-of-line."
 ;;                               " "
 ;;                               filename-and-process)))
 
+;; Visible white spaces
+(use-package whitespace
+  :init
+  (progn
+    (global-whitespace-mode 1)
+    ;; (setq whitespace-style '(tab-mark newline-mark))
+    (setq whitespace-style '(tab-mark))
+    (setq whitespace-display-mappings
+          '((newline-mark ?\n [?¬ ?\n] [?$ ?\n])
+            ;; (space-mark ?\ [?·] [?.])
+            (space-mark ?\xA0 [?¤] [?_])
+            (tab-mark ?\t [?» ?\t] [?\\ ?\t])))))
+(setq-default show-trailing-whitespace t)
+
 ;; Resize window
 ;; Ref: https://github.com/dpsutton/resize-window
 (use-package resize-window
