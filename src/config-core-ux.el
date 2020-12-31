@@ -418,6 +418,9 @@
           (setf split-window-preferred-function
                 #'visual-fill-column-split-window-sensibly)
 
+          ;; Show visual indicators for logical lines
+          (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+
           (with-eval-after-load "evil"
             ;; Make movement keys work like they should
             (define-key evil-normal-state-map
