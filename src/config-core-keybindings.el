@@ -449,8 +449,8 @@
         ("<" #'org-metaleft "Decrease level (current)")
         ("r>" #'org-shiftmetaright "Increase level (tree)")
         ("r<" #'org-shiftmetaleft "Decrease level (tree)")
-        ("P" #'org-shiftmetaup "Move up")
-        ("N" #'org-shiftmetadown "Move down")
+        ("P" #'org-move-subtree-up "Move up")
+        ("N" #'org-move-subtree-down "Move down")
 
         ("ESC" nil "Quit"))
 
