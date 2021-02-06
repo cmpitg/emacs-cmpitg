@@ -539,6 +539,8 @@ selection or end-of-line."
     (global-whitespace-mode 1)
     ;; (setq whitespace-style '(tab-mark newline-mark))
     (setq whitespace-style '(tab-mark))
+    ;; (setq whitespace-style '(face tabs spaces trailing lines newline empty tab-mark))
+    (setq whitespace-style '(face tabs spaces trailing newline empty tab-mark))
     (setq whitespace-display-mappings
           '((newline-mark ?\n [?¬ ?\n] [?$ ?\n])
             ;; (space-mark ?\ [?·] [?.])
