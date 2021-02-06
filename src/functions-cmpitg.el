@@ -72,9 +72,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~insert-week-number ()
-  "Inserts current week number with the current year"
+  "Inserts the current week number with the current year"
   (interactive)
   (~exec-|-async ("date" "+%U/%Y")
+                 #'string-trim
+                 #'insert))
+
+(defun ~insert-date.fi ()
+  "Inserts the current date, with format used in the FI locale"
+  (interactive)
+  (~exec-|-async ("date" "+%d.%m.%Y")
+                 #'string-trim
+                 #'insert))
+
+(defun ~insert-date-and-time ()
+  "Inserts the current date & time"
+  (interactive)
+  (~exec-|-async ("date" "-R")
                  #'string-trim
                  #'insert))
 
