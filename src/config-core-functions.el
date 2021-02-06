@@ -1616,6 +1616,7 @@ could be executed.  See `THING-AT-POINT' for futher information."
       (cons start end))))
 (put 'exec-text 'bounds-of-thing-at-point '~bounds-of-exec-text-at-point)
 
+(use-package thing-cmds)
 (defun ~select-multiline-exec-text ()
   "Selects multiline exec text."
   (interactive)
