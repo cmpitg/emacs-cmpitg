@@ -74,7 +74,30 @@
           (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
                                    (f-glob "*.org")))
 
+          ;; Indent visually by default
           (setq org-startup-indented t)
+
+          ;; Smart editing of invisible text
+          (setq org-catch-invisible-edits 'smart)
+
+          ;; TAB-cycle plain list as children of their heading parent
+          (setq org-cycle-include-plain-lists 'integrate)
+
+          ;; Continuation symbol
+          (setq org-ellipsis "↩")
+
+          ;; Don't split line by default
+          (setq org-M-RET-may-split-line nil)
+
+          ;; Don't fontify code block by default
+          (setq org-src-fontify-natively nil)
+
+          ;; Preserve indentation in org-src
+          (setq org-src-preserve-indentation t)
+
+          ;; Logical TODO & checkbox dependencies
+          (setq org-enforce-todo-dependencies t)
+          (setq org-enforce-todo-checkbox-dependencies t)
 
           ;; No folding by default
           ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
