@@ -625,8 +625,8 @@ project root, not ignoring anything."
     (setf git-commit-finish-query-functions nil)))
 
 ;; Ref: https://github.com/emacs-evil/evil-magit
-(use-package evil-magit
-  :after (evil magit))
+;; (use-package evil-magit
+;;   :after (evil magit))
 
 ;;
 ;; Pattern-based command execution
