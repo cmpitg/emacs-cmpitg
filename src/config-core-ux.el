@@ -316,8 +316,7 @@
 ;; TODO: Make the following call into an enable/disable call
 ;; (setq *one-buffer-per-window-temporarily-disabled?* t)
 
-;; Acme-like command palette utils.  By default the command palette itself is
-;; not enabled.
+;; Acme-like command palette utils.
 (require 'rmacs:config-module-command-palette "config-module-command-palette")
 (command-palette-mode -1)
 
