@@ -63,6 +63,20 @@
     (setq-default olivetti-body-width 92)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Emacs, don't move my window
+;; Ref: https://www.reddit.com/r/emacs/comments/llvyxe/hey_emacs_dont_move_my_windows_customizing/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq display-buffer-alist
+      '((".*"
+         (display-buffer-reuse-window display-buffer-same-window)
+         ;; (reusable-frames . t)
+         )))
+
+;; display-buffer: avoid resizing
+(setq even-window-sizes nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; File utils
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -76,8 +90,8 @@
         ("c" #'(lambda () (interactive) (~copy-to-clipboard path)) "Copy")
         ("o" #'(lambda () (interactive) (find-file path)) "Open")
         ("i" #'(lambda () (interactive) (insert path)) "Insert here"))
-        ;; TODO: Open with external program
-        
+      ;; TODO: Open with external program
+
       (local-hydra-act-on-path/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
