@@ -38,9 +38,12 @@
 (setq font-use-system-font t)
 ;; But do customize current font
 (set-frame-font "Cascadia Code-11" nil t)
-;; (set-frame-font "Go Mono-10.5" nil t)
 (add-to-list 'default-frame-alist
              '(font . "Cascadia Code-11"))
+;; (set-frame-font "Fira Code Medium-10.5" nil t)
+;; (add-to-list 'default-frame-alist
+;;              '(font . "Fira Code Medium-10"))
+;; (set-frame-font "Go Mono-10.5" nil t)
 ;; (add-to-list 'default-frame-alist
 ;;              '(font . "Go Mono-10.5"))
 
@@ -531,6 +534,12 @@ selection or end-of-line."
 ;;                               (name 50 -1 :left :elide)
 ;;                               " "
 ;;                               filename-and-process)))
+
+;; Emoji
+;; Ref: https://github.com/iqbalansari/emacs-emojify
+(use-package emojify
+  :ensure t
+  :init (global-emojify-mode))
 
 ;; Visible white spaces
 (use-package whitespace
