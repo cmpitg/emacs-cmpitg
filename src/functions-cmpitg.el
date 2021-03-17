@@ -71,6 +71,12 @@
 ;; General-purpose editing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun ~insert-week-marker.fi ()
+  "Inserts week marker, in FI locale"
+  (interactive)
+  (insert "Week ")
+  (~insert-week-number))
+
 (defun ~insert-week-number ()
   "Inserts the current week number with the current year"
   (interactive)
@@ -79,7 +85,7 @@
                  #'insert))
 
 (defun ~insert-date.fi ()
-  "Inserts the current date, with format used in the FI locale"
+  "Inserts the current date, in FI locale"
   (interactive)
   (~exec-|-async ("date" "+%d.%m.%Y")
                  #'string-trim
