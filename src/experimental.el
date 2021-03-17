@@ -257,6 +257,24 @@ after command has finished running."
                                                 (call-interactively #'~ansi-colorize-region)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Shell extras
+;; Ref: https://github.com/riscy/shx-for-emacs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package shx
+  :ensure t
+  :init
+  (progn
+    (shx-global-mode 1))
+  :config
+  (progn
+    ;; Break up long lines
+    (setq shx-max-output 4096)
+
+    ;; shx prompt
+    (setq shx-leader ":")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~ansi-colorize-current-output-block ()
   "ANSI-colorizes current output block."
