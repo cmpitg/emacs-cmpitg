@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2019-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -64,8 +64,7 @@
 (require 'wand)
 
 (defvar command-palette:*cp-window-face*
-  '(:family "Go" :height 110)
-  )
+  '(:family "Go" :height 110))
 
 (defvar command-palette:*exec-fn*
   #'wand:execute)
@@ -76,9 +75,8 @@
   displayed from the second line onward.")
 
 (defvar command-palette:*conditional-content*
-  (list (cons (lambda () (eq 'clojure-mode major-mode))
-              "~cider-connect clojure-align"))
-  )
+  (list (cons #'(lambda () (eq 'clojure-mode major-mode))
+              "~cider-connect clojure-align")))
 
 (defvar command-palette:*buffer-exception-regexp-list*
   (list
@@ -192,7 +190,7 @@ returns `nil'."
               (erase-buffer)
               (unless (eq 'emacs-lisp-mode major-mode)
                 (emacs-lisp-mode))
-              (evil-mode 1)
+              ;; (evil-mode 1)
               (if (f-exists? cp-path)
                   (insert-file-contents cp-path)
                 (insert (command-palette:construct-content main-buffer main-path))))
@@ -245,7 +243,7 @@ returns `nil'."
            ;; The command palette window is always right above the main window
            (split-window main-window nil 'above)
            (windmove-up)
-           (~switch-to-blank-buffer)
+           ;; (~switch-to-blank-buffer)
            (command-palette:setup-command-palette-window main-window (selected-window))
            (command-palette:fit-command-palette-window (selected-window))
            (selected-window)))))
@@ -286,7 +284,6 @@ possible."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Remove buffer-or-name
 (defun command-palette:advice/ensure-command-palette (orig-fun &rest args)
   "Advice to ensure command palette exists and properly setup for
 non-exceptional buffers."
