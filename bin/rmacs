@@ -153,7 +153,13 @@ proc rmacsWait {name timeout} {
 }
 
 proc rmacsStart {name shape shapeInitPath init bgDaemon verbose} {
-	set cmd [list emacs -Q]
+	# Makes sure XMODIFIERS is correctly set
+	if {[info exists ::env(XMODIFIERS)]} {
+		set cmd [list env XMODIFIERS=$::env(XMODIFIERS) emacs -Q]
+	} else {
+		set cmd [list emacs -Q]
+	}
+
 	set cmd [concat $cmd [list --eval "(setq *rmacs-shape* :$shape)"]]
 	set cmd [concat $cmd [list --eval "(setq server-name \"$name\")"]]
 	set cmd [concat $cmd [list --load $shapeInitPath]]
@@ -176,7 +182,13 @@ proc rmacsStart {name shape shapeInitPath init bgDaemon verbose} {
 }
 
 proc rmacsEval {name clientOpts argList verbose} {
-	set cmd [list emacsclient --quiet]
+	# Makes sure XMODIFIERS is correctly set
+	if {[info exists ::env(XMODIFIERS)]} {
+		set cmd [list env XMODIFIERS=$::env(XMODIFIERS) emacsclient --quiet]
+	} else {
+		set cmd [list emacsclient --quiet]
+	}
+
 	set cmd [concat $cmd [list --socket-name $name]]
 	if {$clientOpts ne ""} {
 		set cmd [concat $cmd $clientOpts]
