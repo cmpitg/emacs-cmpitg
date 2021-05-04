@@ -98,6 +98,12 @@
                  #'string-trim
                  #'insert))
 
+(defun ~insert-entry-with-timestamp ()
+  "Inserts an entry with timestamp."
+  (interactive)
+  (call-interactively #'org-insert-heading)
+  (call-interactively #'~insert-date-and-time))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window manager - WMII
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
