@@ -126,6 +126,9 @@ recursively."
 ;; TODO: Check filtering & customization
 ;;
 
+(use-package project
+  :demand t)
+
 (use-package projectile
   :diminish projectile-mode
   :init
