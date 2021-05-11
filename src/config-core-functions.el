@@ -924,6 +924,7 @@ which is loaded lazily get loaded."
         for file-name = (buffer-file-name buf)
         when (and file-name (file-exists-p file-name))
         do (ignore-errors (with-current-buffer buf
+                            (message "Reverting %s" file-name)
                             (revert-buffer t t)))))
 
 ;; TODO: Remove the 'open with' logic, replacing it with dispatch-action?
