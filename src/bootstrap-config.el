@@ -95,6 +95,10 @@ a new window or a new frame.  Possible values: `:window',
 ;; On to configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Use straight.el, not default package manager
+;; Ref: https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html
+(setq package-enable-at-startup nil)
+
 (add-to-list 'load-path *config-dir*)
 
 (~load-files "~/.emacs-machine-specific-init"
