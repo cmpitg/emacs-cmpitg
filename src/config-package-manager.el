@@ -47,7 +47,8 @@
 
 (straight-use-package 'use-package)
 ;; Always install missing packages with use-package
-(setq use-package-always-ensure t)
+;; Breaks internal packages, don't use
+;; (setq use-package-always-ensure nil)
 
 ;; To reduce load time
 (eval-when-compile (require 'use-package))
