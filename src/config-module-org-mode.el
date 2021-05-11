@@ -84,7 +84,7 @@
           (setq org-cycle-include-plain-lists 'integrate)
 
           ;; Continuation symbol
-          (setq org-ellipsis "↩")
+          (setq org-ellipsis " ↩")
 
           ;; Don't split line by default
           (setq org-M-RET-may-split-line nil)
@@ -94,6 +94,9 @@
 
           ;; Preserve indentation in org-src
           (setq org-src-preserve-indentation t)
+
+          ;; Enable shift-selection all the time
+          (setq org-support-shift-select 'always)
 
           ;; Logical TODO & checkbox dependencies
           (setq org-enforce-todo-dependencies t)
