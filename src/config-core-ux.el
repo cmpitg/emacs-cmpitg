@@ -574,6 +574,17 @@ selection or end-of-line."
 (custom-set-variables `(mouse-drag-and-drop-region t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Distraction-free writing
+;; Ref: https://github.com/rnkn/olivetti
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package olivetti
+  :init
+  (progn
+    ;; (add-hook 'org-mode-hook #'turn-on-olivetti-mode)
+    (setq-default olivetti-body-width 92)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Standard behaviors for C-x, C-c, C-v
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ref: https://www.emacswiki.org/emacs/CuaMode
