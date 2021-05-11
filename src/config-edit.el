@@ -775,10 +775,35 @@ the sequence, and its index within the sequence."
 (use-package guix-devel
   :straight
   (guix :type git :host github :repo "alezost/guix.el")
-  :mode "\\.scm\\'")
+  :after (geiser)
+  :mode ("\\.scm\\'")
+  :init
+  (progn
+    (add-to-list 'safe-local-variable-values
+                 '(eval let
+                        ((root-dir-unexpanded
+                          (locate-dominating-file default-directory ".dir-locals.el")))
+                        (when root-dir-unexpanded
+                          (let*
+                              ((root-dir
+                                (expand-file-name root-dir-unexpanded))
+                               (root-dir*
+                                (directory-file-name root-dir)))
+                            (unless
+                                (boundp 'geiser-guile-load-path)
+                              (defvar geiser-guile-load-path 'nil))
+                            (make-local-variable 'geiser-guile-load-path)
+                            (require 'cl-lib)
+                            (cl-pushnew root-dir* geiser-guile-load-path :test #'string-equal)))))
+    (add-to-list 'safe-local-variable-values
+                 '(eval setq-local guix-directory
+                        (locate-dominating-file default-directory ".dir-locals.el")))))
+
+(use-package geiser-guile)
 
 (use-package geiser
-  :mode "\\.scm\\'"
+  :after (geiser)
+  :mode ("\\.scm\\'")
   :config
   (progn
     (setq geiser-repl-use-other-window nil)
