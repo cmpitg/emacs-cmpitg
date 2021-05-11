@@ -43,7 +43,7 @@
                                 `(recentf-save-file ,(format "~/.emacs.d/recentf.%s" server-name)))))
 
 (message "Reverting all file-backed buffers")
-(~revert-all-file-buffers-no-confirmation)
+;;(~revert-all-file-buffers-no-confirmation)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
