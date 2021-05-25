@@ -517,6 +517,13 @@ selection or end-of-line."
 ;;                               " "
 ;;                               filename-and-process)))
 
+;; Do not close windows when doing keyboard-quit
+(defun ~advice/do-not-close-windows (fun &rest args)
+  (cl-letf (((symbol-function 'one-window-p) (lambda (&rest _) t)))
+    (apply fun args)))
+
+(advice-add #'keyboard-escape-quit :around #'~advice/do-not-close-windows)
+
 ;; Emoji
 ;; Ref: https://github.com/iqbalansari/emacs-emojify
 (use-package emojify
