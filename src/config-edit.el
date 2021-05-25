@@ -801,8 +801,7 @@ the sequence, and its index within the sequence."
 
 (use-package geiser-guile)
 
-(use-package geiser
-  :after (geiser)
+(use-package geiser-mit
   :mode ("\\.scm\\'")
   :config
   (progn
