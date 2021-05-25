@@ -484,8 +484,9 @@ application."
 
     (dolist (file local/dir-history)
       (dir-browser:render-single-entry "" file)))
-  (acme-mouse-mode -1)
-  (evil-emacs-state))
+  ;; (acme-mouse-mode -1)
+  ;; (evil-emacs-state)
+  )
 
 (defun dir-browser:render-dir-buffer (path)
   "Renders a mouse-oriented buffer to browse files and directories."
