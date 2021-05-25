@@ -91,12 +91,16 @@
                  #'string-trim
                  #'insert))
 
+(defalias #'~insert-today #'~insert-date.fi)
+
 (defun ~insert-date-and-time ()
   "Inserts the current date & time"
   (interactive)
   (~exec-|-async ("date" "-R")
                  #'string-trim
                  #'insert))
+
+(defalias #'~insert-now #'~insert-date-and-time)
 
 (defun ~insert-entry-with-timestamp ()
   "Inserts an entry with timestamp."
