@@ -565,9 +565,16 @@ project root, not ignoring anything."
           :map
           global-map
           ("C-e" . #'modalka-mode))
-  :config (progn
-            (setq modalka-cursor-type 'box)
-            (modalka-global-mode)))
+  :config
+  (progn
+    (setq modalka-cursor-type 'box)
+    (defun ~my/magit-load-modalka ()
+      "Loads Modalka in Magit status mode."
+      (interactive)
+      (modalka-mode -1)
+      (modalka-mode 1))
+    (add-hook 'magit-status-mode-hook #'~my/magit-load-modalka)
+    (modalka-global-mode)))
 
 (defun ~delete-line ()
   "Deletes the current line."
