@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2018-2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -22,7 +22,7 @@
   "Separator for the header line.")
 
 (defvar *header-line-max-path-length*
-  43
+  50
   "Number of maximum characters to which the current
 `buffer-file-name' is truncated to.")
 
@@ -30,21 +30,33 @@
               `(""
                 "x"
                 ,*header-line-separator*
-                "x-buffer"
+                "buffer-"
                 ,*header-line-separator*
-                "x-window"
+                "w-"
+                ,*header-line-separator*
+                "w→"
+                ,*header-line-separator*
+                "w↓"
+                ,*header-line-separator*
+                "✂"
+                ,*header-line-separator*
+                "☍"
+                ,*header-line-separator*
+                "⎀"
+                ,*header-line-separator*
+                "M-x"
+                ,*header-line-separator*
+                "Exec"
                 ,*header-line-separator*
                 "Buffers"
                 ,*header-line-separator*
-                "Tool"
+                "⮹"
                 ,*header-line-separator*
-                "/"
+                "┣"
                 ,*header-line-separator*
                 "✓"
                 ,*header-line-separator*
                 "✗"
-                ,*header-line-separator*
-                "⊞+"
                 ,*header-line-separator*
                 "⇌"
                 ,*header-line-separator*
@@ -66,37 +78,47 @@
            (kill-new buffer-file-name)
            (message "File path %s copied to clipboard" buffer-file-name))
           ((string= "x" str)
-           (call-interactively 'delete-frame))
-          ((string= "x-buffer" str)
-           (call-interactively 'kill-current-buffer))
-          ((string= "x-window" str)
-           (call-interactively '~delete-window))
-          ((string= "╳" str)
-           (call-interactively '~delete-window))
+           (call-interactively #'delete-frame))
+          ((string= "Q" str)
+           (call-interactively #'keyboard-quit))
+          ((string= "buffer-" str)
+           (call-interactively #'kill-current-buffer))
+          ((string= "✂" str)
+           (call-interactively #'cua-cut-region))
+          ((string= "☍" str)
+           (call-interactively #'cua-copy-region))
+          ((string= "⎀" str)
+           (call-interactively #'cua-paste))
+          ((string= "M-x" str)
+           (call-interactively #'amx))
+          ((string= "Exec" str)
+           (call-interactively #'~palette/point/exec-sh-in-term-mux-then-pause))
           ((string= "Buffers" str)
-           (call-interactively '~show-buffer-chooser))
-          ((string= "/" str)
+           (call-interactively #'~show-buffer-chooser))
+          ((string= "┣" str)
            (dir-browser:render-dir-buffer default-directory))
           ((string= "✓" str)
            (call-interactively (key-binding (kbd "C-c C-c"))))
           ((string= "✗" str)
            (call-interactively (key-binding (kbd "C-c C-k"))))
           ((string= "⊞+" str)
-           (call-interactively 'make-frame))
+           (call-interactively #'make-frame))
           ((string= "⊞-" str)
-           (call-interactively 'delete-frame))
-          ((string= "➡+" str)
-           (call-interactively 'split-window-horizontally))
-          ((string= "⬇+" str)
-           (call-interactively 'split-window-vertically))
+           (call-interactively #'delete-frame))
+          ((string= "w-" str)
+           (call-interactively #'~delete-window))
+          ((string= "w→" str)
+           (call-interactively #'split-window-horizontally))
+          ((string= "w↓" str)
+           (call-interactively #'split-window-vertically))
           ((string= "⇌" str)
-           (call-interactively '~transpose-windows))
+           (call-interactively #'~transpose-windows))
           ((string= "git" str)
-           (call-interactively 'magit-status))      
-          ((string= "Tool" str)
+           (call-interactively #'magit-status))
+          ((string= "⮹" str)
            (find-file *toolbox-path*))
           ((string= "+" str)
-           (call-interactively '~header-line-add))
+           (call-interactively #'~header-line-add))
           ((string= *header-line-separator* str)
            nil)
           (t

@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -326,10 +326,10 @@
 
       (defhydra hydra-window (:columns 4 :exit t)
         "Window management"
-        ("sh" #'(lambda () (interactive) (~split-window :right)) "Split right")
-        ("sv" #'(lambda () (interactive) (~split-window :beblow)) "Split down")
-        ("kw" #'delete-window "Kill")
-        ("kk" #'~kill-buffer-and-window "Kill current window & buffer")
+        ("sr" #'(lambda () (interactive) (~split-window 'right)) "Split right")
+        ("sb" #'(lambda () (interactive) (~split-window 'below)) "Split below")
+        ("k" #'delete-window "Kill")
+        ;; ("kk" #'~kill-buffer-and-window "Kill current window & buffer")
         ("T" #'~scroll-other-window "Scroll other" :exit nil)
         ("C" #'~scroll-other-window-reverse "Scroll other (reverse)" :exit nil)
         ("o" #'~one-window "One window (close others)")
@@ -529,7 +529,7 @@
         "Global operations"
         ("s-SPC" #'exchange-point-and-mark "Exchange point & mark")
         ("SPC" #'counsel-M-x "M-x")
-        ("qq" #'save-buffers-kill-emacs "Save buffers and kill Emacs")
+        ("qq" #'delete-window "Close current window")
 
         ("RET" #'hydra-read-input-async/body "Read-input mode")
         ("p" #'hydra-paren-edit/body "Paren-editing mode")
