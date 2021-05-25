@@ -326,8 +326,8 @@
 
       (defhydra hydra-window (:columns 4 :exit t)
         "Window management"
-        ("sr" #'(lambda () (interactive) (~split-window :right)) "Split right")
-        ("sb" #'(lambda () (interactive) (~split-window :below)) "Split below")
+        ("sr" #'(lambda () (interactive) (~split-window 'right)) "Split right")
+        ("sb" #'(lambda () (interactive) (~split-window 'below)) "Split below")
         ("kw" #'delete-window "Kill")
         ("kk" #'~kill-buffer-and-window "Kill current window & buffer")
         ("T" #'~scroll-other-window "Scroll other" :exit nil)
