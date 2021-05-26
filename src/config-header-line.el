@@ -46,9 +46,13 @@
                 ,*header-line-separator*
                 "M-x"
                 ,*header-line-separator*
-                "Exec"
+                "S"
                 ,*header-line-separator*
-                "Buffers"
+                "Ex"
+                ,*header-line-separator*
+                "B"
+                ,*header-line-separator*
+                "M"
                 ,*header-line-separator*
                 "⮹"
                 ,*header-line-separator*
@@ -91,10 +95,14 @@
            (call-interactively #'cua-paste))
           ((string= "M-x" str)
            (call-interactively #'amx))
-          ((string= "Exec" str)
+          ((string= "S" str)
+           (call-interactively #'isearch-forward))
+          ((string= "Ex" str)
            (call-interactively #'~palette/point/exec-sh-in-term-mux-then-pause))
-          ((string= "Buffers" str)
+          ((string= "B" str)
            (call-interactively #'~show-buffer-chooser))
+          ((string= "M" str)
+           (switch-to-buffer "*Messages*"))
           ((string= "┣" str)
            (dir-browser:render-dir-buffer default-directory))
           ((string= "✓" str)
