@@ -524,6 +524,34 @@ selection or end-of-line."
 
 (advice-add #'keyboard-escape-quit :around #'~advice/do-not-close-windows)
 
+;; When doing interactive search, try taking current region first
+(defun ~advice/isearch-taking-current-region (fun forward &rest args)
+  (let ((current-selection (buffer-substring-no-properties (mark) (point))))
+    (cond ((and transient-mark-mode mark-active (not (eq (mark) (point))))
+           (isearch-update-ring current-selection)
+           (deactivate-mark)
+           (apply fun forward args)
+           (if (not forward)
+               (isearch-repeat-backward)
+             (goto-char (mark))
+             (isearch-repeat-forward)))
+          (t
+           (cond ((string-empty-p current-selection)
+                  (apply fun forward args))
+                 (t
+                  (when mark-active
+                    (isearch-update-ring current-selection))
+                  (deactivate-mark)
+                  (apply fun forward args)
+                  (cond ((not forward)
+                         (isearch-repeat-backward))
+                        (t
+                         (goto-char (mark))
+                         (isearch-repeat-forward)
+                         (isearch-repeat-forward)))))))))
+
+(advice-add #'isearch-mode :around #'~advice/isearch-taking-current-region)
+
 ;; Emoji
 ;; Ref: https://github.com/iqbalansari/emacs-emojify
 (use-package emojify
