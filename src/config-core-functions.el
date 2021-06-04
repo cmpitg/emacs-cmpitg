@@ -40,23 +40,10 @@
     ["Delete" delete-region (~is-selecting?)]
     ["--" ignore]
     ["Exec" ~execute]
-    ["Exec kill buffer" ,#'(lambda ()
-                             (interactive)
-                             (call-interactively #'~execute)
-                             (call-interactively #'kill-current-buffer))]
     ["Exec line" ~execute-line]
-    ["Exec line and kill buffer" ,#'(lambda ()
-                                      (interactive)
-                                      (call-interactively #'~execute-line)
-                                      (call-interactively #'kill-current-buffer))]
     ["--" ignore]
     ["Eval last sexp or region" ~eval-last-sexp-or-region]
     ;; TODO: Include buffer list, new temp buffer, ...
-    ["--" ignore]
-    ["Horizontal split" split-window-horizontally]
-    ["Vertical split" split-window-vertically]
-    ["One window" ~one-window]
-    ["Delete current window" delete-window]
     ["--" ignore]
     ["Undo" undo-tree-undo t]
     ["Redo" undo-tree-redo t]
