@@ -47,7 +47,7 @@
   (bind-key "s-t" #'next-line)
   (bind-key "s-h" #'backward-char)
   (bind-key "s-n" #'forward-char)
-  (bind-key "s-d" #'~move-to-beginning-of-line)
+  (bind-key "s-d" #'~to-bol-dwim)
   (bind-key "s-D" #'move-end-of-line)
   (bind-key "M-s-c" #'~previous-line+)
   (bind-key "M-s-t" #'~next-line+)

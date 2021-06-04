@@ -89,8 +89,7 @@ default)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ~join-with-next-line ()
-  "Joins next line with the current line.  This is just a
-convenient wrapper of `join-line'."
+  "Joins next line with the current line."
   (interactive)
   (join-line -1))
 
@@ -110,7 +109,6 @@ convenient wrapper of `join-line'."
   (open-line arg)
   (indent-according-to-mode))
 
-;; TODO: To implement properly: lines should be selected regardless of where the cursor is?
 (defun ~select-line ()
   "Selects a line."
   (interactive)
@@ -170,7 +168,7 @@ convenient wrapper of `join-line'."
   (interactive)
   (save-mark-and-excursion
     (beginning-of-line)
-    (call-interactively '~mark-current-output-block)
+    (call-interactively #'~mark-current-output-block)
     (delete-region (region-beginning) (region-end))))
 
 (cl-defun ~search-buffer-interactively ()
@@ -214,7 +212,7 @@ Source: http://stackoverflow.com/a/4717026/219881"
         (forward-line 1)
         (forward-char pos)))))
 
-(defun ~move-to-beginning-of-line ()
+(defun ~to-bol-dwim ()
   "Moves the point to the first non-whitespace character on this line.
 If the point is already there, moves to the beginning of the
 line."
@@ -226,12 +224,12 @@ line."
       (beginning-of-visual-line nil))))
 
 (cl-defun ~previous-line+ (&optional (n-lines 5))
-  "Scrolls up `n-lines'."
+  "Moves up `N-LINES'."
   (interactive)
   (forward-line (- n-lines)))
 
 (cl-defun ~next-line+ (&optional (n-lines 5))
-  "Scrolls down `n-lines'."
+  "Moves down `N-LINES'."
   (interactive)
   (forward-line n-lines))
 
@@ -295,7 +293,7 @@ is reached."
       (string-join "")
       insert)))
 
-(cl-defun ~insert-file-contents-and-goto-end (filepath)
+(cl-defun ~insert-file-and-goto-end (filepath)
   "Inserts the contents of a file and go to the end of the
 content in buffer."
   (lexical-let ((current-pos (point)))

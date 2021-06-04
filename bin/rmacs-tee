@@ -32,7 +32,7 @@ proc writeToRmacsRepeatedly {} {
           (with-current-buffer $::RMACS_BUFFER
             (save-excursion
               (goto-char $::LOCAL_TEE_MARK_VAR)
-              (~insert-file-contents-and-goto-end \"$::TEMP_PATH\")
+              (~insert-file-and-goto-end \"$::TEMP_PATH\")
               (setq-local $::LOCAL_TEE_MARK_VAR (point-marker))
               (~write-to-file \"$::TEMP_PATH\" \"\")))"
     }
