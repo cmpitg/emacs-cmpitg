@@ -58,7 +58,7 @@
 ;; High-level functions for better UX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(cl-defun ~split-window (&optional (side :right))
+(cl-defun ~split-window (&optional (side 'right))
   "Splits the current window & switch to the new window."
   (interactive)
   (when-let (window (split-window (selected-window) nil side nil))
