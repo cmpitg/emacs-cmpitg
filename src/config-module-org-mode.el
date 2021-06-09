@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -67,6 +67,7 @@
             (bind-key "C-e" nil org-mode-map)
             (~org-refresh-fold-state)
             (font-lock-mode t))
+          (add-hook 'org-mode-hook #'~my/org-mode-setup)
 
           ;; Add timestamp when an item is done
           (setq org-log-done 'time)
@@ -85,6 +86,9 @@
 
           ;; Continuation symbol
           (setq org-ellipsis " ↩")
+
+          ;; _
+          ;; (setq org-hide-emphasis-markers nil)
 
           ;; Don't split line by default
           (setq org-M-RET-may-split-line nil)
@@ -107,24 +111,50 @@
           ;; Of per file: #+STARTUP: all
           (setq org-startup-folded nil)
 
-          (add-hook 'org-mode-hook #'~my/org-mode-setup)
+          ;; org-babel
+          (setq org-babel-load-languages
+                '((emacs-lisp . t)
+                  (python . t)
+                  (R . t)
+                  (clojure . t)))
+          (org-babel-do-load-languages 'org-babel-load-languages
+                                       org-babel-load-languages)
+          (setq org-confirm-babel-evaluate nil)
+
+          (let* ((font (cond ((x-list-fonts "Go Mono") '(:font "Go Mono"))
+                             ((x-list-fonts "Go") '(:font "Go"))
+                             ((x-family-fonts "Go") '(:family "Go"))))
+                 (base-font-color (face-foreground 'default nil 'default))
+                 (headline `(:inherit default :weight bold :foreground ,base-font-color)))
+            (custom-theme-set-faces 'user
+                                    `(org-level-8 ((t (,@headline ,@font))))
+                                    `(org-level-7 ((t (,@headline ,@font))))
+                                    `(org-level-6 ((t (,@headline ,@font))))
+                                    `(org-level-5 ((t (,@headline ,@font))))
+                                    `(org-level-4 ((t (,@headline ,@font :height 1.1))))
+                                    `(org-level-3 ((t (,@headline ,@font :height 1.2))))
+                                    `(org-level-2 ((t (,@headline ,@font :height 1.25))))
+                                    `(org-level-1 ((t (,@headline ,@font :height 1.3))))
+                                    `(org-document-title ((t (,@headline ,@font :height 1.5 :underline nil))))))
 
           (setq-default initial-major-mode 'org-mode)
           (setq-default major-mode 'org-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Babel
+;; Show bullets
+;; Ref: https://github.com/sabof/org-bullets
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'org)
-(setq org-babel-load-languages
-      '((emacs-lisp . t)
-        (python . t)
-        (R . t)
-        (clojure . t)))
-(org-babel-do-load-languages 'org-babel-load-languages
-                             org-babel-load-languages)
-(setq org-confirm-babel-evaluate nil)
+(use-package org-bullets
+  :after (org)
+  :config
+  (progn
+    (font-lock-add-keywords
+     'org-mode
+     '(("^ +\\([-*]\\) "
+        (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+    (add-hook 'org-mode-hook #'(lambda () (org-bullets-mode 1)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
