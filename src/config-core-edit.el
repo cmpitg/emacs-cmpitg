@@ -104,6 +104,8 @@
                search-ring
                regexp-search-ring
                read-expression-history
+               shell-command-history
+               extended-command-history
                *~execute-text-prompt-hist*))
   (add-to-list 'savehist-additional-variables var))
 
