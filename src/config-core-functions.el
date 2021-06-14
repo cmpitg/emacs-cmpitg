@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -288,7 +288,7 @@ is reached."
   (interactive)
   (let ((comment (s-trim comment-start)))
     (thread-first
-        (loop for time from (current-column) upto (1- fill-column) by (length comment)
+        (cl-loop for time from (current-column) upto (1- fill-column) by (length comment)
               collect comment)
       (string-join "")
       insert)))
@@ -462,13 +462,13 @@ Returns the toolbox window."
 
 (cl-defun ~count-non-sticky-windows ()
   "Counts the number of non-sticky windows in the current frame."
-  (loop for window being the windows
+  (cl-loop for window being the windows
         unless (window-dedicated-p window)
         count window))
 
 (cl-defun ~count-windows ()
   "Counts the number of windows in the current frame."
-  (loop for window being the windows
+  (cl-loop for window being the windows
         count window))
 
 (defun ~one-window ()
@@ -517,7 +517,7 @@ If the found window is the mini-buffer, returns `nil'."
   (interactive)
   (when (window-dedicated-p (selected-window))
     (error "Current window is dedicated, cannot transpose"))
-  (let ((windows (loop for window in (window-list)
+  (let ((windows (cl-loop for window in (window-list)
                        when (window-dedicated-p window)
                        collect window)))
     (let* ((current-window (selected-window))
@@ -702,7 +702,7 @@ event is a mouse event, or `nil' otherwise."
   (lexical-let ((res (iflipb-interesting-buffers)))
     (concatenate 'list
                  (iflipb-interesting-buffers)
-                 (loop for b in (buffer-list)
+                 (cl-loop for b in (buffer-list)
                        unless (member b res)
                        collect b))))
 
@@ -905,7 +905,7 @@ assuming a 'yes' answer).  This function is useful when calling
 at the end of Emacs startup stage to make sure configuration
 which is loaded lazily get loaded."
   (interactive)
-  (loop for buf in (buffer-list)
+  (cl-loop for buf in (buffer-list)
         for file-name = (buffer-file-name buf)
         when (and file-name (file-exists-p file-name))
         do (ignore-errors (with-current-buffer buf
@@ -928,7 +928,7 @@ expanded using `expand-file-name', then
       (let ((regexp (car regexp&action))
             (action (cdr regexp&action)))
         (when (s-matches-p regexp path)
-          (cl-return (typecase action
+          (cl-return (cl-typecase action
                        (function   (funcall action path))
                        (string     (~open-with path action))
                        (otherwise  (error "Invalid program %s" action)))))))))
@@ -997,7 +997,7 @@ first occurrence of a pattern.  E.g.
 * If `file-pattern' is of format \"<path>:/<pattern>/\", open the
   file and jump to the first occurrence of `pattern'.
 "
-  (multiple-value-bind (path pattern)
+  (cl-multiple-value-bind (path pattern)
       (~deconstruct-path file-pattern)
     (if new-frame?
         (~find-file-new-frame path)
@@ -1656,7 +1656,7 @@ otherwise, marks only the content of the block."
 (defun ~mark-current-block ()
   "Marks the current code block."
   (interactive)
-  (multiple-value-bind
+  (cl-multiple-value-bind
       (beginning-regexp end-regexp)
       (cond ((eq 'adoc-mode major-mode)
              (values (rx bol "----" (0+ " ") eol) (rx bol "----" (0+ " ") eol)))
@@ -1767,9 +1767,9 @@ command.  Its value type is one of the following:
 
 * any other value → stdin is that value."
   (interactive "MCommand: ")
-  (lexical-let ((command (typecase command
+  (lexical-let ((command (cl-typecase command
                            (string command)
-                           (list (string-join (loop for arg in command
+                           (list (string-join (cl-loop for arg in command
                                                     collect (shell-quote-argument arg))
                                               " "))
                            (t (error "COMMAND must be a string or a list")))))
@@ -1825,7 +1825,7 @@ the command.
 
 This function returns corresponding asynch process."
   (interactive)
-  (lexical-let ((command-str (thread-first (loop for arg in command
+  (lexical-let ((command-str (thread-first (cl-loop for arg in command
                                                  collect (shell-quote-argument arg))
                                (string-join " ")
                                string-trim)))
@@ -2156,7 +2156,7 @@ For a bit more simplified, have a look at `~exec-|-async'.
 Note on implementation details: this function uses `~exec-async'
 to call external programs and uses process buffers for piping for
 performance reasons."
-  `(funcall ,(loop for command in (reverse commands)
+  `(funcall ,(cl-loop for command in (reverse commands)
                    for output-callback = (quote #'identity) then next-output-callback
                    for next-output-callback = `(lambda (output-buffer)
                                                  ,(cond
@@ -2223,7 +2223,7 @@ E.g.
                                        \(\"_Quux\" 3\)\)\)\)\)\)
                \(\"/usr/lib/x86_64-linux-gnu/sawfish/sawfish-menu\"\)
                #'insert\)\)"
-  `(~exec-pipe-async ,@(loop for command in commands
+  `(~exec-pipe-async ,@(cl-loop for command in commands
                              collect (cond
                                       ((stringp command)
                                        `(:str ,command))
