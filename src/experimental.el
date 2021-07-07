@@ -204,10 +204,11 @@ text is multiline text that could be executed with Wand."
   "Executes a shell command in a terminal multiplexer, pauses
 after command has finished running."
   (interactive)
-  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd)))
-    (~add-to-history-file *~exec-history-path* cmd
+  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd))
+                (cleansed (s-replace-regexp (rx "\\" "\n") "" cmd)))
+    (~add-to-history-file *~exec-history-path* cleansed
                           :max-history *~exec-history-max*)
-    (~dispatch-action (concat "!! " cmd))))
+    (~dispatch-action "!! " cleansed)))
 
 (defun ~palette/exec-sh-in-term-mux-piping-to-sh-output-file (&optional cmd)
   "Executes a shell command in a terminal multiplexer, piping output to the next window."
@@ -219,7 +220,7 @@ after command has finished running."
       (insert (format "$ %s" cmd))
       (beginning-of-line)
       (~prepare-for-output-block t)
-      (~dispatch-action (concat "!!! " (~build-|rmacs-tee-cmd cmd))))))
+      (~dispatch-action "!!! " (~build-|rmacs-tee-cmd cmd)))))
 
 (defun ~palette/exec-sh-piping-to-sh-output-file (&optional cmd)
   "Executes a shell command, piping output to the next window."

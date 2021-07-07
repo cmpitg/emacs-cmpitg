@@ -2251,11 +2251,11 @@ E.g.
   (interactive)
   (~insert-from-history *~exec-history-path*))
 
-(defun ~dispatch-action (text)
-  "Dispatches action based on text.  Ignore output."
+(defmacro ~dispatch-action (&rest args)
+  "Dispatches action based on args.  Ignore output."
   (interactive)
-  (message "Dispatching action: %s" text)
-  (~exec-|-async ("setsid" "--fork" "dispatch-action" text)))
+  (message "Dispatching action: %s" args)
+  `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
