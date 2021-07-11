@@ -184,13 +184,14 @@
   "Decorates executable text at current point.  Executable
 text is multiline text that could be executed with Wand."
   (interactive)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
+  (when (~palette/trim-garbage (thing-at-point 'exec-text))
     (save-mark-and-excursion
       (goto-char (car (bounds-of-thing-at-point 'exec-text)))
-      (lexical-let ((text (~palette/ensure-prefix (string-trim-right (thing-at-point 'line))
-                                                  "$ ")))
-        (kill-line)
-        (insert text)))))
+      (lexical-let* ((current-first-line (string-trim-right (thing-at-point 'line)))
+                     (line (~palette/ensure-prefix current-first-line "$ ")))
+        (unless (string= current-first-line line)
+          (kill-line)
+          (insert line))))))
 
 (defun ~palette/exec-sh-in-term-mux (&optional cmd)
   "Executes a shell command in a terminal multiplexer."
