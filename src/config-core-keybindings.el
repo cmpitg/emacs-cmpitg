@@ -86,6 +86,7 @@
   (bind-key "C-S-o" #'~open-line-before)
   (bind-key "s-&" #'~join-with-next-line)
   (bind-key "s-b" #'pop-to-mark-command)
+  (bind-key "C-S-<mouse-1>" 'mc/add-cursor-on-click)
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
