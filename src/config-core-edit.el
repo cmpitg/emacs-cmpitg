@@ -400,7 +400,8 @@ project root, not ignoring anything."
              smart-yank))
 
     (defun ~parinfer-update-keybindings ()
-      (define-key parinfer-mode-map (kbd "C-e") #'modalka-mode)
+      (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
+      (define-key parinfer-mode-map (kbd "C-o") #'~my/deactivate-modalka)
       (define-key parinfer-mode-map (kbd "C-a") #'parinfer-toggle-mode)
       (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
@@ -428,7 +429,8 @@ project root, not ignoring anything."
     (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
 
     (defun ~lispy-update-keybindings ()
-      (define-key lispy-mode-map (kbd "C-e") #'modalka-mode)
+      (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
+      (define-key lispy-mode-map (kbd "C-o") #'~my/deactivate-modalka)
       (define-key lispy-mode-map (kbd "C-a") #'parinfer-toggle-mode)
       (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
@@ -566,10 +568,20 @@ project root, not ignoring anything."
           ("fo" . #'find-file)
           :map
           global-map
-          ("C-e" . #'modalka-mode))
+          ("C-e" . #'~my/activate-modalka)
+          ("C-o" . #'~my/deactivate-modalka))
   :config
   (progn
     (setq modalka-cursor-type 'box)
+
+    (defun ~my/activate-modalka ()
+      (interactive)
+      (modalka-mode 1))
+
+    (defun ~my/deactivate-modalka ()
+      (interactive)
+      (modalka-mode -1))
+
     (defun ~my/magit-load-modalka ()
       "Loads Modalka in Magit status mode."
       (interactive)
