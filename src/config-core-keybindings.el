@@ -82,8 +82,6 @@
   (bind-key "s-\"" #'undo-tree-redo)
   (bind-key "s-w" #'whitespace-cleanup)
   (bind-key "s-@" #'~duplicate-line-or-region)
-  (bind-key "C-o" #'~open-line)
-  (bind-key "C-S-o" #'~open-line-before)
   (bind-key "s-&" #'~join-with-next-line)
   (bind-key "s-b" #'pop-to-mark-command)
   (bind-key "C-S-<mouse-1>" 'mc/add-cursor-on-click)
