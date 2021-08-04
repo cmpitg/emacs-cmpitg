@@ -116,7 +116,8 @@
                 '((emacs-lisp . t)
                   (python . t)
                   (R . t)
-                  (clojure . t)))
+                  (clojure . t)
+                  (shell . t)))
           (org-babel-do-load-languages 'org-babel-load-languages
                                        org-babel-load-languages)
           (setq org-confirm-babel-evaluate nil)
