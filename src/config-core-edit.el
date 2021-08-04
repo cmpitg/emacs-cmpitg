@@ -862,6 +862,14 @@ project root, not ignoring anything."
 
 (use-package man)
 
+;;
+;; Compilation mode
+;;
+
+(with-eval-after-load "compilation"
+  (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
+  (define-key compilation-mode-map (kbd "C-o") #'~my/deactivate-modalka))
+
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-frame-on-close . t))
