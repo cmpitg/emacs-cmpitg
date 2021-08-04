@@ -120,6 +120,7 @@
           (org-babel-do-load-languages 'org-babel-load-languages
                                        org-babel-load-languages)
           (setq org-confirm-babel-evaluate nil)
+          (setq org-babel-python-command "python3")
 
           ;; (let* ((font (cond ((x-list-fonts "Go Mono") '(:font "Go Mono"))
           ;;                    ((x-list-fonts "Go") '(:font "Go"))
