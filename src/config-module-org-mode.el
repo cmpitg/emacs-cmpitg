@@ -59,6 +59,7 @@
           (defalias '~org-to-prev-entry #'outline-previous-heading)
 
           (defun ~my/org-mode-setup ()
+            (variable-pitch-mode 1)
             (bind-key "<S-return>" #'~execute-line org-mode-map)
             (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)
             (bind-key "C-<tab>" #'iflipb-next-buffer org-mode-map)
@@ -84,11 +85,12 @@
           ;; TAB-cycle plain list as children of their heading parent
           (setq org-cycle-include-plain-lists 'integrate)
 
+          ;; Hide the emphasis markers in font-lock-mode
+          ;; (setq org-hide-emphasis-markers t)
+          (setq org-hide-emphasis-markers nil)
+
           ;; Continuation symbol
           (setq org-ellipsis " ↩")
-
-          ;; _
-          ;; (setq org-hide-emphasis-markers nil)
 
           ;; Don't split line by default
           (setq org-M-RET-may-split-line nil)
@@ -110,6 +112,13 @@
           ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
           ;; Of per file: #+STARTUP: all
           (setq org-startup-folded nil)
+
+          ;; Modules that should be loaded with org
+          (dolist (module '(org-crypt
+                            org-habit
+                            org-bookmark
+                            org-eshell))
+            (add-to-list 'org-modules module))
 
           ;; org-babel
           (setq org-babel-load-languages
@@ -145,6 +154,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Show bullets
 ;; Ref: https://github.com/sabof/org-bullets
+;; Ref: https://github.com/integral-dw/org-superstar-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org-bullets
@@ -157,6 +167,14 @@
         (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
     (add-hook 'org-mode-hook #'(lambda () (org-bullets-mode 1)))))
+
+(use-package org-superstar
+  :after (org)
+  :hook (org-mode . org-superstar-mode)
+  :disabled t
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
