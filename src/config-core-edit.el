@@ -273,6 +273,8 @@ project root, not ignoring anything."
 
             (setq ivy-use-selectable-prompt t)
 
+            (setf (nth 0 counsel-rg-base-command) (executable-find "rgg" "rg"))
+
             ;; Disable one-buffer-per-window behavior when swiping
             (with-eval-after-load 'rmacs:config-one-buffer-per-window
               (~disable-one-buffer-per-window-for '(swiper-all
@@ -296,7 +298,7 @@ project root, not ignoring anything."
               (ivy-previous-line n-lines))
 
             (cl-defun ~bind-key-with-prefix (key command &key
-                                               (keymap global-map))
+                                                 (keymap global-map))
               "Binds key in `evil-normal-state-map' and `evil-visual-state-map' with prefix `SPC' and in global mode map with prefix `s-SPC' at the same time."
               (interactive)
               (eval `(progn
