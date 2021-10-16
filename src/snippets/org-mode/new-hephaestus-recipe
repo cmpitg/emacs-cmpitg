@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ~new-recipe
+# key: ~new-recipe
+# --
+# -*- mode: tcl -*-
+
+name ${1:recipe-unique-name}
+description {${2:recipe-description}}
