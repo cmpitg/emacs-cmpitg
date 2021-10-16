@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -17,14 +17,19 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-bare"))
+;; Make GC aware that we have a lot of memory
+(setq gc-cons-threshold (* 100 1024 1024))
 
-(unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
-  (~load-files (~get-config "experimental")))
+(defvar *bootstrap-config-path*
+  (concat (concat (getenv "RMACS_INIT_DIR") "/src/") "bootstrap-config.el")
+  "Path to the Rmacs boostrap-config file.")
 
-;; Load machine-specific settings if existed
-(~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
-
-(require 'rmacs:config-core-last "config-core-last")
+;; Speed up Emacs startup by ignoring all file name handlers.  Ref:
+;; https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
+(let ((file-name-handler-alist nil))
+  (require 'rmacs:bootstrap-config                      *bootstrap-config-path*)
+  (require 'rmacs:config-package-manager                "config-package-manager")
+  (require 'rmacs:config-ipc                            "config-ipc")
+  (require 'rmacs:bootstrap-functionality               "bootstrap-functionality"))
 
 (message "Finish loading minimal functionalities")
