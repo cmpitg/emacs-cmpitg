@@ -874,7 +874,8 @@ project root, not ignoring anything."
   (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
   (define-key compilation-mode-map (kbd "C-o") #'~my/deactivate-modalka))
 
-(with-eval-after-load "dired"
+(require 'dired)
+(with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "C-e") #'~my/activate-modalka)
   (define-key dired-mode-map (kbd "C-o") #'~my/deactivate-modalka))
 
