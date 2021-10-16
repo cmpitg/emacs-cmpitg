@@ -44,7 +44,11 @@
 a new window or a new frame.  Possible values: `:window',
 `:frame'.")
 
-(defvar *~exec-history-path* (expand-file-name (format "~/.local/rmacs.%s.exec-history" server-name))
+(defvar *~exec-history-path*
+  (expand-file-name (format "~/.local/rmacs.%s.exec-history"
+                            (if (boundp 'server-name)
+                                server-name
+                              "default")))
   "Path to history file that stores executed external commands")
 (defvar *~exec-history-max* 3000
   "How many entries are saved in `*~EXEC-HISTORY-PATH*'")
@@ -88,7 +92,9 @@ a new window or a new frame.  Possible values: `:window',
 (message "%s :: debug-on-error=%s serser-name=%s init-file-user=%s\n"
          (emacs-version)
          debug-on-error
-         server-name
+         (if (boundp 'server-name)
+             server-name
+           "default")
          init-file-user)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

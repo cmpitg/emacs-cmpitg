@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2018 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -35,9 +35,10 @@
 is currently running."
     (server-running-p name)))
 
-(if (~emacs-server-running? server-name)
-    (message "Emacs server %s is already running, not starting" server-name)
-  (~start-emacs-server))
+(when (boundp 'server-name)
+  (if (~emacs-server-running? server-name)
+      (message "Emacs server %s is already running, not starting" server-name)
+    (~start-emacs-server)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
