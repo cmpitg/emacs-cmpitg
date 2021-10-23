@@ -81,6 +81,8 @@
   (require 'rmacs:bootstrap-config                      *bootstrap-config-path*)
   (require 'rmacs:config-package-manager                "config-package-manager")
   (require 'rmacs:config-ipc                            "config-ipc")
+  (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
+
   (require 'rmacs:config-core-functions                 "config-core-functions")
   (require 'rmacs:config-module-org-mode                "config-module-org-mode")
   (require 'rmacs:config-core-edit                      "config-core-edit")

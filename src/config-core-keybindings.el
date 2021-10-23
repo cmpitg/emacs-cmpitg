@@ -26,65 +26,24 @@
 
 ;; TODO: Doesn't need with-eval-after-load?
 (with-eval-after-load "modalka"
-  ;; (cua-mode t)
-  ;; (setq cua-keep-region-after-copy t)
   ;; ;; Don't tabify after rectangle commands
   ;; (setq cua-auto-tabify-rectangles nil)
-  ;; ;; No region when it is not highlighted
-  ;; (transient-mark-mode 1)
-
-  ;; <menu> key is convenient, so we get rid of its default
-  (bind-key "<menu>" 'nil)
-  ;; Remove this prefix key by any chance
-  (bind-key "s-SPC" 'nil)
 
   ;;
   ;; Basic editing
   ;;
-
-  ;; Movements
-  (bind-key "s-c" #'previous-line)
-  (bind-key "s-t" #'next-line)
-  (bind-key "s-h" #'backward-char)
-  (bind-key "s-n" #'forward-char)
-  (bind-key "s-d" #'~to-bol-dwim)
-  (bind-key "s-D" #'move-end-of-line)
-  (bind-key "M-s-c" #'~previous-line+)
-  (bind-key "M-s-t" #'~next-line+)
-  (bind-key "s-H" #'beginning-of-buffer)
-  (bind-key "s-N" #'end-of-buffer)
-  (bind-key "s-g" #'backward-word)
-  (bind-key "s-G" #'backward-sexp)
-  (bind-key "s-r" #'forward-word)
-  (bind-key "s-R" #'forward-sexp)
-  (bind-key "s-l" #'goto-line)
-
-  ;; Deletion
-  (bind-key "s-u" #'delete-char)
-  (bind-key "s-e" #'backward-delete-char)
-  (bind-key "s-p" #'kill-word)
-  (bind-key "s-." #'backward-kill-word)
-  (bind-key "<C-delete>" #'delete-region)
 
   ;; Selection/region
   (bind-key "s-=" #'er/expand-region)
 
   ;; Searching
   (bind-key "M-r" #'~insert-entry-from-exec-history)
-  (bind-key "s-s" #'~search-buffer-interactively)
-  (bind-key "s-f" #'query-replace-regexp)
-  (bind-key "s-F" #'query-replace)
 
   ;; Text processing
-  (bind-key "RET" #'~electrify-return-if-match)
-  (bind-key "s--" #'comment-or-uncomment-region)
-  (bind-key "s-'" #'undo-tree-undo)
-  (bind-key "s-\"" #'undo-tree-redo)
-  (bind-key "s-w" #'whitespace-cleanup)
-  (bind-key "s-@" #'~duplicate-line-or-region)
-  (bind-key "s-&" #'~join-with-next-line)
-  (bind-key "s-b" #'pop-to-mark-command)
   (bind-key "C-S-<mouse-1>" 'mc/add-cursor-on-click)
+  (with-eval-after-load "undo-tree"
+    (bind-key "s-'" #'undo-tree-undo)
+    (bind-key "s-\"" #'undo-tree-redo))
 
   (with-eval-after-load "smartparens"
     (bind-key "s-C" #'sp-backward-up)
@@ -97,7 +56,6 @@
   (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
   (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer)
   (bind-key "C-S-t" #'~undo-killed-buffers)
-  (bind-key "C-w" #'kill-current-buffer)
 
   (bind-key "<s-RET>" #'~execute)
   (bind-key "<S-RET>" #'~execute-line)
@@ -134,9 +92,7 @@
   ;; Emacs Lisp
   ;;
 
-  (bind-key "<C-return>"   #'~eval-last-sexp-or-region)
   ;; TODO: Keybinding for eval upper sexp
-  (bind-key "<M-return>"   #'eval-defun)
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m"          #'~eval-then-replace-region-or-last-sexp)
 
@@ -156,7 +112,6 @@
 
   (bind-key "<C-f1>" #'~toggle-scratch)
   (bind-key "<S-f1>" #'~switch-to-messages-buffer)
-  (bind-key "<f2>" #'save-buffer)
   (bind-key "<S-f2>" #'~gui/save-as)
   (bind-key "<C-f2>" #'point-pos-save)
   (bind-key "<C-S-f2>" #'point-pos-delete)
@@ -164,7 +119,6 @@
   (bind-key "<C-f3>" #'~find-files-current-dir)
   (bind-key "<M-f3>" #'~gui/open-file)
   (bind-key "<S-f3>" #'projectile-find-file)
-  (bind-key "<C-f4>" #'kill-current-buffer)
   (bind-key "<S-f4>" #'~delete-window)
   (bind-key "<f8>" #'~switch-buffer)
   (bind-key "<M-f8>" #'switch-to-buffer-other-frame)
