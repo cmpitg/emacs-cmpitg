@@ -535,6 +535,9 @@ might need manual refreshing."
   :mode ("\\.py\\'" . python-mode)
   :config
   (progn
+    (add-to-list 'process-coding-system-alist '("python" . (utf-8 . utf-8)))
+    (setenv "PYTHONIOENCODING" "utf-8")
+
     ;; Ref: https://www.emacswiki.org/emacs/IndentingPython
     (add-hook 'python-mode-hook
               #'(lambda ()
