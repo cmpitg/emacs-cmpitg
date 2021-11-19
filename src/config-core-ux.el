@@ -37,9 +37,12 @@
 ;; Use system font by default
 (setq font-use-system-font t)
 ;; But do customize current font
-(set-frame-font "Cascadia Code-11" nil t)
+(set-frame-font "Cascadia Mono-11" nil t)
 (add-to-list 'default-frame-alist
-             '(font . "Cascadia Code-11"))
+             '(font . "Cascadia Mono-11"))
+;; (set-frame-font "Cascadia Code-11" nil t)
+;; (add-to-list 'default-frame-alist
+;;              '(font . "Cascadia Code-11"))
 ;; (set-frame-font "Fira Code Medium-10.5" nil t)
 ;; (add-to-list 'default-frame-alist
 ;;              '(font . "Fira Code Medium-10"))
