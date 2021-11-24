@@ -403,7 +403,7 @@ project root, not ignoring anything."
 
     (defun ~parinfer-update-keybindings ()
       (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
-      (define-key parinfer-mode-map (kbd "C-o") #'~my/deactivate-modalka)
+      (define-key parinfer-mode-map (kbd "C-a") #'~my/deactivate-modalka)
       (define-key parinfer-mode-map (kbd "C-a") #'parinfer-toggle-mode)
       (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
@@ -432,7 +432,7 @@ project root, not ignoring anything."
 
     (defun ~lispy-update-keybindings ()
       (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
-      (define-key lispy-mode-map (kbd "C-o") #'~my/deactivate-modalka)
+      (define-key lispy-mode-map (kbd "C-a") #'~my/deactivate-modalka)
       (define-key lispy-mode-map (kbd "C-a") #'parinfer-toggle-mode)
       (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
@@ -571,7 +571,7 @@ project root, not ignoring anything."
           :map
           global-map
           ("C-e" . #'~my/activate-modalka)
-          ("C-o" . #'~my/deactivate-modalka))
+          ("C-a" . #'~my/deactivate-modalka))
   :config
   (progn
     (setq modalka-cursor-type 'box)
@@ -872,12 +872,12 @@ project root, not ignoring anything."
 
 (with-eval-after-load "compilation"
   (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
-  (define-key compilation-mode-map (kbd "C-o") #'~my/deactivate-modalka))
+  (define-key compilation-mode-map (kbd "C-a") #'~my/deactivate-modalka))
 
 (require 'dired)
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "C-e") #'~my/activate-modalka)
-  (define-key dired-mode-map (kbd "C-o") #'~my/deactivate-modalka))
+  (define-key dired-mode-map (kbd "C-a") #'~my/deactivate-modalka))
 
 ;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
