@@ -590,6 +590,7 @@ project root, not ignoring anything."
       (modalka-mode -1)
       (modalka-mode 1))
     (add-hook 'magit-status-mode-hook #'~my/magit-load-modalka)
+    (add-hook 'dired-mode-hook #'~my/deactivate-modalka)
     (modalka-global-mode)))
 
 (defun ~delete-line ()
