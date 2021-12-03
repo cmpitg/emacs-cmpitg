@@ -4,4 +4,4 @@ export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg/}
 export RMACS_SERVER_NAME=${RMACS_SERVER_NAME:-bare}
 
 # TODO minimal -> bare
-emacs -q --eval "(setq server-name \"${RMACS_SERVER_NAME}\")" --load "${RMACS_INIT_DIR}/src/init-minimal.el" "$@"
+exec emacs -q --eval "(setq server-name \"${RMACS_SERVER_NAME}\")" --load "${RMACS_INIT_DIR}/src/init-minimal.el" "$@"

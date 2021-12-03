@@ -1293,7 +1293,6 @@ E.g.
 ;; ~read-command-or-get-from-secondary-selection
 ;; things-cmd: thing-at-point 'exec-text
 ;; Key: ~toggle-maximize-buffer
-;; K
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
