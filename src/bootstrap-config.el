@@ -89,7 +89,7 @@ a new window or a new frame.  Possible values: `:window',
 ;; Logging current Rmacs information
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(message "%s :: debug-on-error=%s serser-name=%s init-file-user=%s\n"
+(message "%s :: debug-on-error=%s server-name=%s init-file-user=%s\n"
          (emacs-version)
          debug-on-error
          (if (boundp 'server-name)
