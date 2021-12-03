@@ -433,7 +433,6 @@ project root, not ignoring anything."
     (defun ~lispy-update-keybindings ()
       (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
       (define-key lispy-mode-map (kbd "C-a") #'~my/deactivate-modalka)
-      (define-key lispy-mode-map (kbd "C-a") #'parinfer-toggle-mode)
       (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
       (define-key lispy-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
