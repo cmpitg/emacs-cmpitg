@@ -18,23 +18,6 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Editing
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~activate-selection (pos-1 pos-2)
-  "Activates a selection, also visually, then leaves the point at
-`pos-2'."
-  (interactive)
-  (set-mark pos-1)
-  (goto-char pos-2)
-  (activate-mark))
-
-(defun ~format-json ()
-  "Formats current selection as JSON.  Requires jq."
-  (interactive)
-  (~exec| "jq ."))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; High-level functions for better UX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -100,70 +83,5 @@ its `PROMPTS', will be called.
       (switch-to-buffer current-buffer)
       (set-window-dedicated-p (selected-window) t))
     current-buffer))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Window & Frame
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~get-current-monitor-workarea (&optional frame)
-  "Returns the current position and size of the workarea for the
-current monitor in the format of (X Y WIDTH HEIGHT)"
-  (alist-get 'workarea (frame-monitor-attributes frame)))
-
-(defun ~centralize-mouse-position ()
-  "Centralizes mouse position in the current window."
-  (interactive)
-  (unless (minibufferp (current-buffer))
-    (let ((frame (selected-frame)))
-      (destructuring-bind (x1 y1 x2 y2) (window-edges)
-        (set-mouse-position frame
-                            (+ x1 (/ (window-body-width) 2))
-                            (+ y1 (/ (window-body-height) 2)))))))
-
-(defun ~auto-pos-mouse-position ()
-  "Automatically position mouse in a sensible way."
-  (interactive)
-  (when (eq (current-buffer) (window-buffer (selected-window)))
-    (unless (minibufferp (current-buffer))
-      (let ((frame (selected-frame)))
-        (destructuring-bind (x1 y1 x2 y2) (window-edges)
-          (set-mouse-position frame (+ x1 1) y1))))))
-
-(cl-defun ~center-frame (width
-                       height
-                       &key
-                       (frame (selected-frame)))
-  "Centers a frame.  WIDTH and HEIGHT are in pixels."
-  (set-frame-size frame width height t)
-  (destructuring-bind (x y screen-width screen-height) (~get-current-monitor-workarea frame)
-    (let* ((desired-x (+ x (/ (- screen-width width) 2)))
-           (desired-y (+ y (/ (- screen-height height) 2))))
-      (set-frame-position frame desired-x desired-y))))
-
-(cl-defun ~center-frame-percent (width%
-                               height%
-                               &key
-                               (frame (selected-frame)))
-  "Centers a frame.  WIDTH% and HEIGHT% are integers
-corresponding to the percentage of the width & height with
-regards to the current screen."
-  (destructuring-bind (x y screen-width screen-height) (~get-current-monitor-workarea frame)
-    (let* ((width (* (/ screen-width 100) width%))
-           (height (* (/ screen-height 100) height%))
-           (desired-x (+ x (/ (- screen-width width) 2)))
-           (desired-y (+ y (/ (- screen-height height) 2))))
-      (set-frame-size frame width height t)
-      (set-frame-position frame desired-x desired-y))))
-
-(cl-defun ~center-frame-in-chars (width-in-chars
-                                height-in-chars
-                                &key
-                                (frame (selected-frame)))
-  "Centers a frame with the width & height dimensions in
-characters."
-  (set-frame-size frame width-in-chars height-in-chars)
-  (let* ((width (frame-pixel-width frame))
-         (height (frame-pixel-height frame)))
-    (~center-frame width height :frame frame)))
 
 (provide 'rmacs:config-functions)

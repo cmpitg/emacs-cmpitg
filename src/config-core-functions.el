@@ -273,75 +273,6 @@ Returns the toolbox window."
           (set-window-dedicated-p (selected-window) t)
           (selected-window))))))
 
-(defun ~toggle-maximize-buffer ()
-  "Toggles maximizing current buffer."
-  (interactive)
-  (if (= 1 (length (window-list)))
-      (jump-to-register '_)
-    (progn
-      (window-configuration-to-register '_)
-      (delete-other-windows))))
-
-(cl-defun ~scroll-other-window (&key (nlines 5))
-  "Scrolls the other window."
-  (interactive)
-  (scroll-other-window nlines))
-
-(cl-defun ~scroll-other-window-reverse (&key (nlines 5))
-  "Scrolls the other window in reverse direction."
-  (interactive)
-  (scroll-other-window (- nlines)))
-
-(cl-defun ~kill-buffer-and-frame (&optional (buffer (current-buffer)))
-  "Kills the a buffer along with its frame (if exists)."
-  (interactive)
-  (unless (null buffer)
-    (if-let (window (get-buffer-window buffer t))
-        (let ((frame (window-frame window)))
-          (kill-buffer buffer)
-          (delete-frame frame))
-      (kill-buffer buffer))))
-
-(cl-defun ~kill-buffer-and-window (&optional (window (selected-window)))
-  "Kills the a buffer along with its window (if exists)."
-  (interactive)
-  (with-selected-window window
-    (if (= (~count-non-sticky-windows) 1)
-        (kill-buffer)
-      (kill-buffer-and-window))))
-
-(cl-defun ~count-non-sticky-windows ()
-  "Counts the number of non-sticky windows in the current frame."
-  (cl-loop for window being the windows
-        unless (window-dedicated-p window)
-        count window))
-
-(cl-defun ~count-windows ()
-  "Counts the number of windows in the current frame."
-  (cl-loop for window being the windows
-        count window))
-
-(defun ~one-window ()
-  "Deletes all other non-dedicated windows and makes current
-window the only window visible.  This function does nothing if
-the current window is a dedicated window."
-  (interactive)
-  (unless (window-dedicated-p)
-    (mapcar #'(lambda (window)
-                (unless (window-dedicated-p window)
-                  (delete-window window)))
-            (cdr (window-list)))))
-
-(defun ~delete-window ()
-  "Deletes current window if it's not sticky/dedicated.  Use
-prefix arg (`C-u') to force deletion if it is."
-  (interactive)
-  (or (and (not current-prefix-arg)
-           (window-dedicated-p (selected-window))
-           (message "Window '%s' is sticky/dedicated, should you want to delete, re-invoke the command with C-u prefix."
-                    (current-buffer)))
-      (call-interactively #'delete-window)))
-
 (cl-defun ~get-next-non-dedicated-window (&optional original-window next-window)
   "Gets the next non-dedicated, non-minibuffer window."
   (cond
@@ -353,14 +284,6 @@ prefix arg (`C-u') to force deletion if it is."
     (~get-next-non-dedicated-window original-window (next-window next-window)))
    (t
     next-window)))
-
-(cl-defun ~get-non-minibuffer-window-in-dir (dir)
-  "Gets the next non-minibuffer in a direction.
-If the found window is the mini-buffer, returns `nil'."
-  (require 'windmove)
-  (let ((window (windmove-find-other-window dir)))
-    (unless (minibufferp (window-buffer window))
-      window)))
 
 (cl-defun ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
   "Transposes the current window with the next one."
@@ -410,39 +333,11 @@ If the found window is the mini-buffer, returns `nil'."
 ;; File & buffer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Make the tracking of recently closed file a separate module
-(defun ~track-closed-file ()
-  "Tracks the list of recently closed files."
-  (defvar *recently-closed-file-list* (list)
-    "List of recently closed files.")
-  (when-let (path buffer-file-name)
-    (delete path *recently-closed-file-list*)
-    (add-to-list '*recently-closed-file-list* path)))
-
-(defun ~undo-killed-buffers ()
-  "Undoes the kill of buffers."
-  (interactive)
-  (defvar *recently-closed-file-list* (list)
-    "List of recently closed files.")
-  (find-file (let ((ivy-sort-functions-alist nil))
-               (completing-read "File: " *recently-closed-file-list*))))
-
 ;; (defalias '~switch-buffer 'ivy-switch-buffer
 ;;   "Switches to a buffer and focus the corresponding window & frame.")
 
 (defalias '~switch-buffer '~show-buffer-chooser
   "Switches to a buffer and focus the corresponding window & frame.")
-
-(cl-defun ~clean-up-buffer (&key (buffer (current-buffer))
-                               (keep-local-vars? nil))
-  "Cleans up buffer."
-  (interactive)
-  (with-current-buffer buffer
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (unless keep-local-vars?
-        (kill-all-local-variables))
-      (remove-overlays))))
 
 ;; FIXME: Review these hippie-expand enhancements
 ;; (defun try-expand-flexible-abbrev (old)
@@ -720,12 +615,6 @@ expanded using `expand-file-name', then
 automatically."
   (~run-process (format program (shell-quote-argument path))))
 
-(defun ~find-file-new-frame (path &optional wildcards)
-  "Calls `find-file' in a new frame."
-  (let ((frame (make-frame)))
-    (select-frame frame)
-    (find-file path wildcards)))
-
 (defun ~find-file-in-previous-frame (path)
   "Visits a file in the previous frame, or creates a new frame
 then visits if there is no previous frame."
@@ -865,28 +754,6 @@ This command works on `sudo` *nixes only."
                    port
                    path)))))))
 
-(defun ~save-buffer-as (path)
-  "Saves current file as."
-  (interactive "FPath: ")
-  (unless (string-empty-p path)
-    (write-file path t)))
-
-(defun ~delete-current-file ()
-  "Deletes the file associated with the current buffer and kills
-off the buffer."
-  (interactive)
-  (let ((current-file buffer-file-name))
-    (when (and (file-exists-p current-file)
-               (yes-or-no-p (concat "Delete file: " current-file)))
-      ;; Prevent the following kill-buffer from recursively calling this
-      ;; function
-      (when (local-variable-p 'local/delete-on-close)
-        (kill-local-variable 'local/delete-on-close))
-      (kill-buffer (current-buffer))
-
-      (delete-file current-file)
-      (message "%s deleted" current-file))))
-
 ;; TODO: Is buffer-local-value necessary?
 
 (defun ~maybe-delete-file-when-killing-buffer ()
@@ -936,12 +803,6 @@ variable `local/linked-windows'."
                   (not (window-live-p window)))
         (delete-window window)))))
 
-(defun ~clean-up-tramp ()
-  "Closes all tramp connections and buffers."
-  (interactive)
-  (tramp-cleanup-all-connections)
-  (tramp-cleanup-all-buffers))
-
 (defun ~get-current-project-root ()
   "Returns the current project root or current directory."
   (or (ignore-errors (destructuring-bind (_ . dir) (project-current)
@@ -955,16 +816,6 @@ and fallback to current directory if project root is not found."
   (if current-prefix-arg
       (call-interactively counsel-grep-fn)
     (funcall counsel-grep-fn nil (~get-current-project-root))))
-
-(defun ~current-dir ()
-  "Current directory or `$HOME`."
-  (or (file-name-directory (or load-file-name buffer-file-name ""))
-      "~"))
-
-(defun ~current-file-full-path ()
-  "Full path to current file."
-  (or (expand-file-name buffer-file-name)
-      ""))
 
 (defun ~counsel-rg ()
   "Executes `counsel-rg' with pre-selected input from current

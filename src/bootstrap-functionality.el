@@ -242,6 +242,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (eval-when-compile
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Editing
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (defalias '~is-selecting? 'use-region-p
     "Determines if current there is a selection/active region.")
 
@@ -251,12 +256,18 @@
         (buffer-substring (region-beginning) (region-end))
       ""))
 
+  (defun ~activate-selection (pos-1 pos-2)
+    "Activates a selection, also visually, then leaves the point at
+`pos-2'."
+    (interactive)
+    (set-mark pos-1)
+    (goto-char pos-2)
+    (activate-mark))
   (defun ~get-secondary-selection ()
     "Gets the secondary selection (activated with `M-Mouse-1' by
 default)."
     (interactive)
     (gui-get-selection 'SECONDARY))
-
 
   (defun ~to-bol-dwim ()
     "Moves the point to the first non-whitespace character on this line.
@@ -405,9 +416,35 @@ Source: http://stackoverflow.com/a/4717026/219881"
     (interactive)
     (swiper (~get-selection)))
 
-  ;;
+  (defun ~format-json ()
+    "Formats current selection as JSON.  Requires jq."
+    (interactive)
+    (~exec| "jq ."))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Emacs Lisp
-  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun ~current-dir ()
+    "Current directory."
+    (or (file-name-directory (or load-file-name buffer-file-name ""))
+        ""))
+
+  (defun ~current-file-full-path ()
+    "Full path to current file."
+    (or (expand-file-name (or buffer-file-name ""))
+        ""))
+
+  (defun ~clean-up-tramp ()
+    "Closes all tramp connections and buffers."
+    (interactive)
+    (tramp-cleanup-all-connections)
+    (tramp-cleanup-all-buffers))
+
+  (defun ~get-last-sexp ()
+    "Returns the last sexp before the current point."
+    (interactive)
+    (elisp--preceding-sexp))
 
   (defun ~ido-M-x ()
     "Calls `EXECUTE-EXTENDED-COMMAND' with ido."
@@ -418,11 +455,64 @@ Source: http://stackoverflow.com/a/4717026/219881"
        "M-x "
        (all-completions "" obarray 'commandp)))))
 
+  (defun ~copy-pos-to-clipboard ()
+    "Appends path to the current position to the end of window on
+the right so that it could be open with `~smart-open-file' later
+on."
+    (interactive)
+    (let* ((selection (thread-last (~get-selection)
+                                   (s-replace "/" "\\/")))
+           (line-number-or-pattern (if (~is-selecting?)
+                                       (s-concat "/" selection "/")
+                                     (line-number-at-pos)))
+           (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
+      (~copy-to-clipboard path)))
+
+  (defun ~copy-file-name-to-clipboard ()
+    "Copies current file/dir name to clipboard."
+    (interactive)
+    (let ((filename (if (eq major-mode 'dired-mode)
+                        default-directory
+                      (buffer-file-name))))
+      (when filename
+        (~copy-to-clipboard filename))))
+
+  (defun ~eval-string (str)
+    "Evals a string."
+    (interactive "sString: ")
+    (eval (first (read-from-string (concat "(progn " str ")")))))
+
+  (cl-defun ~eval-region ()
+    "Evals region and returns value."
+    (interactive)
+    (if (~is-selecting?)
+        (thread-first (buffer-substring (region-beginning) (region-end))
+                      ~eval-string)
+      (error "No region to eval")))
+
+  (defun ~eval-last-sexp-or-region ()
+    "Evals region if active, or evals last sexpr."
+    (interactive)
+    (if (~is-selecting?)
+        (call-interactively #'~eval-region)
+      (call-interactively #'eval-last-sexp)))
+
+  (cl-defun ~gen-filename (&key (separator "-")
+                                (word-counter 4))
+    "Generates a random file name."
+    (string-trim (~exec-sh (list "gen-filename"
+                                 (number-to-string word-counter)
+                                 separator))))
+
+  (defun ~gen-uuid ()
+    "Generates a UUID."
+    (string-trim (~exec-sh (list "uuidgen" "-r"))))
+
   (defun ~current-line-continues? ()
     "Determines if the current line has a continuation marker."
     (thread-last (thing-at-point 'line)
-      string-trim
-      (s-matches? (rx "\\" (0+ space) eol))))
+                 string-trim
+                 (s-matches? (rx "\\" (0+ space) eol))))
 
   (defun ~previous-line-continues? ()
     "Determines if the previous line has a continuation marker."
@@ -431,15 +521,21 @@ Source: http://stackoverflow.com/a/4717026/219881"
         (forward-line -1)
         (~current-line-continues?))))
 
-  (cl-defun ~shorten-string (str max-length &optional (ellipsis "…"))
+  (cl-defun ~shorten-string (str max-length &optional (ellipsis "…") (cut-beginning? t))
     "Shortens a string, making sure its length does not exceed
 MAX-LENGTH by truncating and prefixing it with ELLIPSIS if
 necessary."
     (let ((actual-length (length str)))
       (if (> actual-length max-length)
-          (s-concat ellipsis (substring str (+ (- actual-length
-                                                  max-length)
-                                               (length ellipsis))))
+          (if cut-beginning?
+              (concat ellipsis (substring str (+ (- actual-length
+                                                    max-length)
+                                                 (length ellipsis))))
+            (concat (substring str (+ (- actual-length
+                                         max-length)
+                                      (length ellipsis)))
+                    ellipsis)
+            )
         str)))
 
   (defun ~copy-to-clipboard (text)
@@ -460,14 +556,179 @@ necessary."
   (defalias '~ansi-colorize 'ansi-color-apply
     "ANSI-colorizes a string with text properties.")
 
-  ;;
-  ;; File & buffer
-  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Window & Frame
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (defun ~get-last-sexp ()
-    "Returns the last sexp before the current point."
+  (defun ~find-file-new-frame (path &optional wildcards)
+    "Calls `find-file' in a new frame."
+    (let ((frame (make-frame)))
+      (select-frame frame)
+      (find-file path wildcards)))
+
+  (defun ~toggle-maximize-buffer ()
+    "Toggles maximizing current buffer."
     (interactive)
-    (elisp--preceding-sexp))
+    (if (= 1 (length (window-list)))
+        (jump-to-register '_)
+      (progn
+        (window-configuration-to-register '_)
+        (delete-other-windows))))
+
+  (cl-defun ~scroll-other-window (&key (nlines 5))
+    "Scrolls the other window."
+    (interactive)
+    (scroll-other-window nlines))
+
+  (cl-defun ~scroll-other-window-reverse (&key (nlines 5))
+    "Scrolls the other window in reverse direction."
+    (interactive)
+    (scroll-other-window (- nlines)))
+
+  (cl-defun ~kill-buffer-and-frame (&optional (buffer (current-buffer)))
+    "Kills the a buffer along with its frame (if exists)."
+    (interactive)
+    (unless (null buffer)
+      (if-let (window (get-buffer-window buffer t))
+          (let ((frame (window-frame window)))
+            (kill-buffer buffer)
+            (delete-frame frame))
+        (kill-buffer buffer))))
+
+  (cl-defun ~kill-buffer-and-window (&optional (window (selected-window)))
+    "Kills the a buffer along with its window (if exists)."
+    (interactive)
+    (with-selected-window window
+      (if (= (~count-non-sticky-windows) 1)
+          (kill-buffer)
+        (kill-buffer-and-window))))
+
+  (cl-defun ~count-non-sticky-windows ()
+    "Counts the number of non-sticky windows in the current frame."
+    (cl-loop for window being the windows
+             unless (window-dedicated-p window)
+             count window))
+
+  (cl-defun ~count-windows ()
+    "Counts the number of windows in the current frame."
+    (cl-loop for window being the windows
+             count window))
+
+  (defun ~one-window ()
+    "Deletes all other non-dedicated windows and makes current
+window the only window visible.  This function does nothing if
+the current window is a dedicated window."
+    (interactive)
+    (unless (window-dedicated-p)
+      (mapcar #'(lambda (window)
+                  (unless (window-dedicated-p window)
+                    (delete-window window)))
+              (cdr (window-list)))))
+
+  (defun ~delete-window ()
+    "Deletes current window if it's not sticky/dedicated.  Use
+prefix arg (`C-u') to force deletion if it is."
+    (interactive)
+    (or (and (not current-prefix-arg)
+             (window-dedicated-p (selected-window))
+             (message "Window '%s' is sticky/dedicated, should you want to delete, re-invoke the command with C-u prefix."
+                      (current-buffer)))
+        (call-interactively #'delete-window)))
+
+  (cl-defun ~get-non-minibuffer-window-in-dir (dir)
+    "Gets the next non-minibuffer in a direction.
+If the found window is the mini-buffer, returns `nil'."
+    (require 'windmove)
+    (let ((window (windmove-find-other-window dir)))
+      (unless (minibufferp (window-buffer window))
+        window)))
+
+  (defun ~get-current-monitor-workarea (&optional frame)
+    "Returns the current position and size of the workarea for the
+current monitor in the format of (X Y WIDTH HEIGHT)"
+    (alist-get 'workarea (frame-monitor-attributes frame)))
+
+  (defun ~centralize-mouse-position ()
+    "Centralizes mouse position in the current window."
+    (interactive)
+    (unless (minibufferp (current-buffer))
+      (let ((frame (selected-frame)))
+        (destructuring-bind (x1 y1 x2 y2) (window-edges)
+          (set-mouse-position frame
+                              (+ x1 (/ (window-body-width) 2))
+                              (+ y1 (/ (window-body-height) 2)))))))
+
+  (defun ~auto-pos-mouse-position ()
+    "Automatically position mouse in a sensible way."
+    (interactive)
+    (when (eq (current-buffer) (window-buffer (selected-window)))
+      (unless (minibufferp (current-buffer))
+        (let ((frame (selected-frame)))
+          (destructuring-bind (x1 y1 x2 y2) (window-edges)
+            (set-mouse-position frame (+ x1 1) y1))))))
+
+  (cl-defun ~center-frame (width
+                           height
+                           &key
+                           (frame (selected-frame)))
+    "Centers a frame.  WIDTH and HEIGHT are in pixels."
+    (set-frame-size frame width height t)
+    (destructuring-bind (x y screen-width screen-height) (~get-current-monitor-workarea frame)
+      (let* ((desired-x (+ x (/ (- screen-width width) 2)))
+             (desired-y (+ y (/ (- screen-height height) 2))))
+        (set-frame-position frame desired-x desired-y))))
+
+  (cl-defun ~center-frame-percent (width%
+                                   height%
+                                   &key
+                                   (frame (selected-frame)))
+    "Centers a frame.  WIDTH% and HEIGHT% are integers
+corresponding to the percentage of the width & height with
+regards to the current screen."
+    (destructuring-bind (x y screen-width screen-height) (~get-current-monitor-workarea frame)
+      (let* ((width (* (/ screen-width 100) width%))
+             (height (* (/ screen-height 100) height%))
+             (desired-x (+ x (/ (- screen-width width) 2)))
+             (desired-y (+ y (/ (- screen-height height) 2))))
+        (set-frame-size frame width height t)
+        (set-frame-position frame desired-x desired-y))))
+
+  (cl-defun ~center-frame-in-chars (width-in-chars
+                                    height-in-chars
+                                    &key
+                                    (frame (selected-frame)))
+    "Centers a frame with the width & height dimensions in
+characters."
+    (set-frame-size frame width-in-chars height-in-chars)
+    (let* ((width (frame-pixel-width frame))
+           (height (frame-pixel-height frame)))
+      (~center-frame width height :frame frame)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; File & buffer
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun ~delete-current-file ()
+    "Deletes the file associated with the current buffer and kills
+off the buffer."
+    (interactive)
+    (let ((current-file buffer-file-name))
+      (when (and (file-exists-p current-file)
+                 (yes-or-no-p (concat "Delete file: " current-file)))
+        ;; Prevent the following kill-buffer from recursively calling this
+        ;; function
+        (when (local-variable-p 'local/delete-on-close)
+          (kill-local-variable 'local/delete-on-close))
+        (kill-buffer (current-buffer))
+
+        (delete-file current-file)
+        (message "%s deleted" current-file))))
+
+  (defun ~save-buffer-as (path)
+    "Saves current file as."
+    (interactive "FPath: ")
+    (unless (string-empty-p path)
+      (write-file path t)))
 
   (defun ~get-buffer-content (buffer-or-name)
     "Gets the content of a buffer."
@@ -518,8 +779,8 @@ set to nil."
       (funcall (and initial-major-mode))
       (setq default-directory (or *scratch-dir* temporary-file-directory))
       (set-visited-file-name (thread-first "%s_%s"
-                               (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~gen-filename))
-                               string-trim))
+                                           (format (format-time-string "%Y-%m-%d_%H-%M-%S") (~gen-filename))
+                                           string-trim))
       (let ((var/symbol (make-local-variable 'local/delete-on-close)))
         (set var/symbol t)
         (add-file-local-variable var/symbol t))
@@ -553,62 +814,41 @@ which is loaded lazily get loaded."
     "Visits a file without opening it and returns the buffer name."
     (buffer-name (find-file-noselect path)))
 
-  (defun ~copy-pos-to-clipboard ()
-    "Appends path to the current position to the end of window on
-the right so that it could be open with `~smart-open-file' later
-on."
+  (cl-defun ~clean-up-buffer (&key (buffer (current-buffer))
+                                   (keep-local-vars? nil))
+    "Cleans up buffer."
     (interactive)
-    (let* ((selection (thread-last (~get-selection)
-                        (s-replace "/" "\\/")))
-           (line-number-or-pattern (if (~is-selecting?)
-                                       (s-concat "/" selection "/")
-                                     (line-number-at-pos)))
-           (path (format "%s:%s" (buffer-file-name) line-number-or-pattern)))
-      (~copy-to-clipboard path)))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (unless keep-local-vars?
+          (kill-all-local-variables))
+        (remove-overlays))))
 
-  (defun ~copy-file-name-to-clipboard ()
-    "Copies current file/dir name to clipboard."
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Tracking recently closed files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; TODO: Make the tracking of recently closed file a separate module
+  (defun ~track-closed-file ()
+    "Tracks the list of recently closed files."
+    (defvar *recently-closed-file-list* (list)
+      "List of recently closed files.")
+    (when-let (path buffer-file-name)
+      (delete path *recently-closed-file-list*)
+      (add-to-list '*recently-closed-file-list* path)))
+
+  (defun ~undo-killed-buffers ()
+    "Undoes the kill of buffers."
     (interactive)
-    (let ((filename (if (eq major-mode 'dired-mode)
-                        default-directory
-                      (buffer-file-name))))
-      (when filename
-        (~copy-to-clipboard filename))))
+    (defvar *recently-closed-file-list* (list)
+      "List of recently closed files.")
+    (find-file (let ((ivy-sort-functions-alist nil))
+                 (completing-read "File: " *recently-closed-file-list*))))
 
-  (defun ~eval-string (str)
-    "Evals a string."
-    (interactive "sString: ")
-    (eval (first (read-from-string (concat "(progn " str ")")))))
-
-  (cl-defun ~eval-region ()
-    "Evals region and returns value."
-    (interactive)
-    (if (~is-selecting?)
-        (thread-first (buffer-substring (region-beginning) (region-end))
-          ~eval-string)
-      (error "No region to eval")))
-
-  (defun ~eval-last-sexp-or-region ()
-    "Evals region if active, or evals last sexpr."
-    (interactive)
-    (if (~is-selecting?)
-        (call-interactively #'~eval-region)
-      (call-interactively #'eval-last-sexp)))
-
-  (cl-defun ~gen-filename (&key (separator "-")
-                                (word-counter 4))
-    "Generates a random file name."
-    (string-trim (~exec-sh (list "gen-filename"
-                                 (number-to-string word-counter)
-                                 separator))))
-
-  (defun ~gen-uuid ()
-    "Generates a UUID."
-    (string-trim (~exec-sh (list "uuidgen" "-r"))))
-
-  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Process/Execution
-  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun ~get-process-output (process)
     "Gets the output for a managed process."
@@ -980,9 +1220,7 @@ E.g.
                                              (t
                                               command)))
                                            (t
-                                            command)))))
-  )
-
+                                            command))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
@@ -1048,6 +1286,14 @@ E.g.
 ;; BUG: Command history not recorded
 ;; (bind-key "<f12>" #'~ido-M-x)
 (bind-key "<f12>" #'execute-extended-command)
+
+;; TODO
+;; Context menu
+;; ~execute
+;; ~read-command-or-get-from-secondary-selection
+;; things-cmd: thing-at-point 'exec-text
+;; Key: ~toggle-maximize-buffer
+;; K
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
