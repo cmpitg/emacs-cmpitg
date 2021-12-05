@@ -404,7 +404,7 @@ project root, not ignoring anything."
     (defun ~parinfer-update-keybindings ()
       (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
       (define-key parinfer-mode-map (kbd "C-a") #'~my/deactivate-modalka)
-      (define-key parinfer-mode-map (kbd "C-a") #'parinfer-toggle-mode)
+      (define-key parinfer-mode-map (kbd "C-'") #'parinfer-toggle-mode)
       (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
       (define-key parinfer-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
@@ -588,9 +588,10 @@ project root, not ignoring anything."
       (interactive)
       (modalka-mode -1)
       (modalka-mode 1))
-    (add-hook 'magit-status-mode-hook #'~my/magit-load-modalka)
+    ;; (add-hook 'magit-status-mode-hook #'~my/magit-load-modalka)
     (add-hook 'dired-mode-hook #'~my/deactivate-modalka)
-    (modalka-global-mode)))
+    ;; (modalka-global-mode)
+    ))
 
 (defun ~delete-line ()
   "Deletes the current line."
