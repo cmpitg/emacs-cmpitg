@@ -1385,11 +1385,20 @@ code of the command."
   (interactive)
   (~insert-from-history *~exec-history-path*))
 
-(defmacro ~dispatch-action (&rest args)
-  "Dispatches action based on args.  Ignore output."
-  (interactive)
-  (message "Dispatching action: %s" args)
-  `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args)))
+(defun ~dispatch-action (&rest args)
+ "Dispatches action based on args.  Ignore output."
+ (interactive)
+ (message-box "Dispatching action: %s; Workdir: %s" args (pwd))
+ (eval `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args))))
+
+;; (defmacro ~dispatch-action (&rest args)
+;;   "Dispatches action based on args.  Ignore output."
+;;   (interactive)
+;;   `(progn
+;;      (message-box "Dispatching action: %s; Workdir: %s" ,args ,(pwd))
+;;      (~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args)))
+;;   ;; `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args))
+;;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
