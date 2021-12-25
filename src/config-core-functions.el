@@ -1388,7 +1388,7 @@ code of the command."
 (defun ~dispatch-action (&rest args)
  "Dispatches action based on args.  Ignore output."
  (interactive)
- (message-box "Dispatching action: %s; Workdir: %s" args (pwd))
+ (message "Dispatching action: %s; Workdir: %s" args (pwd))
  (eval `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args))))
 
 ;; (defmacro ~dispatch-action (&rest args)
