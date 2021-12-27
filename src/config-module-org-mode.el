@@ -74,7 +74,7 @@
           (setq org-log-done 'time)
 
           (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
-                                   (f-glob "*.org")))
+                                              (f-glob "*.org")))
 
           ;; Indent visually by default
           (setq org-startup-indented t)
@@ -116,8 +116,9 @@
           ;; Modules that should be loaded with org
           (dolist (module '(org-crypt
                             org-habit
-                            org-bookmark
-                            org-eshell))
+                            ;; org-bookmark
+                            ;; org-eshell
+                            ))
             (add-to-list 'org-modules module))
 
           ;; org-babel
@@ -132,20 +133,23 @@
           (setq org-confirm-babel-evaluate nil)
           (setq org-babel-python-command "python3")
 
-          (let* ((monospace-font `(:font ,(~get-default-monospace-font)))
-                 (variable-font `(:font ,(~get-default-font)))
-                 (base-font-color (face-foreground 'default nil 'default))
-                 (headline `(:inherit default :weight bold :foreground ,base-font-color)))
-            (custom-theme-set-faces 'user
-                                    `(org-level-8 ((t (,@headline ,@variable-font))))
-                                    `(org-level-7 ((t (,@headline ,@variable-font))))
-                                    `(org-level-6 ((t (,@headline ,@variable-font))))
-                                    `(org-level-5 ((t (,@headline ,@variable-font))))
-                                    `(org-level-4 ((t (,@headline ,@variable-font :height 1.1))))
-                                    `(org-level-3 ((t (,@headline ,@variable-font :height 1.2))))
-                                    `(org-level-2 ((t (,@headline ,@variable-font :height 1.25))))
-                                    `(org-level-1 ((t (,@headline ,@variable-font :height 1.3))))
-                                    `(org-document-title ((t (,@headline ,@variable-font :height 1.5 :underline nil))))))
+          (defun ~set-org-fonts ()
+            (interactive)
+            (let* ((monospace-font `(:font ,(~get-default-monospace-font)))
+                   (variable-font `(:font ,(~get-default-font)))
+                   (base-font-color (face-foreground 'default nil 'default))
+                   (headline `(:inherit default :weight bold :foreground ,base-font-color)))
+              (custom-theme-set-faces 'user
+                                      `(org-level-8 ((t (,@headline ,@variable-font))))
+                                      `(org-level-7 ((t (,@headline ,@variable-font))))
+                                      `(org-level-6 ((t (,@headline ,@variable-font))))
+                                      `(org-level-5 ((t (,@headline ,@variable-font))))
+                                      `(org-level-4 ((t (,@headline ,@variable-font :height 1.1))))
+                                      `(org-level-3 ((t (,@headline ,@variable-font :height 1.2))))
+                                      `(org-level-2 ((t (,@headline ,@variable-font :height 1.25))))
+                                      `(org-level-1 ((t (,@headline ,@variable-font :height 1.3))))
+                                      `(org-document-title ((t (,@headline ,@variable-font :height 1.5 :underline nil)))))))
+          (add-hook 'window-setup-hook #'~set-org-fonts)
 
           (setq-default initial-major-mode 'org-mode)
           (setq-default major-mode 'org-mode)))

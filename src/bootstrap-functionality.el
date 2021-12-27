@@ -53,6 +53,19 @@
 
 ;; Use system font by default
 (setq font-use-system-font t)
+;; But do customize font
+(defun ~set-gui-font ()
+  (interactive)
+  (let ((font (format "%s-11" (~get-default-monospace-font)))
+        (variable-pitch-font (~get-default-font)))
+    (set-frame-font font nil t)
+    (add-to-list 'default-frame-alist
+                 `(font . ,font))
+    (custom-theme-set-faces
+     'user
+     '(variable-pitch ((t (:family ,variable-pitch-font :height 110))))
+     '(fixed-pitch ((t (:family ,font :height 110)))))))
+(~set-gui-font)
 
 ;; Set line spacing
 (setq-default line-spacing 2)
