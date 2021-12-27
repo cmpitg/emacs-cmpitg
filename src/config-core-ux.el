@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,34 +16,6 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
-
-;; Don't follow symlink, use the path as-is
-(setq vc-follow-symlinks nil)
-(setq find-file-visit-truename nil)
-
-;; 3 lines at a time normally, 5 lines at a time with shift
-(setq mouse-wheel-scroll-amount '(2 ((shift) . 5)))
-
-;; Don't accelerate scrolling
-(setq mouse-wheel-progressive-speed nil)
-
-;; Scroll window under mouse
-(setq mouse-wheel-follow-mouse 't)
-
-;; Keyboard scroll 3 lines at a time
-(setq scroll-step 3)
-(setq scroll-conservatively 10000)
-
-;; Use system font by default
-(setq font-use-system-font t)
-;; But do customize current font
-(let ((font (format "%s-11" (~get-default-monospace-font))))
-  (set-frame-font font nil t)
-  (add-to-list 'default-frame-alist
-               `(font . ,font)))
-
-;; Set line spacing
-(setq-default line-spacing 2)
 
 ;; Restore cursor position after scrolling
 ;; Ref: http://elpa.gnu.org/packages/scroll-restore.html
@@ -96,139 +68,8 @@
   :init (progn
           (custom-set-variables `(save-place-file ,(format "~/.emacs.d/places.%s" server-name)))))
 
-;; Custom unique naming method
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
-
-;; Disable Tramp autosave
-(setq tramp-auto-save-directory "/tmp/")
-
-;; Don't let the cursor go into minibuffer prompt
-;; Ref: http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
-(setq minibuffer-prompt-properties
-      '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
-
-;; Use the same clipboard with X
-(setq select-enable-clipboard t)
-
-;; Echo when trying to kill in a read-only buffer
-(setq kill-read-only-ok t)
-
-;; Always suggest keybindings
-(setq suggest-key-bindings t)
-
-;; More tolerable stack
-(setq max-lisp-eval-depth 15000)
-(setq max-specpdl-size    15000)
-
-;; Don't change case when replacing
-(setq-default case-replace nil)
-
-;; fill-column
-(setq-default fill-column 78)
-(set-fill-column 78)
-
-;; Maximum number of ring items to store
-(setq mark-ring-max 512)
-
-;; yes/no questions become y/n questions
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Backspace and Del delete selection, except in paredit-mode
-(delete-selection-mode 1)
-
-;; Set tab width
-(setq tab-width 4)
-
-;; Default tab-size for C
-(setq-default c-basic-offset 4)
-
-;; Expand tabs to spaces
-(setq-default indent-tabs-mode nil)
-
-;; Subword should include camelCase notation
-(global-subword-mode 1)
-(diminish 'subword-mode)
-
 ;; Hide the toolbar
 (tool-bar-mode -1)
-
-;; Show tooltips in the echo area
-(tooltip-mode -1)
-
-;; Scroll bar comes in handy with mouse usage
-(set-scroll-bar-mode 'left)
-;; Not anymore
-;; (scroll-bar-mode -1)
-
-;; No menu bar, more screen estate
-(menu-bar-mode -1)
-;; (menu-bar-mode 1)
-
-;; Don't display time
-(display-time-mode -1)
-
-;; Don't show the battery indicator
-(display-battery-mode -1)
-
-;; Turn off welcome message
-(setq inhibit-startup-message t)
-
-;; Display the size of the buffer
-(size-indication-mode 1)
-
-;;; Don't blink the cursor
-(blink-cursor-mode -1)
-
-;; Window splitting preferences
-;; Vertical split
-;; (setq split-width-threshold nil)
-;; Horizontal split
-;; (setq split-width-threshold 1)
-
-;; Change cursor type
-;; (set-default 'cursor-type 'hbar)
-;; (set-default 'cursor-type 'box)
-(set-default 'cursor-type 'bar)
-
-;; Show matching parentheses
-(show-paren-mode 1)
-
-;; Set printing type
-(setq ps-paper-type 'a4)
-
-;; Disable backup file
-(setq make-backup-files nil)
-
-;; Show column number
-(column-number-mode 1)
-
-;; Turn on the search-highlighting
-(setq search-highlight 1)
-
-;; Case-insensitive searching
-(setq-default case-fold-search t)
-(setq case-fold-search t)
-
-;; Ignore case when reading a file name completion
-(setq read-file-name-completion-ignore-case t)
-
-;; Dim the ignored part of the file name
-(file-name-shadow-mode 1)
-
-;; Minibuffer window expands vertically as necessary to hold the text
-;; that you put in the minibuffer
-(setq resize-mini-windows t)
-
-;; By default, font-lock mode is off
-(global-font-lock-mode -1)
-;; (setq font-lock-maximum-size nil)
-
-;; Diminish auto-revert-mode in the mode line
-(diminish 'auto-revert-mode)
-
-;; Don't highlight the current line
-(hl-line-mode -1)
 
 ;; Added functionality to hippie-expand
 ;; (add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
