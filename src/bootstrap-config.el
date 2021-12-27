@@ -88,17 +88,18 @@ a new window or a new frame.  Possible values: `:window',
 (defun ~get-default-monospace-font ()
   "Gets the default monospace font."
   (cond
-   ((x-list-fonts "Cascadia Mono") '(:font "Cascadia Mono"))
-   ((x-list-fonts "Fira Code") '(:font "Fira Code"))
-   ((x-list-fonts "Noto Sans Mono") '(:font "Noto Sans Mono"))
-   ((x-list-fonts "Open Sans Mono") '(:font "Open Sans Mono"))
-   ((x-family-fonts "Roboto") '(:family "Roboto"))))
+   ((x-list-fonts "Cascadia Mono") "Cascadia Mono")
+   ((x-list-fonts "Fira Code") "Fira Code")
+   ((x-list-fonts "Noto Sans Mono") "Noto Sans Mono")
+   ((x-list-fonts "Open Sans Mono") "Open Sans Mono")
+   (t "Monospace")))
 
 (defun ~get-default-font ()
   "Gets the default font."
   (cond
-   ((x-list-fonts "Roboto") '(:font "Roboto"))
-   ((x-family-fonts "Roboto") '(:family "Roboto"))))
+   ((x-list-fonts "Roboto") "Roboto")
+   ((x-list-fonts "Open Sans") "Open Sans")
+   (t "Sans Serif")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Logging current Rmacs information
