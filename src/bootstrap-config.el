@@ -52,6 +52,8 @@ a new window or a new frame.  Possible values: `:window',
   "Path to history file that stores executed external commands")
 (defvar *~exec-history-max* 3000
   "How many entries are saved in `*~EXEC-HISTORY-PATH*'")
+(unless (file-exists-p *~exec-history-path*)
+  (write-region "" nil *~exec-history-path*))
 
 (defvar *~output-beginning-marker* "### ««« ###"
   "String that marks the beginning of the output from the interpreter.")
