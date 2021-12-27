@@ -18,6 +18,7 @@ try {
 		{verbose                     "Be verbose, prints options and arguments"}
 		{init-dir.arg     ""         "Alternative Rmacs init directory.  Not in use if the server is already started."}
 		{init.arg         ""         "Additional init file, loaded after loading base init.  Not in use if the server is already started."}
+		{debug-on-error   ""         "Whether or to jump into debug mode on error."}
 	} {[rmacs-options] <command> [arguments] ...
 
 Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized tool (called "shape").  The shape is specified by the '--shape' option.  Each shape shared a base configuration with different configurations on top of it.  Currently the following shapes are supported:
@@ -152,12 +153,16 @@ proc rmacsWait {name timeout} {
 	exit 2
 }
 
-proc rmacsStart {name shape shapeInitPath init bgDaemon verbose} {
+proc rmacsStart {name shape shapeInitPath init bgDaemon debugOnError verbose} {
 	# Makes sure XMODIFIERS is correctly set
 	if {[info exists ::env(XMODIFIERS)]} {
 		set cmd [list env XMODIFIERS=$::env(XMODIFIERS) emacs -Q]
 	} else {
 		set cmd [list emacs -Q]
+	}
+
+	if {$debugOnError} {
+		set cmd [concat $cmd [list --eval "(setq debug-on-error t)"]]
 	}
 
 	set cmd [concat $cmd [list --eval "(setq *rmacs-shape* :$shape)"]]
@@ -222,7 +227,7 @@ proc rmacsKill {name verbose} {
 proc makeSureServerIsRunning {argList} {
 	array set args $argList
 	if {![isServerRunning $args(name)]} {
-		rmacsStart $args(name) $args(shape) $args(shape-init-path) $args(init) 1 $args(verbose)
+		rmacsStart $args(name) $args(shape) $args(shape-init-path) $args(init) true $args(debug-on-error) $args(verbose)
 		rmacsWait $args(name) $args(timeout)
 	}
 }
@@ -261,7 +266,7 @@ switch $mainCommand {
 		if {[isServerRunning $args(name)]} {
 			puts stderr "Error: Server '$args(name)' is running..."
 		} else {
-			rmacsStart $args(name) $args(shape) $args(shape-init-path) $args(init) 0 $args(verbose)
+			rmacsStart $args(name) $args(shape) $args(shape-init-path) $args(init) false $args(debug-on-error) $args(verbose)
 		}
 		exit 15
 	}
