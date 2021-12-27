@@ -85,6 +85,21 @@ a new window or a new frame.  Possible values: `:window',
   (interactive)
   (~load-files (~get-config "init-" (substring (symbol-name *rmacs-shape*) 1))))
 
+(defun ~get-default-monospace-font ()
+  "Gets the default monospace font."
+  (cond
+   ((x-list-fonts "Cascadia Mono") '(:font "Cascadia Mono"))
+   ((x-list-fonts "Fira Code") '(:font "Fira Code"))
+   ((x-list-fonts "Noto Sans Mono") '(:font "Noto Sans Mono"))
+   ((x-list-fonts "Open Sans Mono") '(:font "Open Sans Mono"))
+   ((x-family-fonts "Roboto") '(:family "Roboto"))))
+
+(defun ~get-default-font ()
+  "Gets the default font."
+  (cond
+   ((x-list-fonts "Roboto") '(:font "Roboto"))
+   ((x-family-fonts "Roboto") '(:family "Roboto"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Logging current Rmacs information
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
