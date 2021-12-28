@@ -1233,7 +1233,21 @@ E.g.
                                              (t
                                               command)))
                                            (t
-                                            command))))))
+                                            command)))))
+
+  (defun ~dispatch-action (&rest args)
+    "Dispatches action based on args.  Ignore output."
+    (interactive)
+    (message "Dispatching action: %s; Workdir: %s" args (pwd))
+    (eval `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args))))
+
+  (defun ~run-current-file-in-tmux-then-pause ()
+    "Runs current file in a terminal emulator, pauses after finished."
+    (interactive)
+    (let ((path (buffer-file-name)))
+      (when (or (null path) (string-empty-p path))
+        (error "Current buffer must be a file"))
+      (~dispatch-action "!! " path))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings

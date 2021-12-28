@@ -1385,12 +1385,6 @@ code of the command."
   (interactive)
   (~insert-from-history *~exec-history-path*))
 
-(defun ~dispatch-action (&rest args)
- "Dispatches action based on args.  Ignore output."
- (interactive)
- (message "Dispatching action: %s; Workdir: %s" args (pwd))
- (eval `(~exec-|-async ("setsid" "--fork" "dispatch-action" ,@args))))
-
 ;; (defmacro ~dispatch-action (&rest args)
 ;;   "Dispatches action based on args.  Ignore output."
 ;;   (interactive)
