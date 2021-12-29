@@ -151,6 +151,12 @@
                                       `(org-document-title ((t (,@headline ,@variable-font :height 1.3 :underline nil)))))))
           (add-hook 'window-setup-hook #'~set-org-fonts)
 
+          ;; Darken background of code block
+          (require 'color)
+          (set-face-attribute 'org-block nil :background
+                              (color-darken-name (face-attribute 'default :background) 3))
+
+
           (setq-default initial-major-mode 'org-mode)
           (setq-default major-mode 'org-mode)))
 
