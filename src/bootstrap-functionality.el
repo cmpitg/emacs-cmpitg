@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2021 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2021-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -1248,6 +1248,75 @@ E.g.
       (when (or (null path) (string-empty-p path))
         (error "Current buffer must be a file"))
       (~dispatch-action "!! " path))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Eshell
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'eshell)
+(require 'em-smart)
+
+(defun ~eshell-dir (dir)
+  "Starts Eshell in a directory.  If Eshell has already been
+started, change the directory."
+  (interactive "DDirectory: ")
+  (cond
+   ((get-buffer "*eshell*")
+    (with-current-buffer "*eshell*"
+      (cd dir)
+      (eshell-emit-prompt))
+    (switch-to-buffer "*eshell*"))
+   (t
+    (cd dir)
+    (eshell))))
+
+(defun ~eshell-current-project-dir ()
+  "Starts Eshell in the current project directory or the current
+directory."
+  (interactive)
+  (~eshell-dir (~get-current-project-root)))
+
+(defun ~eshell-quit ()
+  "Quits Eshell when current command is empty."
+  (interactive)
+  (insert "exit")exit
+  (eshell-send-input))
+
+;; (defun ~my/eshell-prompt-function ()
+;;   (format " - %s %s@%s %s -\n%s "
+;;           (format-time-string "%H:%M:%S" (current-time))
+;;           (user-login-name)
+;;           (system-name)
+;;           (eshell/pwd)
+;;           (if (zerop (user-uid)) "#" "$")))
+;; (defun ~my/eshell-prompt-function ()
+;;   (format " - %s %s@%s %s -\n"
+;;           (format-time-string "%H:%M:%S" (current-time))
+;;           (user-login-name)
+;;           (system-name)
+;;           (eshell/pwd)))
+;; (setq eshell-prompt-function #'~my/eshell-prompt-function)
+;; (setq eshell-prompt-regexp (rx bol (or "#" "$") " "))
+
+(defun ~my/eshell-maybe-bol ()
+  "Goes to beginning of command line first, then beginning of
+line in Eshell."
+  (interactive)
+  (let ((p (point)))
+    (eshell-bol)
+    (when (= p (point))
+      (beginning-of-line))))
+
+(defun ~init-eshell ()
+  "Initializes Eshell.  Call this only after Eshell has been fully setup, e.g. in `ESHELL-MODE-HOOK'."
+  (interactive)
+  (eshell-smart-initialize)
+  (add-to-list 'eshell-visual-commands "mutt")
+  (add-to-list 'eshell-visual-subcommands `("git" "log" "diff" "show")))
+
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybindings
