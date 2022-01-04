@@ -547,7 +547,7 @@ project root, not ignoring anything."
           ("Z" . #'fastnav-sprint-backward)
 
           ("X" . #'~execute-current-wand-text)
-          ("xx" . #'hydra-freeform-exec/body)
+          ("xx" . #'hydra-external-exec/body)
           ("I" . #'bowser:expand-dir-here)
 
           (">" . #'beginning-of-buffer)
