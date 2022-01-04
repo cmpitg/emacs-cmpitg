@@ -417,6 +417,11 @@ Source: http://stackoverflow.com/a/4717026/219881"
       (call-interactively #'set-mark-command)
       (backward-word)))
 
+  (defun ~delete-line ()
+    "Deletes the current line."
+    (interactive)
+    (delete-region (point-at-bol) (point-at-eol)))
+
   (defun ~delete-blank-lines ()
     "Deletes all blank lines at the current position."
     (interactive)

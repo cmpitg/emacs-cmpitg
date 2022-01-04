@@ -593,11 +593,6 @@ project root, not ignoring anything."
     ;; (modalka-global-mode)
     ))
 
-(defun ~delete-line ()
-  "Deletes the current line."
-  (interactive)
-  (delete-region (point-at-bol) (point-at-eol)))
-
 (defun ~replace-line ()
   "Replaces the current line."
   (interactive)
