@@ -1,5 +1,5 @@
 ;;
-;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -127,7 +127,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro ~with-output-to-next-window (goto-beginning? &rest body)
-  "TODO"
+  "Runs BODY with the current window being the next window"
   (when (= 1 (~count-windows))
     (error "Must have must than one window to output"))
 
@@ -139,7 +139,7 @@
 (put '~with-output-to-next-window 'lisp-indent-function 1)
 
 (defmacro ~with-output-to-buffer-file (path goto-beginning? &rest body)
-  "TODO"
+  "Runs BODY with the current buffer being a visited file."
   `(with-current-buffer (~visit-file ,path)
      (when ,goto-beginning?
        (beginning-of-buffer))
@@ -161,9 +161,9 @@
 ;; (~palette/ensure-prefix "         pwd" "$ ")
 ;; (~palette/ensure-prefix "         ls\\\n" "$ ")
 
-(defun ~palette/trim-garbage (text)
-  "TODO. TODO: Customize garbage"
-  (lexical-let* ((elements (s-split-up-to (rx bos (1+ (any " ;!$#"))) text 1))
+(cl-defun ~palette/trim-garbage (text &optional (garbage-regexp (rx bos (1+ (any " ;!$#")))))
+  "Trims garbage from TEXT, tries to make text a command."
+  (lexical-let* ((elements (s-split-up-to garbage-regexp text 1))
                  (text (if (> (length elements) 1)
                            (string-trim (second elements))
                          (first elements)))
@@ -205,8 +205,8 @@ text is multiline text that could be executed with Wand."
   "Executes a shell command in a terminal multiplexer, pauses
 after command has finished running."
   (interactive)
-  (lexical-let ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd))
-                (cleansed (s-replace-regexp (rx "\\" "\n") "" cmd)))
+  (lexical-let* ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd))
+                 (cleansed (s-replace-regexp (rx "\\" "\n") "" cmd)))
     (~add-to-history-file *~exec-history-path* cleansed
                           :max-history *~exec-history-max*)
     (~dispatch-action "!! " cleansed)))
