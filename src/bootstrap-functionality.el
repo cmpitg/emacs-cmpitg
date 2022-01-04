@@ -860,6 +860,42 @@ which is loaded lazily get loaded."
                  (completing-read "File: " *recently-closed-file-list*))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; History management
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (cl-defun ~add-to-history-file (history-path line &key (max-history 1000))
+    "Saves a line to a history file."
+    (~exec-|-async (concat line "\n")
+                   ("add-to-history" "--max-history" (number-to-string max-history) history-path)))
+
+  (cl-defun ~add-arg-to-history-fn (history-path action-fn &key (max-history 3000))
+    "Returns a function that records text to a history file, then performs the action defined by ACTION-FN."
+    (lexical-let* ((history-path history-path)
+                   (action-fn action-fn)
+                   (max-history max-history))
+      #'(lambda (text)
+          (~add-to-history-file history-path text
+                                :max-history max-history)
+          (funcall action-fn text))))
+
+  (defun ~choose-from-history (history-path)
+    "Prompts for an entry from a history file.  A history file is a
+text file with each line corresponding to an entry.  An entry is
+trimmed after reading."
+    (let* ((content (~read-file history-path))
+           (lines (split-string content "\n")))
+      (string-trim (ivy-read "Command: " lines))))
+
+  (defun ~insert-from-history (history-path)
+    "Prompts for an entry and inserts it to the current buffer.
+  See `~CHOOSE-FROM-HISTORY' for further information on the
+  history file and how an entry is formatted."
+    (interactive "fHistory path: ")
+    (let ((entry (~choose-from-history history-path)))
+      (unless (string-empty-p entry)
+        (insert entry))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Process/Execution
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
