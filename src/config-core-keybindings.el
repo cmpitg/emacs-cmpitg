@@ -201,13 +201,16 @@
         ("kk" #'kill-current-buffer "Kill current buffer")
         ("kb" #'kill-buffer "Kill a buffer"))
 
-      (defhydra hydra-freeform-exec (:columns 2 :exit t)
-        "Pattern-based text"
-        ("i" #'~palette/point/exec-sh-in-term-mux "SH in term mux")
-        ("I" #'~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file "SH in term mux, piping output to file")
-        ("k" #'~palette/point/exec-sh-piping-here "SH, piping output here")
-        ("x" #'~palette/point/exec-sh-in-term-mux-then-pause "SH in term mux, then pause")
-        ("a" #'~ansi-colorize-current-output-block "Colorize output block"))
+      (defhydra hydra-external-exec (:columns 2 :exit t)
+        "External execution"
+        ("e" #'~palette/exec-sh-in-term-mux-then-pause "SH point in term mux")
+        ("i" #'~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file "SH point in term mux, piping output to file")
+        ("k" #'~palette/point/exec-sh-piping-here "SH point, piping output here")
+        ("x" #'~palette/point/exec-sh-in-term-mux-then-pause "SH point in term mux, then pause")
+        ("a" #'~ansi-colorize-current-output-block "Colorize output block")
+        ("s" #'(lambda ()
+                 (interactive)
+                 (~palette/exec-sh-in-term-mux "zsh")) "Zsh"))
 
       (defhydra hydra-exec (:columns 3 :exit t)
         "Text execution"
@@ -235,9 +238,7 @@
         ("r" #'~insert-entry-from-exec-history "Insert from history")
         ;; TODO: buffer shell current dir
         ;; ("b" #')
-        ("s" #'(lambda ()
-                 (interactive)
-                 (~execute "!! zsh")) "Zsh"))
+        )
 
       (defhydra hydra-emacs-lisp (:columns 4 :exit t)
         "Emacs Lisp operations"
@@ -492,6 +493,7 @@
 
         ("u" #'hydra-dev/body "Dev")
         ("x" #'hydra-exec/body "Execution")
+        ("a" #'hydra-external-exec/body "Execution (external)")
         ("l" #'hydra-emacs-lisp/body "Emacs Lisp operations")
 
         ("o" #'hydra-org/body "Org")
