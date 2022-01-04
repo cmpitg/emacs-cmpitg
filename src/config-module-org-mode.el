@@ -59,6 +59,10 @@
           (defalias '~org-to-prev-entry #'outline-previous-heading)
 
           (defun ~my/org-mode-setup ()
+            ;; Darken background of code block
+            (require 'color)
+            (set-face-attribute 'org-block nil :background
+                                (color-darken-name (face-attribute 'default :background) 3))
             (variable-pitch-mode 1)
             (bind-key "<S-return>" #'~execute-line org-mode-map)
             (bind-key "<C-return>" #'~eval-last-sexp-or-region org-mode-map)
@@ -150,12 +154,6 @@
                                       `(org-level-1 ((t (,@headline ,@variable-font :height 1.25))))
                                       `(org-document-title ((t (,@headline ,@variable-font :height 1.3 :underline nil)))))))
           (add-hook 'window-setup-hook #'~set-org-fonts)
-
-          ;; Darken background of code block
-          (require 'color)
-          (set-face-attribute 'org-block nil :background
-                              (color-darken-name (face-attribute 'default :background) 3))
-
 
           (setq-default initial-major-mode 'org-mode)
           (setq-default major-mode 'org-mode)))
