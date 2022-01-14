@@ -579,6 +579,7 @@ might need manual refreshing."
 ;;
 
 (use-package elpy
+  :after (company)
   :init (progn
           (elpy-enable)
 
@@ -661,7 +662,7 @@ might need manual refreshing."
     (add-hook 'clojure-mode-hook #'my/enable-clj-syntax-check)))
 
 (use-package cider
-  :after (hydra clojure-mode)
+  :after (hydra clojure-mode yasnippet)
   :hook (((clojure-mode) . midje-mode)
          ((cider-repl-mode) . subword-mode)
          ((clojure-mode
@@ -757,7 +758,8 @@ the sequence, and its index within the sequence."
   :after cider)
 
 (use-package clj-refactor
-  :after cider
+  :disabled t
+  :after (cider yasnippet)
   :config
   (progn
     (defalias '~clojure/add-dependency 'cljr-add-project-dependency)
@@ -833,10 +835,11 @@ the sequence, and its index within the sequence."
       (interactive)
       (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))
 
-    (defhydra hydra-dev-tcl (:columns 4 :exit t)
-      "Python development"
-      ("z" #'switch-to-tcl "Switch to shell")
-      ("r" #'tcl-eval-region "Eval region"))))
+    (with-eval-after-load "hydra"
+      (defhydra hydra-dev-tcl (:columns 4 :exit t)
+        "Python development"
+        ("z" #'switch-to-tcl "Switch to shell")
+        ("r" #'tcl-eval-region "Eval region")))))
 
 ;;
 ;; Language server mode

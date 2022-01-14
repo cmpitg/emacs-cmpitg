@@ -149,13 +149,14 @@
   "Focuses a window by its ID."
   (string-trim (~exec-sh (list "xdotool" "windowfocus" "--sync" window-id))))
 
-(defhydra hydra-wm-app (:columns 4 :exit t)
-  "Run application"
-  ("a" #'(lambda () (interactive) (~dispatch-action "!@ config-inputs-cmpitg")) "Config input")
-  ("m" #'(lambda () (interactive) (~dispatch-action "!@ konsole")) "Terminal emulator")
-  ("w" #'(lambda () (interactive) (~dispatch-action "!@ web-browser-gui -ProfileManager")) "Web browser")
-  ("l" #'(lambda () (interactive) (~dispatch-action "!@ lockscreen")) "Lock screen")
-  ("s" #'(lambda () (interactive) (~dispatch-action "!@ suspend-me")) "Suspend"))
+(with-eval-after-load "hydra"
+  (defhydra hydra-wm-app (:columns 4 :exit t)
+    "Run application"
+    ("a" #'(lambda () (interactive) (~dispatch-action "!@ config-inputs-cmpitg")) "Config input")
+    ("m" #'(lambda () (interactive) (~dispatch-action "!@ konsole")) "Terminal emulator")
+    ("w" #'(lambda () (interactive) (~dispatch-action "!@ web-browser-gui -ProfileManager")) "Web browser")
+    ("l" #'(lambda () (interactive) (~dispatch-action "!@ lockscreen")) "Lock screen")
+    ("s" #'(lambda () (interactive) (~dispatch-action "!@ suspend-me")) "Suspend")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

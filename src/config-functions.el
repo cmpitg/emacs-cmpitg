@@ -22,10 +22,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: Revise
-(defhydra hydra-read-input-async (:columns 4 :exit t)
-  "Operations"
-  ("RET" #'(lambda () (interactive) (funcall local/fn-accept-input)) "Accept")
-  ("k" #'kill-current-buffer "Cancel"))
+(with-eval-after-load "hydra"
+  (defhydra hydra-read-input-async (:columns 4 :exit t)
+    "Operations"
+    ("RET" #'(lambda () (interactive) (funcall local/fn-accept-input)) "Accept")
+    ("k" #'kill-current-buffer "Cancel")))
 
 ;; TODO: Revise and improve docstring
 ;; TODO: Support tooltip

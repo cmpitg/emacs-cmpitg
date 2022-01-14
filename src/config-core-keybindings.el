@@ -514,6 +514,7 @@
         ("r" #'hydra-frame/body "Frame management"))
 
       ;; (bind-key "s-SPC" #'hydra-global/body)
+      (bind-key "M-SPC" nil)
       (bind-key "M-SPC" #'hydra-global/body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

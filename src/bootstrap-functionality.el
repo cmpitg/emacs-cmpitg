@@ -65,7 +65,7 @@
      'user
      '(variable-pitch ((t (:family ,variable-pitch-font :height 110))))
      '(fixed-pitch ((t (:family ,font :height 110)))))))
-(~set-gui-font)
+(add-hook 'window-setup-hook #'~set-gui-font)
 
 ;; Set line spacing
 (setq-default line-spacing 2)
