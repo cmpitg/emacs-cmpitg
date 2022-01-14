@@ -55,17 +55,6 @@
   (popup-menu (~get-context-menu)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; High-level functions for better UX
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(cl-defun ~split-window (&optional (side 'right))
-  "Splits the current window & switch to the new window."
-  (interactive)
-  (when-let (window (split-window (selected-window) nil side nil))
-    (select-window window)
-    (call-interactively #'~switch-buffer)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -272,33 +261,6 @@ Returns the toolbox window."
           (when follow-dir (setq-local default-directory working-dir))
           (set-window-dedicated-p (selected-window) t)
           (selected-window))))))
-
-(cl-defun ~get-next-non-dedicated-window (&optional original-window next-window)
-  "Gets the next non-dedicated, non-minibuffer window."
-  (cond
-   ((equal original-window next-window)
-    original-window)
-   ((null next-window)
-    (~get-next-non-dedicated-window original-window (next-window original-window)))
-   ((window-dedicated-p next-window)
-    (~get-next-non-dedicated-window original-window (next-window next-window)))
-   (t
-    next-window)))
-
-(cl-defun ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
-  "Transposes the current window with the next one."
-  (interactive)
-  (when (window-dedicated-p (selected-window))
-    (error "Current window is dedicated, cannot transpose"))
-  (let ((windows (cl-loop for window in (window-list)
-                       when (window-dedicated-p window)
-                       collect window)))
-    (let* ((current-window (selected-window))
-           (current-buffer (window-buffer))
-           (next-window (apply window-selection-fn current-window nil))
-           (next-buffer (window-buffer next-window)))
-      (set-window-buffer next-window current-buffer)
-      (set-window-buffer current-window next-buffer))))
 
 (defun ~set-pop-up-buffer-mode (mode)
   "Sets mode for pop-up buffer.  MODE should either be :WINDOW or :FRAME."

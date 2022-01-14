@@ -721,6 +721,34 @@ characters."
     (let* ((width (frame-pixel-width frame))
            (height (frame-pixel-height frame)))
       (~center-frame width height :frame frame)))
+  
+  (cl-defun ~get-next-non-dedicated-window (&optional original-window next-window)
+    "Gets the next non-dedicated, non-minibuffer window."
+    (cond
+     ((equal original-window next-window)
+      original-window)
+     ((null next-window)
+      (~get-next-non-dedicated-window original-window (next-window original-window)))
+     ((window-dedicated-p next-window)
+      (~get-next-non-dedicated-window original-window (next-window next-window)))
+     (t
+      next-window)))
+  
+  (cl-defun ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
+    "Transposes the current window with the next one."
+    (interactive)
+    (when (window-dedicated-p (selected-window))
+      (error "Current window is dedicated, cannot transpose"))
+    (let ((windows (cl-loop for window in (window-list)
+                            when (window-dedicated-p window)
+                            collect window)))
+      (let* ((current-window (selected-window))
+             (current-buffer (window-buffer))
+             (next-window (apply window-selection-fn current-window nil))
+             (next-buffer (window-buffer next-window)))
+        (set-window-buffer next-window current-buffer)
+        (set-window-buffer current-window next-buffer))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; File & buffer
@@ -1288,7 +1316,18 @@ E.g.
     (let ((path (buffer-file-name)))
       (when (or (null path) (string-empty-p path))
         (error "Current buffer must be a file"))
-      (~dispatch-action "!! " path))))
+      (~dispatch-action "!! " path)))
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; High-level functions for better UX
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (cl-defun ~split-window (&optional (side 'right))
+    "Splits the current window & switch to the new window."
+    (interactive)
+    (when-let (window (split-window (selected-window) nil side nil))
+      (select-window window)
+      (call-interactively #'~switch-buffer))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
@@ -1360,7 +1399,7 @@ line in Eshell."
 (setq eshell-smart-space-goes-to-end t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Keybindings
+;; Simple keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (bind-key "<menu>" 'nil)
@@ -1423,6 +1462,18 @@ line in Eshell."
 ;; BUG: Command history not recorded
 ;; (bind-key "<f12>" #'~ido-M-x)
 (bind-key "<f12>" #'execute-extended-command)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sequence keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(bind-key "M-SPC" nil)
+
+(bind-key "M-SPC w s r" #'(lambda () (interactive) (~split-window 'right)))
+(bind-key "M-SPC w s b" #'(lambda () (interactive) (~split-window 'below)))
+(bind-key "M-SPC w k" #'delete-window)
+(bind-key "M-SPC w o" #'~one-window)
+(bind-key "M-SPC w t" #'~transpose-windows)
 
 ;; TODO
 ;; Context menu
