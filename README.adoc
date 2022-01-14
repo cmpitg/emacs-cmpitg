@@ -2,6 +2,7 @@
 
 [source]
 ----
+$ rmacs --help
 rmacs [rmacs-options] <command> [arguments] ...
 
 Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized tool (called "shape").  The shape is specified by the '--shape' option.  Each shape shared a base configuration with different configurations on top of it.  Currently the following shapes are supported:
@@ -23,7 +24,7 @@ In addition, Rmacs also supports commands to manage Emacs servers:
   kill  :: Kill an Rmacs server, '--name' or '--shape' must be provided
   start :: Start Rmacs server in the foreground, '--name' or '--shape' must be provided
 
-Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name (specified by the '--name' option).  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible to Emacs users.
+Unless --one-off is provided, Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name (specified by the '--name' option).  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible to Emacs users.
 
 Rmacs works by loading init files from the Rmacs init directory (from the environment variable RMACS_INIT_DIR).  Then:
 - If 'command' is 'start', Rmacs loads the init file and starts the server in the foreground.  This is useful when running Rmacs as a daemon, particularly in conjunction in a supervisor process such as Sys V Init, SystemD, or Runit, ...
@@ -59,7 +60,7 @@ Available Rmacs options:
  -shape value         The shape Rmacs takes <minimal>
  -name value          (optional) A unique name used by Emacs server, for interprocess communication.  By default this option is taken from 'shape' if not specified. <>
  -timeout value       Timeout (in milisecs) to wait for the server to be alive.  Not in use when 'command' is 'start'. <30000>
- -client-opts value   Extra options passed to Emacsclient invocation.  Not in use when 'command' is 'start'. <>
+ -opts value          Extra options passed to Emacsclient/Emacs invocation.  Not in use when 'command' is 'start'. <>
  -no-wait             Don't wait for the client session to complete, return immediately.  Not in use when 'command' is 'start'.
  -new-frame           Create a new frame.  Not in use when 'command' is 'start'.  Conflict with '--tty'.
  -tty                 Use TTY.  Not in use when 'command' is 'start'.  Conflict with '--new-frame'.
@@ -67,6 +68,8 @@ Available Rmacs options:
  -verbose             Be verbose, prints options and arguments
  -init-dir value      Alternative Rmacs init directory.  Not in use if the server is already started. <>
  -init value          Additional init file, loaded after loading base init.  Not in use if the server is already started. <>
+ -debug-on-error      Whether or to jump into debug mode on error.
+ -one-off             If true, run a one-off command without starting a server, effectively ignoring '--no-wait', cannot be used with the 'start' command.
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
