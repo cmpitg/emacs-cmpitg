@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -194,9 +194,8 @@
 ;; Ref: https://github.com/justbur/emacs-which-key
 (use-package which-key
   :diminish which-key-mode
-  :disabled t
   :config (progn
-            (which-key-mode)
+            (which-key-mode 1)
             (which-key-setup-side-window-right-bottom)))
 
 ;; Highlighting phrase and expression when needed
