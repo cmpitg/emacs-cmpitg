@@ -34,6 +34,7 @@
  ("emacs-elixir" . "6f61e04c8537c2e9a807dc29908f619b5202b0f8")
  ("emacs-emojify" . "1b726412f19896abf5e4857d4c32220e33400b55")
  ("emacs-vdiff" . "84b8243d9f5d8082b05794dbc998d43dbdd7676a")
+ ("emacs-which-key" . "9f64733e4ac563c0cda3685acf4e1c2cf600319b")
  ("emacsmirror-mirror" . "95329e6cd941b123e04ea8027db3fd60c5a066bb")
  ("epl" . "78ab7a85c08222cd15582a298a364774e3282ce6")
  ("expand-region.el" . "7e5bbe2763c12bae3e77fe0c49bcad05ff91dbfe")
