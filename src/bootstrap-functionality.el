@@ -722,7 +722,7 @@ characters."
     (let* ((width (frame-pixel-width frame))
            (height (frame-pixel-height frame)))
       (~center-frame width height :frame frame)))
-  
+
   (cl-defun ~get-next-non-dedicated-window (&optional original-window next-window)
     "Gets the next non-dedicated, non-minibuffer window."
     (cond
@@ -734,7 +734,7 @@ characters."
       (~get-next-non-dedicated-window original-window (next-window next-window)))
      (t
       next-window)))
-  
+
   (cl-defun ~transpose-windows (&optional (window-selection-fn #'~get-next-non-dedicated-window))
     "Transposes the current window with the next one."
     (interactive)
@@ -770,6 +770,22 @@ off the buffer."
 
         (delete-file current-file)
         (message "%s deleted" current-file))))
+
+  (defun ~rename-current-file (&optional new-name)
+    "Renames the current file."
+    (interactive "FNew name: ")
+    (let* ((new-name (expand-file-name new-name))
+           (name (buffer-name))
+           (filename (buffer-file-name)))
+      (if (not filename)
+          (error "Buffer '%s' is not visiting a file!" name)
+        (if (get-buffer new-name)
+            (message "A buffer named '%s' already exists!" new-name)
+          (progn
+            (rename-file name new-name 1)
+            (rename-buffer new-name)
+            (set-visited-file-name new-name)
+            (set-buffer-modified-p nil))))))
 
   (defun ~save-buffer-as (path)
     "Saves current file as."
@@ -1318,7 +1334,7 @@ E.g.
       (when (or (null path) (string-empty-p path))
         (error "Current buffer must be a file"))
       (~dispatch-action "!! " path)))
-  
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; High-level functions for better UX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1469,6 +1485,12 @@ line in Eshell."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (bind-key "M-SPC" nil)
+
+(bind-key "M-SPC f d" #'~delete-current-file)
+(bind-key "M-SPC f r" #'~rename-current-file)
+(bind-key "M-SPC f s" #'save-buffer)
+(bind-key "M-SPC f a" #'~save-buffer-as)
+(bind-key "M-SPC f o" #'find-file)
 
 (bind-key "M-SPC w s r" #'(lambda () (interactive) (~split-window 'right)))
 (bind-key "M-SPC w s b" #'(lambda () (interactive) (~split-window 'below)))

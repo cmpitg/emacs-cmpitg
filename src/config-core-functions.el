@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 ;;
-;; Copyright (C) 2018-2021 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -396,23 +396,6 @@ event is a mouse event, or `nil' otherwise."
   "Gets index of the current buffer in the buffer list returned
 by `~get-buffer-list'."
   iflipb-current-buffer-index)
-
-;; TODO: Bug - sometimes doesn't work
-(defun ~rename-current-file (&optional new-name)
-  "Renames the current file."
-  (interactive "GNew name: ")
-  (let* ((new-name (expand-file-name new-name))
-         (name (buffer-name))
-         (filename (buffer-file-name)))
-    (if (not filename)
-        (error "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
-          (rename-file name new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))
 
 (defun ~toggle-scratch ()
   "Toggles the `scratch.el' buffer.  `scratch.el' should reside
