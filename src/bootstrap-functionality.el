@@ -28,7 +28,8 @@
 
 (eval-when-compile
   (require 'cl)
-  (require 'cl-lib))
+  (require 'cl-lib)
+  (require 'color))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UX
