@@ -304,7 +304,7 @@ switch $mainCommand {
 		if {[isServerRunning $args(name)]} {
 			puts stderr "Error: Server '$args(name)' is running..."
 			exit 1
-		} else if {$args(one-off)} {
+		} elseif {$args(one-off)} {
 			puts stderr "Error: --one-off cannot be used with command 'start'"
 			exit 2
 		} else {
