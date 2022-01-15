@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -18,12 +18,13 @@
 ;;
 
 ;; Load bare Rmacs
-(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-bare"))
+(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-minimal"))
 
-(require 'rmacs:config-functions       "config-functions")
-(require 'rmacs:functions-cmpitg       "functions-cmpitg")
-(require 'rmacs:config-edit            "config-edit")
-(require 'rmacs:commands-cmpitg        "commands-cmpitg")
+(let ((file-name-handler-alist nil))
+  (require 'rmacs:config-functions       "config-functions")
+  (require 'rmacs:functions-cmpitg       "functions-cmpitg")
+  (require 'rmacs:config-edit            "config-edit")
+  (require 'rmacs:commands-cmpitg        "commands-cmpitg"))
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))
