@@ -110,7 +110,7 @@ so that the system could use it as a webcam."
          (delete-source? (y-or-n-p "Delete source? ")))
     (f-mkdir dest-dir)
     (f-copy source dest)
-    (when visit-dest? 
+    (when visit-dest?
       (find-file dest))
     (when delete-source?
       (delete-file source))
@@ -129,6 +129,21 @@ so that the system could use it as a webcam."
     (f-move source dest)
     (f-symlink dest source)
     (message "'%s' captured to '%s'" source dest)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hephaestus integration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~hephaestus/exec-this-file ()
+  "Execs current file as recipe with Hephaestus."
+  (interactive)
+  (let* ((path (~current-file-full-path))
+         (hephaestus-path "/m/src/hephaestus/hephaestus"))
+    (when (null path)
+      (error "Current buffer doesn't have a file backed!"))
+    (~palette/exec-sh-in-term-mux-then-pause (format "%s exec-recipe-file %s"
+                                                     (shell-quote-argument hephaestus-path)
+                                                     (shell-quote-argument path)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
