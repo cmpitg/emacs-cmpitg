@@ -454,6 +454,10 @@ Source: http://stackoverflow.com/a/4717026/219881"
     (or (expand-file-name (or buffer-file-name ""))
         ""))
 
+  (defun ~expand-path-fully (path)
+    "Expands PATH fully."
+    (substitute-env-vars (expand-file-name path)))
+
   (defun ~clean-up-tramp ()
     "Closes all tramp connections and buffers."
     (interactive)
@@ -888,6 +892,18 @@ which is loaded lazily get loaded."
           (kill-all-local-variables))
         (remove-overlays))))
 
+  (cl-defun ~open-externally (&optional text)
+    "Opens TEXT externally."
+    (interactive)
+    (defvar *~open-externally-history* (list))
+    (let* ((text (if (~is-selecting?)
+                     (~get-selection)
+                   (read-string "Text: " (thing-at-point 'filename) '*~open-externally-history*)))
+           (expanded (~expand-path-fully (string-trim text))))
+      (~run-process (cl-concatenate 'string
+                                    "xdg-open" " " (shell-quote-argument expanded))
+                    :async t)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Tracking recently closed files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -955,12 +971,12 @@ trimmed after reading."
       (buffer-string)))
 
   (cl-defun ~run-process (command &key (async t))
-    "Runs an external process.  If `async' is non-`nil' the process
-is not terminated when Emacs exits and the output is discarded;
-otherwise, both output from stdout and stderr are direceted to
-the buffer naming after `command'.  `command' is executed via the
-current user shell, define by the `SHELL' environment variable.
-Note that `command' is not automatically quoted and should be
+    "Runs an external process.  If ASYNC is non-`nil' the process is
+not terminated when Emacs exits and the output is discarded;
+otherwise, both output from stdout and stderr are directed to the
+buffer whose name is after COMMAND.  COMMAND is executed via the
+current user shell, define by the SHELL environment variable.
+Note that COMMAND is not automatically quoted and should be
 quoted with `shell-quote-argument'."
     (let ((current-shell (getenv "SHELL"))
           (process-name command))

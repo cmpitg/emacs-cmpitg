@@ -26,6 +26,8 @@
 (defun ~get-context-menu ()
   "Returns a list to build a context menu."
   `(""
+    ["Open (external)" ~open-externally]
+    ["--" ignore]
     ["Switch to buffer" ~switch-buffer]
     ["Buffer list" list-buffers]
     ["--" ignore]
