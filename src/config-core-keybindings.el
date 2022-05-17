@@ -34,7 +34,8 @@
   ;;
 
   ;; Selection/region
-  (bind-key "s-=" #'er/expand-region)
+  (with-eval-after-load "expand-region"
+    (bind-key "s-=" #'er/expand-region))
 
   ;; Searching
   (bind-key "M-r" #'~insert-entry-from-exec-history)
@@ -52,11 +53,13 @@
     (bind-key "M-S" #'sp-split-sexp))
 
   ;; Buffer management
-  (bind-key "C-<tab>" #'iflipb-next-buffer)
-  (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
-  (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer)
-  (bind-key "C-S-t" #'~undo-killed-buffers)
+  (with-eval-after-load "iflipb"
+    (bind-key "C-<tab>" #'iflipb-next-buffer)
+    (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
+    (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer))
 
+  ;; RIGHT HERE
+  ;; Review #'~execute
   (bind-key "<s-RET>" #'~execute)
   (bind-key "<S-RET>" #'~execute-line)
   (bind-key "<M-S-RET>" #'(lambda ()

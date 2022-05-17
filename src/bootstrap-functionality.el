@@ -444,6 +444,14 @@ Source: http://stackoverflow.com/a/4717026/219881"
   ;; Emacs Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+  (defun ~identity (x)
+    "The identity function."
+    x)
+
+  (defmacro ~comment (&rest body)
+    "Ignores the body."
+    nil)
+
   (defun ~current-dir ()
     "Current directory."
     (or (file-name-directory (or load-file-name buffer-file-name ""))
@@ -1483,6 +1491,7 @@ line in Eshell."
 
 ;; Buffer management
 (bind-key "C-w" #'kill-current-buffer)
+(bind-key "C-S-t" #'~undo-killed-buffers)
 
 ;; Emacs Lisp
 (bind-key "<C-return>"   #'~eval-last-sexp-or-region)

@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2017-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2017-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,14 +16,6 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
-
-(defun ~identity (x)
-  "The identity function."
-  x)
-
-(defmacro ~comment (&rest body)
-  "Ignores the body."
-  nil)
 
 (cl-defun ~get-project-toolbox-path (&key (dir (~get-current-project-root))
                                           (file-name ".rmacs-toolbox"))

@@ -862,6 +862,13 @@ THING."
                          (format "%s" result))))
       result)))
 
+(~comment
+ (~execute "(+ 1 1)")
+ (~execute "(message-box \"Hello world!\")")
+ (~execute "message-box \"Hello world!\"")
+ (~execute "+ 1 1")
+ (~execute "$ ls -1"))
+
 (cl-defun ~execute-text-prompt ()
   "Prompts for text and executes it with `~execute'."
   (interactive)
