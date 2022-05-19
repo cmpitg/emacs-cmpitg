@@ -484,6 +484,12 @@ If no element is found, returns nil."
     (interactive)
     (elisp--preceding-sexp))
 
+  (defun ~get-cursor-pos-at-last-mouse-event ()
+    "Returns the position of the mouse cursor if the last command
+event is a mouse event, or `nil' otherwise."
+    (interactive)
+    (posn-point (event-end last-command-event)))
+
   (defun ~ido-M-x ()
     "Calls `EXECUTE-EXTENDED-COMMAND' with ido."
     (interactive)
@@ -514,6 +520,50 @@ on."
                       (buffer-file-name))))
       (when filename
         (~copy-to-clipboard filename))))
+
+  (cl-defun ~file-pattern? (str &key (must-exists t))
+    "Determines if a string is a file pattern \(`path' or
+`path:line-number', or `path:pattern'\).  By default, the
+corresponding file must exist for this function to return `t'.
+To remove this constraint, pass in `:must-exists nil'.  E.g.
+
+\(~file-pattern? \"/tmp/aoeu\"\)                                        ⇒ t
+\(~file-pattern? \"/tmp/aoeu:10\"\)                                     ⇒ t
+\(~file-pattern? \"/tmp/aoeu:/hello world/\"\)                          ⇒ t
+\(~file-pattern? \"/tmp/non-existent\"\)                                ⇒ nil
+\(~file-pattern? \"/tmp/non-existent\" :must-exists nil\)               ⇒ t
+\(~file-pattern? \"/tmp/non-existent:10\" :must-exists nil\)            ⇒ t
+\(~file-pattern? \"/tmp/non-existent:/hello world/\" :must-exists nil\) ⇒ t
+"
+    (cl-flet ((check-file-exists? (path) (if must-exists
+                                             (f-exists? path)
+                                           t)))
+      (let ((str (string-trim str)))
+        (or (check-file-exists? str)
+            (let ((components (s-split ":" str)))
+              (and (= 2 (length components))
+                   (check-file-exists? (first components))))))))
+
+  (defun ~try-getting-current-thing ()
+    "Returns text from the current context:
+
+- If the last command is a mouse event, go to the point under the
+  cursor.
+
+- if the current line is a path, returns it; or
+
+- if the thing-at-point could be retrieved as a symbol, returns
+  its string representation; otherwise
+
+- returns the last sexp."
+    (interactive)
+    (save-excursion
+      (if-let (point (~get-cursor-pos-at-last-mouse-event))
+          (goto-char point))
+      (let ((path (string-trim-right (thing-at-point 'line))))
+        (or (and (~file-pattern? path) path)
+            (thing-at-point 'symbol)
+            (~get-last-sexp)))))
 
   (defun ~eval-string (str)
     "Evals a string."
@@ -1523,8 +1573,8 @@ Open file when input string is `file:///path/to/your-file`:
       (cons (function rule-check-fn)
             (function action-fn))))
 
-(cl-defun wand:execute (&optional (string-to-execute ""))
-  "Executes a string based on predefined rules stored in
+  (cl-defun wand:execute (&optional (string-to-execute ""))
+    "Executes a string based on predefined rules stored in
 `wand:*rules*.  If no rules are found, eval the string using
 `wand:eval-string' function.
 
@@ -1553,15 +1603,74 @@ E.g.
 \(some-func \"\(message \\\"Hello World\\\"\\)\"\)
 ;; Both echo \"Hello World\" in echo area
 "
-  (interactive)
-  (let* ((string (if (or (null string-to-execute)
-                         (string-empty-p string-to-execute))
-                     (wand-helper:get-selection)
-                   string-to-execute))
-         (action (or (wand:get-rule-action string)
-                     #'wand:eval-string)))
-    (unless (string-empty-p (string-trim string))
-      (funcall action string))))
+    (interactive)
+    (let* ((string (if (or (null string-to-execute)
+                           (string-empty-p string-to-execute))
+                       (wand-helper:get-selection)
+                     string-to-execute))
+           (action (or (wand:get-rule-action string)
+                       #'wand:eval-string)))
+      (unless (string-empty-p (string-trim string))
+        (funcall action string))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Context-menu execution
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (cl-defun ~get-thing-to-execute-from-context ()
+    "Retrieves the thing to execute from the current context.  The
+rules are as follows:
+
+- If the secondary selection is active, take it;
+  otherwise
+
+- if the primary selection is active, take it;
+  otherwise
+
+- if the last command is a mouse event, take the thing at the
+  mouse cursor;
+
+- if the current line corresponds to a path, take it;
+
+- otherwise take the current symbol or the last sexp at point."
+    (interactive)
+    (or (~get-secondary-selection)
+        (and (region-active-p) (~get-selection))
+        (~try-getting-current-thing)))
+
+  (cl-defun ~execute (&optional thing
+                                &key
+                                (exec-fn #'wand:execute)
+                                (selection-fn #'~get-thing-to-execute-from-context))
+    "Interactively executes THING which is a piece of text or an
+sexp using `exec-fn' and return the result.  If THING is not
+provided, calls and takes the return value of SELECTION-FN as
+THING."
+    (interactive)
+    (let ((thing (if (null thing)
+                     (funcall selection-fn)
+                   thing)))
+      (when (null thing)
+        (error "Nothing to execute"))
+
+      (let* ((result (if (consp thing)
+                         (eval thing)
+                       (funcall exec-fn thing)))
+             (result-str (if (stringp result)
+                             result
+                           (format "%s" result))))
+        result)))
+  (~comment
+   (~execute "(+ 1 1)")
+   (~execute "(message-box \"Hello world!\")")
+   (~execute "message-box \"Hello world!\"")
+   (~execute "+ 1 1")
+   (~execute "$ ls -1"))
+
+  (cl-defun ~execute-line ()
+    "Executes current line with `~execute'."
+    (interactive)
+    (~execute (string-trim (thing-at-point 'line t))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; High-level functions for better UX

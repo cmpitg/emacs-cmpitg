@@ -74,29 +74,6 @@
   (require 'rmacs:config-module-simple-buffer-list)
   (call-interactively #'bl:show-buffer-chooser))
 
-(cl-defun ~file-pattern? (str &key (must-exists t))
-  "Determines if a string is a file pattern \(`path' or
-`path:line-number', or `path:pattern'\).  By default, the
-corresponding file must exist for this function to return `t'.
-To remove this constraint, pass in `:must-exists nil'.  E.g.
-
-\(~file-pattern? \"/tmp/aoeu\"\)                                        ⇒ t
-\(~file-pattern? \"/tmp/aoeu:10\"\)                                     ⇒ t
-\(~file-pattern? \"/tmp/aoeu:/hello world/\"\)                          ⇒ t
-\(~file-pattern? \"/tmp/non-existent\"\)                                ⇒ nil
-\(~file-pattern? \"/tmp/non-existent\" :must-exists nil\)               ⇒ t
-\(~file-pattern? \"/tmp/non-existent:10\" :must-exists nil\)            ⇒ t
-\(~file-pattern? \"/tmp/non-existent:/hello world/\" :must-exists nil\) ⇒ t
-"
-  (cl-flet ((check-file-exists? (path) (if must-exists
-                                           (f-exists? path)
-                                         t)))
-    (let ((str (s-trim str)))
-      (or (check-file-exists? str)
-          (let ((components (s-split ":" str)))
-            (and (= 2 (length components))
-                 (check-file-exists? (first components))))))))
-
 (defun ~deconstruct-path (path)
   "Deconstructs a path notation into `path' and `number' or
 `pattern'.  See the following examples for further information:
@@ -127,7 +104,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
   "Inserts a line full of comment characters until `fill-column'
 is reached."
   (interactive)
-  (let ((comment (s-trim comment-start)))
+  (let ((comment (string-trim comment-start)))
     (thread-first
         (cl-loop for time from (current-column) upto (1- fill-column) by (length comment)
               collect comment)
@@ -357,42 +334,14 @@ Returns the toolbox window."
 ;;   (concat "\\b" (mapconcat (lambda (x) (concat "\\w*" (list x))) str "")
 ;;           "\\w*" "\\b"))
 
-(defun ~get-cursor-pos-at-last-mouse-event ()
-  "Returns the position of the mouse cursor if the last command
-event is a mouse event, or `nil' otherwise."
-  (interactive)
-  (posn-point (event-end last-command-event)))
-
-(defun ~try-getting-current-thing ()
-  "Returns text from the current context:
-
-- If the last command is a mouse event, go to the point under the
-  cursor.
-
-- if the current line is a path, returns it; or
-
-- if the thing-at-point could be retrieved as a symbol, returns
-  its string representation; otherwise
-
-- returns the last sexp."
-  (interactive)
-  (require 'rmacs:config-module-bowser)
-  (save-excursion
-    (if-let (point (~get-cursor-pos-at-last-mouse-event))
-        (goto-char point))
-    (let ((path (bowser:get-path-current-line)))
-      (or (and (~file-pattern? path) path)
-          (thing-at-point 'symbol)
-          (~get-last-sexp)))))
-
 (defun ~get-buffer-list ()
   "Gets the current buffer list, ordered by last visited."
   (lexical-let ((res (iflipb-interesting-buffers)))
     (concatenate 'list
                  (iflipb-interesting-buffers)
                  (cl-loop for b in (buffer-list)
-                       unless (member b res)
-                       collect b))))
+                          unless (member b res)
+                          collect b))))
 
 (defun ~get-current-buffer-index ()
   "Gets index of the current buffer in the buffer list returned
@@ -818,56 +767,7 @@ The output block is defined as everything between
       (kill-sexp -1))
     (insert (format "%s" value))))
 
-(cl-defun ~get-thing-to-execute-from-context ()
-  "Retrieves the thing to execute from the current context.  The
-rules are as follows:
-
-- If the secondary selection is active, take it;
-  otherwise
-
-- if the primary selection is active, take it;
-  otherwise
-
-- if the last command is a mouse event, take the thing at the
-  mouse cursor;
-
-- if the current line corresponds to a path, take it;
-
-- otherwise take the current symbol or the last sexp at point."
-  (interactive)
-  (or (~get-secondary-selection)
-      (and (region-active-p) (~get-selection))
-      (~try-getting-current-thing)))
-
-(cl-defun ~execute (&optional thing
-                              &key
-                              (exec-fn #'wand:execute)
-                              (selection-fn #'~get-thing-to-execute-from-context))
-  "Interactively executes THING which is a piece of text or an
-sexp using `exec-fn' and return the result.  If THING is not
-provided, calls and takes the return value of SELECTION-FN as
-THING."
-  (interactive)
-  (let ((thing (if (null thing)
-                   (funcall selection-fn)
-                 thing)))
-    (when (null thing)
-      (error "Nothing to execute"))
-
-    (let* ((result (if (consp thing)
-                       (eval thing)
-                     (funcall exec-fn thing)))
-           (result-str (if (stringp result)
-                           result
-                         (format "%s" result))))
-      result)))
-
-(~comment
- (~execute "(+ 1 1)")
- (~execute "(message-box \"Hello world!\")")
- (~execute "message-box \"Hello world!\"")
- (~execute "+ 1 1")
- (~execute "$ ls -1"))
+;; RIGHT HERE
 
 (cl-defun ~execute-text-prompt ()
   "Prompts for text and executes it with `~execute'."
@@ -875,11 +775,6 @@ THING."
   (defvar *~execute-text-prompt-hist* (list))
   (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
     (~execute text)))
-
-(cl-defun ~execute-line ()
-  "Executes current line with `~execute'."
-  (interactive)
-  (~execute (string-trim (thing-at-point 'line t))))
 
 (cl-defun ~execute-current-wand-text ()
   "Executes current Wand text with `~execute'."
