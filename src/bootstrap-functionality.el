@@ -29,7 +29,8 @@
 (eval-when-compile
   (require 'cl)
   (require 'cl-lib)
-  (require 'color))
+  (require 'color)
+  (require 'windmove))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UX
@@ -257,9 +258,46 @@
 
 (eval-when-compile
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Menu
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun ~get-context-menu ()
+    "Returns a list to build a context menu."
+    `(""
+      ["Open (external)" ~open-externally]
+      ["--" ignore]
+      ["Switch to buffer" ~switch-buffer]
+      ["Buffer list" list-buffers]
+      ["--" ignore]
+      ["Cut" clipboard-kill-region (~is-selecting?)]
+      ["Copy" kill-ring-save (~is-selecting?)]
+      ["Paste" ,#'(lambda ()
+                    (interactive)
+                    (when (~is-selecting?)
+                      (call-interactively #'delete-region))
+                    (call-interactively #'yank))]
+      ["Clone" ~duplicate-line-or-region]
+      ["Delete" delete-region (~is-selecting?)]
+      ["--" ignore]
+      ["Exec" ~execute]
+      ["Exec line" ~execute-line]
+      ["--" ignore]
+      ["Eval last sexp or region" ~eval-last-sexp-or-region]
+      ;; TODO: Include buffer list, new temp buffer, ...
+      ["--" ignore]
+      ["Undo" undo-tree-undo t]
+      ["Redo" undo-tree-redo t]
+      ["--" ignore]))
+
+  (defun ~popup-context-menu ()
+    "Pops up the context menu."
+    (interactive)
+    (popup-menu (~get-context-menu)))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Editing
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defalias '~is-selecting? 'use-region-p
     "Determines if current there is a selection/active region.")
@@ -440,9 +478,9 @@ Source: http://stackoverflow.com/a/4717026/219881"
     (interactive)
     (~exec| "jq ."))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Emacs Lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun ~identity (x)
     "The identity function."
@@ -644,9 +682,9 @@ necessary."
   (defalias '~ansi-colorize 'ansi-color-apply
     "ANSI-colorizes a string with text properties.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Window & Frame
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun ~find-file-new-frame (path &optional wildcards)
     "Calls `find-file' in a new frame."
@@ -819,10 +857,9 @@ characters."
         (set-window-buffer next-window current-buffer)
         (set-window-buffer current-window next-buffer))))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; File & buffer
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun ~delete-current-file ()
     "Deletes the file associated with the current buffer and kills
@@ -969,9 +1006,9 @@ which is loaded lazily get loaded."
                                     "xdg-open" " " (shell-quote-argument expanded))
                     :async t)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Tracking recently closed files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ;; TODO: Make the tracking of recently closed file a separate module
   (defun ~track-closed-file ()
@@ -990,9 +1027,9 @@ which is loaded lazily get loaded."
     (find-file (let ((ivy-sort-functions-alist nil))
                  (completing-read "File: " *recently-closed-file-list*))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; History management
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (cl-defun ~add-to-history-file (history-path line &key (max-history 1000))
     "Saves a line to a history file."
@@ -1026,9 +1063,9 @@ trimmed after reading."
       (unless (string-empty-p entry)
         (insert entry))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Process/Execution
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun ~get-process-output (process)
     "Gets the output for a managed process."
@@ -1416,9 +1453,9 @@ E.g.
         (error "Current buffer must be a file"))
       (~dispatch-action "!! " path)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Embedded Wand without the processing of comment
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defalias 'wand-helper:get-selection '~get-selection)
   (defalias 'wand-helper:eval-string '~eval-string)
@@ -1613,9 +1650,9 @@ E.g.
       (unless (string-empty-p (string-trim string))
         (funcall action string))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Context-menu execution
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (cl-defun ~get-thing-to-execute-from-context ()
     "Retrieves the thing to execute from the current context.  The
@@ -1672,9 +1709,9 @@ THING."
     (interactive)
     (~execute (string-trim (thing-at-point 'line t))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; High-level functions for better UX
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (cl-defun ~split-window (&optional (side 'right))
     "Splits the current window & switch to the new window."
@@ -1807,8 +1844,24 @@ line in Eshell."
 (bind-key "C-S-t" #'~undo-killed-buffers)
 
 ;; Emacs Lisp
-(bind-key "<C-return>"   #'~eval-last-sexp-or-region)
-(bind-key "<M-return>"   #'eval-defun)
+(bind-key "<C-return>" #'~eval-last-sexp-or-region)
+(bind-key "<M-return>" #'eval-defun)
+(bind-key "<s-RET>" #'~execute)
+(bind-key "<S-RET>" #'~execute-line)
+(bind-key "<s-return>" #'~execute)
+(bind-key "<S-return>" #'~execute-line)
+(bind-key "<C-down-mouse-1>" nil)
+(bind-key "<down-mouse-2>" nil)
+(bind-key "<mouse-2>" #'~execute)
+(bind-key "<mouse-3>" #'~popup-context-menu)
+(bind-key "<C-down-mouse-3>" #'~popup-context-menu)
+
+;; Window
+(with-eval-after-load "windmove"
+  (bind-key "<M-left>" #'windmove-left)
+  (bind-key "<M-right>" #'windmove-right)
+  (bind-key "<M-up>" #'windmove-up)
+  (bind-key "<M-down>" #'windmove-down))
 
 ;; Function keys & other convenient bindings
 (bind-key "<f2>" #'save-buffer)

@@ -58,35 +58,12 @@
     (bind-key "C-S-<tab>" #'iflipb-previous-buffer)
     (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer))
 
-  ;; RIGHT HERE
-  ;; Review #'~execute
-  (bind-key "<s-RET>" #'~execute)
-  (bind-key "<S-RET>" #'~execute-line)
-  (bind-key "<M-S-RET>" #'(lambda ()
-                            (interactive)
-                            (call-interactively #'~execute-line)
-                            (call-interactively #'kill-current-buffer)))
-  (bind-key "<s-return>" #'~execute)
-  (bind-key "<S-return>" #'~execute-line)
-  (bind-key "<M-S-return>" #'(lambda ()
-                               (interactive)
-                               (call-interactively #'~execute-line)
-                               (call-interactively #'kill-current-buffer)))
-  (bind-key "<C-down-mouse-1>" nil)
-  (bind-key "<down-mouse-2>" nil)
-  (bind-key "<mouse-2>" #'~execute)
-  (bind-key "<mouse-3>" #'~popup-context-menu)
-  (bind-key "<C-down-mouse-3>" #'~popup-context-menu)
   (bind-key "<f1>" #'~firefox)
 
   ;; Semantic editting
   (bind-key "s-\\" #'counsel-imenu)
 
-  (bind-key "<M-left>" #'windmove-left)
-  (bind-key "<M-right>" #'windmove-right)
-  (bind-key "<M-up>" #'windmove-up)
-  (bind-key "<M-down>" #'windmove-down)
-
+  ;; RIGHT HERE
   ;; Header line
   (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
   (bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)

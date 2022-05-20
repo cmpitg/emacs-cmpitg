@@ -20,43 +20,6 @@
 ;; TODO: Check: async-start-process → ~exec-|-async
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Menu
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~get-context-menu ()
-  "Returns a list to build a context menu."
-  `(""
-    ["Open (external)" ~open-externally]
-    ["--" ignore]
-    ["Switch to buffer" ~switch-buffer]
-    ["Buffer list" list-buffers]
-    ["--" ignore]
-    ["Cut" clipboard-kill-region (~is-selecting?)]
-    ["Copy" kill-ring-save (~is-selecting?)]
-    ["Paste" ,#'(lambda ()
-                  (interactive)
-                  (when (~is-selecting?)
-                    (call-interactively #'delete-region))
-                  (call-interactively #'yank))]
-    ["Clone" ~duplicate-line-or-region]
-    ["Delete" delete-region (~is-selecting?)]
-    ["--" ignore]
-    ["Exec" ~execute]
-    ["Exec line" ~execute-line]
-    ["--" ignore]
-    ["Eval last sexp or region" ~eval-last-sexp-or-region]
-    ;; TODO: Include buffer list, new temp buffer, ...
-    ["--" ignore]
-    ["Undo" undo-tree-undo t]
-    ["Redo" undo-tree-redo t]
-    ["--" ignore]))
-
-(defun ~popup-context-menu ()
-  "Pops up the context menu."
-  (interactive)
-  (popup-menu (~get-context-menu)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editing
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
