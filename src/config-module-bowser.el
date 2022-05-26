@@ -33,8 +33,6 @@
 ;;
 
 (require 'cl-lib)
-(require 'dash)
-(require 's)
 (require 'thingatpt)
 
 (defvar bowser:*buffer-name-format*
@@ -49,12 +47,18 @@
 (defvar bowser:*history-max*
   256)
 
+(defun bowser:string-split-lines (s)
+  "Splits string S by line breaks."
+  (declare (side-effect-free t))
+  (save-match-data
+    (split-string s "\\(\r\n\\|[\n\r]\\)")))
+
 (defun bowser:save-to-history (text)
   "Saves the current text to history."
   (~exec-sh (list "add-to-history" "--max-history"
-                 bowser:*history-max*
-                 bowser:*history-path*)
-         :stdin text))
+                  bowser:*history-max*
+                  bowser:*history-path*)
+            :stdin text))
 
 (defun bowser:is-dir-expanded? (dir)
   "Checks if a dir is expanded already."
@@ -65,8 +69,8 @@
 
 (defun bowser:is-path-dir? (path)
   "Checks if a path is a directory."
-  (or (f-dir? path)
-      (and (s-starts-with? "ssh://" path) (s-ends-with? "/" path))))
+  (or (file-directory-p path)
+      (and (string-prefix-p "ssh://" path) (string-suffix-p "/" path))))
 
 (defun bowser:record-dir-expanded (dir expanded?)
   "Records that the current dir is either expanded or not."
@@ -107,7 +111,7 @@ files."
                                       (~exec-sh (format "dispatch-action %s 2> /dev/null | rg -v '^\\.{1,2}/$'"
                                                         (shell-quote-argument dir)))
                                     bowser:strip-newline-from-string
-                                    s-lines)
+                                    bowser:string-split-lines)
                       collect (concat dir line))))
     ;; Insert the subpaths and expand them if needed
     (loop for path in paths
@@ -224,14 +228,14 @@ nothing and returns `nil'. "
         (goto-char starting-pos)))
     (switch-to-buffer current-buffer)))
 
-(defun bowser:show-command-runner-with-dedicated-frame ()
-  "Shows command runner frame.  After running a command, the
-frame closes itself."
-  (interactive)
-  (with-current-buffer (bowser:show-command-runner)
-    (setq-local local/delete-frame-on-close (selected-frame))
-    (evil-define-key 'insert 'local (kbd "<S-return>") #'bowser:run-text-from-context-then-delete-frame)
-    (evil-define-key 'normal 'local (kbd "<S-return>") #'bowser:run-text-from-context-then-delete-frame)))
+;; (defun bowser:show-command-runner-with-dedicated-frame ()
+;;   "Shows command runner frame.  After running a command, the
+;; frame closes itself."
+;;   (interactive)
+;;   (with-current-buffer (bowser:show-command-runner)
+;;     (setq-local local/delete-frame-on-close (selected-frame))
+;;     (evil-define-key 'insert 'local (kbd "<S-return>") #'bowser:run-text-from-context-then-delete-frame)
+;;     (evil-define-key 'normal 'local (kbd "<S-return>") #'bowser:run-text-from-context-then-delete-frame)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -500,6 +500,12 @@ Source: http://stackoverflow.com/a/4717026/219881"
     (or (expand-file-name (or buffer-file-name ""))
         ""))
 
+  (defun ~get-current-project-root ()
+    "Returns the current project root or current directory."
+    (or (ignore-errors (destructuring-bind (_ . dir) (project-current)
+                         dir))
+        default-directory))
+
   (defun ~expand-path-fully (path)
     "Expands PATH fully."
     (substitute-env-vars (expand-file-name path)))

@@ -662,12 +662,6 @@ variable `local/linked-windows'."
                   (not (window-live-p window)))
         (delete-window window)))))
 
-(defun ~get-current-project-root ()
-  "Returns the current project root or current directory."
-  (or (ignore-errors (destructuring-bind (_ . dir) (project-current)
-                       dir))
-      default-directory))
-
 (cl-defun ~counsel-grep-default-project-root (&optional (counsel-grep-fn #'counsel-rg))
   "Calls a counsel-grep function, taking project root by default
 and fallback to current directory if project root is not found."
