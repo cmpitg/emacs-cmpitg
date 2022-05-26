@@ -30,6 +30,7 @@
   (require 'rmacs:bootstrap-config                      *bootstrap-config-path*)
   (require 'rmacs:config-package-manager                "config-package-manager")
   (require 'rmacs:config-ipc                            "config-ipc")
-  (require 'rmacs:bootstrap-functionality               "bootstrap-functionality"))
+  (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
+  (require 'rmacs:config-module-bowser                  "config-module-bowser"))
 
 (message "Finish loading bare functionalities")
