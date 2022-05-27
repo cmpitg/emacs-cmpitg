@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t; -*-
+
 ;;
 ;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
 ;;

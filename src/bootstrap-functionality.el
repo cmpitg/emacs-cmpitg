@@ -1604,6 +1604,7 @@ line in Eshell."
 
 (bind-key "<menu>" 'nil)
 (bind-key "s-SPC" 'nil)
+(bind-key "M-SPC" 'nil)
 
 ;;
 ;; Basic editing
@@ -1684,7 +1685,13 @@ line in Eshell."
 ;; Sequence keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(bind-key "M-SPC" nil)
+(bind-key "M-SPC b r" #'revert-buffer)
+(bind-key "M-SPC b n" #'~new-buffer)
+(bind-key "M-SPC b m" #'mark-whole-buffer)
+(bind-key "M-SPC b l" #'~show-buffer-chooser)
+(bind-key "M-SPC b b" #'list-buffers)
+(bind-key "M-SPC b k k" #'kill-current-buffer)
+(bind-key "M-SPC b k b" #'kill-buffer)
 
 (bind-key "M-SPC f d" #'~delete-current-file)
 (bind-key "M-SPC f r" #'~rename-current-file)
