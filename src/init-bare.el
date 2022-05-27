@@ -31,6 +31,7 @@
   (require 'rmacs:config-package-manager                "config-package-manager")
   (require 'rmacs:config-ipc                            "config-ipc")
   (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
+  (require 'rmacs:config-module-wand-minimal            "config-module-wand-minimal")
   (require 'rmacs:config-module-bowser                  "config-module-bowser"))
 
 (message "Finish loading bare functionalities")
