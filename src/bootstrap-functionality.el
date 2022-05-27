@@ -523,6 +523,27 @@ If no element is found, returns nil."
              when (funcall pred x)
              return x))
 
+  ;; Ref: https://stackoverflow.com/a/17310748/219881
+  (defun ~make-repeatable-fn (cmd)
+    "Returns a new command that is a repeatable version of CMD.
+The new command is named CMD-repeat.  CMD should be a quoted
+command.
+
+This allows you to bind the command to a compound keystroke and
+repeat it with just the final key.  For example:
+
+  (global-set-key (kbd \"C-c a\") (make-repeatable-command 'foo))
+
+will create a new command called foo-repeat.  Typing C-c a will
+just invoke foo.  Typing C-c a a a will invoke foo three times,
+and so on."
+    `(lambda ,(help-function-arglist cmd)
+       ,(format "A repeatable version of `%s'." (symbol-name cmd)) ;; Doc string
+       ,(interactive-form cmd)
+       ;; See also repeat-message-function
+       (setq last-repeatable-command ',cmd)
+       (repeat nil)))
+
   (defun ~get-last-sexp ()
     "Returns the last sexp before the current point."
     (interactive)
