@@ -790,6 +790,14 @@ prefix arg (`C-u') to force deletion if it is."
                       (current-buffer)))
         (call-interactively #'delete-window)))
 
+  (defun ~split-window-right ()
+    (interactive)
+    (~split-window 'right))
+
+  (defun ~split-window-below ()
+    (interactive)
+    (~split-window 'below))
+
   (cl-defun ~get-non-minibuffer-window-in-dir (dir)
     "Gets the next non-minibuffer in a direction.
 If the found window is the mini-buffer, returns `nil'."
@@ -889,6 +897,8 @@ characters."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; File & buffer
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defalias '~switch-buffer 'switch-to-buffer)
 
   (defun ~delete-current-file ()
     "Deletes the file associated with the current buffer and kills
