@@ -32,6 +32,7 @@
   (require 'rmacs:config-ipc                            "config-ipc")
   (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
   (require 'rmacs:config-module-wand-minimal            "config-module-wand-minimal")
+  (require 'rmacs:config-module-omni-command            "config-module-omni-command")
   (require 'rmacs:config-header-line                    "config-header-line")
   (require 'rmacs:config-module-bowser                  "config-module-bowser"))
 
