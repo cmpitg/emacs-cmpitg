@@ -65,10 +65,6 @@
   (bind-key "s-\\" #'counsel-imenu)
 
   ;; RIGHT HERE
-  ;; Header line
-  (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
-  (bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)
-
   ;;
   ;; Emacs Lisp
   ;;
@@ -76,12 +72,6 @@
   ;; TODO: Keybinding for eval upper sexp
   (bind-key "<C-S-return>" #'~eval-last-sexp-pp)
   (bind-key "s-m"          #'~eval-then-replace-region-or-last-sexp)
-
-  ;; (~bind-key-with-prefix "h f" #'describe-function)
-  ;; (~bind-key-with-prefix "h v" #'describe-variable)
-  ;; (~bind-key-with-prefix "h k" #'describe-key)
-  ;; (~bind-key-with-prefix "h ." #'find-function)
-  ;; (~bind-key-with-prefix "h l" #'find-library)
 
   ;;
   ;; Configuration & quick opening
@@ -101,7 +91,6 @@
   (bind-key "<M-f3>" #'~gui/open-file)
   (bind-key "<S-f3>" #'projectile-find-file)
   (bind-key "<S-f4>" #'~delete-window)
-  (bind-key "<f8>" #'~switch-buffer)
   (bind-key "<M-f8>" #'switch-to-buffer-other-frame)
   (bind-key "<S-f8>" #'counsel-bookmark)
   (bind-key "<f9>" #'compile)
@@ -118,8 +107,10 @@
   (bind-key "M-ESC" #'~keyboard-quit)
 
   (use-package hydra
+    :disabled t
     :config
     (progn
+      ;; DONE
       (defhydra hydra-visit (:columns 4 :exit t)
         "Visiting places"
         ("n" #'~open-project-notes "Current project notes")
@@ -127,6 +118,7 @@
         ("t" #'~open-toolbox "My global toolbox")
         ("pp" #'projectile-switch-project "Switch to project"))
 
+      ;; DONE
       (defhydra hydra-file (:columns 4 :exit t)
         "File operations"
         ("d" #'~delete-current-file "Delete current file")
@@ -142,6 +134,7 @@
         ("p" #'~copy-pos-to-clipboard "Copy current position to clipboard")
         ("t" #'~choose-path-and-act "Choose path and act"))
 
+      ;; DONE
       (defhydra hydra-jump (:columns 4 :exit t)
         "(Semantic) jumping"
         ("a" #'ace-jump-mode "Jump to a char")
@@ -164,6 +157,7 @@
 
         ("ESC" nil "Quit" :exit t))
 
+      ;; DONE
       (defhydra hydra-cursor (:columns 4)
         "Cursor operations"
         ("l" #'mc/edit-lines "Edit lines")
@@ -172,6 +166,7 @@
         ("a" #'mc/mark-all-in-region "Mark all in region")
         ("ESC" nil "Quit" :exit t))
 
+      ;; DONE
       (defhydra hydra-buffer (:columns 4 :exit t)
         "Buffer operations"
         ("r" #'revert-buffer "Revert")
@@ -182,6 +177,7 @@
         ("kk" #'kill-current-buffer "Kill current buffer")
         ("kb" #'kill-buffer "Kill a buffer"))
 
+      ;; DONE
       (defhydra hydra-external-exec (:columns 2 :exit t)
         "External execution"
         ("e" #'~palette/exec-sh-in-term-mux-then-pause "SH point in term mux")
@@ -193,6 +189,7 @@
                  (interactive)
                  (~palette/exec-sh-in-term-mux "zsh")) "Zsh"))
 
+      ;; DONE
       (defhydra hydra-exec (:columns 3 :exit t)
         "Text execution"
         ("|" #'~exec-sh| "Run sh command, piping region out and output in")
@@ -221,6 +218,7 @@
         ;; ("b" #')
         )
 
+      ;; DONE
       (defhydra hydra-emacs-lisp (:columns 4 :exit t)
         "Emacs Lisp operations"
         ("ee" #'~eval-last-sexp-or-region "Eval last sexp/region")
@@ -236,6 +234,7 @@
         ("h." #'find-function "Jump to function definition")
         ("l" #'find-library "Jump to library definition"))
 
+      ;; DONE
       (defhydra hydra-insertion (:columns 4 :exit t)
         "Insertion operations"
         (";" #'~insert-full-line-comment "Insert line full of comment")
@@ -252,6 +251,7 @@
 
         ("u" #'~unfill-paragraph "Unfill paragraph"))
 
+      ;; DONE
       (defhydra hydra-mode (:columns 4 :exit t)
         "Mode operations"
         ("SPC" #'whitespace-mode "Toggle whitespace mode")
@@ -259,6 +259,7 @@
         ("lf" #'font-lock-mode "Toggle local font lock mode")
         ("w" #'~toggle-soft-wrapping "Toggle soft wrapping mode"))
 
+      ;; DONE
       (defhydra hydra-window (:columns 4 :exit t)
         "Window management"
         ("sr" #'(lambda () (interactive) (~split-window 'right)) "Split right")
@@ -277,6 +278,7 @@
         ("w" #'other-window "Interactive resize" :exit nil)
         ("ESC" nil "Quit"))
 
+      ;; DONE
       (defhydra hydra-frame (:columns 4 :exit t)
         "Frame management"
         ("n" #'make-frame "New frame")
@@ -291,23 +293,27 @@
         ("g" #'~counsel-rg "Grep")
         ("p" #'~counsel-grep-default-project-root "Grep in project"))
 
+      ;; DONE
       (defhydra hydra-replace (:columns 4 :exit t)
         "Replacing"
         ("r" #'query-replace-regexp "Query replace regexp")
         ("q" #'query-replace "Query replace"))
 
+      ;; DONE
       (defhydra hydra-narrow (:columns 4 :exit t)
         "Narrowing"
         ("r" #'narrow-to-region "Narrow to region")
         ("f" #'narrow-to-defun "Narrow to defun")
         ("w" #'widen "Widen the narrowed part"))
 
+      ;; DONE
       (defhydra hydra-align (:columns 4 :exit t)
         "Aligning"
         ("a" #'align "Align")
         ("c" #'align-current "Align current section")
         ("r" #'align-regexp "Align regexp"))
 
+      ;; DONE
       (defhydra hydra-edit (:columns 4 :exit t)
         "Editing operations"
         ("q" #'hydra-replace/body "Replacing")
@@ -340,22 +346,26 @@
         ("SPC" #'mark-sexp "Mark sexp")
         ("ESC" nil "Quit" :exit t))
 
+      ;; DONE
       (defhydra hydra-org-todo (:columns 4 :exit t)
         "Org TODO operations"
         ("i" #'org-insert-todo-heading "Insert TODO heading (same level)")
         ("c" #'org-todo "Change TODO state" :exit nil)
         ("s" #'org-schedule "Schedule"))
 
+      ;; DONE
       (defhydra hydra-org-table (:columns 4 :exit t)
         "Org table operations"
         ("a" #'org-ctrl-c-ctrl-c "Table: Align"))
 
+      ;; DONE
       (defhydra hydra-org-narrow (:columns 4 :exit t)
         "Org narrow"
         ("s" #'org-narrow-to-subtree "Narrow to subtree")
         ("b" #'org-narrow-to-block "Narrow to block")
         ("w" #'widen "Widen"))
 
+      ;; DONE
       (defhydra hydra-org (:columns 4 :exit nil)
         "Org"
         ("o" #'hydra-org-todo/body "TODO operations" :exit t)
@@ -406,6 +416,7 @@
 
         ("ESC" nil "Quit" :exit t))
 
+      ;; DONE
       (defhydra hydra-smartparens (:columns 4)
         "Smartparens"
         (")" #'sp-forward-slurp-sexp "Forward slurp")
@@ -460,43 +471,44 @@
                (setq hydra-current-dev/keymap hydra-emacs-lisp/keymap)
                (eval hydra-emacs-lisp/hint))))
 
-      (defhydra hydra-global (:columns 4 :exit t)
-        "Global operations"
-        ("s-SPC" #'exchange-point-and-mark "Exchange point & mark")
-        ("SPC" #'counsel-M-x "M-x")
-        ("qq" #'delete-window "Close current window")
+      ;; (defhydra hydra-global (:columns 4 :exit t)
+      ;;   "Global operations"
+      ;;   ("s-SPC" #'exchange-point-and-mark "Exchange point & mark")
+      ;;   ("SPC" #'counsel-M-x "M-x")
+      ;;   ("qq" #'delete-window "Close current window")
 
-        ("RET" #'hydra-read-input-async/body "Read-input mode")
-        ("p" #'hydra-paren-edit/body "Paren-editing mode")
+      ;;   ("RET" #'hydra-read-input-async/body "Read-input mode")
+      ;;   ("p" #'hydra-paren-edit/body "Paren-editing mode")
 
-        ;; Universal eval/dev mode for the current buffer
-        ("e" #'hydra-current-dev/body "Dev mode for current buffer")
+      ;;   ;; Universal eval/dev mode for the current buffer
+      ;;   ("e" #'hydra-current-dev/body "Dev mode for current buffer")
 
-        ("u" #'hydra-dev/body "Dev")
-        ("x" #'hydra-exec/body "Execution")
-        ("a" #'hydra-external-exec/body "Execution (external)")
-        ("l" #'hydra-emacs-lisp/body "Emacs Lisp operations")
+      ;;   ("u" #'hydra-dev/body "Dev")
+      ;;   ("x" #'hydra-exec/body "Execution")
+      ;;   ("a" #'hydra-external-exec/body "Execution (external)")
+      ;;   ("l" #'hydra-emacs-lisp/body "Emacs Lisp operations")
 
-        ("o" #'hydra-org/body "Org")
+      ;;   ("o" #'hydra-org/body "Org")
 
-        ("/" #'hydra-search/body "Searching")
-        ("d" #'hydra-edit/body "Editing")
-        ("b" #'hydra-buffer/body "Buffer")
-        ("c" #'hydra-cursor/body "Multiple cursors")
-        ("f" #'hydra-file/body "File")
-        ("j" #'hydra-jump/body "(Semantic) jumping")
-        ("v" #'hydra-visit/body "Visiting")
-        ("i" #'hydra-insertion/body "Insertion")
-        ("t" #'hydra-format/body "Formatting")
-        ("m" #'hydra-mark/body "Marking")
-        ("n" #'hydra-mode/body "Mode")
+      ;;   ("/" #'hydra-search/body "Searching")
+      ;;   ("d" #'hydra-edit/body "Editing")
+      ;;   ("b" #'hydra-buffer/body "Buffer")
+      ;;   ("c" #'hydra-cursor/body "Multiple cursors")
+      ;;   ("f" #'hydra-file/body "File")
+      ;;   ("j" #'hydra-jump/body "(Semantic) jumping")
+      ;;   ("v" #'hydra-visit/body "Visiting")
+      ;;   ("i" #'hydra-insertion/body "Insertion")
+      ;;   ("t" #'hydra-format/body "Formatting")
+      ;;   ("m" #'hydra-mark/body "Marking")
+      ;;   ("n" #'hydra-mode/body "Mode")
 
-        ("w" #'hydra-window/body "Window management")
-        ("r" #'hydra-frame/body "Frame management"))
+      ;;   ("w" #'hydra-window/body "Window management")
+      ;;   ("r" #'hydra-frame/body "Frame management"))
 
       ;; (bind-key "s-SPC" #'hydra-global/body)
-      (bind-key "M-SPC" nil)
-      (bind-key "M-SPC" #'hydra-global/body))))
+      ;; (bind-key "M-SPC" nil)
+      ;; (bind-key "M-SPC" #'hydra-global/body)
+      )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

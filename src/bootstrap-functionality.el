@@ -1710,6 +1710,7 @@ line in Eshell."
 (bind-key "<f2>" #'save-buffer)
 (bind-key "<f3>" #'find-file)
 (bind-key "<C-f4>" #'kill-current-buffer)
+(bind-key "<f8>" #'~switch-buffer)
 ;; BUG: Command history not recorded
 ;; (bind-key "<f12>" #'~ido-M-x)
 (bind-key "<f12>" #'execute-extended-command)
@@ -1722,6 +1723,7 @@ line in Eshell."
 ;; Sequence keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Buffer
 (bind-key "M-SPC b r" #'revert-buffer)
 (bind-key "M-SPC b n" #'~new-buffer)
 (bind-key "M-SPC b m" #'mark-whole-buffer)
@@ -1730,17 +1732,212 @@ line in Eshell."
 (bind-key "M-SPC b k k" #'kill-current-buffer)
 (bind-key "M-SPC b k b" #'kill-buffer)
 
-(bind-key "M-SPC f d" #'~delete-current-file)
-(bind-key "M-SPC f r" #'~rename-current-file)
-(bind-key "M-SPC f s" #'save-buffer)
-(bind-key "M-SPC f a" #'~save-buffer-as)
-(bind-key "M-SPC f o" #'find-file)
-
 (bind-key "M-SPC w s r" #'(lambda () (interactive) (~split-window 'right)))
 (bind-key "M-SPC w s b" #'(lambda () (interactive) (~split-window 'below)))
 (bind-key "M-SPC w k" #'delete-window)
 (bind-key "M-SPC w o" #'~one-window)
 (bind-key "M-SPC w t" #'~transpose-windows)
+
+;; Visit
+(bind-key "M-SPC v n" #'~open-project-notes)
+(bind-key "M-SPC v b" #'~open-project-toolbox)
+(bind-key "M-SPC v t" #'~open-toolbox)
+(bind-key "M-SPC v p p" #'projectile-switch-project)
+
+;; File
+(bind-key "M-SPC f d" #'~delete-current-file)
+(bind-key "M-SPC f r" #'~rename-current-file)
+(bind-key "M-SPC f s" #'save-buffer)
+(bind-key "M-SPC f a" #'~save-buffer-as)
+(with-eval-after-load "counsel"
+  (bind-key "M-SPC f o" #'counsel-find-file))
+(with-eval-after-load "projectile"
+  (bind-key "M-SPC f f" #'projectile-find-file))
+(bind-key "M-SPC f e" #'~find-files-current-dir)
+(bind-key "M-SPC f i" #'~find-files-current-dir-not-ignoring)
+(bind-key "M-SPC f m" #'~open-current-file-as-admin)
+(bind-key "M-SPC f c" #'~copy-file-name-to-clipboard)
+(bind-key "M-SPC f p" #'~copy-pos-to-clipboard)
+(bind-key "M-SPC f t" #'~choose-path-and-act)
+
+;; Jumping
+(with-eval-after-load "ace-jump"
+  (bind-key "M-SPC j a" #'ace-jump-mode)
+  (bind-key "M-SPC j l" #'ace-jump-line-mode))
+;; (with-eval-after-load "dumb-jump"
+;;   ("'" #'dumb-jump-go-other-window "Try jumping to def (other window)")
+;;   ("." #'dumb-jump-go "Try jumping to def")
+;;   ("," #'dumb-jump-back "Jump back")
+;;   (";" #'dumb-jump-quick-look "Peek"))
+(with-eval-after-load "smart-jump"
+  (bind-key "M-SPC j ." #'smart-jump-go)
+  (bind-key "M-SPC j ," #'smart-jump-back))
+(bind-key "M-SPC j j" (~make-repeatable-fn #'~goto-next-line-matching-marker))
+(bind-key "M-SPC j k" (~make-repeatable-fn #'~goto-prev-line-matching-marker))
+(with-eval-after-load "point-pos"
+  (bind-key "M-SPC j s" #'point-pos-save)
+  (bind-key "M-SPC j g" #'point-pos-goto)
+  (bind-key "M-SPC j n" (~make-repeatable-fn #'point-pos-next))
+  (bind-key "M-SPC j p" (~make-repeatable-fn #'point-pos-previous)))
+(with-eval-after-load "counsel"
+  (bind-key "M-SPC j i" #'counsel-imenu))
+
+;; Cursor
+(with-eval-after-load "multiple-cursors"
+  (bind-key "M-SPC c l" #'mc/edit-lines)
+  (bind-key "M-SPC c n" #'mc/mark-next-like-this)
+  (bind-key "M-SPC c p" #'mc/mark-previous-like-this)
+  (bind-key "M-SPC c a" #'mc/mark-all-in-region))
+
+;; Emacs Lisp
+(bind-key "M-SPC l e e" #'~eval-last-sexp-or-region)
+(bind-key "M-SPC l e p" #'pp-eval-last-sexp)
+(bind-key "M-SPC l e w" #'~eval-then-replace-region-or-last-sexp)
+(bind-key "M-SPC l e x" #'eval-expression)
+(bind-key "M-SPC l e r" #'eval-region)
+(bind-key "M-SPC l e b" #'eval-buffer)
+(bind-key "M-SPC l h f" #'describe-function)
+(bind-key "M-SPC l h v" #'describe-variable)
+(bind-key "M-SPC l h k" #'describe-key)
+(bind-key "M-SPC l h ." #'find-function)
+(bind-key "M-SPC l l" #'find-library)
+
+;; Org
+(with-eval-after-load "org"
+  (bind-key "M-SPC o o i" #'org-insert-todo-heading)
+  (bind-key "M-SPC o o c" #'org-todo)
+  (bind-key "M-SPC o o s" #'org-schedule)
+  (bind-key "M-SPC o t a" #'org-ctrl-c-ctrl-c)
+  (bind-key "M-SPC o n s" #'org-narrow-to-subtree)
+  (bind-key "M-SPC o n b" #'org-narrow-to-block)
+  (bind-key "M-SPC o n w" #'widen)
+
+  (bind-key "M-SPC o j" (~make-repeatable-fn #'org-next-visible-heading))
+  (bind-key "M-SPC o k" (~make-repeatable-fn #'org-previous-visible-heading))
+  (bind-key "M-SPC o J" (~make-repeatable-fn #'org-forward-heading-same-level))
+  (bind-key "M-SPC o K" (~make-repeatable-fn #'org-backward-heading-same-level))
+
+  (bind-key "M-SPC o g" #'org-goto)
+  (bind-key "M-SPC o /" #'org-sparse-tree)
+
+  (bind-key "M-SPC o m" #'org-mark-subtree)
+
+  (bind-key "M-SPC o i" (~make-repeatable-fn #'org-insert-heading))
+  (bind-key "M-SPC o I" (~make-repeatable-fn #'org-insert-item))
+  (bind-key "M-SPC o TAB" (~make-repeatable-fn #'org-cycle))
+  (bind-key "M-SPC o c" (~make-repeatable-fn #'org-ctrl-c-ctrl-c))
+
+  (bind-key "M-SPC o s" #'org-insert-structure-template)
+
+  (bind-key "M-SPC o a" #'org-archive-subtree)
+  (bind-key "M-SPC o >" (~make-repeatable-fn #'org-metaright))
+  (bind-key "M-SPC o <" (~make-repeatable-fn #'org-metaleft))
+  (bind-key "M-SPC o r>" (~make-repeatable-fn #'org-shiftmetaright))
+  (bind-key "M-SPC o r<" (~make-repeatable-fn #'org-shiftmetaleft))
+  (bind-key "M-SPC o P" (~make-repeatable-fn #'org-move-subtree-up))
+  (bind-key "M-SPC o N" (~make-repeatable-fn #'org-move-subtree-down)))
+
+;; Edit
+(bind-key "M-SPC d q r" #'query-replace-regexp)
+(bind-key "M-SPC d q q" #'query-replace)
+(bind-key "M-SPC d n r" #'narrow-to-region)
+(bind-key "M-SPC d n f" #'narrow-to-defun)
+(bind-key "M-SPC d n w" #'widen)
+(bind-key "M-SPC d a a" #'align)
+(bind-key "M-SPC d a c" #'align-current)
+(bind-key "M-SPC d a r" #'align-regexp)
+(bind-key "M-SPC d g s" #'magit-status)
+(bind-key "M-SPC d g b" #'magit-blame)
+(bind-key "M-SPC d g d" #'magit-diff)
+(bind-key "M-SPC d v c a" #'vc-annotate)
+(bind-key "M-SPC d v c d" #'vc-diff)
+(bind-key "M-SPC d w o" #'just-one-space)
+(bind-key "M-SPC d w d" #'delete-horizontal-space)
+(bind-key "M-SPC d i" #'indent-rigidly)
+(bind-key "M-SPC d c" #'comment-or-uncomment-region)
+(bind-key "M-SPC d d" #'~duplicate-line-or-region)
+(bind-key "M-SPC d k" #'kill-sexp)
+(bind-key "M-SPC d z" #'repeat)
+
+;; External exec
+(bind-key "M-SPC a e" #'~palette/exec-sh-in-term-mux-then-pause)
+(bind-key "M-SPC a i" #'~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file)
+(bind-key "M-SPC a k" #'~palette/point/exec-sh-piping-here)
+(bind-key "M-SPC a x" #'~palette/point/exec-sh-in-term-mux-then-pause)
+(bind-key "M-SPC a a" #'~ansi-colorize-current-output-block)
+(bind-key "M-SPC a s" #'(lambda ()
+                          (interactive)
+                          (~palette/exec-sh-in-term-mux "zsh")))
+
+;; Text exec
+(bind-key "M-SPC x |" #'~exec-sh|)
+(bind-key "M-SPC x <" #'~exec-sh<)
+(bind-key "M-SPC x >" #'~exec-sh>)
+(bind-key "M-SPC x p" #'~exec-sh-pop-up)
+(bind-key "M-SPC x x" #'~execute-text-prompt)
+(bind-key "M-SPC x l" #'~execute-line)
+(bind-key "M-SPC x w" #'~execute-current-wand-text)
+(bind-key "M-SPC x b" #'~exec-current-block)
+(bind-key "M-SPC x L" #'(lambda ()
+                          (interactive)
+                          (call-interactively #'~execute-line)
+                          (call-interactively #'kill-current-buffer)))
+(bind-key "M-SPC x e" #'~execute)
+(bind-key "M-SPC x E" #'(lambda ()
+                          (interactive)
+                          (call-interactively #'~execute)
+                          (call-interactively #'kill-current-buffer)))
+(bind-key "M-SPC x j" (~make-repeatable-fn #'~goto-prev-command-pattern))
+(bind-key "M-SPC x k" (~make-repeatable-fn #'~goto-next-command-pattern))
+(bind-key "M-SPC x r" #'~insert-entry-from-exec-history)
+
+;; Insertion
+(bind-key "M-SPC i ;" #'~insert-full-line-comment)
+(bind-key "M-SPC i <" #'(lambda () (interactive) (insert *~output-beginning-marker*)))
+(bind-key "M-SPC i >" #'(lambda () (interactive) (insert *~output-end-marker*)))
+(bind-key "M-SPC i b" #'(lambda () (interactive) (insert *~output-beginning-marker* "\n" *~output-end-marker*) (previous-line)))
+(bind-key "M-SPC i x" #'~insert-entry-from-exec-history)
+(bind-key "M-SPC i e" #'~insert-exec)
+
+;; Frame
+(bind-key "M-SPC r n" #'make-frame)
+(bind-key "M-SPC r k" #'delete-frame)
+
+;; Window
+(bind-key "M-SPC w s r" (~make-repeatable-fn #'~split-window-right))
+(bind-key "M-SPC w s b" (~make-repeatable-fn #'~split-window-below))
+(bind-key "M-SPC w k" (~make-repeatable-fn #'delete-window))
+(bind-key "M-SPC w T" (~make-repeatable-fn #'~scroll-other-window))
+(bind-key "M-SPC w C" (~make-repeatable-fn #'~scroll-other-window-reverse))
+(bind-key "M-SPC w o" #'~one-window)
+(bind-key "M-SPC w t" (~make-repeatable-fn #'~transpose-windows))
+(bind-key "M-SPC w y" (~make-repeatable-fn #'~toggle-sticky-window))
+(bind-key "M-SPC w z" (~make-repeatable-fn #'~toggle-maximize-buffer))
+(with-eval-after-load "ace-window"
+  (bind-key "M-SPC w p" #'ace-swap-window)
+  (bind-key "M-SPC w p" #'ace-window))
+(bind-key "M-SPC w r" #'resize-window)
+(bind-key "M-SPC w w" (~make-repeatable-fn #'other-window))
+
+;; Parens management
+(with-eval-after-load "smartparens"
+  (bind-key "M-SPC p )" #'sp-forward-slurp-sexp "Forward slurp")
+  (bind-key "M-SPC p (" #'sp-backward-slurp-sexp "Backward slurp")
+  (bind-key "M-SPC p }" #'sp-forward-barf-sexp "Forward barf")
+  (bind-key "M-SPC p {" #'sp-backward-barf-sexp "Backward barf")
+  (bind-key "M-SPC p l" #'sp-forward-sexp "Go forward")
+  (bind-key "M-SPC p h" #'sp-backward-sexp "Go backward")
+  (bind-key "M-SPC p j" #'sp-down-sexp "Go down")
+  (bind-key "M-SPC p k" #'sp-backward-up-sexp "Go up")
+  (bind-key "M-SPC p e s" #'sp-split-sexp "Split" :exit t)
+  (bind-key "M-SPC p e S" #'sp-splice-sexp "Splice")
+  (bind-key "M-SPC p e j" #'sp-join-sexps "Join"))
+
+;; Mode
+(bind-key "M-SPC n SPC" (~make-repeatable-fn #'whitespace-mode))
+(bind-key "M-SPC n g f" (~make-repeatable-fn #'global-font-lock-mode))
+(bind-key "M-SPC n l f" (~make-repeatable-fn #'font-lock-mode))
+(bind-key "M-SPC n w" (~make-repeatable-fn #'~toggle-soft-wrapping))
 
 ;; TODO
 ;; Context menu

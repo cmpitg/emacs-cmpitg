@@ -513,7 +513,6 @@ project root, not ignoring anything."
   :after (lispy)
   :bind* (:map
           modalka-mode-map
-          ("SPC" . #'hydra-global/body)
           ("u" . #'forward-char)
           ("o" . #'backward-char)
           ("e" . #'next-line)
@@ -573,6 +572,7 @@ project root, not ignoring anything."
           ("C-a" . #'~my/deactivate-modalka))
   :config
   (progn
+    (bind-key "SPC" (lookup-key global-map (kbd "M-SPC")) modalka-mode-map)
     (setq modalka-cursor-type 'box)
 
     (defun ~my/activate-modalka ()
