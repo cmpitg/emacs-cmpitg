@@ -502,7 +502,7 @@ Source: http://stackoverflow.com/a/4717026/219881"
 
   (defun ~get-current-project-root ()
     "Returns the current project root or current directory."
-    (or (ignore-errors (destructuring-bind (_ . dir) (project-current)
+    (or (ignore-errors (destructuring-bind (_ . dir) (last (project-current))
                          dir))
         default-directory))
 
