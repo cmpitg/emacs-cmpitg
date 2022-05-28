@@ -78,8 +78,6 @@
   (require 'rmacs:config-core-ux                        "config-core-ux")
   (require 'rmacs:config-themes                         "config-themes")
   (require 'rmacs:config-core-keybindings               "config-core-keybindings")
-  (require 'rmacs:config-header-line                    "config-header-line")
-  (require 'rmacs:config-module-bowser                  "config-module-bowser")
   (require 'rmacs:config-module-convenient-buffer-shell "config-module-convenient-buffer-shell"))
 
 (message "Done loading Rmacs minimal")
