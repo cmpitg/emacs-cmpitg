@@ -1714,6 +1714,10 @@ line in Eshell."
 ;; (bind-key "<f12>" #'~ido-M-x)
 (bind-key "<f12>" #'execute-extended-command)
 
+;; Header line
+(bind-key "<header-line> <mouse-3>" #'~header-line-execute)
+(bind-key "<header-line> <M-mouse-3>" #'~header-line-edit)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Sequence keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
