@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -24,7 +24,8 @@
 ;;
 
 (use-package ivy-hydra
-  :after (ivy counsel))
+  :disabled t
+  :after (ivy counsel hydra))
 
 ;;
 ;; Sublime-like C-p
@@ -68,8 +69,12 @@
 ;;
 
 (use-package adoc-mode
-  :mode ("\\.adoc\\'" . adoc-mode)
-  :after (hydra)
+  :mode (("\\.adoc\\'" . adoc-mode))
+  :bind* (:map
+          adoc-mode-map
+          ("M-SPC e r" . #'~asciidoc/render)
+          ("M-SPC e p" . #'~asciidoc/preview)
+          ("M-SPC e u" . #'~asciidoc/update-preview))
   :config
   (progn
     (defun ~asciidoc/render (html-path)
@@ -105,13 +110,7 @@ named `asciidoc-html-path' and generated if not yet exists"
       "Re-renders current AsciiDoc file for preview.  The browser
 might need manual refreshing."
       (interactive)
-      (~asciidoc/render (~asciidoc/current-temporary-html-path)))
-
-    (defhydra hydra-asciidoc (:exit t)
-      "Asciidoc operations"
-      ("r" #'~asciidoc/render "Render")
-      ("p" #'~asciidoc/preview "Preview")
-      ("u" #'~asciidoc/update-preview "Update preview"))))
+      (~asciidoc/render (~asciidoc/current-temporary-html-path)))))
 
 ;;
 ;; Just-work jump-to-definition
@@ -580,6 +579,15 @@ might need manual refreshing."
 
 (use-package elpy
   :after (company)
+  :bind* (("M-SPC u p a" . #'pyvenv-activate)
+          ("M-SPC u p z" . #'elpy-shell-switch-to-shell)
+          ("M-SPC u p r" . #'elpy-shell-send-region-or-buffer)
+          ("M-SPC u p e" . #'elpy-shell-send-current-statement)
+          ("M-SPC u p f" . #'elpy-format-code)
+          ("M-SPC u p ." . #'~python-jump-to-definition)
+          ("M-SPC u p ," . #'~python-jump-back)
+          ("M-SPC u p l" . #'elpy-config)
+          ("M-SPC u p c a" . #'conda-env-activate))
   :init (progn
           (elpy-enable)
 
@@ -606,23 +614,7 @@ might need manual refreshing."
           (setq python-shell-interpreter "ipython")
           (setq python-shell-interpreter-args "-i --simple-prompt")
           (setq elpy-rpc-python-command "python3")
-          (setq elpy-rpc-virtualenv-path 'default)
-
-          (defhydra hydra-dev-python-conda (:columns 4 :exit t)
-            "Python development with Conda"
-            ("a" #'conda-env-activate "Activate virtualenv"))
-
-          (defhydra hydra-dev-python (:columns 4 :exit t)
-            "Python development"
-            ("a" #'pyvenv-activate "Activate virtualenv")
-            ("z" #'elpy-shell-switch-to-shell "Switch to shell")
-            ("r" #'elpy-shell-send-region-or-buffer "Eval region or buffer")
-            ("e" #'elpy-shell-send-current-statement "Eval current statement")
-            ("f" #'elpy-format-code "Format code")
-            ("." #'~python-jump-to-definition "Jump to definition")
-            ("," #'~python-jump-back "Jump back" :exit nil)
-            ("l" #'elpy-config "Config")
-            ("c" #'hydra-dev-python-conda/body "Conda"))))
+          (setq elpy-rpc-virtualenv-path 'default)))
 
 ;;
 ;; Clojure development
@@ -662,11 +654,33 @@ might need manual refreshing."
     (add-hook 'clojure-mode-hook #'my/enable-clj-syntax-check)))
 
 (use-package cider
-  :after (hydra clojure-mode yasnippet)
+  :after (clojure-mode yasnippet)
   :hook (((clojure-mode) . midje-mode)
          ((cider-repl-mode) . subword-mode)
          ((clojure-mode
            cider-mode) . eldoc-mode))
+  :bind* (("M-SPC u j d p a" . #'~clojure/add-dependency)
+          ("M-SPC u j d d d" . #'cider-doc)
+          ("M-SPC u j d d a" . #'cider-apropos)
+          ("M-SPC u j n s e" . #'cider-eval-ns-form)
+          ("M-SPC u j n s b" . #'cider-browse-ns)
+          ("M-SPC u j n s ." . #'cider-find-ns)
+          ("M-SPC u j n s r" . #'cljr-add-require-to-ns)
+          ("M-SPC u j b l" . #'cider-load-buffer)
+          ("M-SPC u j f l" . #'cider-load-file)
+          ("M-SPC u j f a" . #'cider-load-all-files)
+          ("M-SPC u j r e" . #'cider-eval-region)
+          ("M-SPC u j l s" . #'cider-switch-to-repl-buffer)
+          ("M-SPC u j l c" . #'cider-repl-clear-buffer)
+          ("M-SPC u j l n" . #'cider-repl-set-ns)
+          ("M-SPC u j a" . #'clojure-align)
+          ("M-SPC u j ." . #'cider-find-var)
+          ("M-SPC u j ," . #'cider-pop-back)
+          ("M-SPC u j p p" . #'cider-pprint-eval-last-sexp)
+          ("M-SPC u j e e" . #'cider-eval-last-sexp)
+          ("M-SPC u j e f" . #'cider-eval-defun-at-point)
+          ("M-SPC u j e s" . #'cider-eval-sexp-at-point)
+          ("M-SPC u j t f" . #'~cider-format-defun))
   :init
   (progn
     (require 'seq)
@@ -722,31 +736,6 @@ the sequence, and its index within the sequence."
 
     ;; Do not pop up REPL after connecting
     (setq cider-repl-pop-to-buffer-on-connect nil)
-
-    (defhydra hydra-dev-clojure (:columns 4 :exit t)
-      "Clojure development"
-      ("dpa" #'~clojure/add-dependency "Dependency: Add")
-      ("ddd" #'cider-doc "Doc: Show")
-      ("dda" #'cider-apropos "Doc: Apropos")
-      ("nse" #'cider-eval-ns-form "Namespace: Eval ns form")
-      ("nsb" #'cider-browse-ns "Namespace: Browse")
-      ("ns." #'cider-find-ns "Namespace: Jump to")
-      ("nsr" #'cljr-add-require-to-ns "Namespace: Add require")
-      ("bl" #'cider-load-buffer "Buffer: Load")
-      ("fl" #'cider-load-file "File: Load")
-      ("fa" #'cider-load-all-files "File: Load all")
-      ("re" #'cider-eval-region "Region: Eval")
-      ("ls" #'cider-switch-to-repl-buffer "REPL: Switch to")
-      ("lc" #'cider-repl-clear-buffer "REPL: Clear")
-      ("ln" #'cider-repl-set-ns "REPL: Set ns")
-      ("a" #'clojure-align "Align")
-      ("." #'cider-find-var "Jump to var definition")
-      ("," #'cider-pop-back "Jump back")
-      ("pp" #'cider-pprint-eval-last-sexp "Eval and pp last sexp")
-      ("ee" #'cider-eval-last-sexp "Eval last sexp")
-      ("ef" #'cider-eval-defun-at-point "Eval defun")
-      ("es" #'cider-eval-sexp-at-point "Eval current sexp")
-      ("tf" #'~cider-format-defun "Format defun"))
 
     (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
     (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
@@ -827,19 +816,15 @@ the sequence, and its index within the sequence."
 ;;
 
 (use-package tcl
+  :bind* (("M-SPC u t z" . #'switch-to-tcl)
+          ("M-SPC u t r" . #'tcl-eval-region))
   :init
   (progn
     (defvar *~tcl-version* "8.7")
     (cl-defun ~tcl/browse-doc (&optional (version *~tcl-version*))
       "Browses Tcl documentation."
       (interactive)
-      (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))
-
-    (with-eval-after-load "hydra"
-      (defhydra hydra-dev-tcl (:columns 4 :exit t)
-        "Python development"
-        ("z" #'switch-to-tcl "Switch to shell")
-        ("r" #'tcl-eval-region "Eval region")))))
+      (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))))
 
 ;;
 ;; Language server mode

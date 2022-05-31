@@ -106,6 +106,9 @@
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
   (bind-key "M-ESC" #'~keyboard-quit)
 
+  (bind-key "M-SPC M-SPC" #'counsel-M-x)
+  (bind-key "M-SPC SPC" #'counsel-M-x)
+
   (use-package hydra
     :disabled t
     :config

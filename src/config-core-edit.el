@@ -1,5 +1,7 @@
+;; -*- lexical-binding: t; no-byte-compile: t; -*-
+
 ;;
-;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -82,7 +84,7 @@
 ;;
 
 (use-package hydra
-  :demand t)
+  :disabled t)
 
 ;;
 ;; grep command
@@ -451,15 +453,16 @@ project root, not ignoring anything."
           cider-repl-mode
           sly-mrepl-mode
           slime-repl-mode) . paredit-mode)
-  :bind (:map paredit-mode-map
-              ("s-." . paredit-backward-kill-word)
-              ("s-p" . paredit-forward-kill-word)
-              ("s-r" . forward-word)
-              ("s-g" . backward-word)
-              ("s-C" . paredit-backward-up)
-              ("s-T" . paredit-forward-up)
-              ("s-R" . paredit-forward)
-              ("s-G" . paredit-backward))
+  :bind (:map
+         paredit-mode-map
+         ("s-." . #'paredit-backward-kill-word)
+         ("s-p" . #'paredit-forward-kill-word)
+         ("s-r" . #'forward-word)
+         ("s-g" . #'backward-word)
+         ("s-C" . #'paredit-backward-up)
+         ("s-T" . #'paredit-forward-up)
+         ("s-R" . #'paredit-forward)
+         ("s-G" . #'paredit-backward))
   :defines (slime-repl-mode-map sly-mrepl-mode-map)
   :config (progn
             ;; Always try to delete region first
@@ -546,7 +549,6 @@ project root, not ignoring anything."
           ("Z" . #'fastnav-sprint-backward)
 
           ("X" . #'~execute-current-wand-text)
-          ("xx" . #'hydra-external-exec/body)
           ("I" . #'bowser:expand-dir-here)
 
           (">" . #'beginning-of-buffer)
@@ -573,6 +575,7 @@ project root, not ignoring anything."
   :config
   (progn
     (bind-key "SPC" (lookup-key global-map (kbd "M-SPC")) modalka-mode-map)
+    (bind-key "x x" (lookup-key global-map (kbd "M-SPC a")) modalka-mode-map)
     (setq modalka-cursor-type 'box)
 
     (defun ~my/activate-modalka ()
@@ -614,7 +617,7 @@ project root, not ignoring anything."
 (use-package company
   :diminish company-mode
   :bind (:map company-mode-map
-         ("C-/" . company-complete))
+         ("C-/" . #'company-complete))
   :demand t
   :config (progn
             (global-company-mode 1)
@@ -622,7 +625,7 @@ project root, not ignoring anything."
 (use-package company-quickhelp
   :demand t
   :bind (:map company-active-map
-         ("M-h" . company-quickhelp-manual-begin))
+         ("M-h" . #'company-quickhelp-manual-begin))
   :config (progn
             (company-quickhelp-mode 1)
             ;; Do not trigger automatically
