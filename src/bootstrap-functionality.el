@@ -523,6 +523,10 @@ If no element is found, returns nil."
              when (funcall pred x)
              return x))
 
+  (cl-defun ~set-fn-docstring (symbol new-docstring)
+    "Sets docstring for a function."
+    (put symbol 'function-documentation new-docstring))
+
   ;; Ref: https://stackoverflow.com/a/17310748/219881
   (defun ~make-repeatable-fn (cmd)
     "Returns a new command that is a repeatable version of CMD.
@@ -545,6 +549,35 @@ and so on."
              (setq last-repeatable-command ',cmd)
              (repeat nil)))
     (intern (concat (symbol-name cmd) "---repeat")))
+
+  (cl-defun ~make-repeatable-multi-fn (cmd keybinding-alist)
+    "Returns an interned symbol, storing the function that is a
+repeatable version of CMD with multiple keybindings."
+    (interactive)
+    (let ((fn-symb (intern (concat (symbol-name cmd) "---repeat-multi"))))
+      (fset fn-symb (~repeatable-multi-fn cmd keybinding-alist))
+      (~set-fn-docstring fn-symb (format "A repeatable version of %s with multiple keybindings" cmd))
+      fn-symb))
+
+  (cl-defun ~repeatable-multi-fn (cmd keybinding-alist)
+    "Returns a lambda as a repeatable version of CMD with multiple
+keybinding."
+    (interactive)
+    #'(lambda ()
+        (interactive)
+        ;; see also repeat-message-function
+        (call-interactively cmd)
+        (set-transient-map
+         (let ((keymap (make-sparse-keymap)))
+           (mapcar #'(lambda (keybinding)
+                       (let ((key (car keybinding))
+                             (fn (cdr keybinding)))
+                         (bind-key key
+                                   (~repeatable-multi-fn fn keybinding-alist)
+                                   keymap)))
+                   keybinding-alist)
+           keymap))))
+
 
   (defun ~get-last-sexp ()
     "Returns the last sexp before the current point."
@@ -1723,6 +1756,9 @@ line in Eshell."
 ;; Sequence keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(bind-key "M-SPC M-SPC" #'execute-extended-command)
+(bind-key "M-SPC SPC" #'execute-extended-command)
+
 ;; Buffer
 (bind-key "M-SPC b r" #'revert-buffer)
 (bind-key "M-SPC b n" #'~new-buffer)
@@ -1804,38 +1840,63 @@ line in Eshell."
 
 ;; Org
 (with-eval-after-load "org"
-  (bind-key "M-SPC o o i" #'org-insert-todo-heading)
-  (bind-key "M-SPC o o c" #'org-todo)
-  (bind-key "M-SPC o o s" #'org-schedule)
-  (bind-key "M-SPC o t a" #'org-ctrl-c-ctrl-c)
-  (bind-key "M-SPC o n s" #'org-narrow-to-subtree)
-  (bind-key "M-SPC o n b" #'org-narrow-to-block)
-  (bind-key "M-SPC o n w" #'widen)
+  (let ((repeatable-keybindings `(("i" . org-insert-heading)
+                                  ("I" . org-insert-item)
+                                  ("TAB" . org-cycle)
+                                  ("c" . org-ctrl-c-ctrl-c)
+                                  (">" . org-metaright)
+                                  ("<" . org-metaleft)
+                                  ("r >" . org-shiftmetaright)
+                                  ("r <" . org-shiftmetaleft)
+                                  ("P" . org-move-subtree-up)
+                                  ("N" . org-move-subtree-down)
 
-  (bind-key "M-SPC o j" (~make-repeatable-fn #'org-next-visible-heading))
-  (bind-key "M-SPC o k" (~make-repeatable-fn #'org-previous-visible-heading))
-  (bind-key "M-SPC o J" (~make-repeatable-fn #'org-forward-heading-same-level))
-  (bind-key "M-SPC o K" (~make-repeatable-fn #'org-backward-heading-same-level))
+                                  ("j" . org-next-visible-heading)
+                                  ("k" . org-previous-visible-heading)
+                                  ("J" . org-forward-heading-same-level)
+                                  ("K" . org-backward-heading-same-level)
 
-  (bind-key "M-SPC o g" #'org-goto)
-  (bind-key "M-SPC o /" #'org-sparse-tree)
+                                  ("t a" . org-ctrl-c-ctrl-c)
 
-  (bind-key "M-SPC o m" #'org-mark-subtree)
+                                  ("o i" . org-insert-todo-heading)
+                                  ("o c" . org-todo))))
+    ;; Nagivation
+    (bind-key "M-SPC o j" (~make-repeatable-multi-fn #'org-next-visible-heading repeatable-keybindings))
+    (bind-key "M-SPC o k" (~make-repeatable-multi-fn #'org-previous-visible-heading repeatable-keybindings))
+    (bind-key "M-SPC o J" (~make-repeatable-multi-fn #'org-forward-heading-same-level repeatable-keybindings))
+    (bind-key "M-SPC o K" (~make-repeatable-multi-fn #'org-backward-heading-same-level repeatable-keybindings))
 
-  (bind-key "M-SPC o i" (~make-repeatable-fn #'org-insert-heading))
-  (bind-key "M-SPC o I" (~make-repeatable-fn #'org-insert-item))
-  (bind-key "M-SPC o TAB" (~make-repeatable-fn #'org-cycle))
-  (bind-key "M-SPC o c" (~make-repeatable-fn #'org-ctrl-c-ctrl-c))
+    ;; List/tree
+    (bind-key "M-SPC o a" #'org-archive-subtree)
+    (bind-key "M-SPC o >" (~make-repeatable-multi-fn #'org-metaright repeatable-keybindings))
+    (bind-key "M-SPC o <" (~make-repeatable-multi-fn #'org-metaleft repeatable-keybindings))
+    (bind-key "M-SPC o r >" (~make-repeatable-multi-fn #'org-shiftmetaright repeatable-keybindings))
+    (bind-key "M-SPC o r <" (~make-repeatable-multi-fn #'org-shiftmetaleft repeatable-keybindings))
+    (bind-key "M-SPC o i" (~make-repeatable-multi-fn #'org-insert-heading repeatable-keybindings))
+    (bind-key "M-SPC o I" (~make-repeatable-multi-fn #'org-insert-item repeatable-keybindings))
+    (bind-key "M-SPC o TAB" (~make-repeatable-multi-fn #'org-cycle repeatable-keybindings))
+    (bind-key "M-SPC o c" (~make-repeatable-multi-fn #'org-ctrl-c-ctrl-c repeatable-keybindings))
+    (bind-key "M-SPC o P" (~make-repeatable-multi-fn #'org-move-subtree-up repeatable-keybindings))
+    (bind-key "M-SPC o N" (~make-repeatable-multi-fn #'org-move-subtree-down repeatable-keybindings))
+    (bind-key "M-SPC o m" #'org-mark-subtree)
+    (bind-key "M-SPC o g" #'org-goto)
+    (bind-key "M-SPC o /" #'org-sparse-tree)
 
-  (bind-key "M-SPC o s" #'org-insert-structure-template)
+    ;; Table
+    (bind-key "M-SPC o t a" (~make-repeatable-multi-fn #'org-ctrl-c-ctrl-c repeatable-keybindings))
 
-  (bind-key "M-SPC o a" #'org-archive-subtree)
-  (bind-key "M-SPC o >" (~make-repeatable-fn #'org-metaright))
-  (bind-key "M-SPC o <" (~make-repeatable-fn #'org-metaleft))
-  (bind-key "M-SPC o r>" (~make-repeatable-fn #'org-shiftmetaright))
-  (bind-key "M-SPC o r<" (~make-repeatable-fn #'org-shiftmetaleft))
-  (bind-key "M-SPC o P" (~make-repeatable-fn #'org-move-subtree-up))
-  (bind-key "M-SPC o N" (~make-repeatable-fn #'org-move-subtree-down)))
+    ;; Todo
+    (bind-key "M-SPC o o i" (~make-repeatable-multi-fn #'org-insert-todo-heading repeatable-keybindings))
+    (bind-key "M-SPC o o c" (~make-repeatable-multi-fn #'org-todo repeatable-keybindings))
+    (bind-key "M-SPC o o s" #'org-schedule)
+
+    ;; Narrowing
+    (bind-key "M-SPC o n s" #'org-narrow-to-subtree)
+    (bind-key "M-SPC o n b" #'org-narrow-to-block)
+    (bind-key "M-SPC o n w" #'widen)
+
+    ;; Editing
+    (bind-key "M-SPC o m" #'org-mark-subtree)))
 
 ;; Edit
 (bind-key "M-SPC d q r" #'query-replace-regexp)
@@ -1921,17 +1982,17 @@ line in Eshell."
 
 ;; Parens management
 (with-eval-after-load "smartparens"
-  (bind-key "M-SPC p )" #'sp-forward-slurp-sexp "Forward slurp")
-  (bind-key "M-SPC p (" #'sp-backward-slurp-sexp "Backward slurp")
-  (bind-key "M-SPC p }" #'sp-forward-barf-sexp "Forward barf")
-  (bind-key "M-SPC p {" #'sp-backward-barf-sexp "Backward barf")
-  (bind-key "M-SPC p l" #'sp-forward-sexp "Go forward")
-  (bind-key "M-SPC p h" #'sp-backward-sexp "Go backward")
-  (bind-key "M-SPC p j" #'sp-down-sexp "Go down")
-  (bind-key "M-SPC p k" #'sp-backward-up-sexp "Go up")
-  (bind-key "M-SPC p e s" #'sp-split-sexp "Split" :exit t)
-  (bind-key "M-SPC p e S" #'sp-splice-sexp "Splice")
-  (bind-key "M-SPC p e j" #'sp-join-sexps "Join"))
+  (bind-key "M-SPC p )" (~make-repeatable-fn #'sp-forward-slurp-sexp))
+  (bind-key "M-SPC p (" (~make-repeatable-fn #'sp-backward-slurp-sexp))
+  (bind-key "M-SPC p }" (~make-repeatable-fn #'sp-forward-barf-sexp))
+  (bind-key "M-SPC p {" (~make-repeatable-fn #'sp-backward-barf-sexp))
+  (bind-key "M-SPC p l" (~make-repeatable-fn #'sp-forward-sexp))
+  (bind-key "M-SPC p h" (~make-repeatable-fn #'sp-backward-sexp))
+  (bind-key "M-SPC p j" (~make-repeatable-fn #'sp-down-sexp))
+  (bind-key "M-SPC p k" (~make-repeatable-fn #'sp-backward-up-sexp))
+  (bind-key "M-SPC p e s" (~make-repeatable-fn #'sp-split-sexp))
+  (bind-key "M-SPC p e S" (~make-repeatable-fn #'sp-splice-sexp))
+  (bind-key "M-SPC p e j" (~make-repeatable-fn #'sp-join-sexps)))
 
 ;; Mode
 (bind-key "M-SPC n SPC" (~make-repeatable-fn #'whitespace-mode))
