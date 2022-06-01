@@ -77,7 +77,10 @@
 ;; Hide undo-tree from mode line
 (use-package undo-tree
   :diminish undo-tree-mode
-  :config (global-undo-tree-mode))
+  :custom (undo-tree-auto-save-history . nil)
+  :config
+  (progn
+    (global-undo-tree-mode)))
 
 ;; Make shebang-ed files executable
 (add-hook 'after-save-hook #'~maybe-make-current-file-executable)
