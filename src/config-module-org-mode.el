@@ -24,6 +24,7 @@
 (use-package f)
 (require 'misc)
 (use-package org
+  :demand t
   :init (progn
           (require 'org-archive)
           (defun ~org-set-fold-entry ()
