@@ -81,7 +81,6 @@
  ("olivetti" . "8d287a80c5e3d72ac01b56c8afe60b01f18500b4")
  ("org" . "a407a89c5f0bde830d2328f98d4e31b4187932db")
  ("org-bullets" . "767f55feb58b840a5a04eabfc3fbbf0d257c4792")
- ("packed" . "6a427d9da742d78a8f6bd6ed9e31fbf241b2ea82")
  ("parseclj" . "a8c4cf30fb68b66ae51541462a8b21753229a6e5")
  ("parseedn" . "e5ba280d1fb7b408d54062d4eac545326e850172")
  ("pkg-info" . "76ba7415480687d05a4353b27fea2ae02b8d9d61")
