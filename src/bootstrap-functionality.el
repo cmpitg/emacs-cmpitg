@@ -1587,6 +1587,31 @@ THING."
   ;; High-level functions for better UX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+  (defun ~turn-on-soft-wrapping ()
+    "Turns on soft-wrapping."
+    (interactive)
+    (turn-off-auto-fill)
+    (turn-on-visual-line-mode)
+    (when (featurep 'visual-fill-column)
+      (turn-on-visual-fill-column-mode)))
+
+  (defun ~turn-off-soft-wrapping ()
+    "Turns off soft-wrapping."
+    (interactive)
+    (visual-line-mode -1)
+    (when (featurep 'visual-fill-column)
+      (visual-fill-column-mode -1)))
+
+  (defun ~toggle-soft-wrapping ()
+    "Toggles on soft-wrapping mode."
+    (interactive)
+    (let* ((soft-wrapped? (if (featurep 'visual-fill-column)
+                              visual-fill-column-mode
+                            visual-line-mode)))
+      (if soft-wrapped?
+          (~turn-off-soft-wrapping)
+        (~turn-on-soft-wrapping))))
+
   (cl-defun ~split-window (&optional (side 'right))
     "Splits the current window & switch to the new window."
     (interactive)
