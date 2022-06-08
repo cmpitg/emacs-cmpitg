@@ -1906,6 +1906,7 @@ line in Eshell."
     (bind-key "M-SPC o m" #'org-mark-subtree)
     (bind-key "M-SPC o g" #'org-goto)
     (bind-key "M-SPC o /" #'org-sparse-tree)
+    (bind-key "M-SPC o s" #'org-insert-structure-template)
 
     ;; Table
     (bind-key "M-SPC o t a" (~make-repeatable-multi-fn #'org-ctrl-c-ctrl-c repeatable-keybindings))
