@@ -5,6 +5,6 @@ export RMACS_SERVER_NAME=${RMACS_SERVER_NAME:-bare-profiling}
 
 exec emacs -q --load "${RMACS_INIT_DIR}/tools/profiledotemacs/profile-dotemacs.el" \
      --eval "(setq server-name \"${RMACS_SERVER_NAME}\")" \
-     --eval "(setq profile-dotemacs-file \"${RMACS_INIT_DIR}/src/init-minimal.el\")" \
+     --eval "(setq profile-dotemacs-file \"${RMACS_INIT_DIR}/src/init-bare.el\")" \
      --eval '(profile-dotemacs)' \
      "$@"
