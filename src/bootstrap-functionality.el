@@ -30,7 +30,8 @@
   (require 'cl)
   (require 'cl-lib)
   (require 'color)
-  (require 'windmove))
+  (require 'windmove)
+  (require 'thingatpt))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UX
