@@ -8,7 +8,7 @@ install-deps:
 	rmacs --debug-on-error --verbose --name installation --shape edit --verbose --one-off eval '(progn (straight-thaw-versions) (message-box "Installation completed!"))'
 
 profile-startup:
-	bin/profile-ee
+	bin/ffn-profiling
 
 profile-ebare:
 	bin/ebare-profiling
