@@ -47,13 +47,13 @@
 \(~deconstruct-path \"/tmp/aoeu:/hello world/\"\)         ⇒ \(values \"/tmp/aoeu\" \"hello world\"\)
 \(~deconstruct-path \"/tmp/aoeu:/inside:/hello world/\"\) ⇒ \(values \"/tmp/aoeu:/inside\" \"hello world\"\)
 "
-  (let ((matches (or (s-match (rx (group (one-or-more any))
-                                  ":" (group (one-or-more digit))
-                                  eol)
-                              path)
-                     (s-match (rx (group (one-or-more any))
-                                  ":/" (group (one-or-more any)) "/" eol)
-                              path))))
+  (let ((matches (or (~string-match (rx (group (one-or-more any))
+                                        ":" (group (one-or-more digit))
+                                        eol)
+                                    path)
+                     (~string-match (rx (group (one-or-more any))
+                                        ":/" (group (one-or-more any)) "/" eol)
+                                    path))))
     (if matches
         (let* ((path (nth 1 matches))
                (pattern-or-number (nth 2 matches))
@@ -62,73 +62,6 @@
               (values path pattern-or-number)
             (values path number)))
       (values path))))
-
-(defun ~insert-full-line-comment ()
-  "Inserts a line full of comment characters until `fill-column'
-is reached."
-  (interactive)
-  (let ((comment (string-trim comment-start)))
-    (thread-first
-        (cl-loop for time from (current-column) upto (1- fill-column) by (length comment)
-              collect comment)
-      (string-join "")
-      insert)))
-
-(cl-defun ~insert-file-and-goto-end (filepath)
-  "Inserts the contents of a file and go to the end of the
-content in buffer."
-  (lexical-let ((current-pos (point)))
-    (destructuring-bind (_ n-chars) (insert-file-contents filepath)
-      (goto-char (+ n-chars current-pos)))))
-
-(cl-defun ~insert-output-block (content
-                                &key replace-current-block?
-                                print-output-marker?
-                                (colorize-with :overlay))
-  "Inserts an output block.
-
-If REPLACE-CURRENT-BLOCK? is t, try replacing the current output
-block.
-
-If PRINT-OUTPUT-MARKER? is t, print also the output
-markers (defined by *~OUTPUT-BEGINNING-MARKER* and
-*~OUTPUT-END-MARKER*).
-
-COLORIZE-WITH is one of the following keywords:
-· :overlay - the content is ANSI-colorized using overlays
-· :text-properties - the content is ANSI-colorized using text properties
-Invalid values has no effects."
-  (when replace-current-block?
-    (call-interactively #'~delete-output-block))
-
-  ;; Deliberately use setq here for readability.  let-only bindings look ugly.
-  (let (start-point
-        end-point
-        (content (if (eq :text-property colorize-with)
-                     (~ansi-colorize content)
-                   content)))
-    (when print-output-marker? (insert *~output-beginning-marker* "\n"))
-    (setq start-point (point))
-    (insert content)
-    (setq end-point (point))
-    (when print-output-marker? (insert "\n" *~output-end-marker*))
-
-    (when (eq :overlay colorize-with) (ansi-color-apply-on-region start-point end-point))))
-
-(defun ~keyboard-quit ()
-  "Escapes the minibuffer or cancels region consistently using 'Control-g'.
-Normally if the minibuffer is active but we lost focus (say, we
-clicked away or set the cursor into another buffer) we can quit
-by pressing 'ESC' three times.  This function handles it more
-conveniently, as it checks for the condition of not beign in the
-minibuffer but having it active.  Otherwise simply doing the ESC
-or (keyboard-escape-quit) would brake whatever split of windows
-we might have in the frame."
-  (interactive)
-  (if (not (window-minibuffer-p (selected-window)))
-      (if (or mark-active (active-minibuffer-window))
-          (keyboard-escape-quit))
-    (keyboard-quit)))
 
 (defun ~insert-exec ()
   "Inserts an executable from PATH or the current working
@@ -431,7 +364,7 @@ expanded using `expand-file-name', then
                                                                  :new-frame? ,new-frame?))))))
       (let ((regexp (car regexp&action))
             (action (cdr regexp&action)))
-        (when (s-matches-p regexp path)
+        (when (~string-matches? regexp path)
           (cl-return (cl-typecase action
                        (function   (funcall action path))
                        (string     (~open-with path action))
@@ -682,18 +615,6 @@ selection."
 ;; Emacs Lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun ~is-next-line-output-block? ()
-  "Determines if the next line is the start of an output block.
-The output block is defined as everything between
-*~OUTPUT-BEGINNING-MARKER* and *~OUTPUT-END-MARKER*."
-  (save-mark-and-excursion
-    (ignore-errors
-      (next-line)
-      (beginning-of-line)
-      (looking-at (rx bol (0+ space)
-                      (eval *~output-beginning-marker*)
-                      (0+ space) eol)))))
-
 (defun ~eval-current-sexp ()
   "Evals the current enclosing sexp."
   (interactive)
@@ -725,13 +646,6 @@ The output block is defined as everything between
     (insert (format "%s" value))))
 
 ;; RIGHT HERE
-
-(cl-defun ~execute-text-prompt ()
-  "Prompts for text and executes it with `~execute'."
-  (interactive)
-  (defvar *~execute-text-prompt-hist* (list))
-  (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
-    (~execute text)))
 
 (cl-defun ~execute-current-wand-text ()
   "Executes current Wand text with `~execute'."
@@ -779,101 +693,6 @@ move the cursor but rather to call `~execute'."
           (t
            (apply orig-fn args)))))
 
-;; TODO: History
-(defun ~read-command-or-get-from-secondary-selection ()
-  "Without prefix argument, if there is an active selection,
-returns it (assuming that it denotes a shell command); otherwise,
-reads and returns a shell command from the minibuffer.
-
-With prefix argument, always reads the shell command from the
-minibuffer."
-  (interactive)
-  (if (and (~get-secondary-selection) (not current-prefix-arg))
-      (~get-secondary-selection)
-    (read-shell-command "Command: ")))
-
-(defun ~read-command-or-get-from-selection (history-file &optional cmd)
-  "Reads a free-from text-based command from the minibuffer.  If
-secondary selection or primary selection is active, returns one
-of them (in that order) instead of reading from the minibuffer."
-  (interactive)
-  (lexical-let ((history (thread-last (~read-file history-file)
-                           string-trim
-                           (s-split "\n"))))
-    (string-trim
-     (if (not (null cmd))
-         cmd
-       (or (if (string-empty-p (~get-secondary-selection))
-               nil
-             (~get-secondary-selection))
-           (if (string-empty-p (~get-selection))
-               nil
-             (~get-selection))
-           (read-shell-command "Command: "
-                               nil
-                               'history))))))
-
-;; TODO: Parameterize the hard-coded "!" character.
-(defun ~bounds-of-wand-text-at-point ()
-  "Returns boundaries for a wand-text thing.  See
-`THING-AT-POINT' for futher information."
-  (lexical-let* ((start (ignore-errors
-                          (save-mark-and-excursion
-                            (end-of-line)
-                            (re-search-backward (rx bol "!"))
-                            (point))))
-                 (end (ignore-errors
-                        (save-mark-and-excursion
-                          (cond
-                           (;; When there's no line continuation
-                            (not (~current-line-continues?))
-                            (end-of-line)
-                            (point))
-                           (t
-                            (while (~current-line-continues?)
-                              (re-search-forward (rx "\\" (0+ space) eol) nil t)
-                              (forward-line))
-                            (end-of-line)
-                            (point)))))))
-    (if (or (null start) (null end))
-        nil
-      (cons start end))))
-(put 'wand-text 'bounds-of-thing-at-point '~bounds-of-wand-text-at-point)
-
-(defun ~bounds-of-exec-text-at-point ()
-  "Returns boundaries for a possibly multiline piece of text that
-could be executed.  See `THING-AT-POINT' for futher information."
-  (lexical-let* ((start (ignore-errors
-                          (save-mark-and-excursion
-                            (cond
-                             (;; When there's no line continuation on the
-                              ;; previous line
-                              (not (~previous-line-continues?))
-                              (beginning-of-line)
-                              (point))
-                             (t
-                              (while (~previous-line-continues?)
-                                (forward-line -1))
-                              (beginning-of-line)
-                              (point))))))
-                 (end (ignore-errors
-                        (save-mark-and-excursion
-                          (cond
-                           (;; When there's no line continuation
-                            (not (~current-line-continues?))
-                            (end-of-line)
-                            (point))
-                           (t
-                            (while (~current-line-continues?)
-                              (re-search-forward (rx "\\" (0+ space) eol) nil t)
-                              (forward-line))
-                            (end-of-line)
-                            (point)))))))
-    (if (or (null start) (null end))
-        nil
-      (cons start end))))
-(put 'exec-text 'bounds-of-thing-at-point '~bounds-of-exec-text-at-point)
-
 (use-package thing-cmds)
 (defun ~select-multiline-exec-text ()
   "Selects multiline exec text."
@@ -885,82 +704,6 @@ could be executed.  See `THING-AT-POINT' for futher information."
 up in a separate frame."
   (interactive)
   (setf *~popup-exec-result?* (not *~popup-exec-result?*)))
-
-(cl-defun ~get-block-positions (beginning-regexp end-regexp)
-  "Returns multiple values corresponding to the beginning and end
-positions of the current block, defined by the regexps
-BEGINNING-REGEXP and END-REGEXP."
-  (save-excursion)
-  (values (save-mark-and-excursion
-            (end-of-line)
-            (search-backward-regexp beginning-regexp)
-            (point))
-          (save-mark-and-excursion
-            (beginning-of-line)
-            (search-forward-regexp end-regexp)
-            (point))))
-
-(cl-defun ~mark-block (beginning-regexp end-regexp &key
-                                        (mark-fences? nil))
-  "Marks a block.  The block is fenced with the regexps
-`BEGINNING-REGEXP' and `END-REGEXP'.
-
-If `MARK-FENCES?' is non-nil, marks the fences as well;
-otherwise, marks only the content of the block."
-  (interactive)
-  ;; Start from the end of the block
-  (beginning-of-line)
-  (search-forward-regexp end-regexp)
-
-  (if mark-fences?
-      (forward-line)
-    (beginning-of-line))
-
-  (push-mark (point) t t)
-  (search-backward-regexp beginning-regexp)
-
-  (if mark-fences?
-      (beginning-of-line)
-    (next-line))
-
-  (beginning-of-line))
-
-(defun ~mark-current-block ()
-  "Marks the current code block."
-  (interactive)
-  (cl-multiple-value-bind
-      (beginning-regexp end-regexp)
-      (cond ((eq 'adoc-mode major-mode)
-             (values (rx bol "----" (0+ " ") eol) (rx bol "----" (0+ " ") eol)))
-            ((eq 'org-mode major-mode)
-             (values (rx "#+BEGIN_SRC") (rx "#+END_SRC")))
-            (t
-             (values (rx "### ««« ###") (rx  "### »»» ###"))))
-    (~mark-block beginning-regexp end-regexp)))
-
-(defun ~mark-current-output-block ()
-  "Marks the current output block, including the fences."
-  (interactive)
-  (let ((beginning-regexp (if (boundp 'local/output-beginning-regexp)
-                              local/output-beginning-regexp
-                            (rx "### ««« ###")))
-        (end-regexp (if (boundp 'local/output-end-regexp)
-                              local/output-end-regexp
-                            (rx "### »»» ###"))))
-    (~mark-block beginning-regexp end-regexp
-                 :mark-fences? t)))
-
-(defun ~goto-next-line-matching-marker ()
-  "Goes to the next line matching a visual marker (defined by
-`*~MARKER-REGEXP*')"
-  (interactive)
-  (search-forward-regexp *~marker-regexp* nil t))
-
-(defun ~goto-prev-line-matching-marker ()
-  "Goes to the previous line matching a visual marker (defined by
-`*~MARKER-REGEXP*')"
-  (interactive)
-  (search-backward-regexp *~marker-regexp* nil t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; External program
@@ -1032,90 +775,6 @@ result, returing the process.  The command is executed asynchronously."
       (sleep-for 0 1)
       (goto-char (point-min)))
     process))
-
-(cl-defun ~exec-sh< (command &key
-                             (move-cursor? t)
-                             (print-output-marker? nil)
-                             (current-position (point))
-                             (destination (point))
-                             (callback #'identity))
-  "Executes a *shell* command and replaces the region with the output.
-This function also returns the exit code of the command.
-
-PRINT-OUTPUT-MARKER? is a boolean value, determining whether or
-not to print the output markers (defined by
-*~OUTPUT-BEGINNING-MARKER* and *~OUTPUT-END-MARKER*)
-
-CURRENT-POSITION is a number, determining the position at which
-the output is printed.
-
-DESTINATION is a number or nil, determining the position at which
-the cursor is moved to after the output is printed."
-  (interactive "MCommand: ")
-  (~add-to-history-file *~exec-history-path* command
-                        :max-history *~exec-history-max*)
-
-  (message "Running: %s" command)
-  (lexical-let ((current-position current-position)
-                (buffer (current-buffer))
-                (print-output-marker? print-output-marker?)
-                (destination destination)
-                (move-cursor? move-cursor?))
-    (~exec-pipe-async (:sh shell-file-name "-c" (format "env 'TERM=dumb' 'PAGER=cat' %s" command))
-                      (:fn #'(lambda (output)
-                               (message "Finished: %s" command)
-
-                               (with-current-buffer buffer
-                                 (goto-char current-position)
-
-                                 (~insert-output-block output
-                                                       :print-output-marker? print-output-marker?
-                                                       :colorize-with :overlay)
-
-                                 (when (and move-cursor? (numberp destination))
-                                   (goto-char destination)))))
-                      (:fn callback))))
-
-(cl-defun ~prepare-for-output-block (&optional (replace-output? t))
-  "TODO"
-  (interactive)
-  ;; Make sure we're an the end of the command
-  (when (region-active-p)
-    (goto-char (region-end))
-    (end-of-line)
-    (deactivate-mark))
-
-  ;; Make sure we're not at the end of the output marker
-  (when (looking-back (rx bol (0+ space)
-                          (eval *~output-beginning-marker*)
-                          (0+ space) eol)
-                      nil t)
-    (beginning-of-line)
-    (backward-char))
-
-  ;; Create a line to separate the command and the output
-  (~open-line 1)
-  (beginning-of-line)
-
-  ;; Delete the current output block if necessary
-  (when (and replace-output? (~is-next-line-output-block?))
-    (call-interactively #'~delete-output-block)))
-
-(cl-defun ~exec-sh<-next-line-separate (command &key (replace-output? t)
-                                                (original-point (point))
-                                                (move-cursor? t)
-                                                (callback #'identity))
-  "Executes a *shell* command in a newly spawned shell and pipes
-back the output to the next line.  The current cursor doesn't
-change."
-  (interactive)
-  (~prepare-for-output-block replace-output?)
-  (~exec-sh< command
-             :print-output-marker? t
-             :current-position (point)
-             :destination original-point
-             :move-cursor? move-cursor?
-             :callback callback))
 
 (defun ~exec-sh> (command)
   "Executes a *shell* command, taking input from the current region,

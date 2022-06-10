@@ -107,14 +107,14 @@ files."
   ;; (delete-region (point-at-bol) (point-at-eol))
   (let* ((dir (file-name-as-directory dir))
          (padding (apply #'concat (make-list level bowser:*level-padding*)))
-         (paths (loop for line in (thread-last
+         (paths (cl-loop for line in (thread-last
                                       (~exec-sh (format "dispatch-action %s 2> /dev/null | rg -v '^\\.{1,2}/$'"
                                                         (shell-quote-argument dir)))
                                     bowser:strip-newline-from-string
                                     bowser:string-split-lines)
                       collect (concat dir line))))
     ;; Insert the subpaths and expand them if needed
-    (loop for path in paths
+    (cl-loop for path in paths
           do (progn
                (insert padding path "\n")
                (when (and (bowser:is-path-dir? path)
@@ -123,7 +123,7 @@ files."
 
 (defun bowser:get-level (str)
   "Gets the indentation level from a string."
-  (loop for counter = 0 then (1+ counter)
+  (cl-loop for counter = 0 then (1+ counter)
         for padding = "" then (concat padding bowser:*level-padding*)
         while (string-prefix-p padding str)
         finally (return (1- counter))))

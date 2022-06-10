@@ -706,19 +706,6 @@ project root, not ignoring anything."
       (beginning-of-line)
       (bs:exec text))
 
-    (defvar *~command-pattern-regexp* (rx bol (0+ " ") (or "$" "!" "!^" "!@" "!!" "!!!" "mux://"))
-      "Regexp that determines whether or not a string is a command pattern.")
-
-    (defun ~goto-next-command-pattern ()
-      "Goes to the next line matching one of the command patterns."
-      (interactive)
-      (re-search-forward *~command-pattern-regexp* nil t))
-
-    (defun ~goto-prev-command-pattern ()
-      "Goes to the previous line matching one of the command patterns."
-      (interactive)
-      (re-search-backward *~command-pattern-regexp* nil t))
-
     (defun ~build-|rmacs-tee-cmd (cmd)
       "Builds command to pipe output to the current buffer using rmacs-tee."
       (format "{ exec-and-echo-stdin %s } |& env RMACS_BUFFER_NAME='%s' RMACS_SERVER_NAME='%s' rmacs-tee"
@@ -805,10 +792,10 @@ project root, not ignoring anything."
                                   :capture :whole
                                   :skip-comment nil
                                   :action #'(lambda (text)
-                                              (let ((cmd (thread-last (s-split "!" text)
-                                                           rest
-                                                           (s-join "!")
-                                                           string-trim)))
+                                              (let ((cmd (thread-last (~split-string "!" text)
+                                                                      rest
+                                                                      (s-join "!")
+                                                                      string-trim)))
                                                 (~add-to-history-file *~exec-history-path* cmd :max-history *~exec-history-max*))
                                               ;; TODO Refactor - after the extraction of the display function from ~exec-sh<-next-line-separate
                                               (~exec-sh<-next-line-separate (format "dispatch-action %s"

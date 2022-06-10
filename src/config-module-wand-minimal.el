@@ -18,6 +18,37 @@
 ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; thing-at-point
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: Parameterize the hard-coded "!" character.
+(defun ~bounds-of-wand-text-at-point ()
+  "Returns boundaries for a wand-text thing.  See
+`THING-AT-POINT' for futher information."
+  (lexical-let* ((start (ignore-errors
+                          (save-mark-and-excursion
+                            (end-of-line)
+                            (re-search-backward (rx bol "!"))
+                            (point))))
+                 (end (ignore-errors
+                        (save-mark-and-excursion
+                          (cond
+                           (;; When there's no line continuation
+                            (not (~current-line-continues?))
+                            (end-of-line)
+                            (point))
+                           (t
+                            (while (~current-line-continues?)
+                              (re-search-forward (rx "\\" (0+ space) eol) nil t)
+                              (forward-line))
+                            (end-of-line)
+                            (point)))))))
+    (if (or (null start) (null end))
+        nil
+      (cons start end))))
+(put 'wand-text 'bounds-of-thing-at-point '~bounds-of-wand-text-at-point)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Embedded Wand without the processing of comment
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

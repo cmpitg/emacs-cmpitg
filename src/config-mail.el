@@ -192,7 +192,7 @@ E.g.
                     (signature-file signature-file)
                     (maildir-shortcuts maildir-shortcuts))
         (add-to-list 'mu4e-user-mail-address-list mail-address t)
-        (destructuring-bind (smtp-server smtp-port) (s-split ":" smtp-server)
+        (destructuring-bind (smtp-server smtp-port) (~split-string ":" smtp-server)
           (add-to-list 'mu4e-contexts
                        (make-mu4e-context
                         :name context-name

@@ -67,7 +67,7 @@
 
 (cl-defun rocket:get-paths (&optional (path-env-var-name "PATH"))
   (thread-last (getenv path-env-var-name)
-    (s-split ":")))
+    (~split-string ":")))
 
 (cl-defun rocket:get-executables (path)
   "Gets the list of executables with relative to a path."

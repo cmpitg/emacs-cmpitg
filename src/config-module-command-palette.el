@@ -112,7 +112,7 @@
 (cl-defun command-palette:is-buffer-exception? (buffer-or-name)
   "Determines if the buffer is not supposed to have a command-palette window."
   (-any? (lambda (regexp)
-           (s-matches? regexp (buffer-name (get-buffer buffer-or-name))))
+           (~string-matches? regexp (buffer-name (get-buffer buffer-or-name))))
          command-palette:*buffer-exception-regexp-list*))
 
 (cl-defun command-palette:is-command-palette-window? (&optional (window (selected-window)))

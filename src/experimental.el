@@ -141,56 +141,6 @@
     (setq shx-leader ":")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun ~ansi-colorize-current-output-block ()
-  "ANSI-colorizes current output block."
-  (interactive)
-  (call-interactively #'~mark-current-output-block)
-  (call-interactively #'~ansi-colorize-region))
-
-(defun ~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file ()
-  "TODO - Add prefix, then exec"
-  (interactive)
-  (~palette/decorate-exec-text-at-point)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
-    (~palette/exec-sh-in-term-mux-piping-to-sh-output-file text)))
-
-(defun ~palette/point/exec-sh-in-term-mux-piping-here ()
-  "TODO - Add prefix, then exec"
-  (interactive)
-  (~palette/decorate-exec-text-at-point)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
-    (~palette/exec-sh-in-term-mux-piping-here text)))
-
-(defun ~palette/point/exec-sh-in-term-mux ()
-  "TODO - Add prefix, then exec"
-  (interactive)
-  (~palette/decorate-exec-text-at-point)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
-    (~palette/exec-sh-in-term-mux text)))
-
-(defun ~palette/point/exec-sh-in-term-mux-then-pause ()
-  "TODO - Add prefix, then exec"
-  (interactive)
-  (~palette/decorate-exec-text-at-point)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
-    (~palette/exec-sh-in-term-mux-then-pause text)))
-
-(defun ~palette/point/exec-sh-piping-to-sh-output-file ()
-  "TODO - Add prefix, then exec.  TODO: Customize garbage"
-  (interactive)
-  (~palette/decorate-exec-text-at-point)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
-    (~palette/exec-sh-piping-to-sh-output-file text)))
-
-(defun ~palette/point/exec-sh-piping-here ()
-  "TODO"
-  (interactive)
-  (~palette/decorate-exec-text-at-point)
-  (when-let (text (~palette/trim-garbage (thing-at-point 'exec-text)))
-    (~palette/exec-sh-piping-here text)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Widget and rendering
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

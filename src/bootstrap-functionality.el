@@ -308,6 +308,40 @@
         (buffer-substring (region-beginning) (region-end))
       ""))
 
+  ;; TODO: History
+  (defun ~read-command-or-get-from-secondary-selection ()
+    "Without prefix argument, if there is an active selection,
+returns it (assuming that it denotes a shell command); otherwise,
+reads and returns a shell command from the minibuffer.
+
+With prefix argument, always reads the shell command from the
+minibuffer."
+    (interactive)
+    (if (and (~get-secondary-selection) (not current-prefix-arg))
+        (~get-secondary-selection)
+      (read-shell-command "Command: ")))
+
+  (defun ~read-command-or-get-from-selection (history-file &optional cmd)
+    "Reads a free-from text-based command from the minibuffer.  If
+secondary selection or primary selection is active, returns one
+of them (in that order) instead of reading from the minibuffer."
+    (interactive)
+    (lexical-let ((history (thread-last (~read-file history-file)
+                                        string-trim
+                                        (~split-string "\n"))))
+      (string-trim
+       (if (not (null cmd))
+           cmd
+         (or (if (string-empty-p (~get-secondary-selection))
+                 nil
+               (~get-secondary-selection))
+             (if (string-empty-p (~get-selection))
+                 nil
+               (~get-selection))
+             (read-shell-command "Command: "
+                                 nil
+                                 'history))))))
+
   (defun ~activate-selection (pos-1 pos-2)
     "Activates a selection, also visually, then leaves the point at
 `pos-2'."
@@ -577,6 +611,160 @@ keybinding."
                    keybinding-alist)
            keymap))))
 
+  (defun ~is-next-line-output-block? ()
+    "Determines if the next line is the start of an output block.
+The output block is defined as everything between
+*~OUTPUT-BEGINNING-MARKER* and *~OUTPUT-END-MARKER*."
+    (save-mark-and-excursion
+      (ignore-errors
+        (next-line)
+        (beginning-of-line)
+        (looking-at (rx bol (0+ space)
+                        (eval *~output-beginning-marker*)
+                        (0+ space) eol)))))
+
+  (defun ~insert-full-line-comment ()
+    "Inserts a line full of comment characters until `fill-column'
+is reached."
+    (interactive)
+    (let ((comment (string-trim comment-start)))
+      (thread-first
+        (cl-loop for time from (current-column) upto (1- fill-column) by (length comment)
+                 collect comment)
+        (string-join "")
+        insert)))
+
+  (cl-defun ~insert-file-and-goto-end (filepath)
+    "Inserts the contents of a file and go to the end of the
+content in buffer."
+    (lexical-let ((current-pos (point)))
+      (destructuring-bind (_ n-chars) (insert-file-contents filepath)
+        (goto-char (+ n-chars current-pos)))))
+
+  (cl-defun ~insert-output-block (content
+                                  &key replace-current-block?
+                                  print-output-marker?
+                                  (colorize-with :overlay))
+    "Inserts an output block.
+
+If REPLACE-CURRENT-BLOCK? is t, try replacing the current output
+block.
+
+If PRINT-OUTPUT-MARKER? is t, print also the output
+markers (defined by *~OUTPUT-BEGINNING-MARKER* and
+*~OUTPUT-END-MARKER*).
+
+COLORIZE-WITH is one of the following keywords:
+· :overlay - the content is ANSI-colorized using overlays
+· :text-properties - the content is ANSI-colorized using text properties
+Invalid values has no effects."
+    (when replace-current-block?
+      (call-interactively #'~delete-output-block))
+
+    ;; Deliberately use setq here for readability.  let-only bindings look ugly.
+    (let (start-point
+          end-point
+          (content (if (eq :text-property colorize-with)
+                       (~ansi-colorize content)
+                     content)))
+      (when print-output-marker? (insert *~output-beginning-marker* "\n"))
+      (setq start-point (point))
+      (insert content)
+      (setq end-point (point))
+      (when print-output-marker? (insert "\n" *~output-end-marker*))
+
+      (when (eq :overlay colorize-with) (ansi-color-apply-on-region start-point end-point))))
+
+  (cl-defun ~get-block-positions (beginning-regexp end-regexp)
+    "Returns multiple values corresponding to the beginning and end
+positions of the current block, defined by the regexps
+BEGINNING-REGEXP and END-REGEXP."
+    (save-excursion)
+    (values (save-mark-and-excursion
+              (end-of-line)
+              (search-backward-regexp beginning-regexp)
+              (point))
+            (save-mark-and-excursion
+              (beginning-of-line)
+              (search-forward-regexp end-regexp)
+              (point))))
+
+  (cl-defun ~mark-block (beginning-regexp end-regexp &key
+                                          (mark-fences? nil))
+    "Marks a block.  The block is fenced with the regexps
+`BEGINNING-REGEXP' and `END-REGEXP'.
+
+If `MARK-FENCES?' is non-nil, marks the fences as well;
+otherwise, marks only the content of the block."
+    (interactive)
+    ;; Start from the end of the block
+    (beginning-of-line)
+    (search-forward-regexp end-regexp)
+
+    (if mark-fences?
+        (forward-line)
+      (beginning-of-line))
+
+    (push-mark (point) t t)
+    (search-backward-regexp beginning-regexp)
+
+    (if mark-fences?
+        (beginning-of-line)
+      (next-line))
+
+    (beginning-of-line))
+
+  (defun ~mark-current-block ()
+    "Marks the current code block."
+    (interactive)
+    (cl-multiple-value-bind
+        (beginning-regexp end-regexp)
+        (cond ((eq 'adoc-mode major-mode)
+               (values (rx bol "----" (0+ " ") eol) (rx bol "----" (0+ " ") eol)))
+              ((eq 'org-mode major-mode)
+               (values (rx "#+BEGIN_SRC") (rx "#+END_SRC")))
+              (t
+               (values (rx "### ««« ###") (rx  "### »»» ###"))))
+      (~mark-block beginning-regexp end-regexp)))
+
+  (defun ~mark-current-output-block ()
+    "Marks the current output block, including the fences."
+    (interactive)
+    (let ((beginning-regexp (if (boundp 'local/output-beginning-regexp)
+                                local/output-beginning-regexp
+                              (rx "### ««« ###")))
+          (end-regexp (if (boundp 'local/output-end-regexp)
+                          local/output-end-regexp
+                        (rx "### »»» ###"))))
+      (~mark-block beginning-regexp end-regexp
+                   :mark-fences? t)))
+
+  (defun ~goto-next-line-matching-marker ()
+    "Goes to the next line matching a visual marker (defined by
+`*~MARKER-REGEXP*')"
+    (interactive)
+    (search-forward-regexp *~marker-regexp* nil t))
+
+  (defun ~goto-prev-line-matching-marker ()
+    "Goes to the previous line matching a visual marker (defined by
+`*~MARKER-REGEXP*')"
+    (interactive)
+    (search-backward-regexp *~marker-regexp* nil t))
+
+  (defun ~keyboard-quit ()
+    "Escapes the minibuffer or cancels region consistently using 'Control-g'.
+Normally if the minibuffer is active but we lost focus (say, we
+clicked away or set the cursor into another buffer) we can quit
+by pressing 'ESC' three times.  This function handles it more
+conveniently, as it checks for the condition of not beign in the
+minibuffer but having it active.  Otherwise simply doing the ESC
+or (keyboard-escape-quit) would brake whatever split of windows
+we might have in the frame."
+    (interactive)
+    (if (not (window-minibuffer-p (selected-window)))
+        (if (or mark-active (active-minibuffer-window))
+            (keyboard-escape-quit))
+      (keyboard-quit)))
 
   (defun ~get-last-sexp ()
     "Returns the last sexp before the current point."
@@ -639,7 +827,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
                                            t)))
       (let ((str (string-trim str)))
         (or (check-file-exists? str)
-            (let ((components (s-split ":" str)))
+            (let ((components (~split-string ":" str)))
               (and (= 2 (length components))
                    (check-file-exists? (first components))))))))
 
@@ -695,11 +883,65 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
     "Generates a UUID."
     (string-trim (~exec-sh (list "uuidgen" "-r"))))
 
+  (defun ~split-string (regexp s &optional omit-nulls)
+    "Split S into substrings bounded by matches for regexp REGEXP.
+If OMIT-NULLS is non-nil, zero-length substrings are omitted."
+    (declare (side-effect-free t))
+    (save-match-data (split-string s regexp omit-nulls)))
+
+  (defun ~string-matches? (regexp s &optional start)
+    "Determines of REGEXP match S."
+    (declare (side-effect-free t))
+    (not (null (string-match-p regexp s start))))
+
+  (defun ~string-split-up-to (regex s n &optional omit-nulls)
+    "Splits string S up to N times into substrings.
+
+If OMIT-NULLS is non-nil, zero-length substrings are omitted.
+
+Based on the implementation of `s-split-up-to' from s.el."
+    (declare (side-effect-free t))
+    (save-match-data
+      (let ((res nil))
+        (with-temp-buffer
+          (cl-labels ((check-and-record-substr
+                       (substr)
+                       (unless (and omit-nulls (equal substr ""))
+                         (push substr res))))
+            (insert s)
+            (let ((current-point (goto-char (point-min))))
+              (while (and (> n 0)
+                          (re-search-forward regex nil t))
+                (check-and-record-substr (buffer-substring current-point (match-beginning 0)))
+                (setq current-point (goto-char (match-end 0)))
+                (cl-decf n))
+              (check-and-record-substr (buffer-substring current-point (point-max))))))
+        (nreverse res))))
+
+  (defun ~string-match (regexp s &optional start)
+    "Returns the list of the whole matching string and one string for each matched regexp.  Returns nil if there is no match.
+
+When START is non-nil the search will start at that index.
+
+Based on the implementation of `s-match' in s.el."
+    (declare (side-effect-free t))
+    (save-match-data
+      (if (string-match regexp s start)
+          (let ((match-list (match-data))
+                res)
+            (while match-list
+              (let* ((beg (car match-list))
+                     (end (cadr match-list))
+                     (substrs (if (and beg end) (substring s beg end) nil)))
+                (setq res (cons substrs res))
+                (setq match-list (cddr match-list))))
+            (nreverse res)))))
+
   (defun ~current-line-continues? ()
     "Determines if the current line has a continuation marker."
     (thread-last (thing-at-point 'line)
                  string-trim
-                 (s-matches? (rx "\\" (0+ space) eol))))
+                 (~string-matches? (rx "\\" (0+ space) eol))))
 
   (defun ~previous-line-continues? ()
     "Determines if the previous line has a continuation marker."
@@ -931,6 +1173,11 @@ characters."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defalias '~switch-buffer 'switch-to-buffer)
+
+  (defun ~file-glob (pattern &optional path)
+    "Globs PATTERN in PATH."
+    (file-expand-wildcards
+     (concat (or path default-directory) pattern)))
 
   (defun ~delete-current-file ()
     "Deletes the file associated with the current buffer and kills
@@ -1583,6 +1830,97 @@ THING."
     (interactive)
     (~execute (string-trim (thing-at-point 'line t))))
 
+  (cl-defun ~execute-text-prompt ()
+    "Prompts for text and executes it with `~execute'."
+    (interactive)
+    (defvar *~execute-text-prompt-hist* (list))
+    (let ((text (read-from-minibuffer "Text: " nil nil nil '*~execute-text-prompt-hist*)))
+      (~execute text)))
+
+  (cl-defun ~exec-sh< (command &key
+                               (move-cursor? t)
+                               (print-output-marker? nil)
+                               (current-position (point))
+                               (destination (point))
+                               (callback #'identity))
+    "Executes a *shell* command and replaces the region with the output.
+This function also returns the exit code of the command.
+
+PRINT-OUTPUT-MARKER? is a boolean value, determining whether or
+not to print the output markers (defined by
+*~OUTPUT-BEGINNING-MARKER* and *~OUTPUT-END-MARKER*)
+
+CURRENT-POSITION is a number, determining the position at which
+the output is printed.
+
+DESTINATION is a number or nil, determining the position at which
+the cursor is moved to after the output is printed."
+    (interactive "MCommand: ")
+    (~add-to-history-file *~exec-history-path* command
+                          :max-history *~exec-history-max*)
+
+    (message "Running: %s" command)
+    (lexical-let ((current-position current-position)
+                  (buffer (current-buffer))
+                  (print-output-marker? print-output-marker?)
+                  (destination destination)
+                  (move-cursor? move-cursor?))
+      (~exec-pipe-async (:sh shell-file-name "-c" (format "env 'TERM=dumb' 'PAGER=cat' %s" command))
+                        (:fn #'(lambda (output)
+                                 (message "Finished: %s" command)
+
+                                 (with-current-buffer buffer
+                                   (goto-char current-position)
+
+                                   (~insert-output-block output
+                                                         :print-output-marker? print-output-marker?
+                                                         :colorize-with :overlay)
+
+                                   (when (and move-cursor? (numberp destination))
+                                     (goto-char destination)))))
+                        (:fn callback))))
+
+  (cl-defun ~prepare-for-output-block (&optional (replace-output? t))
+    "TODO"
+    (interactive)
+    ;; Make sure we're an the end of the command
+    (when (region-active-p)
+      (goto-char (region-end))
+      (end-of-line)
+      (deactivate-mark))
+
+    ;; Make sure we're not at the end of the output marker
+    (when (looking-back (rx bol (0+ space)
+                            (eval *~output-beginning-marker*)
+                            (0+ space) eol)
+                        nil t)
+      (beginning-of-line)
+      (backward-char))
+
+    ;; Create a line to separate the command and the output
+    (~open-line 1)
+    (beginning-of-line)
+
+    ;; Delete the current output block if necessary
+    (when (and replace-output? (~is-next-line-output-block?))
+      (call-interactively #'~delete-output-block)))
+
+  (cl-defun ~exec-sh<-next-line-separate (command &key (replace-output? t)
+                                                  (original-point (point))
+                                                  (move-cursor? t)
+                                                  (callback #'identity))
+    "Executes a *shell* command in a newly spawned shell and pipes
+back the output to the next line.  The current cursor doesn't
+change."
+    (interactive)
+    (~prepare-for-output-block replace-output?)
+    (~exec-sh< command
+               :print-output-marker? t
+               :current-position (point)
+               :destination original-point
+               :move-cursor? move-cursor?
+               :callback callback))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; High-level functions for better UX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1618,6 +1956,146 @@ THING."
     (when-let (window (split-window (selected-window) nil side nil))
       (select-window window)
       (call-interactively #'~switch-buffer))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Org mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'org)
+(with-eval-after-load "org"
+  (require 'org-archive)
+  (defun ~org-set-fold-entry ()
+    (interactive)
+    (org-set-property "~fold?" "true"))
+
+  (defun ~org-is-entry-folded? (&optional pom)
+    (or (string= (org-entry-get pom "~fold?") "true")
+        (ignore-errors (org-entry-is-done-p))))
+
+  (defun ~org-fold-entry ()
+    (interactive)
+    (org-flag-subtree t))
+
+  (defun ~org-unfold-entry ()
+    (interactive)
+    (org-flag-subtree nil))
+
+  (defun ~org-unfold-all ()
+    (interactive)
+    (org-show-all '(headings block)))
+
+  (defun ~org-refresh-fold-state ()
+    (interactive)
+    (save-excursion
+      (beginning-of-buffer)
+      (while (not (eobp))
+        (when (~org-is-entry-folded?)
+          (~org-fold-entry))
+        (~org-to-next-entry))))
+
+  (defalias '~org-to-next-entry #'outline-next-heading)
+  (defalias '~org-to-prev-entry #'outline-previous-heading)
+
+  (defun ~my/org-mode-setup ()
+    ;; Darken background of code block
+    (require 'color)
+    (set-face-attribute 'org-block nil :background
+                        (color-darken-name (face-attribute 'default :background) 3))
+    (variable-pitch-mode 1)
+    (bind-key "<S-return>"        #'~execute-line             org-mode-map)
+    (bind-key "<C-return>"        #'~eval-last-sexp-or-region org-mode-map)
+    (bind-key "C-<tab>"           #'iflipb-next-buffer        org-mode-map)
+    (bind-key "C-S-<tab>"         #'iflipb-previous-buffer    org-mode-map)
+    (bind-key "<C-S-iso-lefttab>" #'iflipb-previous-buffer    org-mode-map)
+    (bind-key "C-e"               nil                         org-mode-map)
+    (~org-refresh-fold-state)
+    (font-lock-mode t))
+  (add-hook 'org-mode-hook #'~my/org-mode-setup)
+
+  ;; Add timestamp when an item is done
+  (setq org-log-done 'time)
+
+  (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
+                                      (~file-glob "*.org")))
+
+  ;; Indent visually by default
+  (setq org-startup-indented t)
+
+  ;; Smart editing of invisible text
+  (setq org-catch-invisible-edits 'smart)
+
+  ;; TAB-cycle plain list as children of their heading parent
+  (setq org-cycle-include-plain-lists 'integrate)
+
+  ;; Hide the emphasis markers in font-lock-mode
+  ;; (setq org-hide-emphasis-markers t)
+  (setq org-hide-emphasis-markers nil)
+
+  ;; Continuation symbol
+  (setq org-ellipsis " ↩")
+
+  ;; Don't split line by default
+  (setq org-M-RET-may-split-line nil)
+
+  ;; Don't fontify code block by default
+  (setq org-src-fontify-natively nil)
+
+  ;; Preserve indentation in org-src
+  (setq org-src-preserve-indentation t)
+
+  ;; Enable shift-selection all the time
+  (setq org-support-shift-select 'always)
+
+  ;; Logical TODO & checkbox dependencies
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+
+  ;; No folding by default
+  ;; Ref: https://emacs.stackexchange.com/questions/9709/keep-the-headlines-expanded-in-org-mode
+  ;; Of per file: #+STARTUP: all
+  (setq org-startup-folded nil)
+
+  ;; Modules that should be loaded with org
+  (dolist (module '(org-crypt
+                    org-habit
+                    ;; org-bookmark
+                    ;; org-eshell
+                    ))
+    (add-to-list 'org-modules module))
+
+  ;; org-babel
+  (setq org-babel-load-languages
+        '((emacs-lisp . t)
+          (python . t)
+          (R . t)
+          (clojure . t)
+          (shell . t)))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-babel-python-command "python3")
+
+  (defun ~set-org-fonts ()
+    (interactive)
+    (let* ((monospace-font `(:font ,(~get-default-monospace-font)))
+           (variable-font `(:font ,(~get-default-font)))
+           (base-font-color (face-foreground 'default nil 'default))
+           (headline `(:inherit default :weight bold :foreground ,base-font-color)))
+      (custom-theme-set-faces 'user
+                              `(org-level-8 ((t (,@headline ,@variable-font :height 1.0))))
+                              `(org-level-7 ((t (,@headline ,@variable-font :height 1.0))))
+                              `(org-level-6 ((t (,@headline ,@variable-font :height 1.0))))
+                              `(org-level-5 ((t (,@headline ,@variable-font :height 1.0))))
+                              `(org-level-4 ((t (,@headline ,@variable-font :height 1.1))))
+                              `(org-level-3 ((t (,@headline ,@variable-font :height 1.15))))
+                              `(org-level-2 ((t (,@headline ,@variable-font :height 1.2))))
+                              `(org-level-1 ((t (,@headline ,@variable-font :height 1.25))))
+                              `(org-document-title ((t (,@headline ,@variable-font :height 1.3 :underline nil)))))))
+  (add-hook 'window-setup-hook #'~set-org-fonts)
+
+  (setq-default initial-major-mode 'org-mode)
+  (setq-default major-mode 'org-mode)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
