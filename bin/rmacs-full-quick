@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+export RMACS_INIT_DIR=${RMACS_INIT_DIR:-/m/src/emacs-cmpitg/}
+export RMACS_SERVER_NAME="$(gen-filename)"
+
+exec emacs -q \
+     --eval "(setq debug-on-error t)" \
+     --eval "(setq server-name \"${RMACS_SERVER_NAME}\")" \
+     --load "${RMACS_INIT_DIR}/src/init-edit.el" \
+     "$@"
