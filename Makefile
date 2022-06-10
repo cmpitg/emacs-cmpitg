@@ -1,4 +1,4 @@
-.PHONY: install-deps install-bin profile-startup
+.PHONY: install-deps profile-startup profile-ebare
 
 install-deps:
 	# Rust language server: https://github.com/rust-lang/rls
@@ -9,3 +9,6 @@ install-deps:
 
 profile-startup:
 	bin/profile-ee
+
+profile-ebare:
+	bin/ebare-profiling
