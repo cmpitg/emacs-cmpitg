@@ -267,6 +267,8 @@
     "Returns a list to build a context menu."
     `(""
       ["Open (external)" ~open-externally]
+      ["Open dir in term emu" ~open-dir-in-term-emu (~is-selecting?)]
+      ["Open term emu" ~open-term-emu]
       ["--" ignore]
       ["Switch to buffer" ~switch-buffer]
       ["Buffer list" list-buffers]
@@ -1324,6 +1326,23 @@ which is loaded lazily get loaded."
       (~run-process (cl-concatenate 'string
                                     "xdg-open" " " (shell-quote-argument expanded))
                     :async t)))
+
+  (cl-defun ~open-dir-in-term-emu (&optional dir-path)
+    "Opens a directory path in a terminal emulator."
+    (interactive)
+    (defvar *~open-dir-in-term-history* (list))
+    (let* ((text (if (~is-selecting?)
+                     (~get-selection)
+                   (read-string "Text: " (thing-at-point 'filename) '*~open-dir-in-term-history*)))
+           (expanded (~expand-path-fully (string-trim text))))
+      (~run-process (cl-concatenate 'string
+                                    "with-workdir" " " (shell-quote-argument expanded) " " "x-terminal-emulator")
+                    :async t)))
+
+  (cl-defun ~open-term-emu ()
+    "Opens a terminal emulator."
+    (interactive)
+    (~run-process "x-terminal-emulator" :async t))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Tracking recently closed files
