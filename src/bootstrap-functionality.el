@@ -2098,22 +2098,22 @@ change."
     (let* ((monospace-font `(:font ,(~get-default-monospace-font)))
            (variable-font `(:font ,(~get-default-font)))
            (base-font-color (face-foreground 'default nil 'default))
-           (headline `(:inherit default :weight bold :foreground ,base-font-color)))
+           (headline `(:inherit default :weight bold :foreground ,base-font-color))
+           (base-height 1.5))
       (custom-theme-set-faces 'user
-                              `(org-level-8 ((t (,@headline ,@variable-font :height 1.0))))
-                              `(org-level-7 ((t (,@headline ,@variable-font :height 1.0))))
-                              `(org-level-6 ((t (,@headline ,@variable-font :height 1.0))))
-                              `(org-level-5 ((t (,@headline ,@variable-font :height 1.0))))
-                              `(org-level-4 ((t (,@headline ,@variable-font :height 1.1))))
-                              `(org-level-3 ((t (,@headline ,@variable-font :height 1.15))))
-                              `(org-level-2 ((t (,@headline ,@variable-font :height 1.2))))
-                              `(org-level-1 ((t (,@headline ,@variable-font :height 1.25))))
+                              `(org-level-8 ((t (,@headline ,@variable-font :height ,base-height))))
+                              `(org-level-7 ((t (,@headline ,@variable-font :height ,base-height))))
+                              `(org-level-6 ((t (,@headline ,@variable-font :height ,base-height))))
+                              `(org-level-5 ((t (,@headline ,@variable-font :height ,base-height))))
+                              `(org-level-4 ((t (,@headline ,@variable-font :height ,(* base-height 1.1)))))
+                              `(org-level-3 ((t (,@headline ,@variable-font :height ,(* base-height 1.15)))))
+                              `(org-level-2 ((t (,@headline ,@variable-font :height ,(* base-height 1.2)))))
+                              `(org-level-1 ((t (,@headline ,@variable-font :height ,(* base-height 1.25)))))
                               `(org-document-title ((t (,@headline ,@variable-font :height 1.3 :underline nil)))))))
   (add-hook 'window-setup-hook #'~set-org-fonts)
 
   (setq-default initial-major-mode 'org-mode)
-  (setq-default major-mode 'org-mode)
-  )
+  (setq-default major-mode 'org-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
