@@ -2359,7 +2359,6 @@ line in Eshell."
 (bind-key "M-SPC l l" #'find-library)
 
 ;; Org
-(require 'org)
 (with-eval-after-load "org"
   (let ((repeatable-keybindings `(("i" . org-insert-heading)
                                   ("I" . org-insert-item)

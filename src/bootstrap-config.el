@@ -102,6 +102,9 @@ a new window or a new frame.  Possible values: `:window',
   "Gets the default font."
   (if window-system
       (cond
+       ((x-list-fonts "Garamond Premr Pro Disp") "Garamond Premr Pro Disp")
+       ((x-list-fonts "Garamond Premr Pro Capt") "Garamond Premr Pro Capt")
+       ((x-list-fonts "Apple Garamond") "Apple Garamond")
        ((x-list-fonts "Roboto") "Roboto")
        ((x-list-fonts "Open Sans") "Open Sans")
        (t "Sans Serif"))
