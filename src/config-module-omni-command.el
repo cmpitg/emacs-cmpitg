@@ -157,7 +157,7 @@ text is multiline text that could be executed with Wand."
 after command has finished running."
   (interactive)
   (lexical-let* ((cmd (~read-command-or-get-from-selection *~exec-history-path* cmd))
-                 (cleansed (s-replace-regexp (rx "\\" "\n") "" cmd)))
+                 (cleansed (replace-regexp-in-string (rx "\\" "\n") "" cmd)))
     (~add-to-history-file *~exec-history-path* cleansed
                           :max-history *~exec-history-max*)
     (~dispatch-action "!! " cleansed)))
