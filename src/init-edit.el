@@ -1,4 +1,4 @@
-;; -*- no-byte-compile: t -*-
+;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
 ;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
