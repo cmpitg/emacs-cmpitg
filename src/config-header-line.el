@@ -38,23 +38,21 @@
                 ,*header-line-separator*
                 "w↓"
                 ,*header-line-separator*
-                "✂"
+                ;; "✂"
+                ;; ,*header-line-separator*
+                ;; "☍"
+                ;; ,*header-line-separator*
+                ;; "⎀"
+                ;; ,*header-line-separator*
+                "🔍"
                 ,*header-line-separator*
-                "☍"
+                "term"
                 ,*header-line-separator*
-                "⎀"
-                ,*header-line-separator*
-                "M-x"
-                ,*header-line-separator*
-                "S"
-                ,*header-line-separator*
-                "Ex"
+                "exec"
                 ,*header-line-separator*
                 "B"
                 ,*header-line-separator*
-                "M"
-                ,*header-line-separator*
-                "⮹"
+                "msgs"
                 ,*header-line-separator*
                 "┣"
                 ,*header-line-separator*
@@ -93,15 +91,17 @@
            (call-interactively #'cua-copy-region))
           ((string= "⎀" str)
            (call-interactively #'cua-paste))
+          ((string= "term" str)
+           (call-interactively #'~open-term-emu))
           ((string= "M-x" str)
            (call-interactively #'amx))
-          ((string= "S" str)
+          ((string= "🔍" str)
            (call-interactively #'isearch-forward))
-          ((string= "Ex" str)
+          ((string= "exec" str)
            (call-interactively #'~palette/point/exec-sh-in-term-mux-then-pause))
           ((string= "B" str)
            (call-interactively #'~show-buffer-chooser))
-          ((string= "M" str)
+          ((string= "msgs" str)
            (switch-to-buffer "*Messages*"))
           ((string= "┣" str)
            (dir-browser:render-dir-buffer default-directory))
