@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 ;;
 ;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
 ;;
@@ -256,8 +258,8 @@ application."
                             (file-name-as-directory file)
                           file)
                         'keymap
-                        (let ((keymap (make-sparse-keymap))
-                              (is-dir? is-dir?))
+                        (lexical-let ((keymap (make-sparse-keymap))
+                                      (is-dir? is-dir?))
                           (bind-key "<mouse-3>"
                                     #'(lambda ()
                                         (interactive)
