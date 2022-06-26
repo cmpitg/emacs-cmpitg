@@ -1,0 +1,16 @@
+#!/usr/bin/env tclsh
+
+package require Tclx
+
+if {![info exists ::env(RMACS_INIT_DIR)]} {
+    set ::env(RMACS_INIT_DIR) {/m/src/emacs-cmpitg}
+}
+
+if {[llength $::argv] > 1 && [string match {*+*} [lindex $::argv 0]]} {
+    # Invoked with: ffn +<number> <path>
+    set number [string range [lindex $::argv 0] 1 end]
+    set rest [lrange $::argv 1 end]
+    execl env [list XMODIFIERS=@im=uim rmacs --opts --alternate-editor=vim --tty --shape edit open "$rest:$number"]
+} else {
+    execl env [list XMODIFIERS=@im=uim rmacs --opts --alternate-editor=vim --tty --shape edit open {*}$::argv]
+}
