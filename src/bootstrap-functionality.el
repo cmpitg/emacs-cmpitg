@@ -2115,6 +2115,22 @@ change."
   (setq-default major-mode 'org-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Directory browsing with Dired
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'dired)
+(with-eval-after-load 'dired
+  (custom-set-variables '(dired-maybe-use-globstar t)
+                        '(dired-listing-switches "-labhFgG --group-directories-first"))
+
+  (defun ~my/setup-dired-mode ()
+    (interactive)
+    (unbind-key "<mouse-2>" dired-mode-map)
+    (setq-local mouse-1-click-follows-link nil))
+
+  (add-hook 'dired-mode-hook #'~my/setup-dired-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eshell
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
