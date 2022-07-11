@@ -243,9 +243,7 @@ might need manual refreshing."
 (use-package dired-single)
 
 (use-package dired-details+
-  :after (dired-single)
-  :config
-  (setq dired-listing-switches "-lahFgG --group-directories-first"))
+  :after (dired-single))
 
 ;;
 ;; Rc shell mode
