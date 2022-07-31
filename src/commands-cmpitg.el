@@ -145,6 +145,17 @@ so that the system could use it as a webcam."
                                                      (shell-quote-argument hephaestus-path)
                                                      (shell-quote-argument path)))))
 
+(defun ~hephaestus/validate-this-file ()
+  "Validates current recipe file with Hephaestus."
+  (interactive)
+  (let* ((path (~current-file-full-path))
+         (hephaestus-path "/m/src/hephaestus/hephaestus"))
+    (when (null path)
+      (error "Current buffer doesn't have a file backed!"))
+    (~palette/exec-sh-in-term-mux-then-pause (format "%s validate-recipe-file %s"
+                                                     (shell-quote-argument hephaestus-path)
+                                                     (shell-quote-argument path)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'rmacs:commands-cmpitg)
