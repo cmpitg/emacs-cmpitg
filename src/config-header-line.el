@@ -46,7 +46,11 @@
                 ;; ,*header-line-separator*
                 "🔍"
                 ,*header-line-separator*
+                "<>"
+                ,*header-line-separator*
                 "term"
+                ,*header-line-separator*
+                "＋"
                 ,*header-line-separator*
                 "exec"
                 ,*header-line-separator*
@@ -66,8 +70,9 @@
                            (~shorten-string buffer-file-name
                                             *header-line-max-path-length*)
                          ""))
-                ,*header-line-separator*
-                "+"))
+                ;; ,*header-line-separator*
+                ;; "+"
+                ))
 
 (defun ~header-line-execute (event)
   (interactive "e")
@@ -97,6 +102,10 @@
            (call-interactively #'amx))
           ((string= "🔍" str)
            (call-interactively #'isearch-forward))
+          ((string= "<>" str)
+           (call-interactively #'er/expand-region))
+          ((string= "＋" str)
+           (call-interactively #'wand:execute))
           ((string= "exec" str)
            (call-interactively #'~palette/point/exec-sh-in-term-mux-then-pause))
           ((string= "B" str)
