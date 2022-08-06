@@ -2458,7 +2458,7 @@ line in Eshell."
 
 ;; External exec
 (bind-key "M-SPC a e" #'~palette/exec-sh-in-term-mux-then-pause)
-(bind-key "M-SPC a i" #'~palette/point/exec-sh-in-term-mux-piping-to-sh-output-file)
+(bind-key "M-SPC a i" #'~palette/point/exec-sh-in-term-mux)
 (bind-key "M-SPC a k" #'~palette/point/exec-sh-piping-here)
 (bind-key "M-SPC a x" #'~palette/point/exec-sh-in-term-mux-then-pause)
 (bind-key "M-SPC a a" #'~ansi-colorize-current-output-block)
