@@ -2038,6 +2038,7 @@ change."
     (set-face-attribute 'org-block nil :background
                         (color-darken-name (face-attribute 'default :background) 3))
     (variable-pitch-mode 1)
+    (bind-key "<M-return>"        #'org-meta-return           org-mode-map)
     (bind-key "<S-return>"        #'~execute-line             org-mode-map)
     (bind-key "<C-return>"        #'~eval-last-sexp-or-region org-mode-map)
     (bind-key "C-<tab>"           #'iflipb-next-buffer        org-mode-map)
