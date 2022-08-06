@@ -86,7 +86,6 @@
      'user
      '(variable-pitch ((t (:family ,variable-pitch-font :height 110))))
      '(fixed-pitch ((t (:family ,font :height 110)))))))
-(add-hook 'window-setup-hook #'~set-gui-font)
 (defun ~set-org-fonts ()
   (interactive)
   (let* ((monospace-font `(:font ,(~get-default-monospace-font)))
@@ -104,7 +103,9 @@
                             `(org-level-2 ((t (,@headline ,@variable-font :height ,(* base-height 1.2)))))
                             `(org-level-1 ((t (,@headline ,@variable-font :height ,(* base-height 1.25)))))
                             `(org-document-title ((t (,@headline ,@variable-font :height 1.3 :underline nil)))))))
+;; Order matters here
 (add-hook 'window-setup-hook #'~set-org-fonts)
+(add-hook 'window-setup-hook #'~set-gui-font)
 
 ;; Set line spacing
 (setq-default line-spacing 2)
