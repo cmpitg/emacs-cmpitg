@@ -34,6 +34,24 @@
   (require 'thingatpt))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Enables all disabled and reports those
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ref: https://www.emacswiki.org/emacs/DisabledCommands
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun ~enable-disabled-commands ()
+  "Enable all disabled commands."
+  (interactive)
+  (message "--- Commands that were disabled ---")
+  (mapatoms
+   #'(lambda (symbol)
+       (when (get symbol 'disabled)
+         (put symbol 'disabled nil)
+         (message "%s" (prin1-to-string symbol)))))
+  (message "--- End: Commands that were disabled ---"))
+(add-hook 'emacs-startup-hook #'~enable-disabled-commands)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
