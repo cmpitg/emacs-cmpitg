@@ -2052,6 +2052,9 @@ change."
   (defalias '~org-to-prev-entry #'outline-previous-heading)
 
   (defun ~my/org-mode-setup ()
+    ;; Don't open link with <mouse-1>
+    (setq-local mouse-1-click-follows-link nil)
+
     ;; Darken background of code block
     (require 'color)
     (set-face-attribute 'org-block nil :background
