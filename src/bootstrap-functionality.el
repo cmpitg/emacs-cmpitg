@@ -2063,8 +2063,9 @@ change."
 
     ;; Darken background of code block
     (require 'color)
-    (set-face-attribute 'org-block nil :background
-                        (color-darken-name (face-attribute 'default :background) 3))
+    (when (display-graphic-p)
+      (set-face-attribute 'org-block nil :background
+                          (color-darken-name (face-attribute 'default :background) 3)))
     (variable-pitch-mode 1)
     (bind-key "<M-return>"        #'org-meta-return           org-mode-map)
     (bind-key "<S-return>"        #'~execute-line             org-mode-map)
