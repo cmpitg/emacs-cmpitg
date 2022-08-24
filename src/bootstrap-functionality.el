@@ -2566,6 +2566,9 @@ line in Eshell."
 (bind-key "M-SPC n l f" (~make-repeatable-fn #'font-lock-mode))
 (bind-key "M-SPC n w" (~make-repeatable-fn #'~toggle-soft-wrapping))
 
+;; Binding shortcut
+(bind-key "<f5>" (lookup-key global-map (kbd "M-SPC")))
+
 ;; TODO
 ;; Context menu
 ;; ~execute
