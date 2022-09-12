@@ -74,7 +74,7 @@
  ("midje-mode" . "10ad5b6084cd03d5cd268b486a7c3c246d85535f")
  ("mit" . "4e90e9ae815e89f3540fb9644e6016c663ef5765")
  ("modalka" . "414b3e89937495b36fd8897adc6443eca98df78c")
- ("modus-themes" . "e4ee971f53d5c687de7bfbcf9fd1522bb42be902")
+ ("modus-themes" . "87b3a2f78ecd5c2d4d434b26b1626201459fb952")
  ("monky" . "72c7cd21b7b995c476e938fd0b92a494aa25c3a7")
  ("multiple-cursors.el" . "1e4842d1297241a5277bfd5c7bfab9e8711da60a")
  ("nginx-mode" . "6e9d96f58eddd69f62f7fd443d9b9753e16e0e96")
