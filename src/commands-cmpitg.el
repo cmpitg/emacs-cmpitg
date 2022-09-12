@@ -134,26 +134,37 @@ so that the system could use it as a webcam."
 ;; Hephaestus integration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar *~hephaestus-path* "/m/src/hephaestus/hephaestus"
+  "Path to Hephaestus binary.")
+
 (defun ~hephaestus/exec-this-file ()
   "Execs current file as recipe with Hephaestus."
   (interactive)
-  (let* ((path (~current-file-full-path))
-         (hephaestus-path "/m/src/hephaestus/hephaestus"))
+  (lexical-let ((path (~current-file-full-path)))
     (when (null path)
       (error "Current buffer doesn't have a file backed!"))
     (~palette/exec-sh-in-term-mux-then-pause (format "%s exec-recipe-file %s"
-                                                     (shell-quote-argument hephaestus-path)
+                                                     (shell-quote-argument *~hephaestus-path*)
                                                      (shell-quote-argument path)))))
 
 (defun ~hephaestus/validate-this-file ()
   "Validates current recipe file with Hephaestus."
   (interactive)
-  (let* ((path (~current-file-full-path))
-         (hephaestus-path "/m/src/hephaestus/hephaestus"))
+  (lexical-let ((path (~current-file-full-path)))
     (when (null path)
       (error "Current buffer doesn't have a file backed!"))
     (~palette/exec-sh-in-term-mux-then-pause (format "%s validate-recipe-file %s"
-                                                     (shell-quote-argument hephaestus-path)
+                                                     (shell-quote-argument *~hephaestus-path*)
+                                                     (shell-quote-argument path)))))
+
+(defun ~hephaestus/exec-recipe-region ()
+  "Execs current region as Hephaestus recipe."
+  (interactive)
+  (lexical-let* ((path (make-temp-file "rmacs-hephaestus_"))
+                 (content (~get-selection)))
+    (~write-to-file path content)
+    (~palette/exec-sh-in-term-mux-then-pause (format "%s exec-recipe-file %s"
+                                                     (shell-quote-argument *~hephaestus-path*)
                                                      (shell-quote-argument path)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
