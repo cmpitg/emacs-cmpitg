@@ -75,7 +75,9 @@
   :commands (er/expand-region
              er/mark-outside-pairs
              er/mark-outside-quotes
-             er/mark-defun))
+             er/mark-defun)
+  :bind
+  (("s-=" . #'er/expand-region)))
 
 ;;
 ;; Interactive menu
