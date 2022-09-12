@@ -2135,7 +2135,8 @@ change."
           (python . t)
           (R . t)
           (clojure . t)
-          (shell . t)))
+          (shell . t)
+          (scheme . t)))
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages)
   (setq org-confirm-babel-evaluate nil)
