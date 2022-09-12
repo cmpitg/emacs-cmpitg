@@ -2527,6 +2527,15 @@ line in Eshell."
 (bind-key "M-SPC i x" #'~insert-entry-from-exec-history)
 (bind-key "M-SPC i e" #'~insert-exec)
 
+;; Selecting/marking
+(bind-key "M-SPC m m" #'~mark-current-block)
+(bind-key "M-SPC m o" #'~mark-current-output-block)
+(bind-key "M-SPC m f" #'mark-defun)
+(bind-key "M-SPC m SPC" #'mark-sexp)
+(with-eval-after-load "expand-region"
+  (bind-key "M-SPC m =" #'er/expand-region)
+  (bind-key "M-SPC m f" #'er/mark-defun))
+
 ;; Frame
 (bind-key "M-SPC r n" #'make-frame)
 (bind-key "M-SPC r k" #'delete-frame)

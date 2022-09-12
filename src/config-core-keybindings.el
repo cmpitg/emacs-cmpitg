@@ -339,6 +339,7 @@
         ("k" #'kill-sexp "Kill sexp")
         ("z" #'repeat "Repeat last command"))
 
+      ;; DONE
       (defhydra hydra-mark (:columns 4)
         "Mark/region management"
         ("e" #'er/expand-region "Expand region")
