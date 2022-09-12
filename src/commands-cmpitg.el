@@ -167,6 +167,13 @@ so that the system could use it as a webcam."
                                                      (shell-quote-argument *~hephaestus-path*)
                                                      (shell-quote-argument path)))))
 
+(defun ~hephaestus/exec-recipe-current-block ()
+  "Execs current block as Hephaestus recipe."
+  (interactive)
+  (save-mark-and-excursion
+    (call-interactively #'~mark-current-block)
+    (call-interactively #'~hephaestus/exec-recipe-region)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'rmacs:commands-cmpitg)
