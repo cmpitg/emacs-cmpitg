@@ -36,7 +36,7 @@
          (win-id (frame-parameter f 'parent-id)))
     (select-frame-set-input-focus f)
     (when (null (frame-parameter f 'fullscreen))
-      (case wm
+      (cl-case wm
         (:awesome
          (~wm/call-awesome-client
           ("client.focus.floating = true; client.focus.ontop = true")
