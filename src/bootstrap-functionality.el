@@ -83,6 +83,7 @@
 ;; But do customize font
 (defun ~set-gui-font ()
   (interactive)
+  (message "Setting GUI fonts")
   (let ((font (format "%s-11" (~get-default-monospace-font)))
         (variable-pitch-font (~get-default-font)))
     (set-frame-font font nil t)
