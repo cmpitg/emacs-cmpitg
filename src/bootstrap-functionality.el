@@ -95,6 +95,7 @@
      '(fixed-pitch ((t (:family ,font :height 110)))))))
 (defun ~set-org-fonts ()
   (interactive)
+  (message "Setting org fonts")
   (let* ((monospace-font `(:font ,(~get-default-monospace-font)))
          (variable-font `(:font ,(~get-default-font)))
          (base-font-color (face-foreground 'default nil 'default))
