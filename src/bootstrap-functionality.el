@@ -114,6 +114,8 @@
 ;; Order matters here
 (add-hook 'window-setup-hook #'~set-org-fonts)
 (add-hook 'window-setup-hook #'~set-gui-font)
+(add-hook 'server-after-make-frame-hook #'~set-org-fonts)
+(add-hook 'server-after-make-frame-hook #'~set-gui-font)
 
 ;; Set line spacing
 (setq-default line-spacing 2)
