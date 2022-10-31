@@ -2525,11 +2525,14 @@ line in Eshell."
 
 ;; Insertion
 (bind-key "M-SPC i ;" #'~insert-full-line-comment)
-(bind-key "M-SPC i <" #'(lambda () (interactive) (insert *~output-beginning-marker*)))
-(bind-key "M-SPC i >" #'(lambda () (interactive) (insert *~output-end-marker*)))
-(bind-key "M-SPC i b" #'(lambda () (interactive) (insert *~output-beginning-marker* "\n" *~output-end-marker*) (previous-line)))
+;; TODO: Revisit
+;; (bind-key "M-SPC i <" #'(lambda () (interactive) (insert *~output-beginning-marker*)))
+;; (bind-key "M-SPC i >" #'(lambda () (interactive) (insert *~output-end-marker*)))
+;; (bind-key "M-SPC i b" #'(lambda () (interactive) (insert *~output-beginning-marker* "\n" *~output-end-marker*) (previous-line)))
 (bind-key "M-SPC i x" #'~insert-entry-from-exec-history)
 (bind-key "M-SPC i e" #'~insert-exec)
+(bind-key "M-SPC i t t" #'~insert-today)
+(bind-key "M-SPC i t n" #'~insert-now)
 
 ;; Selecting/marking
 (bind-key "M-SPC m m" #'~mark-current-block)
