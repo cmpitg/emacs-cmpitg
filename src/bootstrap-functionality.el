@@ -684,6 +684,11 @@ is reached."
         (string-join "")
         insert)))
 
+  (defun ~insert-path (&optional path)
+    "Inserts path to the current point."
+    (interactive "GPath:")
+    (insert path))
+
   (cl-defun ~insert-file-and-goto-end (filepath)
     "Inserts the contents of a file and go to the end of the
 content in buffer."
