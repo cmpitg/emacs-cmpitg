@@ -256,6 +256,8 @@ project root, not ignoring anything."
               ("<S-return>" . ivy-call))
   :demand t
   :config (progn
+            (setq ido-everywhere nil)
+            (ido-mode -1)
             (ivy-mode 1)
 
             ;; Include recentf and bookmarks when switching buffers
