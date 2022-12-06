@@ -92,7 +92,18 @@
                  #'string-trim
                  #'insert))
 
-(defalias #'~insert-now #'~insert-date-and-time)
+(defun ~insert-now ()
+  "Inserts the current date & time"
+  (interactive)
+  (~exec-|-async ("date" "-R")
+                 #'string-trim
+                 #'insert))
+
+(defun ~insert-date-and-day ()
+  "Inserts date & day."
+  (interactive)
+  (~exec-|-async ("yad" "--calendar" "--date-format" "%d.%m.%Y - %a")
+                 #'insert))
 
 (defun ~insert-entry-with-timestamp ()
   "Inserts an entry with timestamp."
