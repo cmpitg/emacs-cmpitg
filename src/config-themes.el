@@ -42,21 +42,31 @@
 ;; (load-theme 'cmpitg-thursday t)
 ;; (load-theme 'cmpitg-random-light t)
 
-(use-package modus-themes
-  :ensure
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
-        modus-themes-scale-headings t
-        modus-themes-region '(bg-only no-extend))
+;; (use-package modus-themes
+;;   :ensure
+;;   :init
+;;   ;; Add all your customizations prior to loading the themes
+;;   (setq modus-themes-italic-constructs t
+;;         modus-themes-bold-constructs nil
+;;         modus-themes-scale-headings t
+;;         modus-themes-region '(bg-only no-extend))
 
-  ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
-  :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-operandi))
+;;   ;; Load the theme files before enabling a theme
+;;   (modus-themes-load-themes)
+;;   :config
+;;   ;; Load the theme of your choice:
+;;   (modus-themes-load-operandi))
 ;; OR (modus-themes-load-vivendi))
+
+;; Emacs 28+ has Modus themes built-in
+;; Ref: https://protesilaos.com/emacs/modus-themes
+(require-theme 'modus-themes)
+(setq modus-themes-italic-constructs t
+      modus-themes-bold-constructs t
+      modus-themes-scale-headings t
+      modus-themes-region '(accented bg-only no-extend))
+(load-theme 'modus-operandi)
+;; (load-theme 'modus-vivendi)
 
 ;; Current
 ;; (load-theme 'plan9 t)
