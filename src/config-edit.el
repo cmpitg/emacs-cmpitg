@@ -653,8 +653,7 @@ might need manual refreshing."
 
 (use-package cider
   :after (clojure-mode yasnippet)
-  :hook (((clojure-mode) . midje-mode)
-         ((cider-repl-mode) . subword-mode)
+  :hook (((cider-repl-mode) . subword-mode)
          ((clojure-mode
            cider-mode) . eldoc-mode))
   :bind* (("M-SPC u j d p a" . #'~clojure/add-dependency)
@@ -739,10 +738,6 @@ the sequence, and its index within the sequence."
     (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
     (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
     (bind-key "M-q"        #'~cider-format-defun       cider-mode-map)))
-
-(use-package midje-mode
-  :diminish midje-mode
-  :after cider)
 
 (use-package clj-refactor
   :disabled t
