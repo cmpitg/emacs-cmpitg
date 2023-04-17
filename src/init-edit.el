@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2023 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -34,4 +34,5 @@
 
 (require 'rmacs:config-core-last "config-core-last")
 
-(message "Finish loading Rmacs edit!")
+(message "Finish loading Rmacs edit:%s!" server-name)
+(~run-process (message "notify-send %s" (shell-quote-argument (format "Finish loading Rmacs edit:%s!" server-name))) :async t)

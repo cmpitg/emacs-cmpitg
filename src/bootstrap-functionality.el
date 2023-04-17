@@ -2400,6 +2400,9 @@ line in Eshell."
   (bind-key "M-SPC c p" #'mc/mark-previous-like-this)
   (bind-key "M-SPC c a" #'mc/mark-all-in-region))
 
+;; Search
+(bind-key "M-SPC / /" #'~search-buffer-interactively)
+
 ;; Emacs Lisp
 (bind-key "M-SPC l e e" #'~eval-last-sexp-or-region)
 (bind-key "M-SPC l e p" #'pp-eval-last-sexp)
