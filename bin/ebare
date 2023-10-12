@@ -5,5 +5,7 @@ export RMACS_SERVER_NAME=${RMACS_SERVER_NAME:-bare}
 
 # TODO minimal -> bare
 exec emacs -q --eval "(setq server-name \"${RMACS_SERVER_NAME}\")" \
+     --eval '(setq debug-on-error t)' \
      --load "${RMACS_INIT_DIR}/src/init-bare.el" \
+     --eval '(setq debug-on-error nil)' \
      "$@"
