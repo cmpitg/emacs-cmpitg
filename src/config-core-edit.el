@@ -56,14 +56,12 @@
 ;; Tramp for remote & sudo access
 ;;
 
-(use-package tramp
-  :config
-  (progn
-    ;; Tramp hangs due to fancy shell prompt -
-    ;; https://www.emacswiki.org/emacs/TrampMode#toc12
-    (custom-set-variables `(tramp-default-method "ssh")
-                          `(tramp-terminal-type "dumb")
-                          `(tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*"))))
+(require 'tramp)
+;; Tramp hangs due to fancy shell prompt -
+;; https://www.emacswiki.org/emacs/TrampMode#toc12
+(custom-set-variables `(tramp-default-method "ssh")
+                      `(tramp-terminal-type "dumb")
+                      `(tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*"))
 
 ;;
 ;; Expand selection with one keybinding
