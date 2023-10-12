@@ -20,11 +20,10 @@
 ;; Load bare Rmacs
 (load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-minimal"))
 
-(let ((file-name-handler-alist nil))
-  (require 'rmacs:config-functions       "config-functions")
-  (require 'rmacs:functions-cmpitg       "functions-cmpitg")
-  (require 'rmacs:config-edit            "config-edit")
-  (require 'rmacs:commands-cmpitg        "commands-cmpitg"))
+(require 'rmacs:config-functions       "config-functions")
+(require 'rmacs:functions-cmpitg       "functions-cmpitg")
+(require 'rmacs:config-edit            "config-edit")
+(require 'rmacs:commands-cmpitg        "commands-cmpitg")
 
 (unless (string= "1" (getenv "EMACS_NO_EXPERIMENTAL"))
   (~load-files (~get-config "experimental")))

@@ -71,13 +71,13 @@
 ;; Load bare Rmacs
 (load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-bare"))
 
-(let ((file-name-handler-alist nil))
-  (require 'rmacs:config-core-functions                 "config-core-functions")
-  (require 'rmacs:config-module-org-mode                "config-module-org-mode")
-  (require 'rmacs:config-core-edit                      "config-core-edit")
-  (require 'rmacs:config-core-ux                        "config-core-ux")
-  (require 'rmacs:config-themes                         "config-themes")
-  (require 'rmacs:config-core-keybindings               "config-core-keybindings")
-  (require 'rmacs:config-module-convenient-buffer-shell "config-module-convenient-buffer-shell"))
+(require 'rmacs:config-package-manager                "config-package-manager")
+(require 'rmacs:config-core-functions                 "config-core-functions")
+(require 'rmacs:config-module-org-mode                "config-module-org-mode")
+(require 'rmacs:config-core-edit                      "config-core-edit")
+(require 'rmacs:config-core-ux                        "config-core-ux")
+(require 'rmacs:config-themes                         "config-themes")
+(require 'rmacs:config-core-keybindings               "config-core-keybindings")
+(require 'rmacs:config-module-convenient-buffer-shell "config-module-convenient-buffer-shell")
 
 (message "Done loading Rmacs minimal")
