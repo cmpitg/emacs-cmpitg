@@ -24,16 +24,14 @@
   (concat (concat (getenv "RMACS_INIT_DIR") "/src/") "bootstrap-config.el")
   "Path to the Rmacs boostrap-config file.")
 
-;; Speed up Emacs startup by ignoring all file name handlers.  Ref:
+;; Speed up Emacs startup by ignoring all file name handlers.  Review: Ref:
 ;; https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
-(let ((file-name-handler-alist nil))
-  (require 'rmacs:bootstrap-config                      *bootstrap-config-path*)
-  (require 'rmacs:config-package-manager                "config-package-manager")
-  (require 'rmacs:config-ipc                            "config-ipc")
-  (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
-  (require 'rmacs:config-module-wand-minimal            "config-module-wand-minimal")
-  (require 'rmacs:config-module-omni-command            "config-module-omni-command")
-  (require 'rmacs:config-header-line                    "config-header-line")
-  (require 'rmacs:config-module-bowser                  "config-module-bowser"))
+(require 'rmacs:bootstrap-config                      *bootstrap-config-path*)
+(require 'rmacs:config-ipc                            "config-ipc")
+(require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
+(require 'rmacs:config-module-wand-minimal            "config-module-wand-minimal")
+(require 'rmacs:config-module-omni-command            "config-module-omni-command")
+(require 'rmacs:config-header-line                    "config-header-line")
+(require 'rmacs:config-module-bowser                  "config-module-bowser")
 
 (message "Finish loading bare functionalities")

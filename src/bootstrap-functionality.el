@@ -172,7 +172,8 @@
 
 ;; Subword should include camelCase notation
 (global-subword-mode 1)
-(diminish 'subword-mode)
+(with-eval-after-load "diminish"
+  (diminish 'subword-mode))
 
 ;; Hide the toolbar
 (tool-bar-mode -1)
@@ -249,7 +250,8 @@
 ;; (setq font-lock-maximum-size nil)
 
 ;; Diminish auto-revert-mode in the mode line
-(diminish 'auto-revert-mode)
+(with-eval-after-load "diminish"
+  (diminish 'auto-revert-mode))
 
 ;; Don't highlight the current line
 (hl-line-mode -1)
