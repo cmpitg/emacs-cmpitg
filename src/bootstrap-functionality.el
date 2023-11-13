@@ -281,9 +281,11 @@
 (custom-set-variables `(mouse-drag-and-drop-region t))
 
 ;; Basic ido setup
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(setq ido-virtual-buffers t)
+(custom-set-variables 
+ `(setq ido-enable-flex-matching t)
+ `(setq ido-everywhere t)
+ `(setq ido-virtual-buffers t))
+(setf (nth 2 ido-decorations) "\n")
 (ido-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
