@@ -281,12 +281,15 @@
 (custom-set-variables `(mouse-drag-and-drop-region t))
 
 ;; Basic ido setup
-(custom-set-variables 
- `(setq ido-enable-flex-matching t)
- `(setq ido-everywhere t)
- `(setq ido-virtual-buffers t))
-(setf (nth 2 ido-decorations) "\n")
-(ido-mode 1)
+(eval-when-compile
+  (require 'ido))
+(with-eval-after-load "ido"
+  (custom-set-variables
+   `(ido-enable-flex-matching t)
+   `(ido-everywhere t)
+   `(ido-virtual-buffers t))
+  (setf (nth 2 ido-decorations) "\n")
+  (ido-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Standard behaviors for C-x, C-c, C-v
@@ -1997,7 +2000,7 @@ change."
                :destination original-point
                :move-cursor? move-cursor?
                :callback callback))
-  
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Widget and rendering
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2098,11 +2101,6 @@ application."
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Simple single-buffer directory browser
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; TODO: Make this work
-  ;; TODO:
-  ;; * Missing ~smart-open-file
-  ;; * 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun dir-browser:record-local-dir-history (path)
