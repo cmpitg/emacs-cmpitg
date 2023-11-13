@@ -590,7 +590,10 @@ Source: http://stackoverflow.com/a/4717026/219881"
 
   (defun ~get-current-project-root ()
     "Returns the current project root or current directory."
-    (or (ignore-errors (cdr (project-current)))
+    (or (ignore-errors
+          (thread-last (project-current)
+                       (seq-drop-while #'(lambda (x) (not (stringp x))))
+                       (first)))
         default-directory))
 
   (defun ~expand-path-fully (path)
