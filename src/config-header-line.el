@@ -46,6 +46,8 @@
                 ;; ,*header-line-separator*
                 "🔍"
                 ,*header-line-separator*
+                "esh"
+                ,*header-line-separator*
                 "<>"
                 ,*header-line-separator*
                 "term"
@@ -86,6 +88,8 @@
            (message "File path %s copied to clipboard" buffer-file-name))
           ((string= "x" str)
            (call-interactively #'delete-frame))
+          ((string= "esh" str)
+           (call-interactively #'eshell))
           ((string= "Q" str)
            (call-interactively #'keyboard-quit))
           ((string= "buffer-" str)
