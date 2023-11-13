@@ -967,9 +967,9 @@ Based on the implementation of `s-split-up-to' from s.el."
       (let ((res nil))
         (with-temp-buffer
           (cl-labels ((check-and-record-substr
-                       (substr)
-                       (unless (and omit-nulls (equal substr ""))
-                         (push substr res))))
+                        (substr)
+                        (unless (and omit-nulls (equal substr ""))
+                          (push substr res))))
             (insert s)
             (let ((current-point (goto-char (point-min))))
               (while (and (> n 0)
@@ -1997,6 +1997,202 @@ change."
                :destination original-point
                :move-cursor? move-cursor?
                :callback callback))
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Widget and rendering
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (eval-when-compile (require 'wid-edit))
+  (require 'widget)
+
+  (cl-defun ui:render-widgets (&key buffer func (keep-local-vars? nil))
+    "Does book-keeping and handles the render of widgets in a
+buffer.  All the processing and insertions of widgets should be
+in `func'."
+    (interactive)
+    (let ((buffer (get-buffer-create buffer)))
+      (with-current-buffer buffer
+        (~clean-up-buffer :keep-local-vars? keep-local-vars?)
+        (funcall func)
+        (use-local-map widget-keymap)
+        (widget-setup)
+        (goto-char (point-min))
+        (switch-to-buffer buffer))))
+
+  (cl-defun ui:render-buffer (&key buffer func (keep-local-vars? nil))
+    "Does book-keeping and handles the render of text in a buffer.
+All the processing and insertions of text should be in `func'.
+This function is useful when building text-based interactive
+application."
+    (interactive)
+    (let ((buffer (get-buffer-create buffer)))
+      (with-current-buffer buffer
+        (~clean-up-buffer :keep-local-vars? keep-local-vars?)
+        (let ((inhibit-read-only t))
+          (setq truncate-lines nil)
+          (setq truncate-partial-width-windows nil)
+          (setq word-wrap t)
+          (setq line-spacing 0)
+          (setq left-fringe-width 8)
+          (setq right-fringe-width 8)
+          (funcall func)
+          (unless view-mode
+            (view-mode 1))
+          (goto-char (point-min))
+          (switch-to-buffer buffer)))))
+
+  (defun ui:text/title (text title-style)
+    "Returns propertized text with title-like style."
+    (propertize text 'face title-style))
+
+  (defun ui:text/comment (text)
+    "Returns propertized text with comment-like style."
+    (propertize text 'face '(:inherit (variable-pitch font-lock-comment-face))))
+
+  (defun ui:text/hline ()
+    "Returns a horizontal hline."
+    (propertize "\n" 'display
+                `(space :align-to (- right (1)))
+                'face
+                '(:underline t)
+                'point-entered
+                'mb-kick-cursor))
+
+  (cl-defun ui:text/insert-hline (&optional (trailing-lines t))
+    "Inserts a horizontal line."
+    (insert (ui:text/hline))
+    (when trailing-lines
+      (insert "\n")))
+
+  (cl-defun ui:text/insert-line (&optional (text "") (trailing-lines t))
+    "Inserts a line of text."
+    (insert text)
+    (when trailing-lines
+      (insert "\n")))
+
+  (cl-defun ui:text/insert-title (&optional (text "")
+                                            (title-style 'info-title-1)
+                                            (trailing-lines t))
+    "Inserts a title."
+    (insert (ui:text/title text title-style))
+    (when trailing-lines
+      (insert "\n\n")))
+
+  (cl-defun ui:text/insert-paragraph (&optional (text "") (trailing-lines t))
+    "Inserts a paragraph."
+    (insert text)
+    (when trailing-lines
+      (insert "\n\n")))
+
+  (cl-defun ui:text/insert-comment (text &optional (trailing-lines t))
+    "Inserts comment text."
+    (insert (ui:text/comment text))
+    (when trailing-lines
+      (insert "\n\n")))
+
+  (defmacro* ui:text/insert-section (title &rest body)
+    "Inserts a text section with a title."
+    `(progn (ui:text/insert-title ,title 'info-title-4)
+            ,@body))
+
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Simple single-buffer directory browser
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; TODO: Make this work
+  ;; TODO:
+  ;; * Missing ~smart-open-file
+  ;; * 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun dir-browser:record-local-dir-history (path)
+    "Records directory visit history to a local variable named `local/dir-history'."
+    (let ((path (expand-file-name path)))
+      (setq-local local/dir-history
+                  (thread-last (remove path local/dir-history)
+                               (cons path)))))
+
+  (defun dir-browser:render-single-entry (base-path file)
+    "Renders a single file/directory entry."
+    (lexical-let* ((full-path (concat base-path file))
+                   (is-dir? (file-directory-p full-path)))
+      (insert (propertize (if is-dir?
+                              (file-name-as-directory file)
+                            file)
+                          'keymap
+                          (lexical-let ((keymap (make-sparse-keymap))
+                                        (is-dir? is-dir?))
+                            (bind-key "<mouse-3>"
+                                      #'(lambda ()
+                                          (interactive)
+                                          (if is-dir?
+                                              (dir-browser:render-dir full-path)
+                                            (~smart-open-file full-path)))
+                                      keymap)
+                            keymap)))
+      (insert "\n")))
+
+  (defun dir-browser:render-current-path (path)
+    "Renders the current working and project directories."
+    (insert "Current path: ")
+    (insert-text-button path
+                        'keymap
+                        (let ((keymap (make-sparse-keymap)))
+                          (bind-key "<mouse-3>"
+                                    #'(lambda ()
+                                        (interactive)
+                                        (kill-new path)
+                                        (message "%s saved to clipboard" path))
+                                    keymap)
+                          keymap))
+    (insert "\n")
+    (insert "Project path: "
+            (propertize (~get-current-project-root)
+                        'keymap
+                        (let ((keymap (make-sparse-keymap)))
+                          (bind-key "<mouse-3>"
+                                    #'(lambda ()
+                                        (interactive)
+                                        (dir-browser:render-dir (~get-current-project-root)))
+                                    keymap)
+                          keymap)))
+    (insert "\n\n"))
+
+  (defun dir-browser:render-dir (path)
+    "Renders the content of a directory."
+    (~clean-up-buffer :keep-local-vars? t)
+
+    (let ((inhibit-read-only t)
+          (path (expand-file-name (file-name-as-directory path))))
+      (dir-browser:record-local-dir-history path)
+      (setq-local default-directory path)
+
+      (dir-browser:render-current-path path)
+
+      (dolist (file (directory-files path))
+        (dir-browser:render-single-entry path file))
+
+      (insert "\n")
+
+      (dolist (file local/dir-history)
+        (dir-browser:render-single-entry "" file)))
+    ;; (acme-mouse-mode -1)
+    ;; (evil-emacs-state)
+    )
+
+  (defun dir-browser:render-dir-buffer (path)
+    "Renders a mouse-oriented buffer to browse files and directories."
+    (interactive "DDirectory: ")
+    (ui:render-buffer
+     :buffer "*dir-browser*"
+     :keep-local-vars? t
+     :func
+     #'(lambda ()
+         (setq-local lexical-binding t)
+         (let ((sym/local/dir-history (make-local-variable 'local/dir-history)))
+           (unless (boundp sym/local/dir-history)
+             (set sym/local/dir-history (list))))
+         (dir-browser:render-dir path))))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; High-level functions for better UX
@@ -2327,8 +2523,8 @@ line in Eshell."
 (bind-key "<C-f4>" #'kill-current-buffer)
 (bind-key "<f8>" #'~switch-buffer)
 ;; BUG: Command history not recorded
-;; (bind-key "<f12>" #'~ido-M-x)
-(bind-key "<f12>" #'execute-extended-command)
+(bind-key "<f12>" #'~ido-M-x)
+;; (bind-key "<f12>" #'execute-extended-command)
 
 ;; Header line
 (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
