@@ -46,14 +46,16 @@
                 ;; ,*header-line-separator*
                 "🔍"
                 ,*header-line-separator*
+                "<>"
+                ,*header-line-separator*
                 "esh"
                 ,*header-line-separator*
-                "<>"
+                "M-x"
                 ,*header-line-separator*
                 "term"
                 ,*header-line-separator*
-                "＋"
-                ,*header-line-separator*
+                ;; "＋"
+                ;; ,*header-line-separator*
                 "exec"
                 ,*header-line-separator*
                 "B"
