@@ -259,7 +259,8 @@
 ;; Focus follows mouse
 (setq mouse-autoselect-window t)
 ;; (setq focus-follows-mouse t)
-(setq focus-follows-mouse 'auto-raise)
+;; (setq focus-follows-mouse 'auto-raise)
+(setq focus-follows-mouse nil)
 
 ;; Set frame title
 (let ((title-format
