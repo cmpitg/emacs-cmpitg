@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2024 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -148,6 +148,18 @@
   ;; :straight
   ;; (iflipb :type git :host github :repo "jrosdahl/iflipb")
   :config (custom-set-variables `(iflipb-ignore-buffers nil)))
+
+;; Make window management saner
+;; Ref: https://depp.brause.cc/shackle/
+(use-package shackle
+  :init (shackle-mode 1)
+  :config
+  (progn
+    (setq shackle-rules `((compilation-mode :noselect t)
+                          ;; (help-mode :align below :select t :popup t)
+                          ;; (debugger-mode :select t :popup t)
+                          ))
+    (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))))
 
 ;; Simple buffer listing
 (require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
