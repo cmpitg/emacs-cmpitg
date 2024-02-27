@@ -47,6 +47,7 @@
                          :command command
                          :filter #'(lambda (proc str)
                                      (let ((b (process-buffer proc)))
+                                       ;; b and buffer should be the same
                                        (when (buffer-live-p b)
                                          (with-current-buffer b
                                            (let* ((moved? (= (point) (process-mark proc))))

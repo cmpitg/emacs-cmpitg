@@ -57,14 +57,14 @@
 ;; Ref: https://www.reddit.com/r/emacs/comments/llvyxe/hey_emacs_dont_move_my_windows_customizing/
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq display-buffer-alist
-      '((".*"
-         (display-buffer-reuse-window display-buffer-same-window)
-         ;; (reusable-frames . t)
-         )))
+;; (setq display-buffer-alist
+;;       '((".*"
+;;          (display-buffer-reuse-window display-buffer-same-window)
+;;          ;; (reusable-frames . t)
+;;          )))
 
-;; display-buffer: avoid resizing
-(setq even-window-sizes nil)
+;; ;; display-buffer: avoid resizing
+;; (setq even-window-sizes nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; File utils
