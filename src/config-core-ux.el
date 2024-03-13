@@ -41,6 +41,7 @@
             (scroll-restore-mode 1)))
 
 ;; Smooth scrolling
+(pixel-scroll-precision-mode 1)
 
 ;; Ref: https://github.com/zk-phi/sublimity
 ;; Sublimity makes CPU scream
