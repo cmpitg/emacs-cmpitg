@@ -110,10 +110,10 @@ directory to the current buffer."
                "Window '%s' is now normal")
              (current-buffer))))
 
-(cl-defun ~toggle-toolbox (&key (path *toolbox-path*)
-                              (side 'right)
-                              (size -78)
-                              (follow-dir t))
+(cl-defun ~toggle-toolbox (&key path
+                                (side 'right)
+                                (size -78)
+                                (follow-dir t))
   "Toggles toolbox file.  The path to the toolbox file is passed
 on using the `path' argument.  The toolbox window is sticky,
 appears on the `side', and using `size' as its width.
@@ -121,6 +121,8 @@ appears on the `side', and using `size' as its width.
 inherits the working directory from the buffer that calls it.
 Returns the toolbox window."
   (interactive)
+  (when (null path)
+    (error "PATH must be set to a path"))
   ;; TODO: Correctly get the buffer
   (let ((toolbox-buffer (get-file-buffer path))
         (working-dir default-directory))

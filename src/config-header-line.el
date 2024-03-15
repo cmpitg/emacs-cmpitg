@@ -138,8 +138,6 @@
            (call-interactively #'~transpose-windows))
           ((string= "git" str)
            (call-interactively #'magit-status))
-          ((string= "⮹" str)
-           (find-file *toolbox-path*))
           ((string= "+" str)
            (call-interactively #'~header-line-add))
           ((string= *header-line-separator* str)

@@ -2289,9 +2289,6 @@ application."
   ;; Add timestamp when an item is done
   (setq org-log-done 'time)
 
-  (setq org-agenda-files (thread-last (file-name-directory *toolbox-path*)
-                                      (~file-glob "*.org")))
-
   ;; Indent visually by default
   (setq org-startup-indented t)
 
