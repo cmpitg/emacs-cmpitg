@@ -2598,6 +2598,8 @@ line in Eshell."
 
 ;; Search
 (bind-key "M-SPC / /" #'~search-buffer-interactively)
+(bind-key "M-SPC / r" #'query-replace-regexp)
+(bind-key "M-SPC / R" #'query-replace)
 
 ;; Emacs Lisp
 (bind-key "M-SPC l e e" #'~eval-last-sexp-or-region)
