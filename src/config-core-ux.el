@@ -157,9 +157,8 @@
   :config
   (progn
     (setq shackle-rules `((compilation-mode :noselect t)
-                          ;; (help-mode :align below :select t :popup t)
-                          ;; (debugger-mode :select t :popup t)
-                          ))
+                          (help-mode :align below :select t :popup t)
+                          (debugger-mode :select t :popup t)))
     (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))))
 
 ;; Simple buffer listing
