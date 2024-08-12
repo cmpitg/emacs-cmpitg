@@ -112,8 +112,9 @@
                             `(org-level-1 ((t (,@headline ,@variable-font :height ,(* base-height 1.25)))))
                             `(org-document-title ((t (,@headline ,@variable-font :height 1.3 :underline nil)))))))
 ;; Order matters here
-(add-hook 'window-setup-hook #'~set-org-fonts)
-(add-hook 'window-setup-hook #'~set-gui-font)
+;; Note: This might make Emacs running in daemon mode not able to create a GUI frame!!!
+;; (add-hook 'window-setup-hook #'~set-org-fonts)
+;; (add-hook 'window-setup-hook #'~set-gui-font)
 (add-hook 'server-after-make-frame-hook #'~set-org-fonts)
 (add-hook 'server-after-make-frame-hook #'~set-gui-font)
 
