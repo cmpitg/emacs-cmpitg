@@ -828,7 +828,7 @@ the sequence, and its index within the sequence."
 ;; - C, C++: Clangd
 ;; - Rust: https://github.com/rust-lang/rls
 ;;
-
+(require 'eglot)
 (use-package eglot
   :config (progn
             (add-to-list 'eglot-server-programs
