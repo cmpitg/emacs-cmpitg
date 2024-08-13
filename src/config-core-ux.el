@@ -153,13 +153,13 @@
 ;; Make window management saner
 ;; Ref: https://depp.brause.cc/shackle/
 (use-package shackle
-  :init (shackle-mode 1)
   :config
   (progn
     (setq shackle-rules `((compilation-mode :noselect t)
                           (help-mode :align below :select t :popup t)
                           (debugger-mode :select t :popup t)))
-    (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))))
+    (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))
+    (shackle-mode 1)))
 
 ;; Simple buffer listing
 (require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
