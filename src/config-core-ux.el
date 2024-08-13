@@ -164,18 +164,7 @@
 ;; Simple buffer listing
 (require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
 
-;; Better display of header-line
-(set-face-attribute 'header-line nil
-                    :family "Roboto"
-                    :height 130
-                    :width 'condensed
-                    :weight 'bold)
-
-;; Mode line format
-(set-face-attribute 'mode-line nil
-                    :family "Go"
-                    :height 130
-                    :width 'condensed)
+;; Mode line config
 (setq ~mode-line-simplified-position
       `(line-number-mode
         ((column-number-mode

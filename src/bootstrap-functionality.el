@@ -87,12 +87,22 @@
   (let ((font (format "%s-11" (~get-default-monospace-font)))
         (variable-pitch-font (~get-default-font)))
     (set-frame-font font nil t)
-    (add-to-list 'default-frame-alist
-                 `(font . ,font))
-    (custom-theme-set-faces
-     'user
-     '(variable-pitch ((t (:family ,variable-pitch-font :height 110))))
-     '(fixed-pitch ((t (:family ,font :height 110)))))))
+    (add-to-list 'default-frame-alist `(font . ,font))
+    (custom-theme-set-faces 'user
+                            '(variable-pitch ((t (:family ,variable-pitch-font :height 110))))
+                            '(fixed-pitch ((t (:family ,font :height 110)))))
+    ;; Header line faces
+    (set-face-attribute 'header-line nil
+                        :family "Roboto"
+                        :height 130
+                        :width 'condensed
+                        :weight 'bold)
+
+    ;; Mode line faces
+    (set-face-attribute 'mode-line nil
+                        :family "Go"
+                        :height 130
+                        :width 'condensed)))
 (defun ~set-org-fonts ()
   (interactive)
   (message "Setting org fonts")
@@ -117,6 +127,10 @@
 ;; (add-hook 'window-setup-hook #'~set-gui-font)
 (add-hook 'server-after-make-frame-hook #'~set-org-fonts)
 (add-hook 'server-after-make-frame-hook #'~set-gui-font)
+(add-hook 'window-setup-hook #'(lambda ()
+                                 (when (display-graphic-p)
+                                   (~set-org-fonts)
+                                   (~set-gui-font))))
 
 ;; Set line spacing
 (setq-default line-spacing 2)
