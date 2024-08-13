@@ -134,6 +134,7 @@ recursively."
   :demand t)
 
 (use-package projectile
+  ;; :disabled t
   :diminish projectile-mode
   :init
   (progn
@@ -190,11 +191,11 @@ project root."
       ;; of flet that neither cl-flet nor cl-letf provides
       (cl-flet ((projectile-project-root () default-directory)
                 (projectile-current-project-files
-                 ()
-                 (let (files)
-                   (setq files (-mapcat #'projectile-dir-files
-                                        (projectile-get-project-directories)))
-                   (projectile-sort-files files))))
+                  ()
+                  (let (files)
+                    (setq files (-mapcat #'projectile-dir-files
+                                         (projectile-get-project-directories)))
+                    (projectile-sort-files files))))
         (call-interactively 'projectile-find-file)))
 
     (defun ~find-files-current-dir-not-ignoring ()
@@ -206,12 +207,23 @@ project root, not ignoring anything."
       (let ((projectile-generic-command "fdfind . --type f | tr \"\\n\" \"\\0\""))
         (cl-flet ((projectile-project-root () default-directory)
                   (projectile-current-project-files
-                   ()
-                   (let (files)
-                     (setq files (-mapcat #'projectile-dir-files
-                                          (projectile-get-project-directories)))
-                     (projectile-sort-files files))))
+                    ()
+                    (let (files)
+                      (setq files (-mapcat #'projectile-dir-files
+                                           (projectile-get-project-directories)))
+                      (projectile-sort-files files))))
           (call-interactively 'projectile-find-file))))
+
+    ;; Don't use truename, e.g. don't follow symlinks
+    ;; Ref:
+    ;; * https://github.com/bbatsov/projectile/pull/566
+    ;; * https://github.com/bbatsov/projectile/issues/1387
+    ;; * https://github.com/bbatsov/projectile/issues/1404
+    (defun ~dont-use-truename-projectile-root
+        (old-fn &rest args)
+      (flet ((file-truename (f) f))
+        (apply old-fn args)))
+    (advice-add 'projectile-project-root :around #'~dont-use-truename-projectile-root)
 
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
