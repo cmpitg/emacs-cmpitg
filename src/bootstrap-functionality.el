@@ -2564,7 +2564,6 @@ line in Eshell."
 (bind-key "M-SPC v n" #'~open-project-notes)
 (bind-key "M-SPC v b" #'~open-project-toolbox)
 (bind-key "M-SPC v t" #'~open-toolbox)
-(bind-key "M-SPC v p" #'projectile-commander)
 
 ;; File
 (bind-key "M-SPC f d" #'~delete-current-file)
