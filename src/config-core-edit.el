@@ -221,9 +221,10 @@ project root, not ignoring anything."
     ;; * https://github.com/bbatsov/projectile/issues/1404
     (defun ~dont-use-truename-projectile-root
         (old-fn &rest args)
-      (flet ((file-truename (f) f))
+      (cl-flet ((file-truename (f) f))
         (apply old-fn args)))
     (advice-add 'projectile-project-root :around #'~dont-use-truename-projectile-root)
+    (advice-add 'projectile-find-file :around #'~dont-use-truename-projectile-root)
 
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
