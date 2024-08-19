@@ -158,7 +158,8 @@
     (setq shackle-rules `((compilation-mode :noselect t)
                           (help-mode :align below :select t :popup t)
                           (debugger-mode :select t :popup t)))
-    (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))
+    ;; (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))
+    (setq shackle-default-rule '(:same t))
     (shackle-mode 1)))
 
 ;; Simple buffer listing
