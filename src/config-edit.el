@@ -54,6 +54,15 @@
   :mode "\\.json\\'")
 
 ;;
+;; Nix
+;;
+;; Ref: https://github.com/NixOS/nix-mode
+;;
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
+;;
 ;; TOML
 ;;
 ;; Ref: https://github.com/dryman/toml-mode.el
