@@ -418,6 +418,10 @@ then visits if there is no previous frame."
       (select-frame frame)
       (find-file (f-join dir path)))))
 
+;; TODO - RIGHT NOW
+;; Review
+;; ~counsel-grep-default-project-root
+
 (cl-defun ~open-file-specialized (file-pattern &key (new-frame? nil))
   "Opens a path and jumps to a line based on number or a the
 first occurrence of a pattern.  E.g.
@@ -596,22 +600,6 @@ variable `local/linked-windows'."
       (unless (or (equalp window (get-buffer-window))
                   (not (window-live-p window)))
         (delete-window window)))))
-
-(cl-defun ~counsel-grep-default-project-root (&optional (counsel-grep-fn #'counsel-rg))
-  "Calls a counsel-grep function, taking project root by default
-and fallback to current directory if project root is not found."
-  (interactive)
-  (if current-prefix-arg
-      (call-interactively counsel-grep-fn)
-    (funcall counsel-grep-fn nil (~get-current-project-root))))
-
-(defun ~counsel-rg ()
-  "Executes `counsel-rg' with pre-selected input from current
-selection."
-  (interactive)
-  (if (~is-selecting?)
-      (counsel-rg (~get-selection))
-    (call-interactively #'counsel-rg)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Emacs Lisp
@@ -810,11 +798,6 @@ code of the command."
   (save-mark-and-excursion
     (call-interactively #'~mark-current-block)
     (~exec-sh> "exec-stdin")))
-
-(defun ~insert-entry-from-exec-history ()
-  "Inserts an entry from the execution history to the current buffer."
-  (interactive)
-  (~insert-from-history *~exec-history-path*))
 
 ;; (defmacro ~dispatch-action (&rest args)
 ;;   "Dispatches action based on args.  Ignore output."

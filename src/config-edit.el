@@ -18,24 +18,6 @@
 ;;
 
 ;;
-;; Interactive menu
-;;
-;; Ref: https://github.com/abo-abo/hydra
-;;
-
-(use-package ivy-hydra
-  :disabled t
-  :after (ivy counsel hydra))
-
-;;
-;; Sublime-like C-p
-;; Ref: https://github.com/vspinu/imenu-anywhere
-;;
-
-(use-package imenu-anywhere
-  :after (counsel))
-
-;;
 ;; YAML
 ;;
 ;; Ref: https://www.emacswiki.org/emacs/YamlMode

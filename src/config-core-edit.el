@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2024 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -183,37 +183,6 @@ recursively."
     (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
     ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
 
-    (defun ~find-files-current-dir ()
-      "Activates `projectile-find-files', taking current directory as
-project root."
-      (interactive)
-      ;; Ignore the obsolete, we do need the powerful dynamic binding capability
-      ;; of flet that neither cl-flet nor cl-letf provides
-      (cl-flet ((projectile-project-root () default-directory)
-                (projectile-current-project-files
-                  ()
-                  (let (files)
-                    (setq files (-mapcat #'projectile-dir-files
-                                         (projectile-get-project-directories)))
-                    (projectile-sort-files files))))
-        (call-interactively 'projectile-find-file)))
-
-    (defun ~find-files-current-dir-not-ignoring ()
-      "Activates `projectile-find-files', taking current directory as
-project root, not ignoring anything."
-      (interactive)
-      ;; Ignore the obsolete, we do need the powerful dynamic binding capability
-      ;; of flet that neither cl-flet nor cl-letf provides
-      (let ((projectile-generic-command "fdfind . --type f | tr \"\\n\" \"\\0\""))
-        (cl-flet ((projectile-project-root () default-directory)
-                  (projectile-current-project-files
-                    ()
-                    (let (files)
-                      (setq files (-mapcat #'projectile-dir-files
-                                           (projectile-get-project-directories)))
-                      (projectile-sort-files files))))
-          (call-interactively 'projectile-find-file))))
-
     ;; Don't use truename, e.g. don't follow symlinks
     ;; Ref:
     ;; * https://github.com/bbatsov/projectile/pull/566
@@ -225,6 +194,8 @@ project root, not ignoring anything."
         (apply old-fn args)))
     (advice-add 'projectile-project-root :around #'~dont-use-truename-projectile-root)
     (advice-add 'projectile-find-file :around #'~dont-use-truename-projectile-root)
+    (advice-add 'project-find-file :around #'~dont-use-truename-projectile-root)
+    (advice-add 'project-current :around #'~dont-use-truename-projectile-root)
 
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-find-dir-includes-top-level t)
@@ -250,84 +221,59 @@ project root, not ignoring anything."
 ;;
 ;; Fuzzy finding
 ;;
-;; Ref: https://github.com/abo-abo/swiper
-;;
 
-(use-package flx-ido)
+;; (use-package flx-ido)
 
-(use-package counsel
-  :diminish ivy-mode
-  :bind (:map ivy-minibuffer-map
-              ("M-s-c"      . ~ivy-prev-line+)
-              ("M-s-t"      . ~ivy-next-line+)
-              ("C-m"        . ivy-alt-done)
-              ("<f3>"       . ivy-occur)
-              ("<s-return>" . ivy-dispatching-done)
-              ("<C-return>" . ivy-immediate-done)
-              ("<S-return>" . ivy-call))
-  :demand t
-  :config (progn
-            (setq ido-everywhere nil)
-            (ido-mode -1)
-            (ivy-mode 1)
+(use-package vertico
+  :init
+  (progn
+    (vertico-mode 1)
+    (ido-mode -1)
+    (savehist-mode 1)))
 
-            ;; Include recentf and bookmarks when switching buffers
-            (setq ivy-use-virtual-buffers t)
+(use-package orderless
+  :custom
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
 
-            ;; Show 15 items
-            (setq ivy-height 15)
+(use-package consult
+  ;; Enable automatic preview at point in the *Completions* buffer, relevant
+  ;; when using the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  (progn
+    (ido-mode -1)
+    ;; Optionally configure the register formatting. This improves the
+    ;; register preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0.5
+          register-preview-function #'consult-register-format)
 
-            ;; Don't count the candidates
-            (setq ivy-count-format "")
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
 
-            ;; Plain display style works and is greener
-            (setq ivy-display-style nil)
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key "M-.")
+    ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
 
-            ;; Use Projectile with Ivy
-            (setq projectile-completion-system 'ivy)
+    (setq consult-narrow-key "<")
 
-            (setq enable-recursive-minibuffers t)
+    (defalias '~interactively-grep #'consult-ripgrep)
+    (defalias '~interactively-call-symbol-menu #'consult-imenu)
+    (defalias '~interactively-find-file #'find-file)
+    (defalias '~interactively-find-file-in-project #'project-find-file)
+    (defalias '~interactively-get-bookmarks #'consult-bookmark)
+    (defalias '~interactively-yank-pop #'consult-yank-pop)
+    (defalias '~interactively-search #'consult-line)
 
-            (setq ivy-use-selectable-prompt t)
-
-            (setf (nth 0 counsel-rg-base-command) (executable-find "rgg" "rg"))
-
-            ;; Disable one-buffer-per-window behavior when swiping
-            (with-eval-after-load 'rmacs:config-one-buffer-per-window
-              (~disable-one-buffer-per-window-for '(swiper-all
-                                                    swiper-all-query-replace
-                                                    swiper-multi
-                                                    swiper-query-replace)))
-
-            (require 'flx)
-            ;; Default matching
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-plus)))
-            (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-            ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-            (setq ivy-initial-inputs-alist nil)
-
-            (cl-defun ~ivy-next-line+ (&optional (n-lines 5))
-              (interactive)
-              (ivy-next-line n-lines))
-
-            (cl-defun ~ivy-prev-line+ (&optional (n-lines 5))
-              (interactive)
-              (ivy-previous-line n-lines))
-
-            (cl-defun ~bind-key-with-prefix (key command &key
-                                                 (keymap global-map))
-              "Binds key in `evil-normal-state-map' and `evil-visual-state-map' with prefix `SPC' and in global mode map with prefix `s-SPC' at the same time."
-              (interactive)
-              (eval `(progn
-                       (bind-key ,(format "s-SPC %s" key) command keymap))))
-
-            (cl-defun ~bind-key-with-prefix-local (key command &key (keymap global-map))
-              "Like `~bind-key-with-prefix', except that the binding is local."
-              (interactive)
-              (eval `(progn
-                       (bind-key ,(format "s-SPC %s" key) command keymap))))
-
-            (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
+    ))
 
 ;;
 ;; Temporary save points
@@ -518,104 +464,116 @@ project root, not ignoring anything."
               (ignore-errors
                 (loop do (paredit-forward-up))))))
 
-;;
-;; Modal editing mode
-;;
-;; Ref: https://github.com/mrkkrp/modalka
-;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Meow sensible modal editting, inspired by Kakoune
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ref: https://github.com/meow-edit/meow/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package modalka
-  :demand t
-  ;; Must load after Lisp for the keybindings to take precendence
-  ;; :after (lispy parinfer)
-  :after (lispy)
-  :bind* (:map
-          modalka-mode-map
-          ("u" . #'forward-char)
-          ("o" . #'backward-char)
-          ("e" . #'next-line)
-          ("." . #'previous-line)
-          ("," . #'~backward-word-boundary)
-          ("p" . #'~forward-word-boundary)
-          ("a" . #'beginning-of-line)
-          ("i" . #'end-of-line)
-
-          ("J" . #'~join-with-next-line)
-          ("c" . #'~replace-line)
-          ("d" . #'kill-line)
-          ("D" . #'~kill-whole-line)
-          ("#" . #'er/expand-region)
-          ("y" . #'~open-line)
-          ("Y" . #'~open-line-before)
-
-          ("v" . #'set-mark-command)
-          ("V" . #'~select-line)
-          ("w" . #'~select-word)
-          ("mm" . #'~mark-current-output-block)
-
-          ("s" . #'~search-buffer-interactively)
-          ("/" . #'isearch-forward)
-          ("?" . #'isearch-backward)
-          ("r" . #'query-replace)
-          ("R" . #'query-replace-regexp)
-          ("h" . #'highlight-regexp)
-          ("H" . #'unhighlight-regexp)
-          ("z" . #'fastnav-sprint-forward)
-          ("Z" . #'fastnav-sprint-backward)
-
-          ("X" . #'~execute-current-wand-text)
-          ("I" . #'bowser:expand-dir-here)
-
-          (">" . #'beginning-of-buffer)
-          ("E" . #'end-of-buffer)
-          (";" . #'kill-current-buffer)
-          (":" . #'~kill-buffer-and-window)
-
-          ("(" . #'kmacro-start-macro)
-          (")" . #'kmacro-end-macro)
-          ("@" . #'kmacro-call-macro)
-
-          ("'" . #'undo-tree-undo)
-          ("\"" . #'undo-tree-redo)
-          ("q" . #'cua-cut-region)
-          ("j" . #'cua-copy-region)
-          ("k" . #'cua-paste)
-
-          ("ff" . #'projectile-find-file)
-          ("fo" . #'find-file)
-          :map
-          global-map
-          ("C-e" . #'~my/activate-modalka)
-          ("C-a" . #'~my/deactivate-modalka))
+(use-package meow
   :config
   (progn
-    (bind-key "SPC" (lookup-key global-map (kbd "M-SPC")) modalka-mode-map)
-    (bind-key "x x" (lookup-key global-map (kbd "M-SPC a")) modalka-mode-map)
-    (setq modalka-cursor-type 'box)
-
-    (defun ~my/activate-modalka ()
-      (interactive)
-      (modalka-mode 1))
-
-    (defun ~my/deactivate-modalka ()
-      (interactive)
-      (modalka-mode -1))
-
-    (defun ~my/magit-load-modalka ()
-      "Loads Modalka in Magit status mode."
-      (interactive)
-      (modalka-mode -1)
-      (modalka-mode 1))
-    ;; (add-hook 'magit-status-mode-hook #'~my/magit-load-modalka)
-    (add-hook 'dired-mode-hook #'~my/deactivate-modalka)
-    ;; (modalka-global-mode)
-    ))
-
-(defun ~replace-line ()
-  "Replaces the current line."
-  (interactive)
-  (~delete-line)
-  (modalka-mode -1))
+    (defun meow-setup-qwerty ()
+      (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+      (meow-motion-overwrite-define-key
+       '("j" . meow-next)
+       '("k" . meow-prev)
+       '("<escape>" . ignore))
+      (meow-leader-define-key
+       ;; SPC j/k will run the original command in MOTION state.
+       '("j" . "H-j")
+       '("k" . "H-k")
+       ;; Use SPC (0-9) for digit arguments.
+       '("1" . meow-digit-argument)
+       '("2" . meow-digit-argument)
+       '("3" . meow-digit-argument)
+       '("4" . meow-digit-argument)
+       '("5" . meow-digit-argument)
+       '("6" . meow-digit-argument)
+       '("7" . meow-digit-argument)
+       '("8" . meow-digit-argument)
+       '("9" . meow-digit-argument)
+       '("0" . meow-digit-argument)
+       '("/" . meow-keypad-describe-key)
+       '("?" . meow-cheatsheet))
+      (meow-normal-define-key
+       '("0" . meow-expand-0)
+       '("9" . meow-expand-9)
+       '("8" . meow-expand-8)
+       '("7" . meow-expand-7)
+       '("6" . meow-expand-6)
+       '("5" . meow-expand-5)
+       '("4" . meow-expand-4)
+       '("3" . meow-expand-3)
+       '("2" . meow-expand-2)
+       '("1" . meow-expand-1)
+       '("-" . negative-argument)
+       '(";" . meow-reverse)
+       '("," . meow-inner-of-thing)
+       '("." . meow-bounds-of-thing)
+       '("[" . meow-beginning-of-thing)
+       '("]" . meow-end-of-thing)
+       '("a" . meow-append)
+       '("A" . meow-open-below)
+       '("b" . meow-back-word)
+       '("B" . meow-back-symbol)
+       '("c" . meow-change)
+       '("d" . meow-delete)
+       '("D" . meow-backward-delete)
+       '("e" . meow-next-word)
+       '("E" . meow-next-symbol)
+       '("f" . meow-find)
+       '("g" . meow-cancel-selection)
+       '("G" . meow-grab)
+       '("h" . meow-left)
+       '("H" . meow-left-expand)
+       '("i" . meow-insert)
+       '("I" . meow-open-above)
+       '("j" . meow-next)
+       '("J" . meow-next-expand)
+       '("k" . meow-prev)
+       '("K" . meow-prev-expand)
+       '("l" . meow-right)
+       '("L" . meow-right-expand)
+       '("m" . meow-join)
+       '("n" . meow-search)
+       '("o" . meow-block)
+       '("O" . meow-to-block)
+       '("p" . meow-yank)
+       '("q" . meow-quit)
+       '("Q" . meow-goto-line)
+       '("r" . meow-replace)
+       '("R" . meow-swap-grab)
+       '("s" . meow-kill)
+       '("t" . meow-till)
+       '("u" . meow-undo)
+       '("U" . meow-undo-in-selection)
+       '("v" . meow-visit)
+       '("w" . meow-mark-word)
+       '("W" . meow-mark-symbol)
+       '("x" . meow-line)
+       '("X" . meow-goto-line)
+       '("y" . meow-save)
+       '("Y" . meow-sync-grab)
+       '("z" . meow-pop-selection)
+       '("'" . repeat)
+       '("<escape>" . ignore)))
+    (meow-setup-qwerty)
+    (setq meow-use-clipboard t)
+    (custom-set-faces
+     '(meow-grab ((t (:inherit secondary-selection))))
+     '(meow-normal-indicator ((t ())))
+     '(meow-motion-indicator ((t ())))
+     '(meow-keypad-indicator ((t ())))
+     '(meow-insert-indicator ((t ()))))
+    (add-to-list 'meow-expand-exclude-mode-list 'dired-mode)
+    (add-to-list 'meow-expand-exclude-mode-list 'wdired-mode)
+    (add-to-list 'meow-mode-state-list '(magit-mode . insert))
+    (meow-setup-indicator)
+    ;; For some reasons cua-mode breaks meow-reverse command
+    (when (and (boundp 'cua-mode) cua-mode)
+      (cua-mode -1))
+    (meow-global-mode 1)))
 
 ;;
 ;; TODO: keybinding

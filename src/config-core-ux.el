@@ -448,13 +448,14 @@ selection or end-of-line."
 
 ;; Don't rebind <C-return>, must set before enabling CUA
 (setq cua-rectangle-mark-key "")
-(cua-mode 1)
-;; Don't tabify after rectangle command
-(setq cua-auto-tabify-rectangles nil)
-;; No region when it's not highlighted
-(transient-mark-mode 1)
-;; Don't keep region after copying
-(setq cua-keep-region-after-copy nil)
+;; (cua-mode 1)
+(with-eval-after-load "cua"
+  ;; Don't tabify after rectangle command
+  (setq cua-auto-tabify-rectangles nil)
+  ;; No region when it's not highlighted
+  (transient-mark-mode 1)
+  ;; Don't keep region after copying
+  (setq cua-keep-region-after-copy nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

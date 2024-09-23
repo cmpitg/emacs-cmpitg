@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2021-2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2021-2024 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -296,17 +296,6 @@
 ;; Allow text drap-and-drop with mouse
 (custom-set-variables `(mouse-drag-and-drop-region t))
 
-;; Basic ido setup
-(eval-when-compile
-  (require 'ido))
-(with-eval-after-load "ido"
-  (custom-set-variables
-   `(ido-enable-flex-matching t)
-   `(ido-everywhere t)
-   `(ido-virtual-buffers t))
-  (setf (nth 2 ido-decorations) "\n")
-  (ido-mode 1))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Standard behaviors for C-x, C-c, C-v
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -374,6 +363,13 @@
 
   (defalias '~is-selecting? 'use-region-p
     "Determines if current there is a selection/active region.")
+
+  (defun ~replace-line ()
+    "Replaces the current line."
+    (interactive)
+    (~delete-line)
+    (when (boundp 'modalka-mode)
+      (modalka-mode -1)))
 
   (defun ~get-selection ()
     "Gets the currently selected text."
@@ -575,10 +571,16 @@ Source: http://stackoverflow.com/a/4717026/219881"
     (when (looking-at (rx bol (0+ space) eol))
       (kill-line)))
 
-  (cl-defun ~search-buffer-interactively ()
-    "Searches the current buffer interactively."
-    (interactive)
-    (swiper (~get-selection)))
+  (cl-defun ~isearch-from-selection-action ()
+    "isearch but from selection."
+    (when mark-active
+    (let ((region (funcall region-extract-function nil)))
+      (goto-char (region-beginning))
+      (deactivate-mark)
+      ;; (isearch-push-state)
+      (isearch-update)
+      (isearch-yank-string region))))
+  (add-hook 'isearch-mode-hook #'~isearch-from-selection-action)
 
   (defun ~format-json ()
     "Formats current selection as JSON.  Requires jq."
@@ -1435,8 +1437,7 @@ which is loaded lazily get loaded."
     (interactive)
     (defvar *recently-closed-file-list* (list)
       "List of recently closed files.")
-    (find-file (let ((ivy-sort-functions-alist nil))
-                 (completing-read "File: " *recently-closed-file-list*))))
+    (find-file (completing-read "File: " *recently-closed-file-list*)))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; History management
@@ -1463,7 +1464,7 @@ text file with each line corresponding to an entry.  An entry is
 trimmed after reading."
     (let* ((content (~read-file history-path))
            (lines (split-string content "\n")))
-      (string-trim (ivy-read "Command: " lines))))
+      (string-trim (completing-read "Command: " lines))))
 
   (defun ~insert-from-history (history-path)
     "Prompts for an entry and inserts it to the current buffer.
@@ -1473,6 +1474,11 @@ trimmed after reading."
     (let ((entry (~choose-from-history history-path)))
       (unless (string-empty-p entry)
         (insert entry))))
+
+  (defun ~insert-entry-from-exec-history ()
+    "Inserts an entry from the execution history to the current buffer."
+    (interactive)
+    (~insert-from-history *~exec-history-path*))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Process/Execution
@@ -2451,6 +2457,19 @@ line in Eshell."
 (setq eshell-smart-space-goes-to-end t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Abstraction over high-level operations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defalias '~interactively-grep #'grep)
+(defalias '~interactively-call-symbol-menu #'imenu)
+(defalias '~interactively-find-file #'find-file)
+(defalias '~interactively-find-file-in-project #'project-find-file)
+(defalias '~interactively-get-bookmarks #'list-bookmarks)
+(defalias '~interactively-yank-pop #'yank-pop)
+(defalias '~interactively-M-x #'execute-extended-command)
+(defalias '~interactively-search #'isearch)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Simple keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -2489,7 +2508,7 @@ line in Eshell."
 ;; Searching
 (bind-key "s-f" #'query-replace-regexp)
 (bind-key "s-F" #'query-replace)
-(bind-key "s-s" #'~search-buffer-interactively)
+(bind-key "s-s" #'~interactively-search)
 
 ;; Text processing
 (bind-key "RET" #'~electrify-return-if-match)
@@ -2502,7 +2521,8 @@ line in Eshell."
 (bind-key "s-\"" #'undo-redo)
 
 ;; Buffer management
-(bind-key "C-w" #'kill-current-buffer)
+;; Breaking meow-mode?
+;; (bind-key "C-w" #'kill-current-buffer)
 (bind-key "C-S-t" #'~undo-killed-buffers)
 
 ;; Emacs Lisp
@@ -2517,6 +2537,13 @@ line in Eshell."
 (bind-key "<mouse-2>" #'~execute)
 (bind-key "<mouse-3>" #'~popup-context-menu)
 (bind-key "<C-down-mouse-3>" #'~popup-context-menu)
+(bind-key "M-r" #'~insert-entry-from-exec-history)
+
+;; TODO: Keybinding for eval upper sexp
+;; TODO: Review this, copy this to sequenced keybindings
+(bind-key "<C-S-return>" #'~eval-last-sexp-pp)
+(bind-key "s-m"          #'~eval-then-replace-region-or-last-sexp)
+;; TODO: ~toggle-scratch
 
 ;; Window
 (with-eval-after-load "windmove"
@@ -2527,12 +2554,25 @@ line in Eshell."
 
 ;; Function keys & other convenient bindings
 (bind-key "<f2>" #'save-buffer)
-(bind-key "<f3>" #'find-file)
+(bind-key "<f3>" #'~interactively-find-file)
+;; TODO: RIGHT HERE
+(bind-key "<M-f3>" #'~gui/open-file)
 (bind-key "<C-f4>" #'kill-current-buffer)
+(bind-key "<S-f4>" #'~delete-window)
 (bind-key "<f8>" #'~switch-buffer)
-;; BUG: Command history not recorded
-(bind-key "<f12>" #'~ido-M-x)
-;; (bind-key "<f12>" #'execute-extended-command)
+(bind-key "<f9>" #'compile)
+(bind-key "<f10>" #'~interactively-grep)
+;; TODO: Review this ivy-resume, how about consult-resume?
+;; (bind-key "<M-f10>" #'ivy-resume)
+(bind-key "<f11>" #'~interactively-yank-pop)
+(bind-key "<f12>" #'~interactively-M-x)
+
+(bind-key "M-/" #'hippie-expand)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(bind-key "M-ESC" #'~keyboard-quit)
+
+(bind-key "M-SPC M-SPC" #'~interactively-M-x)
+(bind-key "M-SPC SPC" #'~interactively-M-x)
 
 ;; Header line
 (bind-key "<header-line> <mouse-3>" #'~header-line-execute)
@@ -2570,12 +2610,8 @@ line in Eshell."
 (bind-key "M-SPC f r" #'~rename-current-file)
 (bind-key "M-SPC f s" #'save-buffer)
 (bind-key "M-SPC f a" #'~save-buffer-as)
-(with-eval-after-load "counsel"
-  (bind-key "M-SPC f o" #'counsel-find-file))
-(with-eval-after-load "projectile"
-  (bind-key "M-SPC f f" #'projectile-find-file))
-(bind-key "M-SPC f e" #'~find-files-current-dir)
-(bind-key "M-SPC f i" #'~find-files-current-dir-not-ignoring)
+(bind-key "M-SPC f o" #'~interactively-find-file)
+(bind-key "M-SPC f f" #'~interactively-find-file-in-project)
 (bind-key "M-SPC f m" #'~open-current-file-as-admin)
 (bind-key "M-SPC f c" #'~copy-file-name-to-clipboard)
 (bind-key "M-SPC f p" #'~copy-pos-to-clipboard)
@@ -2585,11 +2621,6 @@ line in Eshell."
 (with-eval-after-load "ace-jump"
   (bind-key "M-SPC j a" #'ace-jump-mode)
   (bind-key "M-SPC j l" #'ace-jump-line-mode))
-;; (with-eval-after-load "dumb-jump"
-;;   ("'" #'dumb-jump-go-other-window "Try jumping to def (other window)")
-;;   ("." #'dumb-jump-go "Try jumping to def")
-;;   ("," #'dumb-jump-back "Jump back")
-;;   (";" #'dumb-jump-quick-look "Peek"))
 (with-eval-after-load "smart-jump"
   (bind-key "M-SPC j ." #'smart-jump-go)
   (bind-key "M-SPC j ," #'smart-jump-back))
@@ -2600,8 +2631,7 @@ line in Eshell."
   (bind-key "M-SPC j g" #'point-pos-goto)
   (bind-key "M-SPC j n" (~make-repeatable-fn #'point-pos-next))
   (bind-key "M-SPC j p" (~make-repeatable-fn #'point-pos-previous)))
-(with-eval-after-load "counsel"
-  (bind-key "M-SPC j i" #'counsel-imenu))
+(bind-key "M-SPC j i" #'~interactively-call-symbol-menu)
 
 ;; Cursor
 (with-eval-after-load "multiple-cursors"
@@ -2611,7 +2641,7 @@ line in Eshell."
   (bind-key "M-SPC c a" #'mc/mark-all-in-region))
 
 ;; Search
-(bind-key "M-SPC / /" #'~search-buffer-interactively)
+(bind-key "M-SPC / /" #'~interactively-search)
 (bind-key "M-SPC / r" #'query-replace-regexp)
 (bind-key "M-SPC / R" #'query-replace)
 
