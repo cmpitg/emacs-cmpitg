@@ -786,10 +786,10 @@ recursively."
                 (wand:create-rule :match (rx bol (0+ " ") "https?://")
                                   :capture :whole
                                   :action #'~web-browse-gui)
-                (wand:create-rule :match ".*\\.html$"
-                                  :capture :whole
-                                  :skip-comment nil
-                                  :action #'~web-browse-gui)
+                ;; (wand:create-rule :match ".*\\.html$"
+                ;;                   :capture :whole
+                ;;                   :skip-comment nil
+                ;;                   :action #'~web-browse-gui)
                 (wand:create-rule :match (rx bol (0+ " ") "in:")
                                   :capture :after
                                   :action #'~wand:set-current-dir)
