@@ -1,4 +1,4 @@
-#!/usr/bin/env expect
+#!/usr/bin/env tclsh
 
 package require Tcl 8
 package require Tclx
