@@ -2523,6 +2523,8 @@ line in Eshell."
 (bind-key "s-b" #'pop-to-mark-command)
 (bind-key "s-'" #'undo)
 (bind-key "s-\"" #'undo-redo)
+(bind-key "C-z" #'undo-tree-undo)
+(bind-key "S-C-z" #'undo-tree-redo)
 
 ;; Buffer management
 ;; Breaking meow-mode?

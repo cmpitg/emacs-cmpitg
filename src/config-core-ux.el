@@ -441,23 +441,6 @@ selection or end-of-line."
     (setq-default olivetti-body-width 92)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Standard behaviors for C-x, C-c, C-v
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Ref: https://www.emacswiki.org/emacs/CuaMode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Don't rebind <C-return>, must set before enabling CUA
-(setq cua-rectangle-mark-key "")
-;; (cua-mode 1)
-(with-eval-after-load "cua"
-  ;; Don't tabify after rectangle command
-  (setq cua-auto-tabify-rectangles nil)
-  ;; No region when it's not highlighted
-  (transient-mark-mode 1)
-  ;; Don't keep region after copying
-  (setq cua-keep-region-after-copy nil))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (message "Finished configuring core UX")
 
