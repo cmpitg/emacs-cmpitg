@@ -2494,6 +2494,8 @@ line in Eshell."
 (bind-key "C-M-t" #'next-line)
 (bind-key "C-M-S-c" #'~previous-line+)
 (bind-key "C-M-S-t" #'~next-line+)
+(bind-key "C-M-n" #'forward-char)
+(bind-key "C-M-h" #'backward-char)
 (bind-key "s-H" #'beginning-of-buffer)
 (bind-key "s-N" #'end-of-buffer)
 (bind-key "s-g" #'backward-word)
