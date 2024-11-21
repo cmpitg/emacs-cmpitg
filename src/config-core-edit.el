@@ -558,6 +558,10 @@ recursively."
        '("z" . meow-pop-selection)
        '("'" . repeat)
        '("<escape>" . ignore)))
+    (dolist (mapping `((,(get-byte 0 "(") . round)
+                       (,(get-byte 0 "[") . square)
+                       (,(get-byte 0 "{") . curly)))
+      (add-to-list 'meow-char-thing-table mapping))
     (meow-setup-qwerty)
     (setq meow-use-clipboard t)
     (custom-set-faces
