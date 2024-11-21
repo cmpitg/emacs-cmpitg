@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2014-2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2024 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -52,6 +52,24 @@
 
 (use-package toml-mode
   :mode "\\.toml\\'")
+
+;;
+;; Nickel
+;;
+;; Ref: https://github.com/nickel-lang/nickel-mode
+;;
+
+(use-package nickel-mode
+  :mode "\\.ncl\\'"
+  :config
+  (progn
+    (with-eval-after-load "lsp-mode"
+      (add-to-list 'lsp-language-id-configuration '(nickel-mode . "nickel"))
+      (lsp-register-client (make-lsp-client
+                            :new-connection (lsp-stdio-connection "nls")
+                            :activation-fn (lsp-activate-on "nickel")
+                            :server-id 'nls
+                            :major-modes 'nickel-mode)))))
 
 ;;
 ;; Asciidoc mode
