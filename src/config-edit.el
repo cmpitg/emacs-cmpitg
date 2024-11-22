@@ -72,6 +72,26 @@
                             :major-modes 'nickel-mode)))))
 
 ;;
+;; Dhall
+;;
+;; Ref: https://github.com/psibi/dhall-mode
+;;
+
+(use-package dhall-mode
+  :mode "\\.dhall\\'")
+
+;;
+;; Just
+;;
+;; Ref: https://github.com/psibi/justl.el
+;; Ref: https://github.com/leon-barrett/just-mode.el
+;;
+
+(use-package justl)
+
+(use-package just-mode)
+
+;;
 ;; Asciidoc mode
 ;;
 ;; Ref: https://github.com/sensorflo/adoc-mode
