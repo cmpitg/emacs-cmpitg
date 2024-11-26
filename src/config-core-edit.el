@@ -75,7 +75,7 @@
              er/mark-outside-quotes
              er/mark-defun)
   :bind
-  (("s-=" . #'er/expand-region)))
+  (("C-=" . #'er/expand-region)))
 
 ;;
 ;; Interactive menu

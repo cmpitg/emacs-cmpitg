@@ -43,7 +43,7 @@
 
 ;; Selection/region
 (with-eval-after-load "expand-region"
-  (bind-key "s-=" #'er/expand-region))
+  (bind-key "C-=" #'er/expand-region))
 
 ;; Text processing
 (bind-key "C-S-<mouse-1>" 'mc/add-cursor-on-click)
