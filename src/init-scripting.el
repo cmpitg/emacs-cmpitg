@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2025 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -30,11 +30,8 @@
 ;; Speed up Emacs startup by ignoring all file name handlers.  Review: Ref:
 ;; https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
 (require 'rmacs:bootstrap-config                      rmacs:+bootstrap-config-path+)
-(require 'rmacs:config-ipc                            "config-ipc")
 (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
-(require 'rmacs:config-module-wand-minimal            "config-module-wand-minimal")
 (require 'rmacs:config-module-omni-command            "config-module-omni-command")
-(require 'rmacs:config-header-line                    "config-header-line")
 (require 'rmacs:config-module-bowser                  "config-module-bowser")
 
 (message "Finish loading bare functionalities")

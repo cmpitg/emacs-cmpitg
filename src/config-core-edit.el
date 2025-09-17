@@ -816,7 +816,7 @@ recursively."
 (use-package yasnippet
   :diminish yas-minor-mode
   :config (progn
-            (add-to-list 'yas-snippet-dirs (expand-file-name *snippet-dir*))
+            (add-to-list 'yas-snippet-dirs (expand-file-name rmacs:+snippet-dir+))
             (yas-global-mode 1)))
 
 ;;

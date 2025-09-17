@@ -143,7 +143,7 @@ Returns the toolbox window."
   "Sets mode for pop-up buffer.  MODE should either be :WINDOW or :FRAME."
   (cl-case mode
     (:window
-     (custom-set-variables `(*popup-buffer-in* :window)
+     (custom-set-variables `(rmacs:*popup-buffer-in* :window)
                            `(display-buffer-alist nil))
 
      ;; Prefer creating a new window
@@ -152,7 +152,7 @@ Returns the toolbox window."
      ;; Prefer reusing the current window
      (custom-set-variables `(pop-up-windows nil)))
     (:frame
-     (custom-set-variables `(*popup-buffer-in* :frame))
+     (custom-set-variables `(rmacs:*popup-buffer-in* :frame))
 
      ;; To make the behavior of `display-buffer' consistent, do not allow it
      ;; to split/create a new window by setting to `nil'
@@ -246,14 +246,6 @@ Returns the toolbox window."
 by `~get-buffer-list'."
   iflipb-current-buffer-index)
 
-(defun ~toggle-scratch ()
-  "Toggles the `scratch.el' buffer.  `scratch.el' should reside
-in the `*scratch-dir*' directory."
-  (interactive)
-  (let* ((scratch-dir (or *scratch-dir* temporary-file-directory))
-         (scratch-file (s-concat scratch-dir "scratch.el")))
-    (~toggle-toolbox :path scratch-file :size -80)))
-
 ;; TODO: Thinking
 (cl-defun ~setup-temp-buffer (&optional (buffer (current-buffer)))
   "Sets up a temporary buffer."
@@ -327,19 +319,19 @@ This function will pop up a buffer window if the variable
 argument.  Otherwise, it will pop up a buffer frame."
   (interactive)
   (cond
-   ((or (eq :frame *popup-buffer-in*)
+   ((or (eq :frame rmacs:*popup-buffer-in*)
         current-prefix-arg)
     (~popup-buffer-frame :buffer buffer
                          :content content
                          :working-dir working-dir))
-   ((eq :window *popup-buffer-in*)
+   ((eq :window rmacs:*popup-buffer-in*)
     (~popup-buffer-window :buffer buffer
                           :content content
                           :working-dir working-dir
                           :size size))
    (t
-    (error "Unrecognized value of *popup-buffer-in*: %s. It must be either :window or :frame."
-           *popup-buffer-in*))))
+    (error "Unrecognized value of rmacs:*popup-buffer-in*: %s. It must be either :window or :frame."
+           rmacs:*popup-buffer-in*))))
 
 ;; (defalias '~popup-buffer 'internal-temp-output-buffer-show
 ;;   "Pops up a buffer for temporary display.")

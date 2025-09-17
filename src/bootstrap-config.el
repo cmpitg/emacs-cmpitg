@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2018-2020 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -19,26 +19,19 @@
 
 (require 'cl-lib)
 
-(setq init-file-user (user-login-name))
+(when (null init-file-user)
+  (setq init-file-user (user-login-name)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Important global values
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst *config-dir* (concat (getenv "RMACS_INIT_DIR") "/src/")
-  "Default configuration directory - the one containing this file.")
-
-(defvar *snippet-dir*
+(defconst rmacs:+snippet-dir+
   (file-name-as-directory
-   (concat (file-name-as-directory *config-dir*) "snippets"))
+   (file-name-concat (file-name-as-directory rmacs:+init-src-dir+) "snippets"))
   "Default snippet directory.")
 
-(defvar *scratch-dir*
-  (file-name-as-directory
-   (concat (file-name-as-directory *config-dir*) "scratch"))
-  "Default path to Scratch directory.")
-
-(defvar *popup-buffer-in*
+(defvar rmacs:*popup-buffer-in*
   :window
   "Determines whether a buffer popped up by `~popup-buffer' is in
 a new window or a new frame.  Possible values: `:window',
@@ -75,7 +68,7 @@ a new window or a new frame.  Possible values: `:window',
 
 (defun ~get-config (&rest paths)
   "Path to a config file or directory."
-  (apply 'concat *config-dir* paths))
+  (apply 'concat rmacs:+init-src-dir+ paths))
 
 (defun ~load-files (&rest paths)
   "Loads Emacs Lisp files when they exist."
@@ -130,7 +123,7 @@ a new window or a new frame.  Possible values: `:window',
 ;; Ref: https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html
 (setq package-enable-at-startup nil)
 
-(add-to-list 'load-path *config-dir*)
+(add-to-list 'load-path rmacs:+init-src-dir+)
 
 (~load-files "~/.emacs-machine-specific-init"
              (~get-config "machine-specific-init"))

@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2014-2023 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -18,7 +18,7 @@
 ;;
 
 ;; Load bare Rmacs
-(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-minimal"))
+(load (file-concat (file-name-directory (or load-file-name (buffer-file-name))) "init-minimal"))
 
 (require 'rmacs:config-functions       "config-functions")
 (require 'rmacs:functions-cmpitg       "functions-cmpitg")
