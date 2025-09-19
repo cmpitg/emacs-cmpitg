@@ -82,7 +82,7 @@
   (interactive "e")
   (let* ((e (event-end event))
          (obj (posn-object e))
-         (str (first obj)))
+         (str (cl-first obj)))
     (cond ((string= (~shorten-string buffer-file-name
                                      *header-line-max-path-length*)
                     str)

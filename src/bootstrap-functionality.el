@@ -916,7 +916,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
         (or (check-file-exists? str)
             (let ((components (~split-string ":" str)))
               (and (= 2 (length components))
-                   (check-file-exists? (first components))))))))
+                   (check-file-exists? (cl-first components))))))))
 
   (defun ~try-getting-current-thing ()
     "Returns text from the current context:
@@ -942,7 +942,7 @@ To remove this constraint, pass in `:must-exists nil'.  E.g.
   (defun ~eval-string (str)
     "Evals a string."
     (interactive "sString: ")
-    (eval (first (read-from-string (concat "(progn " str ")")))))
+    (eval (cl-first (read-from-string (concat "(progn " str ")")))))
 
   (cl-defun ~eval-region ()
     "Evals region and returns value."
@@ -1786,27 +1786,27 @@ performance reasons."
                                                       ,(cond
 
                                                         ;; If is string, command is passed as-is
-                                                        ((eq :str (first command))
-                                                         `(funcall ,output-callback ,(second command)))
+                                                        ((eq :str (cl-first command))
+                                                         `(funcall ,output-callback ,(cl-second command)))
 
                                                         ;; If is function, command is called then passed
-                                                        ((eq :fn (first command))
-                                                         `(funcall ,output-callback (funcall ,(second command)
+                                                        ((eq :fn (cl-first command))
+                                                         `(funcall ,output-callback (funcall ,(cl-second command)
                                                                                              (if (bufferp output-buffer)
                                                                                                  (with-current-buffer output-buffer
                                                                                                    (buffer-string))
                                                                                                output-buffer))))
 
                                                         ;; If is an external program, execute it
-                                                        ((eq :sh (first command))
-                                                         `(~exec-async (list ,@(rest command))
+                                                        ((eq :sh (cl-first command))
+                                                         `(~exec-async (list ,@(cl-rest command))
                                                                        :stdin output-buffer
                                                                        :output-callback ,output-callback
                                                                        :output-as-buffer t))
 
                                                         ;; If is an exp, command is eval'ed then passed
-                                                        ((eq :exp (first command))
-                                                         `(funcall ,output-callback ,(second command)))
+                                                        ((eq :exp (cl-first command))
+                                                         `(funcall ,output-callback ,(cl-second command)))
                                                         (t
                                                          `(funcall ,output-callback ,command))))
                         finally (return next-output-callback))
@@ -1853,10 +1853,10 @@ E.g.
                                             `(:str ,command))
                                            ((listp command)
                                             (cond
-                                             ((stringp (first command))
+                                             ((stringp (cl-first command))
                                               `(:sh ,@command))
-                                             ((or (eq 'function (first command))
-                                                  (eq 'lambda (first command)))
+                                             ((or (eq 'function (cl-first command))
+                                                  (eq 'lambda (cl-first command)))
                                               `(:fn ,command))
                                              (t
                                               command)))

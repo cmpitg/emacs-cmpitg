@@ -135,12 +135,12 @@
 ;; Window manager
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro* ~wm/call-awesome-client (args &optional (callback #'~identity))
+(cl-defmacro ~wm/call-awesome-client (args &optional (callback #'~identity))
   "Calls awesome-client (from Awesome WM)."
   `(~exec-|-async ("env" "AWESOME_RLWRAP=" "awesome-client" ,@args)
                   ,callback))
 
-(defmacro* ~wm/call-herbstclient (args &optional (callback #'~identity))
+(cl-defmacro ~wm/call-herbstclient (args &optional (callback #'~identity))
   "Calls herbstclient (from Herbstluftwm)"
   `(~exec-|-async ("herbstclient" ,@args) ,callback))
 

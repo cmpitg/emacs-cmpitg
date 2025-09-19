@@ -31,6 +31,60 @@
   (ido-mode 1))
 
 ;;
+;; Chruby
+;;
+;; Ref: https://github.com/plexus/chruby.el
+;;
+
+(use-package chruby
+  :mode ("\\.rb\\'" "Rakefile")
+  :defer t
+  :config
+  (let ((ruby-version (or (getenv "CHRUBY_VERSION") "ruby-2.5.1")))
+    (chruby ruby-version)))
+
+;;
+;; Ref: https://github.com/necaris/conda.el
+;; Environment (de)activation: conda-env-activate, conda-env-deactivate
+;;
+
+(use-package conda
+  :after (exec-path-from-shell)
+  :config
+  (progn
+    (conda-env-initialize-interactive-shells)
+    (conda-env-initialize-eshell)
+    (conda-env-autoactivate-mode -1)
+    (setq conda-anaconda-home *conda-home-path*)
+
+    (let ((conda-bin (concat *conda-home-path* "/bin"))
+          (current-env-path (getenv "PATH")))
+      (unless (string-prefix-p conda-bin current-env-path)
+        (setenv "PATH" (concat conda-bin ":" current-env-path))
+        (exec-path-from-shell-copy-env "PATH")))))
+
+;;
+;; Vimdiff implementation - More intuitive than Ediff
+;;
+;; https://github.com/justbur/emacs-vdiff
+;;
+
+(use-package vdiff
+  :commands (vdiff-mode vdiff-files vdiff-files3)
+  :config
+  (progn
+    (with-eval-after-load "evil"
+      (evil-define-key 'normal vdiff-mode-map "," vdiff-mode-prefix-map)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "]c" 'vdiff-next-hunk)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "[c" 'vdiff-previous-hunk)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zc" 'vdiff-close-fold)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zM" 'vdiff-close-all-folds)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zo" 'vdiff-open-fold)
+      (evil-define-minor-mode-key 'normal 'vdiff-mode "zR" 'vdiff-open-all-folds)
+      (evil-define-minor-mode-key 'motion 'vdiff-mode "go" 'vdiff-receive-changes)
+      (evil-define-minor-mode-key 'motion 'vdiff-mode "gp" 'vdiff-send-changes))))
+
+;;
 ;; Project management
 ;;
 ;; Ref: https://github.com/bbatsov/projectile
@@ -43,7 +97,7 @@
   (progn
     (custom-set-variables `(projectile-known-projects-file ,(format (expand-file-name "projectile-bookmarks.%s.eld"
                                                                                       user-emacs-directory)
-                                                                   server-name))))
+                                                                    server-name))))
   :config
   (progn
     (projectile-mode)

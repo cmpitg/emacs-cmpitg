@@ -199,7 +199,7 @@ indirectly."
   (string-match-p (rx bol
                       (0+ whitespace)
                       eol)
-                  (first (~split-string "\n" (thing-at-point 'line)))))
+                  (cl-first (~split-string "\n" (thing-at-point 'line)))))
 
 (defun ~toggle-narrow-to-code-region ()
   "Toggle narrowing to region in Markdown mode by calling

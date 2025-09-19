@@ -61,3 +61,13 @@
                   :around #'mru-buffer:advice/record-current-buffer)
 
 * Notes: evil's `;`
+
+* Check-in: tree-sitter Nix: https://github.com/nix-community/nix-ts-mode
+
+nix-ts-mode only provides syntax highlighting for now, but will eventually support other tree-sitter powered features such as sexp-movement and smart indenting.
+
+* Bug: =~insert-execs=
+
+** =get-all-execs= external dep
+
+** =find= command incorrect

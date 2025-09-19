@@ -43,12 +43,12 @@
 ;; Ref: https://github.com/emacscollective/auto-compile
 ;;
 
-(setq load-prefer-newer t)
-(use-package auto-compile
-  :config
-  (progn
-    (auto-compile-on-load-mode)
-    (auto-compile-on-save-mode)))
+; (setq load-prefer-newer t)
+; (use-package auto-compile
+;   :config
+;   (progn
+;     (auto-compile-on-load-mode)
+;     (auto-compile-on-save-mode)))
 
 ;; (setenv "XDG_DATA_DIRS" "/usr/share/i3:/usr/local/share:/usr/share")
 

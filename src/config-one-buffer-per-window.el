@@ -107,7 +107,7 @@ visible."
 (defun ~advice/filter-out-blank-buffer-for-window-prev-buffers (orig-fun &rest args)
   "Filters out the blank buffer."
   (remove-if #'(lambda (x)
-                 (~is-blank-buffer? (first x)))
+                 (~is-blank-buffer? (cl-first x)))
              (apply orig-fun args)))
 
 ;; (advice-add 'buffer-list

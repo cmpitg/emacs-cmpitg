@@ -105,7 +105,10 @@
 
 (require 'grep)
 ;; (grep-apply-setting 'grep-command "grep --ignore-case --line-number --with-filename -e ")
+
+;; or,
 (grep-apply-setting 'grep-command "rg --ignore-case --line-number --with-filename --vimgrep -e ")
+(grep-apply-setting 'grep-use-null-device nil)
 
 ;;
 ;; Save minibuffer history across sessions

@@ -22,17 +22,28 @@
 ;;
 ;; Ref: https://emacs-tree-sitter.github.io/
 ;;
+;; Helpful doc: https://emacs-tree-sitter.github.io/getting-started/
+;;
+
+;; To check available languages: tree-sitter-major-mode-language-alist
 
 (use-package tree-sitter
   :ensure t)
 (use-package tree-sitter-langs
   :ensure t
-  :after (tree-sitter))
+  :after (tree-sitter)
+  :config
+  (progn
+    (global-tree-sitter-mode 1)
+
+    ;; Replace the default highlight mechanisms with tree-sitter's whenever possible
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)))
 
 ;;
 ;; Nix
 ;;
 ;; Ref: https://github.com/NixOS/nix-mode
+;; Ref: https://github.com/nix-community/nix-ts-mode
 ;;
 
 (use-package nix-mode
@@ -73,17 +84,21 @@
 ;; Ref: https://github.com/leon-barrett/just-mode.el
 ;;
 
-(use-package justl)
+(use-package justl
+  :ensure t)
 
-(use-package just-mode)
+(use-package just-mode
+  :ensure t)
 
 ;;
 ;; Asciidoc mode
 ;;
 ;; Ref: https://github.com/sensorflo/adoc-mode
+;; Ref: https://github.com/bbatsov/adoc-mode
 ;;
 
 (use-package adoc-mode
+  :ensure t
   :mode (("\\.adoc\\'" . adoc-mode))
   :bind* (:map
           adoc-mode-map
@@ -134,9 +149,10 @@ might need manual refreshing."
 ;;
 
 (use-package dumb-jump
+  :ensure t
   :config
   (progn
-    (setq dumb-jump-selector 'ivy)
+    ;; (setq dumb-jump-selector 'popup)
     (setq dumb-jump-prefer-searcher 'rg)))
 
 (use-package smart-jump
@@ -169,46 +185,13 @@ might need manual refreshing."
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 
 ;;
-;; Chruby
-;;
-;; Ref: https://github.com/plexus/chruby.el
-;;
-
-(use-package chruby
-  :mode ("\\.rb\\'" "Rakefile")
-  :defer t
-  :config
-  (let ((ruby-version (or (getenv "CHRUBY_VERSION") "ruby-2.5.1")))
-    (chruby ruby-version)))
-
-;;
-;; Vimdiff implementation - More intuitive than Ediff
-;;
-;; https://github.com/justbur/emacs-vdiff
-;;
-
-(use-package vdiff
-  :commands (vdiff-mode vdiff-files vdiff-files3)
-  :config
-  (progn
-    (with-eval-after-load "evil"
-      (evil-define-key 'normal vdiff-mode-map "," vdiff-mode-prefix-map)
-      (evil-define-minor-mode-key 'normal 'vdiff-mode "]c" 'vdiff-next-hunk)
-      (evil-define-minor-mode-key 'normal 'vdiff-mode "[c" 'vdiff-previous-hunk)
-      (evil-define-minor-mode-key 'normal 'vdiff-mode "zc" 'vdiff-close-fold)
-      (evil-define-minor-mode-key 'normal 'vdiff-mode "zM" 'vdiff-close-all-folds)
-      (evil-define-minor-mode-key 'normal 'vdiff-mode "zo" 'vdiff-open-fold)
-      (evil-define-minor-mode-key 'normal 'vdiff-mode "zR" 'vdiff-open-all-folds)
-      (evil-define-minor-mode-key 'motion 'vdiff-mode "go" 'vdiff-receive-changes)
-      (evil-define-minor-mode-key 'motion 'vdiff-mode "gp" 'vdiff-send-changes))))
-
-;;
 ;; Markdown
 ;;
 ;; Ref: https://jblevins.org/projects/markdown-mode/
 ;;
 
 (use-package markdown-mode
+  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -248,16 +231,21 @@ might need manual refreshing."
 ;;
 ;; Enhanced file management with Dired
 ;;
+;; Ref: https://github.com/emacsattic/dired-single
+;;
 
 (use-package dired+
-  :init (progn
-          ;; (setq dired-listing-switches "-lahF")
-          ;; Reuse current buffer when opening file/dir
-          (toggle-diredp-find-file-reuse-dir 1)))
+  :ensure (:host github :repo "emacsmirror/dired-plus")
+  :config (progn
+            ;; (setq dired-listing-switches "-lahF")
+            ;; Reuse current buffer when opening file/dir
+            (toggle-diredp-find-file-reuse-dir 1)))
 
-(use-package dired-single)
+(use-package dired-single
+  :ensure (:host github :repo "emacsattic/dired-single"))
 
 (use-package dired-details+
+  :disabled t
   :after (dired-single))
 
 ;;
@@ -276,6 +264,7 @@ might need manual refreshing."
 ;;
 
 (use-package dockerfile-mode
+  :ensure t
   :mode "Dockerfile\\'")
 
 ;;
@@ -285,6 +274,7 @@ might need manual refreshing."
 ;;
 
 (use-package nginx-mode
+  :ensure t
   :mode ("sites-\\(?:available\\|enabled\\)/" . nginx-mode))
 
 ;;
@@ -306,6 +296,7 @@ might need manual refreshing."
 ;;
 
 (use-package rust-mode
+  :ensure t
   :mode ("\\.rs\\'" . rust-mode))
 
 ;;
@@ -315,18 +306,8 @@ might need manual refreshing."
 ;;
 
 (use-package go-mode
+  :ensure t
   :mode "\\.go\\'")
-
-;;
-;; CoffeeScript mode
-;;
-;; Ref: https://github.com/defunkt/coffee-mode
-;;
-
-(use-package coffee-mode
-  :mode "\\.coffee\\'"
-  :init
-  (custom-set-variables '(coffee-tab-width 2)))
 
 ;;
 ;; Lua mode
@@ -335,6 +316,7 @@ might need manual refreshing."
 ;;
 
 (use-package lua-mode
+  :ensure t
   :mode "\\.lua\\'"
   :config
   (progn
@@ -351,6 +333,7 @@ might need manual refreshing."
 
 (remove-hook 'lisp-mode-hook 'slime-lisp-mode-hook)
 (use-package sly
+  :ensure t
   :commands common-lisp-mode
   :config
   (progn
@@ -403,6 +386,7 @@ might need manual refreshing."
 
 ;; Ref: https://github.com/tonini/alchemist.el
 (use-package alchemist
+  :ensure t
   :mode (("\\.ex\\'"  . alchemist-mode)
          ("\\.exs\\'" . alchemist-mode))
   :init
@@ -415,7 +399,7 @@ might need manual refreshing."
 
 ;; Ref: https://github.com/elixir-editors/emacs-elixir
 (use-package elixir-mode
-  :defer t
+  :ensure t
   :mode ("\\.ex\\'"
          "\\.exs\\'"))
 
@@ -438,6 +422,7 @@ might need manual refreshing."
 ;;
 
 (use-package haskell-mode
+  :ensure t
   :mode "\\.hs\\'"
   :config (progn
             (require 'inf-haskell)
@@ -454,6 +439,7 @@ might need manual refreshing."
 ;;
 
 (use-package julia-mode
+  :ensure t
   :mode "\\.jl\\'"
   :commands julia-mode)
 
@@ -464,6 +450,7 @@ might need manual refreshing."
 ;;
 
 (use-package scss-mode
+  :ensure t
   :mode "\\.scss\\'")
 
 ;;
@@ -473,8 +460,8 @@ might need manual refreshing."
 ;;
 
 (use-package opascal-mode
-  :straight
-  (opascal-mode :type git :host github :repo "ki11men0w/emacs-delphi-mode")
+  :ensure
+  (opascal :host github :repo "ki11men0w/emacs-delphi-mode")
   :mode (("\\.pas\\'" . opascal-mode)
          ("\\.pp\\'"  . opascal-mode)))
 
@@ -486,11 +473,13 @@ might need manual refreshing."
 ;;
 
 (use-package js2-mode
+  :ensure t
   :mode (("\\.js\\'"   . js2-minor-mode)
          ("\\.jsx?\\'" . js2-jsx-mode))
   :interpreter "node")
 
 (use-package add-node-modules-path
+  :disabled t
   :after (js2-mode)
   :config
   (progn
@@ -498,6 +487,7 @@ might need manual refreshing."
     (add-hook 'js2-jsx-mode-hook #'add-node-modules-path)))
 
 (use-package tide
+  :ensure t
   :after (flycheck company)
   :mode (("\\.tsx\\'" . typescript-mode))
   :config
@@ -523,23 +513,6 @@ might need manual refreshing."
     (add-hook 'typescript-mode-hook #'my/setup-javascript-dev)))
 
 ;;
-;; Ruby development
-;;
-;; Ref: https://github.com/Mon-Ouie/ruby-dev.el
-;;
-
-(use-package ruby-mode
-  :commands ruby-mode
-  :mode (("\\Rakefile\\'" . ruby-mode)
-         ("\\.mab\\'"     . ruby-mode))
-  :config (progn
-            (use-package robe
-              :init (progn
-                      (add-hook 'ruby-mode-hook 'robe-mode)
-                      (with-eval-after-load "company-mode"
-                        (push 'company-robe company-backends))))))
-
-;;
 ;; Python development
 ;;
 
@@ -557,26 +530,6 @@ might need manual refreshing."
                   (setq electric-indent-inhibit t)))))
 
 ;;
-;; Ref: https://github.com/necaris/conda.el
-;; Environment (de)activation: conda-env-activate, conda-env-deactivate
-;;
-
-(use-package conda
-  :after (exec-path-from-shell)
-  :config
-  (progn
-    (conda-env-initialize-interactive-shells)
-    (conda-env-initialize-eshell)
-    (conda-env-autoactivate-mode -1)
-    (setq conda-anaconda-home *conda-home-path*)
-
-    (let ((conda-bin (concat *conda-home-path* "/bin"))
-          (current-env-path (getenv "PATH")))
-      (unless (string-prefix-p conda-bin current-env-path)
-        (setenv "PATH" (concat conda-bin ":" current-env-path))
-        (exec-path-from-shell-copy-env "PATH")))))
-
-;;
 ;; Ref: http://elpy.readthedocs.io/en/latest/index.html
 ;; Config with (elpy-config)
 ;;
@@ -591,6 +544,7 @@ might need manual refreshing."
 ;;
 
 (use-package elpy
+  :ensure t
   :after (company)
   :bind* (("M-SPC u p a" . #'pyvenv-activate)
           ("M-SPC u p z" . #'elpy-shell-switch-to-shell)
@@ -638,24 +592,25 @@ might need manual refreshing."
 ;;
 
 (use-package clojure-mode
-  :after paredit-mode
+  :ensure t
   :mode "\\.clj\\'"
-  :init
+  :config
   (progn
     (define-clojure-indent
-      (defroutes 'defun)
-      (GET 2)
-      (POST 2)
-      (PUT 2)
-      (DELETE 2)
-      (HEAD 2)
-      (ANY 2)
-      (context 2)
-      (tabular '(2 1))
-      (are '(2 1))
-      (keep-focused 1))))
+     (defroutes 'defun)
+     (GET 2)
+     (POST 2)
+     (PUT 2)
+     (DELETE 2)
+     (HEAD 2)
+     (ANY 2)
+     (context 2)
+     (tabular '(2 1))
+     (are '(2 1))
+     (keep-focused 1))))
 
 (use-package flycheck-clj-kondo
+  :ensure t
   :after clojure-mode
   :init
   (progn
@@ -667,6 +622,7 @@ might need manual refreshing."
     (add-hook 'clojure-mode-hook #'my/enable-clj-syntax-check)))
 
 (use-package cider
+  :ensure t
   :after (clojure-mode yasnippet)
   :hook (((cider-repl-mode) . subword-mode)
          ((clojure-mode
@@ -754,20 +710,6 @@ the sequence, and its index within the sequence."
     (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
     (bind-key "M-q"        #'~cider-format-defun       cider-mode-map)))
 
-(use-package clj-refactor
-  :disabled t
-  :after (cider yasnippet)
-  :config
-  (progn
-    (defalias '~clojure/add-dependency 'cljr-add-project-dependency)
-    (defalias '~clojure/add-require 'cljr-add-require-to-ns)
-
-    (defun ~hook/clojure-refactor-mode ()
-      (clj-refactor-mode 1)
-      (yas-minor-mode 1))
-
-    (add-hook 'clojure-mode-hook #'~hook/clojure-refactor-mode)))
-
 ;;
 ;; Scheme development
 ;;
@@ -775,6 +717,7 @@ the sequence, and its index within the sequence."
 ;;
 
 (use-package guix-devel
+  :disabled t
   :straight
   (guix :type git :host github :repo "alezost/guix.el")
   :after (geiser)
@@ -801,9 +744,11 @@ the sequence, and its index within the sequence."
                  '(eval setq-local guix-directory
                         (locate-dominating-file default-directory ".dir-locals.el")))))
 
-(use-package geiser-guile)
+(use-package geiser-guile
+  :disabled t)
 
 (use-package geiser-mit
+  :disabled t
   :mode ("\\.scm\\'")
   :config
   (progn
@@ -817,6 +762,7 @@ the sequence, and its index within the sequence."
 ;;
 
 (use-package zig-mode
+  :ensure t
   :mode (("\\.zig\\'" . zig-mode)))
 
 ;;

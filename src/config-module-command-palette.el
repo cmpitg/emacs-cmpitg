@@ -296,8 +296,8 @@ non-exceptional buffers."
 (defun command-palette:advice/split-command-palette-window (split-fn &rest args)
   "TODO"
   (require 'windmove)
-  (let* ((window (or (first args) (selected-window)))
-         (size (second args))
+  (let* ((window (or (cl-first args) (selected-window)))
+         (size (cl-second args))
          (side (if (eq t (third args))
                    'right
                  (third args)))

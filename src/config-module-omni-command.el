@@ -101,7 +101,7 @@ could be executed.  See `THING-AT-POINT' for futher information."
 (defun ~palette/ensure-prefix (text prefix)
   "Makes sure text has a prefix."
   (lexical-let* ((text (concat prefix (~palette/trim-garbage text)))
-                 (padding (first (~string-match (rx bos (0+ blank)) text))))
+                 (padding (cl-first (~string-match (rx bos (0+ blank)) text))))
     (concat padding text)))
 
 ;; (~palette/ensure-prefix "         ls \\\n" "$ ")
@@ -116,12 +116,12 @@ could be executed.  See `THING-AT-POINT' for futher information."
   "Trims garbage from TEXT, tries to make text a command."
   (lexical-let* ((elements (~string-split-up-to garbage-regexp text 1))
                  (text (if (> (length elements) 1)
-                           (string-trim (second elements))
-                         (first elements)))
+                           (string-trim (cl-second elements))
+                         (cl-first elements)))
                  (pass-2 (~string-split-up-to (rx bos (>= 2 "/")) text 1))
                  (res (if (> (length pass-2) 1)
-                          (string-trim (second pass-2))
-                        (first pass-2))))
+                          (string-trim (cl-second pass-2))
+                        (cl-first pass-2))))
     res))
 
 ;; (~palette/trim-garbage "ls \\\n")

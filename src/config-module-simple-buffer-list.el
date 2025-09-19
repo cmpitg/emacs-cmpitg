@@ -44,7 +44,7 @@
 active region, kill the buffer at the current line."
     (interactive)
     (save-excursion
-      (let* ((first-line-number (line-number-at-pos (region-beginning)))
+      (let* ((cl-first-line-number (line-number-at-pos (region-beginning)))
              (last-line-number (line-number-at-pos (region-end)))
              (line-counter (1+ (- last-line-number first-line-number))))
         (when (y-or-n-p "Kill buffers? ")
