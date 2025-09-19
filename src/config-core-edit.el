@@ -311,8 +311,9 @@ recursively."
              smart-yank))
 
     (defun ~parinfer-update-keybindings ()
-      (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
-      (define-key parinfer-mode-map (kbd "C-a") #'~my/deactivate-modalka)
+      (with-eval-after-load "modalka"
+        (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
+        (define-key parinfer-mode-map (kbd "C-a") #'~my/deactivate-modalka))
       (define-key parinfer-mode-map (kbd "C-'") #'parinfer-toggle-mode)
       (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
       (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
