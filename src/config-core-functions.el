@@ -675,7 +675,6 @@ move the cursor but rather to call `~execute'."
           (t
            (apply orig-fn args)))))
 
-(use-package thing-cmds)
 (defun ~select-multiline-exec-text ()
   "Selects multiline exec text."
   (interactive)

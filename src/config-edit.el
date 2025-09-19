@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2014-2024 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -18,22 +18,16 @@
 ;;
 
 ;;
-;; YAML
+;; Treesitter bundle
 ;;
-;; Ref: https://www.emacswiki.org/emacs/YamlMode
-;;
-
-;; TODO: Reevaluate
-(use-package yaml-mode)
-
-;;
-;; JSON
-;;
-;; Ref: https://github.com/joshwnj/json-mode
+;; Ref: https://emacs-tree-sitter.github.io/
 ;;
 
-(use-package json-mode
-  :mode "\\.json\\'")
+(use-package tree-sitter
+  :ensure t)
+(use-package tree-sitter-langs
+  :ensure t
+  :after (tree-sitter))
 
 ;;
 ;; Nix
@@ -45,15 +39,6 @@
   :mode "\\.nix\\'")
 
 ;;
-;; TOML
-;;
-;; Ref: https://github.com/dryman/toml-mode.el
-;;
-
-(use-package toml-mode
-  :mode "\\.toml\\'")
-
-;;
 ;; Nickel
 ;;
 ;; Ref: https://github.com/nickel-lang/nickel-mode
@@ -61,6 +46,7 @@
 
 (use-package nickel-mode
   :mode "\\.ncl\\'"
+  :ensure t
   :config
   (progn
     (with-eval-after-load "lsp-mode"

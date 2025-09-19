@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2019 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2019-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -21,14 +21,14 @@
 ;; Ref: https://github.com/nflath/save-visited-files
 ;; TODO: Problematic - requires scrolling with some files
 (use-package save-visited-files
+  :ensure t
   :config (progn
             ;; Temporarily set default Scheme implementation to prevent
             ;; interactive prompt on startup
             (setq geiser-default-implementation 'guile)
 
             ;; Each Emacs server has a different list of visited files
-            (setq save-visited-files-location
-                  (format "~/.emacs.d/emacs-visited-files.%s" server-name))
+            (setq save-visited-files-location (~get-rmacs-config-path "emacs-visited-files"))
 
             (unless (file-exists-p save-visited-files-location)
               (write-region "" nil save-visited-files-location))

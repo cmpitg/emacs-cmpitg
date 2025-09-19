@@ -31,6 +31,85 @@
   (ido-mode 1))
 
 ;;
+;; Project management
+;;
+;; Ref: https://github.com/bbatsov/projectile
+;;
+
+(use-package projectile
+  :disabled t
+  :diminish projectile-mode
+  :init
+  (progn
+    (custom-set-variables `(projectile-known-projects-file ,(format (expand-file-name "projectile-bookmarks.%s.eld"
+                                                                                      user-emacs-directory)
+                                                                   server-name))))
+  :config
+  (progn
+    (projectile-mode)
+
+    (setq ~project-ignored-patterns
+          (list (rx (0+ any) ".gz" eol)
+                (rx (0+ any) ".pyc" eol)
+                (rx (0+ any) ".jar" eol)
+                (rx (0+ any) ".tar.gz" eol)
+                (rx (0+ any) ".tgz" eol)
+                (rx (0+ any) ".zip" eol)
+                (rx (0+ any) ".pyc" eol)
+                (rx (0+ any) ".elc" eol)
+                (rx (0+ any) ".class" eol)
+                (rx (0+ any) "~" eol)
+                (rx (0+ any) "swp" eol)
+                (rx ".lein-" (0+ any))
+                (rx ".git/")
+                (rx ".hg/")
+                (rx "/classes/")
+                (rx "/target/")
+                (rx "/node_modules/")
+                (rx "/bower_components/")))
+
+    (defun ~projectile-ignored-patterns ()
+      "Collects all ignored patterns for Projectile."
+      (concatenate 'list ~project-ignored-patterns
+                   (first (projectile-filtering-patterns))))
+
+    (defun ~projectile-ignored? (path)
+      (cl-member-if #'(lambda (pattern)
+                        (string-match pattern path))
+                    (~projectile-ignored-patterns)))
+
+    (defun ~print-files-advice-around (orig-fun &rest args)
+      (let* ((files (apply orig-fun args))
+             (filtered-with-regex (cl-remove-if #'~projectile-ignored? files)))
+        filtered-with-regex))
+
+    (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
+    ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
+
+    ;; Don't use truename, e.g. don't follow symlinks
+    ;; Ref:
+    ;; * https://github.com/bbatsov/projectile/pull/566
+    ;; * https://github.com/bbatsov/projectile/issues/1387
+    ;; * https://github.com/bbatsov/projectile/issues/1404
+    (defun ~dont-use-truename-projectile-root
+        (old-fn &rest args)
+      (cl-flet ((file-truename (f) f))
+        (apply old-fn args)))
+    (advice-add 'projectile-project-root :around #'~dont-use-truename-projectile-root)
+    (advice-add 'projectile-find-file :around #'~dont-use-truename-projectile-root)
+    (advice-add 'project-find-file :around #'~dont-use-truename-projectile-root)
+    (advice-add 'project-current :around #'~dont-use-truename-projectile-root)
+
+    (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-find-dir-includes-top-level t)
+    (setq projectile-enable-caching t)
+
+    (setq projectile-indexing-method 'hybrid)
+
+    ;; (setq projectile-indexing-method 'alien)
+    (setq projectile-generic-command "fdfind . --type f | grep -v -f <(grep . .projectile) | tr \"\\n\" \"\\0\"")))
+
+;;
 ;; Modal editing mode
 ;;
 ;; Ref: https://github.com/mrkkrp/modalka

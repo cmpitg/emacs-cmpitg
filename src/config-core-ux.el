@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2024 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -67,7 +67,7 @@
 (use-package saveplace
   :config (save-place-mode 1)
   :init (progn
-          (custom-set-variables `(save-place-file ,(format "~/.emacs.d/places.%s" server-name)))))
+          (custom-set-variables `(save-place-file ,(~get-rmacs-config-path "places")))))
 
 ;; Hide the toolbar
 (tool-bar-mode -1)
@@ -77,6 +77,7 @@
 
 ;; Hide undo-tree from mode line
 (use-package undo-tree
+  :ensure t
   :diminish undo-tree-mode
   :custom (undo-tree-auto-save-history . nil)
   :config
@@ -148,11 +149,13 @@
 (use-package iflipb
   ;; :straight
   ;; (iflipb :type git :host github :repo "jrosdahl/iflipb")
+  :ensure t
   :config (custom-set-variables `(iflipb-ignore-buffers nil)))
 
 ;; Make window management saner
 ;; Ref: https://depp.brause.cc/shackle/
 (use-package shackle
+  :ensure
   :config
   (progn
     (setq shackle-rules `((compilation-mode :noselect t)
@@ -161,9 +164,6 @@
     ;; (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))
     (setq shackle-default-rule '(:same t))
     (shackle-mode 1)))
-
-;; Simple buffer listing
-(require 'rmacs:config-module-simple-buffer-list "config-module-simple-buffer-list")
 
 ;; Mode line config
 (setq ~mode-line-simplified-position
@@ -198,6 +198,7 @@
 ;; Displaying available keybindings in pop up
 ;; Ref: https://github.com/justbur/emacs-which-key
 (use-package which-key
+  :ensure t
   :diminish which-key-mode
   :config (progn
             (which-key-mode 1)
@@ -211,6 +212,7 @@
 ;; Soft-wrapping long lines
 ;; Ref: https://github.com/joostkremers/visual-fill-column
 (use-package visual-fill-column
+  :ensure t
   :demand t
   :init (progn
           (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
@@ -225,13 +227,13 @@
           (with-eval-after-load "evil"
             ;; Make movement keys work like they should
             (define-key evil-normal-state-map
-              (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+                        (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
             (define-key evil-normal-state-map
-              (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+                        (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
             (define-key evil-motion-state-map
-              (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+                        (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
             (define-key evil-motion-state-map
-              (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+                        (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
             ;; Make horizontal movement cross lines
             (setq-default evil-cross-lines t))))
 
@@ -239,81 +241,83 @@
 ;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
 ;; TODO - URGENT Clean up the following code
 
-(use-package cider)
+(use-package cider
+  :ensure t)
 (autoload 'cider--make-result-overlay "cider-overlays")
 
-(defun blink:display-value (value point)
-  "Displays a value in an overlay at a point."
-  (let ((comment-start (if (null comment-start) ";" comment-start)))
-    (cider--make-result-overlay (format "%S" value)
-      :where point
-      :duration 'command))
-  value)
+(with-eval-after-load "cider-overlays"
+  (defun blink:display-value (value point)
+    "Displays a value in an overlay at a point."
+    (let ((comment-start (if (null comment-start) ";" comment-start)))
+      (cider--make-result-overlay (format "%S" value)
+                                  :where point
+                                  :duration 'command))
+    value)
 
-(defun blink:display-value-at-point (value)
-  "Displays `value' in an overlay at current point."
-  (blink:display-value value (point)))
+  (defun blink:display-value-at-point (value)
+    "Displays `value' in an overlay at current point."
+    (blink:display-value value (point)))
 
-(defun blink:display-value-at-end-of-selection (value)
-  "Displays `value' in an overlay at the end of the current
+  (defun blink:display-value-at-end-of-selection (value)
+    "Displays `value' in an overlay at the end of the current
 selection or current point."
-  (blink:display-value value (if (region-active-p)
-                                 (region-end)
-                               (point))))
+    (blink:display-value value (if (region-active-p)
+                                   (region-end)
+                                 (point))))
 
-(defun blink:display-value-at-end-of-defun (value)
-  "Displays `value' in an overlay at end-of-defun."
-  (blink:display-value value (save-excursion
-                               (end-of-defun)
-                               (point))))
-
-(defun blink:display-value-at-end-of-selection-or-defun (value)
-  "Displays `value' in an overlay at the end of the current
-selection or end-of-defun."
-  (blink:display-value value (if (region-active-p)
-                                 (region-end)
-                               (save-excursion
+  (defun blink:display-value-at-end-of-defun (value)
+    "Displays `value' in an overlay at end-of-defun."
+    (blink:display-value value (save-excursion
                                  (end-of-defun)
-                                 (point)))))
+                                 (point))))
 
-(defun blink:display-value-at-end-of-selection-or-line (value)
-  "Displays `value' in an overlay at the end of the current
+  (defun blink:display-value-at-end-of-selection-or-defun (value)
+    "Displays `value' in an overlay at the end of the current
+selection or end-of-defun."
+    (blink:display-value value (if (region-active-p)
+                                   (region-end)
+                                 (save-excursion
+                                   (end-of-defun)
+                                   (point)))))
+
+  (defun blink:display-value-at-end-of-selection-or-line (value)
+    "Displays `value' in an overlay at the end of the current
 selection or end-of-line."
-  (blink:display-value value (if (region-active-p)
-                                 (region-end)
-                               (point-at-eol))))
+    (blink:display-value value (if (region-active-p)
+                                   (region-end)
+                                 (point-at-eol))))
 
-(defun blink:display-value-at-end-of-sexp (value)
-  "Displays `value' in an overlay at end of the current sexp."
-  (blink:display-value-at-end-of-defun value (save-excursion
-                                               (sp-up-sexp)
-                                               (point))))
+  (defun blink:display-value-at-end-of-sexp (value)
+    "Displays `value' in an overlay at end of the current sexp."
+    (blink:display-value-at-end-of-defun value (save-excursion
+                                                 (sp-up-sexp)
+                                                 (point))))
 
-(defun blink:enable ()
-  (interactive)
-  (advice-add 'eval-last-sexp :filter-return #'blink:display-value-at-point)
-  (advice-add 'pp-eval-last-sexp :filter-return #'blink:display-value-at-point)
-  (advice-add 'eval-defun :filter-return #'blink:display-value-at-end-of-defun)
-  (advice-add '~eval-current-sexp :filter-return #'blink:display-value-at-end-of-sexp)
-  (advice-add 'eval-region :filter-return #'blink:display-value-at-end-of-selection)
-  (advice-add '~eval-region :filter-return #'blink:display-value-at-end-of-selection)
-  (advice-add '~execute :filter-return #'blink:display-value-at-end-of-selection-or-line)
-  (advice-add '~execute-line :filter-return #'blink:display-value-at-end-of-selection-or-line))
+  (defun blink:enable ()
+    (interactive)
+    (advice-add 'eval-last-sexp :filter-return #'blink:display-value-at-point)
+    (advice-add 'pp-eval-last-sexp :filter-return #'blink:display-value-at-point)
+    (advice-add 'eval-defun :filter-return #'blink:display-value-at-end-of-defun)
+    (advice-add '~eval-current-sexp :filter-return #'blink:display-value-at-end-of-sexp)
+    (advice-add 'eval-region :filter-return #'blink:display-value-at-end-of-selection)
+    (advice-add '~eval-region :filter-return #'blink:display-value-at-end-of-selection)
+    (advice-add '~execute :filter-return #'blink:display-value-at-end-of-selection-or-line)
+    (advice-add '~execute-line :filter-return #'blink:display-value-at-end-of-selection-or-line))
 
-(defun blink:disable ()
-  (interactive)
-  (advice-remove 'eval-last-sexp #'blink:display-value-at-point)
-  (advice-remove 'pp-eval-last-sexp #'blink:display-value-at-point)
-  (advice-remove 'eval-defun #'blink:display-value-at-end-of-defun)
-  (advice-remove '~eval-current-sexp #'blink:display-value-at-end-of-sexp)
-  (advice-remove 'eval-region #'blink:display-value-at-end-of-selection)
-  (advice-remove '~eval-region #'blink:display-value-at-end-of-selection)
-  (advice-remove '~execute #'blink:display-value-at-end-of-selection-or-line)
-  (advice-remove '~execute-line #'blink:display-value-at-end-of-selection-or-line))
+  (defun blink:disable ()
+    (interactive)
+    (advice-remove 'eval-last-sexp #'blink:display-value-at-point)
+    (advice-remove 'pp-eval-last-sexp #'blink:display-value-at-point)
+    (advice-remove 'eval-defun #'blink:display-value-at-end-of-defun)
+    (advice-remove '~eval-current-sexp #'blink:display-value-at-end-of-sexp)
+    (advice-remove 'eval-region #'blink:display-value-at-end-of-selection)
+    (advice-remove '~eval-region #'blink:display-value-at-end-of-selection)
+    (advice-remove '~execute #'blink:display-value-at-end-of-selection-or-line)
+    (advice-remove '~execute-line #'blink:display-value-at-end-of-selection-or-line))
 
-(blink:enable)
-;; (blink:disable)
-
+  (blink:enable)
+  ;; (blink:disable)
+  )
 ;; ;; Buffer list sidebar
 ;; ;; Ref: https://github.com/jojojames/ibuffer-sidebar
 ;; (use-package ibuffer-sidebar
@@ -342,29 +346,32 @@ selection or end-of-line."
 
 ;; When doing interactive search, try taking current region first
 (defun ~advice/isearch-taking-current-region (fun forward &rest args)
-  (let ((current-selection (buffer-substring-no-properties (mark) (point))))
-    (cond ((and transient-mark-mode mark-active (not (eq (mark) (point))))
-           (isearch-update-ring current-selection)
-           (deactivate-mark)
-           (apply fun forward args)
-           (if (not forward)
-               (isearch-repeat-backward)
-             (goto-char (mark))
-             (isearch-repeat-forward)))
-          (t
-           (cond ((string-empty-p current-selection)
-                  (apply fun forward args))
-                 (t
-                  (when mark-active
-                    (isearch-update-ring current-selection))
-                  (deactivate-mark)
-                  (apply fun forward args)
-                  (cond ((not forward)
-                         (isearch-repeat-backward))
-                        (t
-                         (goto-char (mark))
-                         (isearch-repeat-forward)
-                         (isearch-repeat-forward)))))))))
+  (if (null (mark))
+      (apply fun forward args)
+    (let ((current-selection (buffer-substring-no-properties (mark)
+                                                             (point))))
+      (cond ((and transient-mark-mode mark-active (not (eq (mark) (point))))
+             (isearch-update-ring current-selection)
+             (deactivate-mark)
+             (apply fun forward args)
+             (if (not forward)
+                 (isearch-repeat-backward)
+               (goto-char (mark))
+               (isearch-repeat-forward)))
+            (t
+             (cond ((string-empty-p current-selection)
+                    (apply fun forward args))
+                   (t
+                    (when mark-active
+                      (isearch-update-ring current-selection))
+                    (deactivate-mark)
+                    (apply fun forward args)
+                    (cond ((not forward)
+                           (isearch-repeat-backward))
+                          (t
+                           (goto-char (mark))
+                           (isearch-repeat-forward)
+                           (isearch-repeat-forward))))))))))
 
 (advice-add #'isearch-mode :around #'~advice/isearch-taking-current-region)
 
@@ -417,15 +424,6 @@ selection or end-of-line."
   (progn
     (custom-set-variables `(aw-keys (list ?u ?e ?o ?a ?i ?h ?t ?n ?s ?k ?j ?q ?' ?x ?m ?w ?v ?z ?b)))))
 
-;; Acme-mouse
-;; Ref: https://github.com/cmpitg/acme-mouse
-(use-package acme-mouse
-  :disabled t
-  :config
-  (progn
-    (acme-mouse-mode)
-    (global-acme-mouse-mode)))
-
 ;; Allow text drap-and-drop with mouse
 (custom-set-variables `(mouse-drag-and-drop-region t))
 
@@ -435,6 +433,7 @@ selection or end-of-line."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package olivetti
+  :ensure t
   :init
   (progn
     ;; (add-hook 'org-mode-hook #'turn-on-olivetti-mode)

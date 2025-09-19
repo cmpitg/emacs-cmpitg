@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2021-2024 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2021-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -27,7 +27,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (eval-when-compile
-  (require 'cl)
   (require 'cl-lib)
   (require 'color)
   (require 'windmove)
@@ -279,7 +278,7 @@
 
 ;; Set frame title
 (let ((title-format
-       `(,(format "Rmacs@%s || %s" (system-name) (or server-name :minimal))
+       `(,(format "Rmacs@%s || %s" (system-name) (or server-name "UNNAMED"))
          ;; " \u262f "
          ;; " ☯ "
          " "
@@ -688,6 +687,11 @@ keybinding."
                                    keymap)))
                    keybinding-alist)
            keymap))))
+
+  (defun ~get-rmacs-config-path (config-name)
+    "Gets path for a config file."
+    (file-name-concat user-emacs-directory
+                      (format "%s.%s" config-name server-name)))
 
   (defun ~is-next-line-output-block? ()
     "Determines if the next line is the start of an output block.
@@ -2115,7 +2119,7 @@ application."
     (when trailing-lines
       (insert "\n\n")))
 
-  (defmacro* ui:text/insert-section (title &rest body)
+  (cl-defmacro ui:text/insert-section (title &rest body)
     "Inserts a text section with a title."
     `(progn (ui:text/insert-title ,title 'info-title-4)
             ,@body))

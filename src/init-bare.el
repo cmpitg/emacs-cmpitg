@@ -34,6 +34,7 @@
 (require 'rmacs:bootstrap-functionality               "bootstrap-functionality")
 (require 'rmacs:config-module-wand-minimal            "config-module-wand-minimal")
 (require 'rmacs:config-module-omni-command            "config-module-omni-command")
+(require 'rmacs:config-module-simple-buffer-list      "config-module-simple-buffer-list")
 (require 'rmacs:config-header-line                    "config-header-line")
 (require 'rmacs:config-module-bowser                  "config-module-bowser")
 

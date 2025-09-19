@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,25 +16,6 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
-
-;; NOTE: Do not use this file as a standalone init file!
-
-;; TODO: https://github.com/tjarvstrand/edts and Erlang integration
-;; TODO: https://wiki.haskell.org/Emacs#Scion for Haskell integration
-
-;; TODO: DOC - Python mode keybinding - Look under the Elpy configuration
-
-;; TODO: Manual testing scenario
-
-;; TODO: *exec* in combination with the header-line
-;; TODO: header-line → double-right-clicking to edit
-
-;; TODO: Functions:
-;; - e r (python-mode) python-shell-send-region
-;; - (bind-key "s-+" 'mc/edit-lines)
-
-;; TODO: company mode
-;; TODO: Make backward/forward kill word deletes, not kills
 
 ;; Doc: Don't use setq to customize, use `custom-set-variables'
 ;; Doc: To add a file variable to the prop line: add-file-local-variable-prop-line
@@ -60,16 +41,10 @@
 ;; Doc: treemacs
 ;; Doc: Splitting & one window
 
-;; TODO: Make point-pos open up closed file
-;; TODO: Migrate all old advice functions to the new advice mechanism as with :commands, so force-load might be necessary
-;; TODO: Think about how testing should work
-;; TODO: config-literate-programming's TODOs
-
-;; TODO: Default vars for machine-specific-init
-;; TOOD: setq to custom-set-variables
-
-;; Load bare Rmacs
-(load (concat (file-name-directory (or load-file-name (buffer-file-name))) "init-bare"))
+;; Always starts with bare config
+(load (file-name-concat (file-name-directory (or load-file-name
+                                                 (buffer-file-name)))
+                        "init-bare"))
 
 (require 'rmacs:config-package-manager                "config-package-manager")
 (require 'rmacs:config-core-functions                 "config-core-functions")
@@ -79,5 +54,15 @@
 (require 'rmacs:config-themes                         "config-themes")
 (require 'rmacs:config-core-keybindings               "config-core-keybindings")
 (require 'rmacs:config-module-convenient-buffer-shell "config-module-convenient-buffer-shell")
+
+;;
+;; Last but not least - remember
+;;
+
+(require 'rmacs:config-core-last                      "config-core-last")
+
+;; Make user all actions queued by Elpaca are executed before we enjoy Emacs
+(with-eval-after-load "elpaca"
+  (elpaca-process-queues))
 
 (message "Done loading Rmacs minimal")

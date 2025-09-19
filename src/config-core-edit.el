@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2018-2024 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -23,12 +23,21 @@
 (require 'subr-x)
 
 ;;
+;; Navigate buffers based on MRU/recency
+;;
+;; Ref: https://github.com/jrosdahl/iflipb
+;;
+(use-package iflipb
+  :ensure t)
+
+;;
 ;; String processing
 ;;
 ;; Ref: https://github.com/magnars/s.el
 ;;
 
-(use-package s)
+(use-package s
+  :ensure t)
 
 ;;
 ;; File/filesystem library
@@ -36,7 +45,8 @@
 ;; Ref: https://github.com/rejeep/f.el
 ;;
 
-(use-package f)
+(use-package f
+  :ensure t)
 
 ;;
 ;; Async processing by spawning subordinate processes
@@ -44,13 +54,15 @@
 ;; Ref: https://github.com/jwiegley/emacs-async
 ;;
 
-(use-package async)
+(use-package async
+  :ensure t)
 
 ;;
 ;; Editable grep'ing
 ;;
 
-(use-package wgrep)
+(use-package wgrep
+  :ensure t)
 
 ;;
 ;; Tramp for remote & sudo access
@@ -70,6 +82,7 @@
 ;;
 
 (use-package expand-region
+  :ensure t
   :commands (er/expand-region
              er/mark-outside-pairs
              er/mark-outside-quotes
@@ -91,7 +104,7 @@
 ;;
 
 ;; (setq grep-command "grep --ignore-case --line-number --with-filename -e ")
-(setq grep-command "rg --ignore-case --line-number --with-filename -e ")
+(setq grep-command "rg --ignore-case --line-number --with-filename --vimgrep -e ")
 
 ;;
 ;; Save minibuffer history across sessions
@@ -100,8 +113,7 @@
 ;;
 
 (savehist-mode 1)
-(setq savehist-file
-      (format "~/.emacs.d/history.%s" server-name))
+(setq savehist-file (~get-rmacs-config-path "history"))
 (dolist (var '(kill-ring
                search-ring
                regexp-search-ring
@@ -125,86 +137,10 @@ recursively."
 ;;
 ;; Project management
 ;;
-;; Ref: https://github.com/bbatsov/projectile
-;;
-;; TODO: Check filtering & customization
-;;
 
-(use-package project
-  :demand t)
-
-(use-package projectile
-  ;; :disabled t
-  :diminish projectile-mode
-  :init
-  (progn
-    (custom-set-variables `(projectile-known-projects-file ,(format (expand-file-name "projectile-bookmarks.%s.eld"
-                                                                                      user-emacs-directory)
-                                                                    server-name))))
-  :config
-  (progn
-    (projectile-mode)
-
-    (setq ~project-ignored-patterns
-          (list (rx (0+ any) ".gz" eol)
-                (rx (0+ any) ".pyc" eol)
-                (rx (0+ any) ".jar" eol)
-                (rx (0+ any) ".tar.gz" eol)
-                (rx (0+ any) ".tgz" eol)
-                (rx (0+ any) ".zip" eol)
-                (rx (0+ any) ".pyc" eol)
-                (rx (0+ any) ".elc" eol)
-                (rx (0+ any) ".class" eol)
-                (rx (0+ any) "~" eol)
-                (rx (0+ any) "swp" eol)
-                (rx ".lein-" (0+ any))
-                (rx ".git/")
-                (rx ".hg/")
-                (rx "/classes/")
-                (rx "/target/")
-                (rx "/node_modules/")
-                (rx "/bower_components/")))
-
-    (defun ~projectile-ignored-patterns ()
-      "Collects all ignored patterns for Projectile."
-      (concatenate 'list ~project-ignored-patterns
-                   (first (projectile-filtering-patterns))))
-
-    (defun ~projectile-ignored? (path)
-      (cl-member-if #'(lambda (pattern)
-                        (string-match pattern path))
-                    (~projectile-ignored-patterns)))
-
-    (defun ~print-files-advice-around (orig-fun &rest args)
-      (let* ((files (apply orig-fun args))
-             (filtered-with-regex (cl-remove-if #'~projectile-ignored? files)))
-        filtered-with-regex))
-
-    (advice-add 'projectile-remove-ignored :around #'~print-files-advice-around)
-    ;; (advice-remove 'projectile-remove-ignored #'~print-files-advice-around)
-
-    ;; Don't use truename, e.g. don't follow symlinks
-    ;; Ref:
-    ;; * https://github.com/bbatsov/projectile/pull/566
-    ;; * https://github.com/bbatsov/projectile/issues/1387
-    ;; * https://github.com/bbatsov/projectile/issues/1404
-    (defun ~dont-use-truename-projectile-root
-        (old-fn &rest args)
-      (cl-flet ((file-truename (f) f))
-        (apply old-fn args)))
-    (advice-add 'projectile-project-root :around #'~dont-use-truename-projectile-root)
-    (advice-add 'projectile-find-file :around #'~dont-use-truename-projectile-root)
-    (advice-add 'project-find-file :around #'~dont-use-truename-projectile-root)
-    (advice-add 'project-current :around #'~dont-use-truename-projectile-root)
-
-    (setq projectile-switch-project-action 'projectile-dired)
-    (setq projectile-find-dir-includes-top-level t)
-    (setq projectile-enable-caching t)
-
-    (setq projectile-indexing-method 'hybrid)
-
-    ;; (setq projectile-indexing-method 'alien)
-    (setq projectile-generic-command "fdfind . --type f | grep -v -f <(grep . .projectile) | tr \"\\n\" \"\\0\"")))
+(require 'project)
+;; (use-package project
+;;   :ensure (:wait t))
 
 ;;
 ;; Enhanced M-x
@@ -213,25 +149,30 @@ recursively."
 ;;
 
 (use-package amx
+  :ensure t
   :config
-  (progn
-    (amx-mode 1)
-    (setq amx-save-file (format "~/.emacs.d/amx-items.%s" server-name))))
+  (setq amx-save-file (~get-rmacs-config-path "amx-items"))
+  :init
+  (amx-mode 1))
 
 ;;
-;; Fuzzy finding
+;; Fuzzy finding and vertical completion
+;;
+;; Ref: https://github.com/minad/vertico
 ;;
 
 ;; (use-package flx-ido)
 
 (use-package vertico
-  :init
+  :ensure t
+  :config
   (progn
     (vertico-mode 1)
     (ido-mode -1)
     (savehist-mode 1)))
 
 (use-package orderless
+  :ensure t
   :custom
   ;; Configure a custom style dispatcher (see the Consult wiki)
   ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
@@ -241,10 +182,11 @@ recursively."
   (completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package consult
+  :ensure t
   ;; Enable automatic preview at point in the *Completions* buffer, relevant
   ;; when using the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-  :init
+  :config
   (progn
     (ido-mode -1)
     ;; Optionally configure the register formatting. This improves the
@@ -271,9 +213,7 @@ recursively."
     (defalias '~interactively-find-file-in-project #'project-find-file)
     (defalias '~interactively-get-bookmarks #'consult-bookmark)
     (defalias '~interactively-yank-pop #'consult-yank-pop)
-    (defalias '~interactively-search #'consult-line)
-
-    ))
+    (defalias '~interactively-search #'consult-line)))
 
 ;;
 ;; Temporary save points
@@ -281,7 +221,8 @@ recursively."
 ;; Ref: https://github.com/alezost/point-pos.el
 ;;
 
-(use-package point-pos)
+(use-package point-pos
+  :ensure t)
 
 ;;
 ;; Multiple cursors
@@ -289,7 +230,8 @@ recursively."
 ;; Ref: https://github.com/magnars/multiple-cursors.el
 ;;
 
-(use-package multiple-cursors)
+(use-package multiple-cursors
+  :ensure t)
 
 ;;
 ;; Live doc in echo area
@@ -310,7 +252,8 @@ recursively."
 
 ;; Cheat sheet: M-x sp-cheat-sheet
 (use-package smartparens
-  :config
+  :ensure t
+  :init
   (progn
     (require 'smartparens-config)
     (smartparens-global-mode)))
@@ -322,6 +265,7 @@ recursively."
 ;;
 
 (use-package dtrt-indent
+  :ensure t
   :config (dtrt-indent-global-mode 1))
 
 ;;
@@ -331,6 +275,7 @@ recursively."
 ;;
 
 (use-package fastnav
+  :ensure
   :config (progn
             (defvaralias 'lazy-highlight-face 'isearch-lazy-highlight)))
 
@@ -385,7 +330,7 @@ recursively."
           cider-repl-mode
           sly-mrepl-mode
           slime-repl-mode) . lispy-mode)
-  :demand t
+  :ensure t
   :config
   (progn
     (defun ~conditionally-enable-lispy ()
@@ -471,6 +416,7 @@ recursively."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package meow
+  :disabled t
   :config
   (progn
     (defun meow-setup-qwerty ()
@@ -598,12 +544,13 @@ recursively."
   :diminish company-mode
   :bind (:map company-mode-map
          ("C-/" . #'company-complete))
-  :demand t
+  :ensure t
   :config (progn
             (global-company-mode 1)
-            (use-package pos-tip)))
+            (use-package pos-tip
+              :ensure t)))
 (use-package company-quickhelp
-  :demand t
+  :ensure t
   :bind (:map company-active-map
          ("M-h" . #'company-quickhelp-manual-begin))
   :config (progn
@@ -619,19 +566,21 @@ recursively."
 ;;
 
 (use-package monky
+  :ensure t
   :commands monky-status)
 
+(use-package transient
+  :ensure t)
+
 (use-package magit
+  :ensure t
+  :after (transient)
   :commands (magit-status magit-get-top-dir)
   :init
   (progn
     (setf magit-push-always-verify 'pp)
     ;; (setf git-commit-check-style-conventions nil)
     (setf git-commit-finish-query-functions nil)))
-
-;; Ref: https://github.com/emacs-evil/evil-magit
-;; (use-package evil-magit
-;;   :after (evil magit))
 
 ;;
 ;; Pattern-based command execution
@@ -642,6 +591,7 @@ recursively."
 ;; TODO: Separate ~smart-open-file to a module
 
 (use-package wand
+  :ensure t
   :after (rmacs:config-module-bowser rmacs:config-module-convenient-buffer-shell f)
   :config
   (progn
@@ -815,6 +765,7 @@ recursively."
 
 (use-package yasnippet
   :diminish yas-minor-mode
+  :ensure t
   :config (progn
             (add-to-list 'yas-snippet-dirs (expand-file-name rmacs:+snippet-dir+))
             (yas-global-mode 1)))
@@ -824,6 +775,7 @@ recursively."
 ;;
 
 (use-package rainbow-mode
+  :ensure t
   :commands (rainbow-mode))
 
 ;;

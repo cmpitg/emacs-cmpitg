@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2022 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2022-2025 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,6 +16,8 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
+
+(require 'cl-lib)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; thing-at-point
@@ -111,7 +113,7 @@ E.g.
     (unless (string-empty-p (string-trim string))
       (wand-helper:eval-string sexp))))
 
-(defun* wand:create-rule (&key (skip-comment t)
+(cl-defun wand:create-rule (&key (skip-comment t)
                                match
                                capture
                                (action wand:eval-string))
