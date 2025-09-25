@@ -2851,6 +2851,10 @@ line in Eshell."
 
 ;; Binding shortcut
 (bind-key "<f5>" (lookup-key global-map (kbd "M-SPC")))
+
+(bind-key "<f7>" (lookup-key global-map (kbd "M-SPC")))
+(bind-key "M-SPC <f7>" #'execute-extended-command)
+
 (bind-key "C-M-<return>" (lookup-key global-map (kbd "M-SPC")))
 (bind-key "C-M-RET" (lookup-key global-map (kbd "M-SPC")))
 (bind-key "<s-g>" (lookup-key global-map (kbd "C-g")))
