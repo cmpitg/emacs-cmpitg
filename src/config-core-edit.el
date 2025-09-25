@@ -273,6 +273,28 @@ recursively."
   :config (dtrt-indent-global-mode 1))
 
 ;;
+;; Showing vertical guides
+;;
+;; Ref: https://github.com/jdtsmith/indent-bars
+;;
+
+(use-package indent-bars
+  :ensure t
+  :custom
+  (indent-bars-no-descend-lists t) ; no extra bars in continued func arg lists
+  (indent-bars-treesit-support t)
+  (indent-bars-treesit-ignore-blank-lines-types '("module"))
+  ;; Add other languages as needed
+  (indent-bars-treesit-scope '((python function_definition class_definition for_statement
+                                       if_statement with_statement while_statement)))
+  ;; Note: wrap may not be needed if no-descend-list is enough
+  ;;(indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
+  ;;				      list list_comprehension
+  ;;				      dictionary dictionary_comprehension
+  ;;				      parenthesized_expression subscript)))
+  :hook ((python-base-mode yaml-mode nickel-mode lisp-mode) . indent-bars-mode))
+
+;;
 ;; Char-based navigation
 ;;
 ;; Ref: https://www.emacswiki.org/emacs/FastNav
