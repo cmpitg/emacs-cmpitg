@@ -2384,7 +2384,7 @@ application."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'dired)
-(with-eval-after-load 'dired
+(with-eval-after-load "dired"
   (custom-set-variables '(dired-maybe-use-globstar t)
                         '(dired-listing-switches "-labhFgG --group-directories-first"))
 
@@ -2425,7 +2425,7 @@ directory."
 (defun ~eshell-quit ()
   "Quits Eshell when current command is empty."
   (interactive)
-  (insert "exit")exit
+  (insert "exit")
   (eshell-send-input))
 
 ;; (defun ~my/eshell-prompt-function ()
