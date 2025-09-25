@@ -167,16 +167,44 @@ might need manual refreshing."
 ;;
 
 (use-package treemacs
-  :after (evil)
-  :disabled t
+  :ensure t
   :config
   (progn
-    (treemacs-follow-mode -1)
+    (treemacs-follow-mode 1)
     (treemacs-filewatch-mode -1)
+    (treemacs-fringe-indicator-mode 'always)
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
+
     ;; Collapse empty dirs into one when possible
     (setq treemacs-collapse-dirs 3)
     ;; Always find and focus on the current file when treemacs is built
-    (setq treemacs-follow-after-init t)))
+    (setq treemacs-follow-after-init t)
+
+    ;; (treemacs-start-on-boot)
+    ))
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :after (treemacs)
+  :ensure t)
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+(use-package treemacs-persp
+  :after (treemacs persp-mode)
+  :ensure t
+  :config (treemacs-set-scope-type 'Perspectives))
+(use-package treemacs-tab-bar
+  :after (treemacs)
+  :ensure t
+  :config (treemacs-set-scope-type 'Tabs))
 (use-package treemacs-evil
   :after (treemacs evil)
   :disabled t)
