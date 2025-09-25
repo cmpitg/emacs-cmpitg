@@ -263,9 +263,8 @@ recursively."
 (use-package smartparens
   :ensure t
   :init
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode)))
+  (require 'smartparens-config)
+  (smartparens-global-mode 1))
 
 ;;
 ;; Adjust indentation based on current file
@@ -285,6 +284,7 @@ recursively."
 
 (use-package indent-bars
   :ensure t
+
   :custom
   (indent-bars-no-descend-lists t) ; no extra bars in continued func arg lists
   (indent-bars-treesit-support t)
@@ -297,6 +297,7 @@ recursively."
   ;;				      list list_comprehension
   ;;				      dictionary dictionary_comprehension
   ;;				      parenthesized_expression subscript)))
+
   :hook ((python-base-mode yaml-mode nickel-mode lisp-mode) . indent-bars-mode))
 
 ;;
@@ -306,9 +307,9 @@ recursively."
 ;;
 
 (use-package fastnav
-  :ensure
-  :config (progn
-            (defvaralias 'lazy-highlight-face 'isearch-lazy-highlight)))
+  :ensure t
+  :config
+  (defvaralias 'lazy-highlight-face 'isearch-lazy-highlight))
 
 ;;
 ;; Bracket-based structured editing
@@ -364,22 +365,21 @@ recursively."
           slime-repl-mode) . lispy-mode)
   :ensure t
   :config
-  (progn
-    (defun ~conditionally-enable-lispy ()
-      (when (eq this-command 'eval-expression)
-        (lispy-mode 1)))
-    (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
+  (defun ~conditionally-enable-lispy ()
+    (when (eq this-command 'eval-expression)
+      (lispy-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
 
-    (defun ~lispy-update-keybindings ()
-      (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
-      (define-key lispy-mode-map (kbd "C-a") #'~my/deactivate-modalka)
-      (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
-      (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
-      (define-key lispy-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
-      (define-key lispy-mode-map (kbd "<C-RET>") #'~eval-last-sexp-or-region))
-    (add-hook 'lisp-mode-hook #'~lispy-update-keybindings)
+  (defun ~lispy-update-keybindings ()
+    (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
+    (define-key lispy-mode-map (kbd "C-a") #'~my/deactivate-modalka)
+    (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
+    (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
+    (define-key lispy-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
+    (define-key lispy-mode-map (kbd "<C-RET>") #'~eval-last-sexp-or-region))
+  (add-hook 'lisp-mode-hook #'~lispy-update-keybindings)
 
-    (~lispy-update-keybindings)))
+  (~lispy-update-keybindings))
 
 (use-package paredit
   :disabled t
@@ -577,18 +577,18 @@ recursively."
   :bind (:map company-mode-map
          ("C-/" . #'company-complete))
   :ensure t
-  :config (progn
-            (global-company-mode 1)
-            (use-package pos-tip
-              :ensure t)))
+  :config
+  (global-company-mode 1)
+  (use-package pos-tip
+    :ensure t))
 (use-package company-quickhelp
   :ensure t
   :bind (:map company-active-map
          ("M-h" . #'company-quickhelp-manual-begin))
-  :config (progn
-            (company-quickhelp-mode 1)
-            ;; Do not trigger automatically
-            (setq company-quickhelp-delay nil)))
+  :config
+  (company-quickhelp-mode 1)
+  ;; Do not trigger automatically
+  (setq company-quickhelp-delay nil))
 
 ;;
 ;; Version control systems: Mercurial and Git
@@ -609,10 +609,9 @@ recursively."
   :after (transient)
   :commands (magit-status magit-get-top-dir)
   :init
-  (progn
-    (setf magit-push-always-verify 'pp)
-    ;; (setf git-commit-check-style-conventions nil)
-    (setf git-commit-finish-query-functions nil)))
+  (setf magit-push-always-verify 'pp)
+  ;; (setf git-commit-check-style-conventions nil)
+  (setf git-commit-finish-query-functions nil))
 
 ;;
 ;; Pattern-based command execution
@@ -626,166 +625,165 @@ recursively."
   :ensure t
   :after (rmacs:config-module-bowser rmacs:config-module-convenient-buffer-shell f)
   :config
-  (progn
-    (cl-defun ~wand:set-current-dir (&optional
-                                     (text (thing-at-point 'line)))
-      (interactive)
-      (let ((text (string-trim text)))
-        (when (f-dir? text)
-          (setq-local default-directory text))))
+  (cl-defun ~wand:set-current-dir (&optional
+                                   (text (thing-at-point 'line)))
+    (interactive)
+    (let ((text (string-trim text)))
+      (when (f-dir? text)
+        (setq-local default-directory text))))
 
-    (cl-defun ~wand:open-or-eval (&optional text)
-      "Performs an action based on what `text' represents:
+  (cl-defun ~wand:open-or-eval (&optional text)
+    "Performs an action based on what `text' represents:
 - if `text' is a path to a directory, expands or collapses it with Bowser;
 - if `text' is a file pattern, smartly opens it with `~smart-open-file';
 - otherwise, executes it as Emacs Lisp code"
-      (interactive)
-      (let ((text (string-trim text)))
-        (cond
-         ((s-starts-with? "ssh://" text)
-          (if (s-ends-with? "/" text)
-              (bowser:expand-or-collapse-dir)
-            (let ((ssh-expr (substring text (length "ssh://"))))
-              (find-file (format "/ssh:%s" ssh-expr)))))
-         ((~file-pattern? text)
-          (if (and (string-equal text (bowser:get-path-current-line)) ;; Current line is a path
-                   (f-exists? text))
-              ;; Expand or collapse dir if is dir, or visit the file in
-              ;; another frame if not.  This effectively makes it possible to
-              ;; use Bowser as a poor man's file browser.
-              (if (f-directory? text)
-                  (bowser:expand-or-collapse-dir)
-                (find-file-other-window text)
-                ;; (~find-file-in-previous-frame text)
-                )
-            (~smart-open-file text)))
-         (t
-          (wand:eval-string text)))))
+    (interactive)
+    (let ((text (string-trim text)))
+      (cond
+       ((s-starts-with? "ssh://" text)
+        (if (s-ends-with? "/" text)
+            (bowser:expand-or-collapse-dir)
+          (let ((ssh-expr (substring text (length "ssh://"))))
+            (find-file (format "/ssh:%s" ssh-expr)))))
+       ((~file-pattern? text)
+        (if (and (string-equal text (bowser:get-path-current-line)) ;; Current line is a path
+                 (f-exists? text))
+            ;; Expand or collapse dir if is dir, or visit the file in
+            ;; another frame if not.  This effectively makes it possible to
+            ;; use Bowser as a poor man's file browser.
+            (if (f-directory? text)
+                (bowser:expand-or-collapse-dir)
+              (find-file-other-window text)
+              ;; (~find-file-in-previous-frame text)
+              )
+          (~smart-open-file text)))
+       (t
+        (wand:eval-string text)))))
 
-    (cl-defun ~bs:exec-output-to-next-line (text)
-      (interactive)
-      (~open-line 1)
-      (beginning-of-line)
-      (bs:exec text))
+  (cl-defun ~bs:exec-output-to-next-line (text)
+    (interactive)
+    (~open-line 1)
+    (beginning-of-line)
+    (bs:exec text))
 
-    (defun ~build-|rmacs-tee-cmd (cmd)
-      "Builds command to pipe output to the current buffer using rmacs-tee."
-      (format "{ exec-and-echo-stdin %s } |& env RMACS_BUFFER_NAME='%s' RMACS_SERVER_NAME='%s' rmacs-tee"
-              cmd (buffer-name) server-name))
+  (defun ~build-|rmacs-tee-cmd (cmd)
+    "Builds command to pipe output to the current buffer using rmacs-tee."
+    (format "{ exec-and-echo-stdin %s } |& env RMACS_BUFFER_NAME='%s' RMACS_SERVER_NAME='%s' rmacs-tee"
+            cmd (buffer-name) server-name))
 
-    (setq wand:*rules*
-          (list (wand:create-rule :match (rx bol (0+ " ") "<")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'~exec-sh<)
-                (wand:create-rule :match (rx bol (0+ " ") "$<")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'bs:send-complete-string)
-                (wand:create-rule :match (rx bol (0+ " ") "$")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action (~add-arg-to-history-fn *~exec-history-path* #'~bs:exec-output-to-next-line
-                                                                  :max-history *~exec-history-max*))
-                (wand:create-rule :match (rx bol (0+ " ") ">")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'~exec-sh>)
-                (wand:create-rule :match (rx bol (0+ " ") "!!!#")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!!! " text))))
-                (wand:create-rule :match (rx bol (0+ " ") "!!!")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~prepare-for-output-block t)
-                                              (~dispatch-action (concat "!!! " (~build-|rmacs-tee-cmd text)))))
-                (wand:create-rule :match (rx bol (0+ " ") "!#")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!# " text))))
-                (wand:create-rule :match (rx bol (0+ " ") "!@")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!@ " text))))
-                (wand:create-rule :match (rx bol (0+ " ") "!^")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'~exec-sh-pop-up)
-                (wand:create-rule :match (rx bol (0+ " ") "!!#")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "!! " text))))
-                (wand:create-rule :match (rx bol (0+ " ") "!!")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~prepare-for-output-block t)
-                                              (~dispatch-action (concat "!! " (~build-|rmacs-tee-cmd text)))))
-                (wand:create-rule :match (rx bol (0+ " ") "!")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~exec-sh<-next-line-separate text
-                                                                            :callback #'(lambda (&rest _args)
-                                                                                          (end-of-thing 'wand-text)
-                                                                                          (forward-line)
-                                                                                          (call-interactively #'~mark-current-output-block)))))
-                (wand:create-rule :match (rx bol (0+ " ") "mux://")
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
-                                              (~dispatch-action (concat "mux://" text))))
-                (wand:create-rule :match (rx bol (0+ " ") "ssh://"
-                                             (1+ (not (any "!")))
-                                             "!")
-                                  :capture :whole
-                                  :skip-comment nil
-                                  :action #'(lambda (text)
-                                              (let ((cmd (thread-last (~split-string "!" text)
-                                                                      rest
-                                                                      (s-join "!")
-                                                                      string-trim)))
-                                                (~add-to-history-file *~exec-history-path* cmd :max-history *~exec-history-max*))
-                                              ;; TODO Refactor - after the extraction of the display function from ~exec-sh<-next-line-separate
-                                              (~exec-sh<-next-line-separate (format "dispatch-action %s"
-                                                                                    (shell-quote-argument text)))))
-                (wand:create-rule :match "----\n[^ ]* +"
-                                  :capture :after
-                                  :skip-comment nil
-                                  :action #'~current-snippet->file)
-                (wand:create-rule :match (rx bol (0+ " ") "chrome:")
-                                  :capture :after
-                                  :action #'~open-with-google-chrome)
-                (wand:create-rule :match (rx bol (0+ " ") "https?://")
-                                  :capture :whole
-                                  :action #'~web-browse-gui)
-                ;; (wand:create-rule :match ".*\\.html$"
-                ;;                   :capture :whole
-                ;;                   :skip-comment nil
-                ;;                   :action #'~web-browse-gui)
-                (wand:create-rule :match (rx bol (0+ " ") "in:")
-                                  :capture :after
-                                  :action #'~wand:set-current-dir)
-                (wand:create-rule :match (rx bol (0+ " ") "file:")
-                                  :capture :after
-                                  :action #'~smart-open-file)
-                (wand:create-rule :match (rx (0+ (or any "\n")))
-                                  :capture :whole
-                                  :skip-comment nil
-                                  :action #'~wand:open-or-eval)))))
+  (setq wand:*rules*
+        (list (wand:create-rule :match (rx bol (0+ " ") "<")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'~exec-sh<)
+              (wand:create-rule :match (rx bol (0+ " ") "$<")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'bs:send-complete-string)
+              (wand:create-rule :match (rx bol (0+ " ") "$")
+                                :capture :after
+                                :skip-comment nil
+                                :action (~add-arg-to-history-fn *~exec-history-path* #'~bs:exec-output-to-next-line
+                                                                :max-history *~exec-history-max*))
+              (wand:create-rule :match (rx bol (0+ " ") ">")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'~exec-sh>)
+              (wand:create-rule :match (rx bol (0+ " ") "!!!#")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~dispatch-action (concat "!!! " text))))
+              (wand:create-rule :match (rx bol (0+ " ") "!!!")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~prepare-for-output-block t)
+                                            (~dispatch-action (concat "!!! " (~build-|rmacs-tee-cmd text)))))
+              (wand:create-rule :match (rx bol (0+ " ") "!#")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~dispatch-action (concat "!# " text))))
+              (wand:create-rule :match (rx bol (0+ " ") "!@")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~dispatch-action (concat "!@ " text))))
+              (wand:create-rule :match (rx bol (0+ " ") "!^")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'~exec-sh-pop-up)
+              (wand:create-rule :match (rx bol (0+ " ") "!!#")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~dispatch-action (concat "!! " text))))
+              (wand:create-rule :match (rx bol (0+ " ") "!!")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~prepare-for-output-block t)
+                                            (~dispatch-action (concat "!! " (~build-|rmacs-tee-cmd text)))))
+              (wand:create-rule :match (rx bol (0+ " ") "!")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~exec-sh<-next-line-separate text
+                                                                          :callback #'(lambda (&rest _args)
+                                                                                        (end-of-thing 'wand-text)
+                                                                                        (forward-line)
+                                                                                        (call-interactively #'~mark-current-output-block)))))
+              (wand:create-rule :match (rx bol (0+ " ") "mux://")
+                                :capture :after
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (~add-to-history-file *~exec-history-path* text :max-history *~exec-history-max*)
+                                            (~dispatch-action (concat "mux://" text))))
+              (wand:create-rule :match (rx bol (0+ " ") "ssh://"
+                                           (1+ (not (any "!")))
+                                           "!")
+                                :capture :whole
+                                :skip-comment nil
+                                :action #'(lambda (text)
+                                            (let ((cmd (thread-last (~split-string "!" text)
+                                                                    rest
+                                                                    (s-join "!")
+                                                                    string-trim)))
+                                              (~add-to-history-file *~exec-history-path* cmd :max-history *~exec-history-max*))
+                                            ;; TODO Refactor - after the extraction of the display function from ~exec-sh<-next-line-separate
+                                            (~exec-sh<-next-line-separate (format "dispatch-action %s"
+                                                                                  (shell-quote-argument text)))))
+              (wand:create-rule :match "----\n[^ ]* +"
+                                :capture :after
+                                :skip-comment nil
+                                :action #'~current-snippet->file)
+              (wand:create-rule :match (rx bol (0+ " ") "chrome:")
+                                :capture :after
+                                :action #'~open-with-google-chrome)
+              (wand:create-rule :match (rx bol (0+ " ") "https?://")
+                                :capture :whole
+                                :action #'~web-browse-gui)
+              ;; (wand:create-rule :match ".*\\.html$"
+              ;;                   :capture :whole
+              ;;                   :skip-comment nil
+              ;;                   :action #'~web-browse-gui)
+              (wand:create-rule :match (rx bol (0+ " ") "in:")
+                                :capture :after
+                                :action #'~wand:set-current-dir)
+              (wand:create-rule :match (rx bol (0+ " ") "file:")
+                                :capture :after
+                                :action #'~smart-open-file)
+              (wand:create-rule :match (rx (0+ (or any "\n")))
+                                :capture :whole
+                                :skip-comment nil
+                                :action #'~wand:open-or-eval))))
 
 ;;
 ;; Snippet mode
@@ -798,9 +796,9 @@ recursively."
 (use-package yasnippet
   :diminish yas-minor-mode
   :ensure t
-  :config (progn
-            (add-to-list 'yas-snippet-dirs (expand-file-name rmacs:+snippet-dir+))
-            (yas-global-mode 1)))
+  :config
+  (add-to-list 'yas-snippet-dirs (expand-file-name rmacs:+snippet-dir+))
+  (yas-global-mode 1))
 
 ;;
 ;; Showing color based on hex code

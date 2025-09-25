@@ -22,23 +22,24 @@
 ;; FIXME: Buggy - Check and fix
 (use-package scroll-restore
   :disabled t
-  :config (progn
-            ;; Recenter when jumpting back
-            (setq scroll-restore-center t)
 
-            ;; Allow scroll-restore to modify the cursor face
-            (setq scroll-restore-handle-cursor t)
+  :config
+  ;; Recenter when jumpting back
+  (setq scroll-restore-center t)
 
-            ;; Make the cursor invisible while POINT is off-screen
-            (setq scroll-restore-cursor-type nil)
+  ;; Allow scroll-restore to modify the cursor face
+  (setq scroll-restore-handle-cursor t)
 
-            ;; Jump back to the original cursor position after scrolling
-            (setq scroll-restore-jump-back t)
+  ;; Make the cursor invisible while POINT is off-screen
+  (setq scroll-restore-cursor-type nil)
 
-            ;; Due to some reason the mode needs disabling and re-enabling to
-            ;; work
-            (scroll-restore-mode -1)
-            (scroll-restore-mode 1)))
+  ;; Jump back to the original cursor position after scrolling
+  (setq scroll-restore-jump-back t)
+
+  ;; Due to some reason the mode needs disabling and re-enabling to
+  ;; work
+  (scroll-restore-mode -1)
+  (scroll-restore-mode 1))
 
 ;; Smooth scrolling
 (pixel-scroll-precision-mode 1)
@@ -66,11 +67,8 @@
 ;; Save and restore current editing point when opening a file
 (use-package saveplace
   :config (save-place-mode 1)
-  :init (progn
-          (custom-set-variables `(save-place-file ,(~get-rmacs-config-path "places")))))
-
-;; Hide the toolbar
-(tool-bar-mode -1)
+  :init
+  (custom-set-variables `(save-place-file ,(~get-rmacs-config-path "places"))))
 
 ;; Added functionality to hippie-expand
 ;; (add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
@@ -78,11 +76,11 @@
 ;; Hide undo-tree from mode line
 (use-package undo-tree
   :ensure t
+  :demand t
   :diminish undo-tree-mode
   :custom (undo-tree-auto-save-history . nil)
   :config
-  (progn
-    (global-undo-tree-mode)))
+  (global-undo-tree-mode))
 
 ;; Make shebang-ed files executable
 (add-hook 'after-save-hook #'~maybe-make-current-file-executable)
@@ -129,7 +127,7 @@
   (setq icon-title-format title-format))
 
 ;; Buffers are popped up in a separate frame or window
-(~set-pop-up-buffer-mode :window)
+;; (~set-pop-up-buffer-mode :window)
 
 ;; Make window combinations resize proportionally
 (setq window-combination-resize t)
@@ -155,15 +153,15 @@
 ;; Make window management saner
 ;; Ref: https://depp.brause.cc/shackle/
 (use-package shackle
-  :ensure
+  :ensure t
+  :disabled t
   :config
-  (progn
-    (setq shackle-rules `((compilation-mode :noselect t)
-                          (help-mode :align below :select t :popup t)
-                          (debugger-mode :select t :popup t)))
-    ;; (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))
-    (setq shackle-default-rule '(:same t))
-    (shackle-mode 1)))
+  (setq shackle-rules `((compilation-mode :noselect t)
+                        (help-mode :align below :select t :popup t)
+                        (debugger-mode :select t :popup t)))
+  ;; (setq shackle-default-rule `(:select t :popup t :align below :size 0.5))
+  (setq shackle-default-rule '(:same t))
+  (shackle-mode 1))
 
 ;; Mode line config
 (setq ~mode-line-simplified-position
@@ -200,9 +198,9 @@
 (use-package which-key
   :ensure t
   :diminish which-key-mode
-  :config (progn
-            (which-key-mode 1)
-            (which-key-setup-side-window-right-bottom)))
+  :config
+  (which-key-mode 1)
+  (which-key-setup-side-window-right-bottom))
 
 ;; Highlighting phrase and expression when needed
 ;; Ref: https://www.emacswiki.org/emacs/HiLock
@@ -214,28 +212,29 @@
 (use-package visual-fill-column
   :ensure t
   :demand t
-  :init (progn
-          (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
 
-          ;; Correct the default split
-          (setf split-window-preferred-function
-                #'visual-fill-column-split-window-sensibly)
+  :init
+  (advice-add 'text-scale-adjust :after #'visual-fill-column-adjust)
 
-          ;; Show visual indicators for logical lines
-          (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  ;; Correct the default split
+  (setf split-window-preferred-function
+        #'visual-fill-column-split-window-sensibly)
 
-          (with-eval-after-load "evil"
-            ;; Make movement keys work like they should
-            (define-key evil-normal-state-map
-                        (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-            (define-key evil-normal-state-map
-                        (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-            (define-key evil-motion-state-map
-                        (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-            (define-key evil-motion-state-map
-                        (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-            ;; Make horizontal movement cross lines
-            (setq-default evil-cross-lines t))))
+  ;; Show visual indicators for logical lines
+  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+
+  (with-eval-after-load "evil"
+    ;; Make movement keys work like they should
+    (define-key evil-normal-state-map
+                (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+    (define-key evil-normal-state-map
+                (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+    (define-key evil-motion-state-map
+                (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+    (define-key evil-motion-state-map
+                (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+    ;; Make horizontal movement cross lines
+    (setq-default evil-cross-lines t)))
 
 ;; Displaying eval result in an overlay after eval'ing
 ;; Ref: http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
@@ -341,7 +340,6 @@ selection or end-of-line."
 (defun ~advice/do-not-close-windows (fun &rest args)
   (cl-letf (((symbol-function 'one-window-p) (lambda (&rest _) t)))
     (apply fun args)))
-
 (advice-add #'keyboard-escape-quit :around #'~advice/do-not-close-windows)
 
 ;; When doing interactive search, try taking current region first
@@ -372,7 +370,6 @@ selection or end-of-line."
                            (goto-char (mark))
                            (isearch-repeat-forward)
                            (isearch-repeat-forward))))))))))
-
 (advice-add #'isearch-mode :around #'~advice/isearch-taking-current-region)
 
 ;; Emoji
@@ -384,22 +381,21 @@ selection or end-of-line."
 ;; Visible white spaces
 (use-package whitespace
   :init
-  (progn
-    (global-whitespace-mode 1)
-    ;; (setq whitespace-style '(tab-mark newline-mark))
-    ;; (setq whitespace-style '(tab-mark))
-    ;; (setq whitespace-style '(face tabs spaces trailing lines newline empty tab-mark))
-    ;; (setq whitespace-style '(face tabs spaces trailing newline empty tab-mark))
-    (setq whitespace-style '(face tabs trailing newline empty tab-mark))
-    ;; (setq whitespace-display-mappings
-    ;;       '((newline-mark ?\n [?¬ ?\n] [?$ ?\n])
-    ;;         (space-mark ?\ [?·] [?.])
-    ;;         (space-mark ?\xA0 [?¤] [?_])
-    ;;         (tab-mark ?\t [?» ?\t] [?\\ ?\t])))
-    (setq whitespace-display-mappings
-          '((newline-mark ?\n [?¬ ?\n] [?$ ?\n])
-            (space-mark ?\xA0 [?¤] [?_])
-            (tab-mark ?\t [?» ?\t] [?\\ ?\t])))))
+  (global-whitespace-mode 1)
+  ;; (setq whitespace-style '(tab-mark newline-mark))
+  ;; (setq whitespace-style '(tab-mark))
+  ;; (setq whitespace-style '(face tabs spaces trailing lines newline empty tab-mark))
+  ;; (setq whitespace-style '(face tabs spaces trailing newline empty tab-mark))
+  (setq whitespace-style '(face tabs trailing newline empty tab-mark))
+  ;; (setq whitespace-display-mappings
+  ;;       '((newline-mark ?\n [?¬ ?\n] [?$ ?\n])
+  ;;         (space-mark ?\ [?·] [?.])
+  ;;         (space-mark ?\xA0 [?¤] [?_])
+  ;;         (tab-mark ?\t [?» ?\t] [?\\ ?\t])))
+  (setq whitespace-display-mappings
+        '((newline-mark ?\n [?¬ ?\n] [?$ ?\n])
+          (space-mark ?\xA0 [?¤] [?_])
+          (tab-mark ?\t [?» ?\t] [?\\ ?\t]))))
 (setq-default show-trailing-whitespace t)
 
 ;; Resize window
@@ -407,22 +403,20 @@ selection or end-of-line."
 (use-package resize-window
   :ensure t
   :config
-  (progn
-    (setq resize-window-fine-argument 3)
+  (setq resize-window-fine-argument 3)
 
-    (dolist (action (list (list ?n #'resize-window--enlarge-horizontally " Resize - horizontally" t)
-                          (list ?h #'resize-window--shrink-horizontally " Resize - shrink horizontally" t)
-                          (list ?t #'resize-window--enlarge-down " Resize - Expand down" t)
-                          (list ?c #'resize-window--enlarge-up " Resize - Expand up" t)))
-      (add-to-list 'resize-window-dispatch-alist action))))
+  (dolist (action (list (list ?n #'resize-window--enlarge-horizontally " Resize - horizontally" t)
+                        (list ?h #'resize-window--shrink-horizontally " Resize - shrink horizontally" t)
+                        (list ?t #'resize-window--enlarge-down " Resize - Expand down" t)
+                        (list ?c #'resize-window--enlarge-up " Resize - Expand up" t)))
+    (add-to-list 'resize-window-dispatch-alist action)))
 
 ;; Window jumping
 ;; Ref: https://github.com/abo-abo/ace-window
 (use-package ace-window
   :ensure t
   :config
-  (progn
-    (custom-set-variables `(aw-keys (list ?u ?e ?o ?a ?i ?h ?t ?n ?s ?k ?j ?q ?' ?x ?m ?w ?v ?z ?b)))))
+  (custom-set-variables `(aw-keys (list ?u ?e ?o ?a ?i ?h ?t ?n ?s ?k ?j ?q ?' ?x ?m ?w ?v ?z ?b))))
 
 ;; Allow text drap-and-drop with mouse
 (custom-set-variables `(mouse-drag-and-drop-region t))
@@ -435,9 +429,8 @@ selection or end-of-line."
 (use-package olivetti
   :ensure t
   :init
-  (progn
-    ;; (add-hook 'org-mode-hook #'turn-on-olivetti-mode)
-    (setq-default olivetti-body-width 92)))
+  ;; (add-hook 'org-mode-hook #'turn-on-olivetti-mode)
+  (setq-default olivetti-body-width 92))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
