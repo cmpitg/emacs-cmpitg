@@ -163,6 +163,7 @@ recursively."
 ;; Fuzzy finding and vertical completion
 ;;
 ;; Ref: https://github.com/minad/vertico
+;; Ref: https://github.com/minad/consult
 ;;
 
 ;; (use-package flx-ido)
@@ -187,37 +188,41 @@ recursively."
 
 (use-package consult
   :ensure t
+
+  :demand t
+
   ;; Enable automatic preview at point in the *Completions* buffer, relevant
   ;; when using the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  :init
+  ;; Optionally configure the register formatting. This improves the
+  ;; register preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
   :config
-  (progn
-    (ido-mode -1)
-    ;; Optionally configure the register formatting. This improves the
-    ;; register preview for `consult-register', `consult-register-load',
-    ;; `consult-register-store' and the Emacs built-ins.
-    (setq register-preview-delay 0.5
-          register-preview-function #'consult-register-format)
+  (ido-mode -1)
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key "M-.")
+  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
 
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-xrefs-function #'consult-xref
-          xref-show-definitions-function #'consult-xref)
+  (setq consult-narrow-key "<")
 
-    ;; Optionally configure preview. The default value
-    ;; is 'any, such that any key triggers the preview.
-    (setq consult-preview-key 'any)
-    ;; (setq consult-preview-key "M-.")
-    ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-
-    (setq consult-narrow-key "<")
-
-    (defalias '~interactively-grep #'consult-ripgrep)
-    (defalias '~interactively-call-symbol-menu #'consult-imenu)
-    (defalias '~interactively-find-file #'find-file)
-    (defalias '~interactively-find-file-in-project #'project-find-file)
-    (defalias '~interactively-get-bookmarks #'consult-bookmark)
-    (defalias '~interactively-yank-pop #'consult-yank-pop)
-    (defalias '~interactively-search #'consult-line)))
+  (defalias '~interactively-grep #'consult-ripgrep)
+  (defalias '~interactively-call-symbol-menu #'consult-imenu)
+  (defalias '~interactively-find-file #'find-file)
+  (defalias '~interactively-find-file-in-project #'project-find-file)
+  (defalias '~interactively-get-bookmarks #'consult-bookmark)
+  (defalias '~interactively-yank-pop #'consult-yank-pop)
+  (defalias '~interactively-search #'consult-line))
 
 ;;
 ;; Temporary save points
