@@ -143,8 +143,11 @@
 
 ;; Don't let the cursor go into minibuffer prompt
 ;; Ref: http://ergoemacs.org/emacs/emacs_stop_cursor_enter_prompt.html
+;; Ref: https://github.com/minad/vertico
+;; (setq minibuffer-prompt-properties
+;;       '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
 (setq minibuffer-prompt-properties
-      '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
+      '(read-only t cursor-intangible t face minibuffer-prompt))
 
 ;; Use the same clipboard with X
 (setq select-enable-clipboard t)
