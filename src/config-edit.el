@@ -60,14 +60,9 @@
   :mode "\\.ncl\\'"
   :ensure t
   :config
-  (progn
-    (with-eval-after-load "lsp-mode"
-      (add-to-list 'lsp-language-id-configuration '(nickel-mode . "nickel"))
-      (lsp-register-client (make-lsp-client
-                            :new-connection (lsp-stdio-connection "nls")
-                            :activation-fn (lsp-activate-on "nickel")
-                            :server-id 'nls
-                            :major-modes 'nickel-mode)))))
+  (with-eval-after-load "eglot-mode"
+    (add-to-list 'eglot-server-programs '(nickel-mode . ("nls")))
+    (add-hook 'nickel-mode-hook 'eglot-ensure)))
 
 ;;
 ;; Dhall
@@ -820,10 +815,10 @@ the sequence, and its index within the sequence."
 ;;
 (require 'eglot)
 (use-package eglot
-  :config (progn
-            (add-to-list 'eglot-server-programs
-                         '((c++-mode c-mode) "clangd-6.0"))
-            (add-hook 'rust-mode-hook 'eglot-ensure)))
+  :config
+  (add-to-list 'eglot-server-programs
+               '((c++-mode c-mode) "clangd-6.0"))
+  (add-hook 'rust-mode-hook 'eglot-ensure))
 
 ;;
 ;; Acme-like command palette
