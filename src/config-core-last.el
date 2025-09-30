@@ -22,27 +22,28 @@
 ;; TODO: Problematic - requires scrolling with some files
 (use-package save-visited-files
   :ensure t
-  :config (progn
-            ;; Temporarily set default Scheme implementation to prevent
-            ;; interactive prompt on startup
-            (setq geiser-default-implementation 'guile)
+  :demand t
+  :config
+  ;; Temporarily set default Scheme implementation to prevent
+  ;; interactive prompt on startup
+  (setq geiser-default-implementation 'guile)
 
-            ;; Each Emacs server has a different list of visited files
-            (setq save-visited-files-location (~get-rmacs-config-path "emacs-visited-files"))
+  ;; Each Emacs server has a different list of visited files
+  (setq save-visited-files-location (~get-rmacs-config-path "emacs-visited-files"))
 
-            (unless (file-exists-p save-visited-files-location)
-              (write-region "" nil save-visited-files-location))
-
-            (turn-on-save-visited-files-mode)))
+  (unless (file-exists-p save-visited-files-location)
+    (write-region "" nil save-visited-files-location))
+  
+  (turn-on-save-visited-files-mode))
 
 ;; Managing recent files
 (use-package recentf
-  :init (progn
-          (recentf-mode 1)
-          (custom-set-variables `(recentf-max-menu-items 128)
-                                `(recentf-save-file ,(format "~/.emacs.d/recentf.%s" server-name)))))
+  :config
+  (recentf-mode 1)
+  (custom-set-variables `(recentf-max-menu-items 128)
+                        `(recentf-save-file ,(format "~/.emacs.d/recentf.%s" server-name))))
 
-(message "Reverting all file-backed buffers")
+;; (message "Reverting all file-backed buffers")
 ;;(~revert-all-file-buffers-no-confirmation)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
