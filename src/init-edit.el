@@ -46,11 +46,11 @@
 ;; Last but not least - remember
 ;;
 
+(require 'rmacs:config-core-last                      "config-core-last")
+
 ;; Make user all actions queued by Elpaca are executed before we enjoy Emacs
 (with-eval-after-load "elpaca"
   (elpaca-process-queues))
-
-(require 'rmacs:config-core-last                      "config-core-last")
 
 (message "Finish loading Rmacs edit:%s!" server-name)
 (~run-process (message "notify-send %s"
