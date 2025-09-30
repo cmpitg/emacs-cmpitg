@@ -2574,6 +2574,7 @@ line in Eshell."
 ;; Function keys & other convenient bindings
 (bind-key "<f2>" #'save-buffer)
 (bind-key "<f3>" #'~interactively-find-file)
+(bind-key "<S-f3>" #'~interactively-find-file-in-project)
 ;; TODO: RIGHT HERE
 (bind-key "<M-f3>" #'~gui/open-file)
 (bind-key "<C-f4>" #'kill-current-buffer)
