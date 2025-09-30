@@ -265,23 +265,29 @@ recursively."
   :ensure t
   :demand t
 
+  :init
+  (defun ~load-cape ()
+    "Loads cape so that we could set `completion-at-point-functions' after some modes stupidly destroy it."
+    (interactive)
+    ;; Add to the global default value of `completion-at-point-functions' which
+    ;; is used by `completion-at-point'.  The order of the functions matters,
+    ;; the first function returning a result wins.  Note that the list of
+    ;; buffer-local completion functions takes precedence over the global list.
+    (cl-loop for x in (list #'cape-dabbrev
+                            #'cape-abbrev
+                            #'cape-file
+                            #'cape-history
+                            #'cape-keyword
+                            #'cape-emoji
+                            #'cape-elisp-block
+                            #'cape-elisp-symbol
+                            #'cape-dict
+                            #'cape-sgml
+                            #'cape-tex)
+             do (add-hook 'completion-at-point-functions x)))
+  (~load-cape)
+
   :config
-  ;; Add to the global default value of `completion-at-point-functions' which
-  ;; is used by `completion-at-point'.  The order of the functions matters,
-  ;; the first function returning a result wins.  Note that the list of
-  ;; buffer-local completion functions takes precedence over the global list.
-  (cl-loop for x in (list #'cape-dabbrev
-                          #'cape-abbrev
-                          #'cape-file
-                          #'cape-history
-                          #'cape-keyword
-                          #'cape-emoji
-                          #'cape-elisp-block
-                          #'cape-elisp-symbol
-                          #'cape-dict
-                          #'cape-sgml
-                          #'cape-tex)
-           do (add-hook 'completion-at-point-functions x))
   (bind-key "M-SPC TAB" cape-prefix-map))
 
 ;; Enhanced matching
@@ -404,6 +410,9 @@ recursively."
     (when (eq this-command 'eval-expression)
       (lispy-mode 1)))
   (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
+
+  (with-eval-after-load "cape"
+    (~load-cape))
 
   (defun ~lispy-update-keybindings ()
     (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)

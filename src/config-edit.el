@@ -680,8 +680,8 @@ might need manual refreshing."
     (unless (fboundp 'seq-map-indexed)
       (defun seq-map-indexed (function sequence)
         "Return the result of applying FUNCTION to each element of SEQUENCE.
-Unlike `seq-map', FUNCTION takes two arguments: the element of
-the sequence, and its index within the sequence."
+Unlike `seq-map', FUNCTION takes two arguments: the element of the
+sequence, and its index within the sequence."
         (let ((index 0))
           (seq-map (lambda (elt)
                      (prog1
@@ -689,50 +689,52 @@ the sequence, and its index within the sequence."
                        (setq index (1+ index))))
                    sequence)))))
   :config
-  (progn
-    (defun ~cider-connect ()
-      "Interactively calls `cider-connect', saving the current cursor position."
-      (interactive)
-      (save-excursion
-        (call-interactively 'cider-connect)))
+  (defun ~cider-connect ()
+    "Interactively calls `cider-connect', saving the current cursor position."
+    (interactive)
+    (save-excursion
+      (call-interactively 'cider-connect)))
 
-    (defun ~cider-format-defun ()
-      "Interactively calls `cider-connect', saving the current cursor position."
-      (interactive)
-      (save-excursion
-        (call-interactively 'cider-format-defun)))
+  (defun ~cider-format-defun ()
+    "Interactively calls `cider-connect', saving the current cursor position."
+    (interactive)
+    (save-excursion
+      (call-interactively 'cider-format-defun)))
 
-    ;; Only display eldoc for current function/macro, not current symbol
-    (setq cider-eldoc-display-for-symbol-at-point nil)
+  ;; Only display eldoc for current function/macro, not current symbol
+  (setq cider-eldoc-display-for-symbol-at-point nil)
 
-    ;; Hide *nrepl-connection* and *nrepl-server*
-    (setq nrepl-hide-special-buffers t)
+  ;; Hide *nrepl-connection* and *nrepl-server*
+  (setq nrepl-hide-special-buffers t)
 
-    ;; Prevent the auto-display of the REPL buffer in a separate window
-    ;; after connection is established
-    ;; (setq cider-repl-pop-to-buffer-on-connect nil)
-    (setq cider-repl-pop-to-buffer-on-connect t)
+  ;; Prevent the auto-display of the REPL buffer in a separate window
+  ;; after connection is established
+  ;; (setq cider-repl-pop-to-buffer-on-connect nil)
+  (setq cider-repl-pop-to-buffer-on-connect t)
 
-    (setq cider-popup-stacktraces nil)
+  (setq cider-popup-stacktraces nil)
 
-    ;; Enable error buffer popping also in the REPL
-    (setq cider-repl-popup-stacktraces t)
+  ;; Enable error buffer popping also in the REPL
+  (setq cider-repl-popup-stacktraces t)
 
-    ;; Default value: "repl -s -H :: wait"
-    (setq cider-boot-parameters "cider repl -s wait")
+  ;; Default value: "repl -s -H :: wait"
+  (setq cider-boot-parameters "cider repl -s wait")
 
-    (setq nrepl-buffer-name-separator "-")
-    (setq nrepl-buffer-name-show-port t)
+  (setq nrepl-buffer-name-separator "-")
+  (setq nrepl-buffer-name-show-port t)
 
-    (setq cider-repl-history-size 9999)
+  (setq cider-repl-history-size 9999)
 
-    ;; Do not pop up REPL after connecting
-    (setq cider-repl-pop-to-buffer-on-connect nil)
+  ;; Do not pop up REPL after connecting
+  (setq cider-repl-pop-to-buffer-on-connect nil)
 
-    (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
-    (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
-    (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
-    (bind-key "M-q"        #'~cider-format-defun       cider-mode-map)))
+  (with-eval-after-load "cape"
+    (~load-cape))
+
+  (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
+  (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
+  (bind-key "<S-return>" #'cider-eval-sexp-at-point  cider-mode-map)
+  (bind-key "M-q"        #'~cider-format-defun       cider-mode-map))
 
 ;;
 ;; Scheme development
