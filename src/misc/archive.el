@@ -31,6 +31,263 @@
   (ido-mode 1))
 
 ;;
+;; Auto completion framework
+;;
+;; Ref: https://github.com/company-mode/company-mode
+;;
+
+(use-package company
+  :diminish company-mode
+  :bind (:map company-mode-map
+         ("C-/" . #'company-complete))
+  :ensure t
+  :config
+  (global-company-mode 1)
+  (use-package pos-tip
+    :ensure t))
+(use-package company-quickhelp
+  :ensure t
+  :bind (:map company-active-map
+         ("M-h" . #'company-quickhelp-manual-begin))
+  :config
+  (company-quickhelp-mode 1)
+  ;; Do not trigger automatically
+  (setq company-quickhelp-delay nil))
+
+;;
+;; Bracket-based structural editing
+;;
+;; Ref: https://www.emacswiki.org/emacs/ParEdit
+;; Ref: https://github.com/DogLooksGood/parinfer-mode
+;;
+
+(use-package parinfer
+  :disabled t
+  :hook ((emacs-lisp-mode
+          scheme-mode
+          common-lisp-mode
+          lisp-mode
+          clojure-mode
+          cider-repl-mode
+          sly-mrepl-mode
+          slime-repl-mode) . parinfer-mode)
+  :bind
+  (("C-a" . #'parinfer-toggle-mode))
+  :config
+  (progn
+    (setq parinfer-extensions
+          '(defaults
+             pretty-parens
+             ;; evil
+             ;; lispy
+             smart-tab
+             smart-yank))
+
+    (defun ~parinfer-update-keybindings ()
+      (with-eval-after-load "modalka"
+        (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
+        (define-key parinfer-mode-map (kbd "C-a") #'~my/deactivate-modalka))
+      (define-key parinfer-mode-map (kbd "C-'") #'parinfer-toggle-mode)
+      (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
+      (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
+      (define-key parinfer-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
+      (define-key parinfer-mode-map (kbd "<C-RET>") #'~eval-last-sexp-or-region))
+    (add-hook 'lisp-mode-hook #'~parinfer-update-keybindings)
+
+    (~parinfer-update-keybindings)))
+
+(use-package paredit
+  :disabled t
+  :hook ((emacs-lisp-mode
+          scheme-mode
+          common-lisp-mode
+          lisp-mode
+          clojure-mode
+          cider-repl-mode
+          sly-mrepl-mode
+          slime-repl-mode) . paredit-mode)
+  :bind (:map
+         paredit-mode-map
+         ("s-." . #'paredit-backward-kill-word)
+         ("s-p" . #'paredit-forward-kill-word)
+         ("s-r" . #'forward-word)
+         ("s-g" . #'backward-word)
+         ("s-C" . #'paredit-backward-up)
+         ("s-T" . #'paredit-forward-up)
+         ("s-R" . #'paredit-forward)
+         ("s-G" . #'paredit-backward))
+  :defines (slime-repl-mode-map sly-mrepl-mode-map)
+  :config (progn
+            ;; Always try to delete region first
+            (put 'paredit-forward-delete 'delete-selection 'supersede)
+            (put 'paredit-backward-delete 'delete-selection 'supersede)
+
+            (defun ~enable-paredit-mode ()
+              "Enables paredit mode"
+              (interactive)
+              (paredit-mode 1))
+
+            (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
+              (when (apply orig-fun args)
+                (when (fboundp 'autopair-mode)
+                  (autopair-mode -1))
+                (when (fboundp 'smartparens-mode)
+                  (smartparens-mode -1))))
+            (advice-add 'paredit-mode
+                        :around #'~advice/disable-other-parens-modes-in-paredit)
+
+            ;; Use in minibuffer
+            (defun conditionally-enable-paredit-mode ()
+              "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
+              (if (eq this-command 'eval-expression)
+                  (paredit-mode 1)))
+            (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
+
+            ;; Stop SLIME's REPL from grabbing DEL,
+            ;; which is annoying when backspacing over a '('
+            (defun override-slime-repl-bindings-with-paredit ()
+              (define-key slime-repl-mode-map
+                (read-kbd-macro paredit-backward-delete-key) nil))
+            (add-hook 'slime-repl-mode-hook
+                      #'override-slime-repl-bindings-with-paredit)
+
+            (defun ~paredit-up-all ()
+              (interactive)
+              (ignore-errors
+                (loop do (paredit-forward-up))))))
+
+;;
+;; Meow sensible modal editting, inspired by Kakoune
+;;
+;; Ref: https://github.com/meow-edit/meow/
+;;
+
+(use-package meow
+  :disabled t
+  :config
+  (progn
+    (defun meow-setup-qwerty ()
+      (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+      (meow-motion-overwrite-define-key
+       '("j" . meow-next)
+       '("k" . meow-prev)
+       '("<escape>" . ignore))
+      (meow-leader-define-key
+       ;; SPC j/k will run the original command in MOTION state.
+       '("j" . "H-j")
+       '("k" . "H-k")
+       ;; Use SPC (0-9) for digit arguments.
+       '("1" . meow-digit-argument)
+       '("2" . meow-digit-argument)
+       '("3" . meow-digit-argument)
+       '("4" . meow-digit-argument)
+       '("5" . meow-digit-argument)
+       '("6" . meow-digit-argument)
+       '("7" . meow-digit-argument)
+       '("8" . meow-digit-argument)
+       '("9" . meow-digit-argument)
+       '("0" . meow-digit-argument)
+       '("/" . meow-keypad-describe-key)
+       '("?" . meow-cheatsheet))
+      (meow-normal-define-key
+       '("0" . meow-expand-0)
+       '("9" . meow-expand-9)
+       '("8" . meow-expand-8)
+       '("7" . meow-expand-7)
+       '("6" . meow-expand-6)
+       '("5" . meow-expand-5)
+       '("4" . meow-expand-4)
+       '("3" . meow-expand-3)
+       '("2" . meow-expand-2)
+       '("1" . meow-expand-1)
+       '("-" . negative-argument)
+       '(";" . meow-reverse)
+       '("," . meow-inner-of-thing)
+       '("." . meow-bounds-of-thing)
+       '("[" . meow-beginning-of-thing)
+       '("]" . meow-end-of-thing)
+       '("a" . meow-append)
+       '("A" . meow-open-below)
+       '("b" . meow-back-word)
+       '("B" . meow-back-symbol)
+       '("c" . meow-change)
+       '("d" . meow-delete)
+       '("D" . meow-backward-delete)
+       '("e" . meow-next-word)
+       '("E" . meow-next-symbol)
+       '("f" . meow-find)
+       '("g" . meow-cancel-selection)
+       '("G" . meow-grab)
+       '("h" . meow-left)
+       '("H" . meow-left-expand)
+       '("i" . meow-insert)
+       '("I" . meow-open-above)
+       '("j" . meow-next)
+       '("J" . meow-next-expand)
+       '("k" . meow-prev)
+       '("K" . meow-prev-expand)
+       '("l" . meow-right)
+       '("L" . meow-right-expand)
+       '("m" . meow-join)
+       '("n" . meow-search)
+       '("o" . meow-block)
+       '("O" . meow-to-block)
+       '("p" . meow-yank)
+       '("q" . meow-quit)
+       '("Q" . meow-goto-line)
+       '("r" . meow-replace)
+       '("R" . meow-swap-grab)
+       '("s" . meow-kill)
+       '("t" . meow-till)
+       '("u" . meow-undo)
+       '("U" . meow-undo-in-selection)
+       '("v" . meow-visit)
+       '("w" . meow-mark-word)
+       '("W" . meow-mark-symbol)
+       '("x" . meow-line)
+       '("X" . meow-goto-line)
+       '("y" . meow-save)
+       '("Y" . meow-sync-grab)
+       '("z" . meow-pop-selection)
+       '("'" . repeat)
+       '("<escape>" . ignore)))
+    (dolist (mapping `((,(get-byte 0 "(") . round)
+                       (,(get-byte 0 "[") . square)
+                       (,(get-byte 0 "{") . curly)))
+      (add-to-list 'meow-char-thing-table mapping))
+    (meow-setup-qwerty)
+    (setq meow-use-clipboard t)
+    (custom-set-faces
+     '(meow-grab ((t (:inherit secondary-selection))))
+     '(meow-normal-indicator ((t ())))
+     '(meow-motion-indicator ((t ())))
+     '(meow-keypad-indicator ((t ())))
+     '(meow-insert-indicator ((t ()))))
+    ;; (add-to-list 'meow-expand-exclude-mode-list 'dired-mode)
+    ;; (add-to-list 'meow-expand-exclude-mode-list 'wdired-mode)
+    ;; (add-to-list 'meow-mode-state-list '(magit-mode . insert))
+    (add-to-list 'meow-mode-state-list '(magit-mode . normal))
+    (add-to-list 'meow-mode-state-list '(dired-mode . normal))
+    (add-to-list 'meow-mode-state-list '(wdired-mode . normal))
+    (meow-setup-indicator)
+    ;; For some reasons cua-mode breaks meow-reverse command
+    (when (and (boundp 'cua-mode) cua-mode)
+      (cua-mode -1))
+    (meow-global-mode 1)))
+
+;; Modalka in other modes
+
+(with-eval-after-load "compilation"
+  (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
+  (define-key compilation-mode-map (kbd "C-a") #'~my/deactivate-modalka))
+
+(require 'dired)
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "C-e") #'~my/activate-modalka)
+  (define-key dired-mode-map (kbd "C-a") #'~my/deactivate-modalka))
+
+
+;;
 ;; Chruby
 ;;
 ;; Ref: https://github.com/plexus/chruby.el

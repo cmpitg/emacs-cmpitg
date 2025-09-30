@@ -88,16 +88,7 @@
              er/mark-outside-quotes
              er/mark-defun)
   :bind
-  (("C-=" . #'er/expand-region)))
-
-;;
-;; Interactive menu
-;;
-;; Ref: https://github.com/abo-abo/hydra
-;;
-
-(use-package hydra
-  :disabled t)
+  ("C-=" . #'er/expand-region))
 
 ;;
 ;; grep command
@@ -135,7 +126,7 @@
   "Also finds all files within a list of files.  This even works
 recursively."
   (if (listp filename)
-      (loop for f in filename do (find-file f wildcards))
+      (cl-loop for f in filename do (find-file f wildcards))
     ad-do-it))
 
 ;;
@@ -160,46 +151,59 @@ recursively."
   (amx-mode 1))
 
 ;;
-;; Fuzzy finding and vertical completion
+;; Fuzzy finding, vertical completion, auto-completion framework, enhanced
+;; minibuffer experience
 ;;
 ;; Ref: https://github.com/minad/vertico
 ;; Ref: https://github.com/minad/consult
+;; Ref: https://github.com/minad/orderless
+;; Ref: https://github.com/minad/corfu
+;; Ref: https://github.com/minad/cape
 ;;
 
 ;; (use-package flx-ido)
 
+(use-package emacs
+  :custom
+  (context-menu-mode t)
+  ;; Minibuffer inside minibuffer (recursive editting) is quite useful
+  (enable-recursive-minibuffers t)
+
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers. This setting is useful beyond
+  ;; Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt)))
+
+;; Vertical display of candidates
 (use-package vertico
   :ensure t
+  :demand t
   :config
-  (progn
-    (vertico-mode 1)
-    (ido-mode -1)
-    (savehist-mode 1)))
-
-(use-package orderless
-  :ensure t
-  :custom
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
-  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (vertico-mode 1)
+  (ido-mode -1)
+  (savehist-mode 1))
 
 (use-package consult
   :ensure t
-
   :demand t
 
   ;; Enable automatic preview at point in the *Completions* buffer, relevant
   ;; when using the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
+  :custom
+  ;; Show the completion candidates with Vertico
+  (completion-in-region-function #'consult-completion-in-region)
+
   :init
   ;; Optionally configure the register formatting. This improves the
   ;; register preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
+  (setq register-preview-delay 0.2
         register-preview-function #'consult-register-format)
 
   ;; Use Consult to select xref locations with preview
@@ -208,6 +212,16 @@ recursively."
 
   :config
   (ido-mode -1)
+
+  ;; Prompt indicator for `completing-read-multiple'.
+  (when (< emacs-major-version 31)
+    (advice-add #'completing-read-multiple :filter-args
+                (lambda (args)
+                  (cons (format "[CRM%s] %s"
+                                (string-replace "[ \t]*" "" crm-separator)
+                                (car args))
+                        (cdr args)))))
+
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   (setq consult-preview-key 'any)
@@ -224,8 +238,66 @@ recursively."
   (defalias '~interactively-yank-pop #'consult-yank-pop)
   (defalias '~interactively-search #'consult-line))
 
+;; Auto-completion
+(use-package corfu
+  :ensure t
+  :demand t
+
+  :custom
+  ;; Cycling
+  (corfu-cycle t)
+
+  ;; Emacs 30 and newer: Disable Ispell completion function.
+  ;; Try `cape-dict' as an alternative.
+  (text-mode-ispell-word-completion nil)
+
+  :config
+  (global-corfu-mode 1)
+  (corfu-history-mode 1)
+  (corfu-popupinfo-mode 1)
+
+  ;; Automatic popup, quit when there is no match
+  (setq corfu-auto t
+        corfu-quit-no-match 'separator))
+
+;; Completion candidates
+(use-package cape
+  :ensure t
+  :demand t
+
+  :config
+  ;; Add to the global default value of `completion-at-point-functions' which
+  ;; is used by `completion-at-point'.  The order of the functions matters,
+  ;; the first function returning a result wins.  Note that the list of
+  ;; buffer-local completion functions takes precedence over the global list.
+  (cl-loop for x in (list #'cape-dabbrev
+                          #'cape-abbrev
+                          #'cape-file
+                          #'cape-history
+                          #'cape-keyword
+                          #'cape-emoji
+                          #'cape-elisp-block
+                          #'cape-elisp-symbol
+                          #'cape-dict
+                          #'cape-sgml
+                          #'cape-tex)
+           do (add-hook 'completion-at-point-functions x))
+  (bind-key "M-SPC TAB" cape-prefix-map))
+
+;; Enhanced matching
+(use-package orderless
+  :ensure t
+  :demand t
+
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion))))
+
+  ;; Emacs 31: partial-completion behaves like substring
+  (completion-pcm-leading-wildcard t))
+
 ;;
-;; Temporary save points
+;; Temporary save points/bookmarks
 ;;
 ;; Ref: https://github.com/alezost/point-pos.el
 ;;
@@ -314,45 +386,8 @@ recursively."
 ;;
 ;; Bracket-based structured editing
 ;;
-;; Ref: https://www.emacswiki.org/emacs/ParEdit
-;; Ref: https://github.com/DogLooksGood/parinfer-mode
 ;; Ref: https://github.com/abo-abo/lispy
 ;;
-
-(use-package parinfer
-  :disabled t
-  :hook ((emacs-lisp-mode
-          scheme-mode
-          common-lisp-mode
-          lisp-mode
-          clojure-mode
-          cider-repl-mode
-          sly-mrepl-mode
-          slime-repl-mode) . parinfer-mode)
-  :bind
-  (("C-a" . #'parinfer-toggle-mode))
-  :config
-  (progn
-    (setq parinfer-extensions
-          '(defaults
-             pretty-parens
-             ;; evil
-             ;; lispy
-             smart-tab
-             smart-yank))
-
-    (defun ~parinfer-update-keybindings ()
-      (with-eval-after-load "modalka"
-        (define-key parinfer-mode-map (kbd "C-e") #'~my/activate-modalka)
-        (define-key parinfer-mode-map (kbd "C-a") #'~my/deactivate-modalka))
-      (define-key parinfer-mode-map (kbd "C-'") #'parinfer-toggle-mode)
-      (define-key parinfer-mode-map (kbd "<M-return>") #'eval-defun)
-      (define-key parinfer-mode-map (kbd "<M-RET>") #'eval-defun)
-      (define-key parinfer-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)
-      (define-key parinfer-mode-map (kbd "<C-RET>") #'~eval-last-sexp-or-region))
-    (add-hook 'lisp-mode-hook #'~parinfer-update-keybindings)
-
-    (~parinfer-update-keybindings)))
 
 (use-package lispy
   :hook ((emacs-lisp-mode
@@ -381,214 +416,11 @@ recursively."
 
   (~lispy-update-keybindings))
 
-(use-package paredit
-  :disabled t
-  :hook ((emacs-lisp-mode
-          scheme-mode
-          common-lisp-mode
-          lisp-mode
-          clojure-mode
-          cider-repl-mode
-          sly-mrepl-mode
-          slime-repl-mode) . paredit-mode)
-  :bind (:map
-         paredit-mode-map
-         ("s-." . #'paredit-backward-kill-word)
-         ("s-p" . #'paredit-forward-kill-word)
-         ("s-r" . #'forward-word)
-         ("s-g" . #'backward-word)
-         ("s-C" . #'paredit-backward-up)
-         ("s-T" . #'paredit-forward-up)
-         ("s-R" . #'paredit-forward)
-         ("s-G" . #'paredit-backward))
-  :defines (slime-repl-mode-map sly-mrepl-mode-map)
-  :config (progn
-            ;; Always try to delete region first
-            (put 'paredit-forward-delete 'delete-selection 'supersede)
-            (put 'paredit-backward-delete 'delete-selection 'supersede)
-
-            (defun ~enable-paredit-mode ()
-              "Enables paredit mode"
-              (interactive)
-              (paredit-mode 1))
-
-            (defun ~advice/disable-other-parens-modes-in-paredit (orig-fun &rest args)
-              (when (apply orig-fun args)
-                (when (fboundp 'autopair-mode)
-                  (autopair-mode -1))
-                (when (fboundp 'smartparens-mode)
-                  (smartparens-mode -1))))
-            (advice-add 'paredit-mode
-                        :around #'~advice/disable-other-parens-modes-in-paredit)
-
-            ;; Use in minibuffer
-            (defun conditionally-enable-paredit-mode ()
-              "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
-              (if (eq this-command 'eval-expression)
-                  (paredit-mode 1)))
-            (add-hook 'minibuffer-setup-hook #'conditionally-enable-paredit-mode)
-
-            ;; Stop SLIME's REPL from grabbing DEL,
-            ;; which is annoying when backspacing over a '('
-            (defun override-slime-repl-bindings-with-paredit ()
-              (define-key slime-repl-mode-map
-                (read-kbd-macro paredit-backward-delete-key) nil))
-            (add-hook 'slime-repl-mode-hook
-                      #'override-slime-repl-bindings-with-paredit)
-
-            (defun ~paredit-up-all ()
-              (interactive)
-              (ignore-errors
-                (loop do (paredit-forward-up))))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Meow sensible modal editting, inspired by Kakoune
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Ref: https://github.com/meow-edit/meow/
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package meow
-  :disabled t
-  :config
-  (progn
-    (defun meow-setup-qwerty ()
-      (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-      (meow-motion-overwrite-define-key
-       '("j" . meow-next)
-       '("k" . meow-prev)
-       '("<escape>" . ignore))
-      (meow-leader-define-key
-       ;; SPC j/k will run the original command in MOTION state.
-       '("j" . "H-j")
-       '("k" . "H-k")
-       ;; Use SPC (0-9) for digit arguments.
-       '("1" . meow-digit-argument)
-       '("2" . meow-digit-argument)
-       '("3" . meow-digit-argument)
-       '("4" . meow-digit-argument)
-       '("5" . meow-digit-argument)
-       '("6" . meow-digit-argument)
-       '("7" . meow-digit-argument)
-       '("8" . meow-digit-argument)
-       '("9" . meow-digit-argument)
-       '("0" . meow-digit-argument)
-       '("/" . meow-keypad-describe-key)
-       '("?" . meow-cheatsheet))
-      (meow-normal-define-key
-       '("0" . meow-expand-0)
-       '("9" . meow-expand-9)
-       '("8" . meow-expand-8)
-       '("7" . meow-expand-7)
-       '("6" . meow-expand-6)
-       '("5" . meow-expand-5)
-       '("4" . meow-expand-4)
-       '("3" . meow-expand-3)
-       '("2" . meow-expand-2)
-       '("1" . meow-expand-1)
-       '("-" . negative-argument)
-       '(";" . meow-reverse)
-       '("," . meow-inner-of-thing)
-       '("." . meow-bounds-of-thing)
-       '("[" . meow-beginning-of-thing)
-       '("]" . meow-end-of-thing)
-       '("a" . meow-append)
-       '("A" . meow-open-below)
-       '("b" . meow-back-word)
-       '("B" . meow-back-symbol)
-       '("c" . meow-change)
-       '("d" . meow-delete)
-       '("D" . meow-backward-delete)
-       '("e" . meow-next-word)
-       '("E" . meow-next-symbol)
-       '("f" . meow-find)
-       '("g" . meow-cancel-selection)
-       '("G" . meow-grab)
-       '("h" . meow-left)
-       '("H" . meow-left-expand)
-       '("i" . meow-insert)
-       '("I" . meow-open-above)
-       '("j" . meow-next)
-       '("J" . meow-next-expand)
-       '("k" . meow-prev)
-       '("K" . meow-prev-expand)
-       '("l" . meow-right)
-       '("L" . meow-right-expand)
-       '("m" . meow-join)
-       '("n" . meow-search)
-       '("o" . meow-block)
-       '("O" . meow-to-block)
-       '("p" . meow-yank)
-       '("q" . meow-quit)
-       '("Q" . meow-goto-line)
-       '("r" . meow-replace)
-       '("R" . meow-swap-grab)
-       '("s" . meow-kill)
-       '("t" . meow-till)
-       '("u" . meow-undo)
-       '("U" . meow-undo-in-selection)
-       '("v" . meow-visit)
-       '("w" . meow-mark-word)
-       '("W" . meow-mark-symbol)
-       '("x" . meow-line)
-       '("X" . meow-goto-line)
-       '("y" . meow-save)
-       '("Y" . meow-sync-grab)
-       '("z" . meow-pop-selection)
-       '("'" . repeat)
-       '("<escape>" . ignore)))
-    (dolist (mapping `((,(get-byte 0 "(") . round)
-                       (,(get-byte 0 "[") . square)
-                       (,(get-byte 0 "{") . curly)))
-      (add-to-list 'meow-char-thing-table mapping))
-    (meow-setup-qwerty)
-    (setq meow-use-clipboard t)
-    (custom-set-faces
-     '(meow-grab ((t (:inherit secondary-selection))))
-     '(meow-normal-indicator ((t ())))
-     '(meow-motion-indicator ((t ())))
-     '(meow-keypad-indicator ((t ())))
-     '(meow-insert-indicator ((t ()))))
-    ;; (add-to-list 'meow-expand-exclude-mode-list 'dired-mode)
-    ;; (add-to-list 'meow-expand-exclude-mode-list 'wdired-mode)
-    ;; (add-to-list 'meow-mode-state-list '(magit-mode . insert))
-    (add-to-list 'meow-mode-state-list '(magit-mode . normal))
-    (add-to-list 'meow-mode-state-list '(dired-mode . normal))
-    (add-to-list 'meow-mode-state-list '(wdired-mode . normal))
-    (meow-setup-indicator)
-    ;; For some reasons cua-mode breaks meow-reverse command
-    (when (and (boundp 'cua-mode) cua-mode)
-      (cua-mode -1))
-    (meow-global-mode 1)))
-
 ;;
 ;; TODO: keybinding
 ;; * Text object manipulation
 ;; * Mark inner/outer <, (, [, {, \', \"
 ;;
-
-;;
-;; Auto completion framework
-;;
-;; Ref: https://github.com/company-mode/company-mode
-;;
-
-(use-package company
-  :diminish company-mode
-  :bind (:map company-mode-map
-         ("C-/" . #'company-complete))
-  :ensure t
-  :config
-  (global-company-mode 1)
-  (use-package pos-tip
-    :ensure t))
-(use-package company-quickhelp
-  :ensure t
-  :bind (:map company-active-map
-         ("M-h" . #'company-quickhelp-manual-begin))
-  :config
-  (company-quickhelp-mode 1)
-  ;; Do not trigger automatically
-  (setq company-quickhelp-delay nil))
 
 ;;
 ;; Version control systems: Mercurial and Git
@@ -815,19 +647,9 @@ recursively."
 (use-package man)
 
 ;;
-;; Modalka in other modes
+;; Some safe local variables
 ;;
 
-(with-eval-after-load "compilation"
-  (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
-  (define-key compilation-mode-map (kbd "C-a") #'~my/deactivate-modalka))
-
-(require 'dired)
-(with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "C-e") #'~my/activate-modalka)
-  (define-key dired-mode-map (kbd "C-a") #'~my/deactivate-modalka))
-
-;; Some safe local variables
 (add-to-list 'safe-local-variable-values '(local/delete-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-frame-on-close . t))
 (add-to-list 'safe-local-variable-values '(local/delete-window-on-close . t))
