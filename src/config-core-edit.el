@@ -320,9 +320,23 @@ recursively."
         ;; Emacs 31: partial-completion behaves like substring
         completion-pcm-leading-wildcard t))
 
+;; Rich annotations in the minibuffer
+;; Enable rich annotations using the Marginalia package
+(use-package marginalia
+  :ensure t
+  :demand t
 
-  ;; Emacs 31: partial-completion behaves like substring
-  (completion-pcm-leading-wildcard t))
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+              ("M-A" . marginalia-cycle))
+
+  :init
+  ;; Marginalia must be activated in the :init section of use-package such
+  ;; that the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode 1))
 
 ;;
 ;; Temporary save points/bookmarks
@@ -432,9 +446,6 @@ recursively."
     (when (eq this-command 'eval-expression)
       (lispy-mode 1)))
   (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
-
-  (with-eval-after-load "cape"
-    (~load-cape))
 
   (defun ~lispy-update-keybindings ()
     (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
