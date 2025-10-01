@@ -194,13 +194,13 @@
 (add-to-list 'after-make-frame-functions #'~format-mode-line-for-frame)
 
 ;; Displaying available keybindings in pop up
-;; Ref: https://github.com/justbur/emacs-which-key
 (use-package which-key
-  :ensure t
   :diminish which-key-mode
+  :custom
+  (which-key-dont-use-unicode nil)
   :config
   (which-key-mode 1)
-  (which-key-setup-side-window-right-bottom))
+  (which-key-setup-minibuffer))
 
 ;; Highlighting phrase and expression when needed
 ;; Ref: https://www.emacswiki.org/emacs/HiLock
