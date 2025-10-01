@@ -258,7 +258,7 @@ recursively."
 
   ;; Automatic popup, quit when there is no match
   (setq corfu-auto t
-        corfu-quit-no-match 'separator))
+        corfu-quit-no-match nil))
 
 ;; Completion candidates
 (use-package company
@@ -331,6 +331,11 @@ recursively."
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
               ("M-A" . marginalia-cycle))
+
+  :custom
+  ;; We don't care about the relative age
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'left)
 
   :init
   ;; Marginalia must be activated in the :init section of use-package such
