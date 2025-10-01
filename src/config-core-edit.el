@@ -261,31 +261,40 @@ recursively."
         corfu-quit-no-match 'separator))
 
 ;; Completion candidates
+(use-package company
+  :ensure t
+  :demand t)
 (use-package cape
   :ensure t
   :demand t
+  :after (company)
+
+  :hook ((prog-mode . ~cape-setup-general)
+         (emacs-lisp-mode . ~cape-setup-general)
+         (eglot-mode . ~cape-setup-general))
 
   :init
-  (defun ~load-cape ()
-    "Loads cape so that we could set `completion-at-point-functions' after some modes stupidly destroy it."
-    (interactive)
-    ;; Add to the global default value of `completion-at-point-functions' which
-    ;; is used by `completion-at-point'.  The order of the functions matters,
-    ;; the first function returning a result wins.  Note that the list of
-    ;; buffer-local completion functions takes precedence over the global list.
-    (cl-loop for x in (list #'cape-dabbrev
-                            #'cape-abbrev
-                            #'cape-file
-                            #'cape-history
-                            #'cape-keyword
-                            #'cape-emoji
-                            #'cape-elisp-block
-                            #'cape-elisp-symbol
-                            #'cape-dict
-                            #'cape-sgml
-                            #'cape-tex)
+  ;; Super-Capf/capfs merging is nice with static, non- multi-stage completion
+  ;; functions.  Check Cape's docs.
+  (defun ~cape-capfs-static ()
+    (cape-wrap-super #'cape-dabbrev
+                     #'cape-abbrev
+                     #'cape-dict
+                     #'cape-keyword
+                     #'cape-emoji
+                     #'cape-sgml
+                     #'cape-rfc1345
+                     #'cape-tex))
+
+  (cl-defun ~cape-load-capfs (&rest xs)
+    (cl-loop for x in xs
              do (add-hook 'completion-at-point-functions x)))
-  (~load-cape)
+
+  (cl-defun ~cape-setup-general ()
+    (~cape-load-capfs #'tags-completion-at-point-function
+                      #'cape-file
+                      #'~cape-capfs-static
+                      (cape-company-to-capf #'company-yasnippet)))
 
   :config
   (bind-key "M-SPC TAB" cape-prefix-map))
@@ -295,9 +304,22 @@ recursively."
   :ensure t
   :demand t
 
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles partial-completion))))
+  :config
+  (orderless-define-completion-style orderless+initialism
+    (orderless-matching-styles '(orderless-initialism
+                                 orderless-literal
+                                 orderless-regexp)))
+  (setq completion-styles '(orderless basic)
+
+        completion-category-overrides
+        '((command (styles orderless+initialism))
+          (symbol (styles orderless+initialism))
+          (variable (styles orderless+initialism))
+          (file (styles partial-completion)))
+
+        ;; Emacs 31: partial-completion behaves like substring
+        completion-pcm-leading-wildcard t))
+
 
   ;; Emacs 31: partial-completion behaves like substring
   (completion-pcm-leading-wildcard t))

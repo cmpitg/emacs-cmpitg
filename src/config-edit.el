@@ -392,6 +392,7 @@ might need manual refreshing."
     (~load-files (concat *quicklisp-path* "slime-helper")
                  (concat *quicklisp-path* "clhs-use-local"))))
 
+;; TODO
 ;; Ref: https://github.com/anwyn/slime-company
 (use-package slime-company
   :after (slime company)
@@ -727,9 +728,6 @@ sequence, and its index within the sequence."
 
   ;; Do not pop up REPL after connecting
   (setq cider-repl-pop-to-buffer-on-connect nil)
-
-  (with-eval-after-load "cape"
-    (~load-cape))
 
   (bind-key "<C-return>" #'cider-eval-last-sexp      cider-mode-map)
   (bind-key "<M-return>" #'cider-eval-defun-at-point cider-mode-map)
