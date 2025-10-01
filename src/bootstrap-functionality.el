@@ -2526,6 +2526,7 @@ line in Eshell."
 (bind-key "s-f" #'query-replace-regexp)
 (bind-key "s-F" #'query-replace)
 (bind-key "s-s" #'~interactively-search)
+(bind-key "C-s" #'~interactively-search)
 
 ;; Text processing
 (bind-key "RET" #'~electrify-return-if-match)
