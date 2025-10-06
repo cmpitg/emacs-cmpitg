@@ -40,6 +40,17 @@
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)))
 
 ;;
+;; YAML
+;;
+;; Ref: https://github.com/ikatyang/tree-sitter-yaml
+;;
+
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.yaml\\'"
+         "\\.yml\\'"))
+
+;;
 ;; Nix
 ;;
 ;; Ref: https://github.com/NixOS/nix-mode
@@ -72,6 +83,18 @@
 
 (use-package dhall-mode
   :mode "\\.dhall\\'")
+
+;;
+;; Caddyfile
+;;
+;; Ref: https://github.com/Schnouki/caddyfile-mode
+;;
+
+(use-package caddyfile-mode
+  :ensure t
+  :mode (("Caddyfile\\'" . caddyfile-mode)
+         ("Caddyfile.local\\'" . caddyfile-mode)
+         ("caddy\\.conf\\'" . caddyfile-mode)))
 
 ;;
 ;; Just
