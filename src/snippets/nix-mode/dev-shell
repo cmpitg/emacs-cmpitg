@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: dev-shell
+# key: -dev-shell
+# --
+{ pkgs ? import <nixpkgs> {$1} }:
+pkgs.mkShell {
+    packages = with pkgs; [
+        $2
+    ];
+}

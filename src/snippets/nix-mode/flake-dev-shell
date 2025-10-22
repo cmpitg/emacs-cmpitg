@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: flake-dev-shell
+# key: -flake-dev-shell
+# --
+{
+    description = "$1";
+
+    inputs = {
+        nixpkgs.url = "github:nixos/nixpkgs?ref=${2:nixos-unstable}";
+    };
+
+    outputs = { self, nixpkgs }:
+        let
+            pkgs = import nixpkgs { system = "${3:x86_64-linux}"; };
+        in {
+            devShells.$3.default = import ./shell.nix { pkgs = pkgs; };
+        };
+}

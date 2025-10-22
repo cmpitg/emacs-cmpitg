@@ -179,7 +179,18 @@ might need manual refreshing."
   :config (smart-jump-setup-default-registers))
 
 ;;
-;; File explorer and sidebar
+;; Sidebar with file explorer
+;;
+;; Ref: https://github.com/jaypei/emacs-neotree
+;;
+
+(use-package neotree
+  :ensure t
+  :commands (neotree-toggle
+             neotree-dir))
+
+;;
+;; Project-based file explorer sidebar
 ;;
 ;; Ref: https://github.com/Alexander-Miller/treemacs
 ;;
@@ -312,7 +323,8 @@ might need manual refreshing."
 
 (use-package dockerfile-mode
   :ensure t
-  :mode "Dockerfile\\'")
+  :mode ("Dockerfile\\'"
+         "Containerfile\\'"))
 
 ;;
 ;; Nginx mode

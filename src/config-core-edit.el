@@ -271,7 +271,8 @@ recursively."
 
   :hook ((prog-mode . ~cape-setup-general)
          (emacs-lisp-mode . ~cape-setup-general)
-         (eglot-mode . ~cape-setup-general))
+         (eglot-mode . ~cape-setup-general)
+         (org-mode . ~cape-setup-general))
 
   :init
   ;; Super-Capf/capfs merging is nice with static, non- multi-stage completion
