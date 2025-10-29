@@ -267,11 +267,11 @@ recursively."
 (use-package cape
   :ensure t
   :demand t
-  :after (company)
+  :after (company yasnippet tempel)
 
   :hook ((prog-mode . ~cape-setup-general)
          (emacs-lisp-mode . ~cape-setup-general)
-         (eglot-mode . ~cape-setup-general)
+         (eglot-mode . ~cape-setup-eglot)
          (org-mode . ~cape-setup-general))
 
   :init
@@ -297,8 +297,18 @@ recursively."
                       #'~cape-capfs-static
                       (cape-company-to-capf #'company-yasnippet)))
 
+  ;; Ref: https://github.com/minad/corfu/wiki#making-a-cape-super-capf-for-eglot
+  (cl-defun ~cape-setup-eglot ()
+    (~cape-setup-general)
+    (~cape-load-capfs (cape-capf-super #'eglot-completion-at-point
+                                       #'tempel-expand)))
+
   :config
-  (bind-key "M-SPC TAB" cape-prefix-map))
+  (bind-key "M-SPC TAB" cape-prefix-map)
+
+  ;; Continuously update the candidate when using Eglot
+  ;; Ref: https://github.com/minad/corfu/wiki#configuring-corfu-for-eglot
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 ;; Enhanced matching
 (use-package orderless
@@ -669,6 +679,7 @@ recursively."
 ;; Snippet mode
 ;;
 ;; Ref: https://github.com/joaotavora/yasnippet
+;; Ref: https://github.com/minad/tempel
 ;;
 ;; Note: Load before auto complete
 ;;
@@ -679,6 +690,12 @@ recursively."
   :config
   (add-to-list 'yas-snippet-dirs (expand-file-name rmacs:+snippet-dir+))
   (yas-global-mode 1))
+
+(use-package tempel
+  :ensure t)
+(use-package tempel-collection
+  :ensure t
+  :after (tempel))
 
 ;;
 ;; Showing color based on hex code
