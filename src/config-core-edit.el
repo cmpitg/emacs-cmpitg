@@ -238,6 +238,33 @@ recursively."
   (defalias '~interactively-yank-pop #'consult-yank-pop)
   (defalias '~interactively-search #'consult-line))
 
+;;;
+;; Emulate a terminal
+;;
+;; Ref: https://codeberg.org/akib/emacs-eat
+;;
+
+(use-package eat
+  :ensure t
+  :demand t
+  :straight (eat :type git
+                 :host codeberg
+                 :repo "akib/emacs-eat"
+                 :files ("*.el" ("term" "term/*.el") "*.texi"
+                         "*.ti" ("terminfo/e" "terminfo/e/*")
+                         ("terminfo/65" "terminfo/65/*")
+                         ("integration" "integration/*")
+                         (:exclude ".dir-locals.el" "*-tests.el")))
+
+  :init
+  (defun ~edit-with-helix ()
+    "Edits current file with Helix"
+    (interactive)
+    (eat (concat "hx" " " (shell-quote-argument buffer-file-name))))
+
+  :bind
+  ("M-SPC d e" . #'~edit-with-helix))
+
 ;; Auto-completion
 (use-package corfu
   :ensure t

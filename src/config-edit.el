@@ -107,7 +107,9 @@
   :ensure t)
 
 (use-package just-mode
-  :ensure t)
+  :ensure t
+  :custom
+  (tab-width 2))
 
 ;;
 ;; Asciidoc mode
