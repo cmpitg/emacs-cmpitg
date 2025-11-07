@@ -1,158 +1,46 @@
-= Rmacs - cmpitg's Emacs
+= Yet another Emacs configuration
 
-[source]
-----
-$ rmacs --help
-rmacs [rmacs-options] <command> [arguments] ...
+== Guiding Principles
 
-Rmacs is an Emacs distribution with the aim to shape Emacs into a specialized tool (called "shape").  The shape is specified by the '--shape' option.  Each shape shared a base configuration with different configurations on top of it.  Currently the following shapes are supported:
+* Don't make me think!
+** That it doesn't matter if a series of editing commands is long, as long as
+   the mental load is kept minimal, the config delivers its goal.
+*** E.g. If sometimes reaching for the mouse imposes physical movement but
+    less mental load, enabling actions with the mouse is better than forcing
+    users to stay on the keyboard.
+*** E.g. Contrary to a popular belief, jumping to a line based on relative
+    number (e.g. jump 9 lines forward) might lead to fewer editing commands
+    but heavier mental load, i.e. counting/or reading a the (relative) line
+    number, then type it might be more mentally taxing than just throwing and
+    clicking the mouse on the desire place.
+** There is no one true way to edit, e.g. selecting text might be done by
+   holding the `Shift` key, or using the mouse, or using a visual/selection
+   mode in a modal editing extension, etc.  Which way is most optimal depends
+   on the mental of the current workflow.
 
-  minimal :: General text editing framework
-  utils   :: Utility framework
-  edit    :: Text editor
+* Integrating (not integrated) Development Environment:
+** That Emacs should not try to reinvent the wheel.  Unless there is a
+   significant increase in cost, i.e. maintenance effort, mental load, instead
+   of reimplementing things in Emacs, try to interact with external tooling as
+   much as possible.
+*** E.g. The Helix text editor implements interesting and efficient ways of
+    editing text, e.g. select-then-act modal.  If that is to be desired, one
+    could quickly invoke Helix in an Emacs session.  It is not necessary to
+    reimplement Helix features in Emacs.
+*** E.g. Running terminal emulator in Emacs is requires understanding of how
+    and when keybindings are forwarded to the terminal.  This might
+    unnecessarily complex the workflow, which, in turn, increases the mental
+    load.  It might be better to quickly summon and dismiss an external
+    terminal emulator to do the job.
+*** E.g. Lots of text processing tools are well-designed and well-tested.
+    These include not only the traditional Sed, Awk, `wc`, `sort`, etc. but
+    also https://jqlang.org/[Jq], https://github.com/mikefarah/yq[Yq],
+    https://github.com/TomWright/dasel[Dasel], ... and the likes.  Invoking
+    them in an editing session, e.g. by input-/output-piping, might be more
+    useful than reimplementing parts of their functionality in Emacs Lisp.
 
-After naming a shape, a 'command' needs providing.  The command defines the action to perform.  Some commands need arguments.  The following commands take shape-related options:
+== Useful Helpers
 
-  open [path]  :: Open a path or URL.  If 'path' is not provided, open a blank buffer.
-  visit [path] :: Visit a path or URL but do not switch to its buffer.  If 'path' is not provided, open a blank buffer.
-  eval <sexp>  :: Evaluate an Emacs Lisp expression and return the result
-  wait         :: Wait until the corresponding server is alive
-
-In addition, Rmacs also supports commands to manage Emacs servers:
-
-  list  :: List the current Emacs server socket names
-  kill  :: Kill an Rmacs server, '--name' or '--shape' must be provided
-  start :: Start Rmacs server in the foreground, '--name' or '--shape' must be provided
-
-Unless --one-off is provided, Rmacs runs in a client-server architecture.  Each Rmacs server has a socket name (specified by the '--name' option).  Once the server has started, a normal Emacsclient could connect to the corresponding socket.  This keeps the Rmacs implementation as transparent as possible to Emacs users.
-
-Rmacs works by loading init files from the Rmacs init directory (from the environment variable RMACS_INIT_DIR).  Then:
-- If 'command' is 'start', Rmacs loads the init file and starts the server in the foreground.  This is useful when running Rmacs as a daemon, particularly in conjunction in a supervisor process such as Sys V Init, SystemD, or Runit, ...
-- Otherwise, Rmacs will try to start an Emacs server (if necessary) in the background.  It will then use Emacsclient to connect to that server to perform the action denoted by 'command'.
-
-Rmacs will always load ~/.emacs-machine-specific-init before and ~/.emacs-machine-specific after all other configurations.
-
-Examples:
-
-  rmacs --shape edit open <path>
-	Opens a path as text editor, server name is 'edit'.
-
-  rmacs --shape edit start
-	Starts an Rmacs text editor server on the foreground, server name is 'edit'.
-
-  rmacs --shape minimal open
-	Runs Rmacs as a general, "minimal" text editor; server name is 'minimal'.
-
-  rmacs --name edit eval <sexp>
-	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'minimal'.
-
-  rmacs --shape edit eval <sexp>
-	Evals an Emacs Lisp s-expression in an Rmacs server with name 'edit' and shape 'edit'.
-
-  rmacs list
-	Lists all current socket names for running Emacs servers.
-
-  rmacs --name foobar kill
-	Kills the server with socket name 'foobar'.
-
-Available Rmacs options:
-
- -shape value         The shape Rmacs takes <minimal>
- -name value          (optional) A unique name used by Emacs server, for interprocess communication.  By default this option is taken from 'shape' if not specified. <>
- -timeout value       Timeout (in milisecs) to wait for the server to be alive.  Not in use when 'command' is 'start'. <30000>
- -opts value          Extra options passed to Emacsclient/Emacs invocation.  Not in use when 'command' is 'start'. <>
- -no-wait             Don't wait for the client session to complete, return immediately.  Not in use when 'command' is 'start'.
- -new-frame           Create a new frame.  Not in use when 'command' is 'start'.  Conflict with '--tty'.
- -tty                 Use TTY.  Not in use when 'command' is 'start'.  Conflict with '--new-frame'.
- -with-buffer value   Name of the buffer (returned by buffer-name) in which the command is executed. <>
- -verbose             Be verbose, prints options and arguments
- -init-dir value      Alternative Rmacs init directory.  Not in use if the server is already started. <>
- -init value          Additional init file, loaded after loading base init.  Not in use if the server is already started. <>
- -debug-on-error      Whether or to jump into debug mode on error.
- -one-off             If true, run a one-off command without starting a server, effectively ignoring '--no-wait', cannot be used with the 'start' command.
- --                   Forcibly stop option processing
- -help                Print this message
- -?                   Print this message
-
-----
-
-This documentation is a work in progress.  At this point in time please consult the source code (in `src/`) directly for in-depth documentation.
-
-Emacs is considered an editor framework, providing building blocks to build editor and much more.  This repo contains my personal Emacs configuration, which, though heavily customized, could potentially be adopted to different users.  The idea is to use Emacs Lisp to push Emacs to its limit, morphing it to different shapes depending on the use cases.  Currently I'm running Emacs as:
-
-* Basic text editor (with `rmacs minimal`),
-* Full-blown text editor with IDE-like features (with `rmacs edit`),
-* Email browser (with `rmacs mail`),
-* Note taker (with `rmacs notes`).
-
-== Architecture
-
-With the entrypoint being `rmacs` script, Rmacs could be run in different so-called *shapes*.  Each shape defines a use case for Rmacs to run:
-
-* Running a shape is essentially loading Emacs with a configuration set.  By default each shape loads the `minimal` configuration, then continues with specific configuration corresponding to its use case.
-
-* Each shape runs an https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html[Emacs server] behind the scene, denoted by a server `name` (which could be passed by specifying the `--name` command line argument) with the socket directory being `/tmp/emacs${UID}`.  Rmacs doesn't add any additional layer on top of the default IPC machanism provided by Emacs so `emacsclient` could be used to interact with the Emacs server.
-
-The `minimal` configuration contains some deliberate UX design that all of other shapes follow.  It tries to stay lean in a practical manner.
-
-== Requirements
-
-* Emacs 26.1+
-* Python 3+
-* GNU Make 4.1+.  Supposedly any version of modern Make implementation could work.
-* The `${HOME}/bin` directory exists, containing executables for the current user.
-
-== Installation
-
-* Installing dependencies:
-+
-[source,sh]
-----
-make install-deps
-----
-
-* Installing Rmacs by symlinking the executable to `${HOME}/bin`:
-+
-[source,sh]
-----
-make install-bin
-----
-
-== Running
-
-For full documentation, run `rmacs --help`.
-
-=== Emacs as a basic text editor
-
-[source,sh]
-----
-rmacs minimal <path>
-----
-
-=== Emacs as text editor
-
-[source,sh]
-----
-rmacs edit <path>
-----
-
-=== Emacs as mail browser (with https://www.djcbsoftware.nl/code/mu/mu4e.html[mu4e])
-
-[source,sh]
-----
-rmacs mail
-----
-
-=== Emacs as note taker
-
-[source,sh]
-----
-rmacs notes
-----
-
-=== Communicating with a running Rmacs server
-
-[source,sh]
-----
-rmacs --name <server-name> eval <expression>
-----
+* To execute an external commands:
+** Open a terminal emulation at the current working director: `~open-term-emu`
+** Edit current file with the Helix text editor at the current point: ``
