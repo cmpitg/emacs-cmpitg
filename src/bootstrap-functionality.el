@@ -1429,6 +1429,26 @@ which is loaded lazily get loaded."
     (interactive)
     (~run-process "x-terminal-emulator" :async t))
 
+  (cl-defun ~exec-in-term-emu (&rest cmd&args)
+    "Executes a command in a terminal emulator asynchronously.  No need to
+  quote arguments."
+    (interactive)
+    (let* ((full-cmd&args (cl-concatenate 'list
+                                          (list "x-terminal-emulator" "-e")
+                                          cmd&args))
+           (quoted-parts (cl-mapcar #'shell-quote-argument full-cmd&args))
+           (quoted (string-join quoted-parts " ")))
+      (~run-process quoted :async t)))
+
+  (defun ~edit-with-helix ()
+    "Edits current file with Helix at the current position."
+    (interactive)
+    ;; (eat (concat "hx" " " (shell-quote-argument buffer-file-name)))
+    (~exec-in-term-emu "hx"
+                       (format "%s:%s:%s"
+                               (buffer-file-name)
+                               (line-number-at-pos) (current-column))))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Tracking recently closed files
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2762,6 +2782,7 @@ line in Eshell."
 (bind-key "M-SPC d d" #'~duplicate-line-or-region)
 (bind-key "M-SPC d k" #'kill-sexp)
 (bind-key "M-SPC d z" #'repeat)
+(bind-key "M-SPC d e" #'~edit-with-helix)
 
 ;; External exec
 (bind-key "M-SPC a e" #'~palette/exec-sh-in-term-mux-then-pause)

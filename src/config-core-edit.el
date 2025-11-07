@@ -254,16 +254,7 @@ recursively."
                          "*.ti" ("terminfo/e" "terminfo/e/*")
                          ("terminfo/65" "terminfo/65/*")
                          ("integration" "integration/*")
-                         (:exclude ".dir-locals.el" "*-tests.el")))
-
-  :init
-  (defun ~edit-with-helix ()
-    "Edits current file with Helix"
-    (interactive)
-    (eat (concat "hx" " " (shell-quote-argument buffer-file-name))))
-
-  :bind
-  ("M-SPC d e" . #'~edit-with-helix))
+                         (:exclude ".dir-locals.el" "*-tests.el"))))
 
 ;; Auto-completion
 (use-package corfu
@@ -491,8 +482,9 @@ recursively."
   (add-hook 'minibuffer-setup-hook #'~conditionally-enable-lispy)
 
   (defun ~lispy-update-keybindings ()
-    (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
-    (define-key lispy-mode-map (kbd "C-a") #'~my/deactivate-modalka)
+    (with-eval-after-load "modalka"
+      (define-key lispy-mode-map (kbd "C-e") #'~my/activate-modalka)
+      (define-key lispy-mode-map (kbd "C-a") #'~my/deactivate-modalka))
     (define-key lispy-mode-map (kbd "<M-return>") #'eval-defun)
     (define-key lispy-mode-map (kbd "<M-RET>") #'eval-defun)
     (define-key lispy-mode-map (kbd "<C-return>") #'~eval-last-sexp-or-region)

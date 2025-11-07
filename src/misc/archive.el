@@ -277,14 +277,15 @@
 
 ;; Modalka in other modes
 
-(with-eval-after-load "compilation"
-  (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
-  (define-key compilation-mode-map (kbd "C-a") #'~my/deactivate-modalka))
+(with-eval-after-load "modalka"
+  (with-eval-after-load "compilation"
+    (define-key compilation-mode-map (kbd "C-e") #'~my/activate-modalka)
+    (define-key compilation-mode-map (kbd "C-a") #'~my/deactivate-modalka))
 
-(require 'dired)
-(with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "C-e") #'~my/activate-modalka)
-  (define-key dired-mode-map (kbd "C-a") #'~my/deactivate-modalka))
+  (require 'dired)
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map (kbd "C-e") #'~my/activate-modalka)
+    (define-key dired-mode-map (kbd "C-a") #'~my/deactivate-modalka)))
 
 
 ;;
