@@ -1425,9 +1425,13 @@ which is loaded lazily get loaded."
                     :async t)))
 
   (cl-defun ~open-term-emu ()
-    "Opens a terminal emulator."
+    "Opens a terminal emulator in the current project root."
     (interactive)
-    (~run-process "x-terminal-emulator" :async t))
+    (let* ((default-directory (~get-current-project-root))
+           (cmd&args (list "x-terminal-emulator" "-e" "--cwd" default-directory))
+           (quoted-parts (cl-mapcar #'shell-quote-argument cmd&args))
+           (quoted (string-join quoted-parts " ")))
+      (~run-process quoted :async t)))
 
   (cl-defun ~exec-in-term-emu (&rest cmd&args)
     "Executes a command in a terminal emulator asynchronously.  No need to
