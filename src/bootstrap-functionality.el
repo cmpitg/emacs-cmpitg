@@ -616,7 +616,7 @@ Source: http://stackoverflow.com/a/4717026/219881"
 
   (defun ~get-current-project-root ()
     "Returns the current project root or current directory."
-    (or (ignore-errors (car (last (project-current))))
+    (or (ignore-errors (expand-file-name (car (last (project-current)))))
         default-directory))
 
   (defun ~expand-path-fully (path)
