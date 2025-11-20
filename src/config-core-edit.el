@@ -247,6 +247,7 @@ recursively."
 (use-package meow
   :ensure t
   :demand t
+  :bind* ("C-M-a" . meow-insert-mode)
   :config
   (defun meow-setup-qwerty ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
