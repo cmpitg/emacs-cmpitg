@@ -43,4 +43,4 @@
 
 * To execute an external commands:
 ** Open a terminal emulation at the current working director: `~open-term-emu`
-** Edit current file with the Helix text editor at the current point: ``
+** Edit current file with the Helix text editor at the current point: `~edit-with-helix`

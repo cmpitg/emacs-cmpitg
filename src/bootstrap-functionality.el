@@ -1436,8 +1436,11 @@ which is loaded lazily get loaded."
   (cl-defun ~exec-in-term-emu (&rest cmd&args)
     "Executes a command in a terminal emulator asynchronously.  No need to
   quote arguments."
-    (interactive)
-    (let* ((full-cmd&args (cl-concatenate 'list
+    (interactive "xCommand as list: ")
+    (let* ((cmd&args (if (stringp (first cmd&args))
+                         cmd&args
+                       (first cmd&args)))
+           (full-cmd&args (cl-concatenate 'list
                                           (list "x-terminal-emulator" "-e")
                                           cmd&args))
            (quoted-parts (cl-mapcar #'shell-quote-argument full-cmd&args))
@@ -2786,6 +2789,7 @@ line in Eshell."
 (bind-key "M-SPC d d" #'~duplicate-line-or-region)
 (bind-key "M-SPC d k" #'kill-sexp)
 (bind-key "M-SPC d z" #'repeat)
+(bind-key "M-SPC d t" #'~open-term-emu)
 (bind-key "M-SPC d e" #'~edit-with-helix)
 
 ;; External exec
