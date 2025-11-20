@@ -360,9 +360,8 @@ recursively."
 ;;
 
 (use-package eat
-  :ensure t
   :demand t
-  :straight (eat :type git
+  :ensure (eat :type git
                  :host codeberg
                  :repo "akib/emacs-eat"
                  :files ("*.el" ("term" "term/*.el") "*.texi"
