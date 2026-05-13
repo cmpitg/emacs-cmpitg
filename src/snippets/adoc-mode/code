@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: Code block without title
-# key: cb
+# key: -cb
 # group: adoc-mode
 # --
 [source${1:,sh}]

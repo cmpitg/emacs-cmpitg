@@ -3,16 +3,30 @@
 # key: -flake-dev-shell
 # --
 {
-    description = "$1";
+  description = "$1";
 
-    inputs = {
-        nixpkgs.url = "github:nixos/nixpkgs?ref=${2:nixos-unstable}";
-    };
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 
-    outputs = { self, nixpkgs }:
-        let
-            pkgs = import nixpkgs { system = "${3:x86_64-linux}"; };
-        in {
-            devShells.$3.default = import ./shell.nix { pkgs = pkgs; };
-        };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
+
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, flake-parts, ... }:
+    let
+      createDevShell = { inputs }: flake-parts.lib.mkFlake { inherit inputs; }
+        (top@{ ... }: {
+          systems = [ ${3:"x86_64-linux" "aarch64-linux" "aarch64-darwin"} ];
+          perSystem = { system, ... }: let
+            pkgs = import nixpkgs { inherit system; config = { allowUnfree = true; }; };
+          in {
+            # Development shell
+            devShells.default = pkgs.mkShell {
+              buildInputs = with pkgs; [
+                ${4:hello}
+              ];
+            };
+          };
+        });
+    in createDevShell { inherit inputs; };
 }
