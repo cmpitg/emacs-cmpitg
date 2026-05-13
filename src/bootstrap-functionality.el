@@ -1537,16 +1537,18 @@ quoted with `shell-quote-argument'."
     (let ((current-shell (getenv "SHELL"))
           (process-name command))
       (if async
-          (async-start-process process-name
-                               current-shell
-                               #'(lambda (process)
-                                   (let ((output (~get-process-output process)))
-                                     (with-current-buffer (get-buffer-create process-name)
-                                       (insert output))))
-                               "-c"
-                               ;; Make sure the command doesn't fail, otherwise
-                               ;; the finish function never gets called
-                               (s-concat command "; true"))
+          (with-eval-after-load "emacs-async"
+            (async-start-process process-name
+                                 current-shell
+                                 #'(lambda (process)
+                                     (let ((output (~get-process-output process)))
+                                       (with-current-buffer (get-buffer-create process-name)
+                                         (insert output))))
+                                 "-c"
+                                 ;; Make sure the command doesn't fail, otherwise
+                                 ;; the finish function never gets called
+                                 (s-concat command "; true"))
+            )
         (call-process current-shell
 
                       ;; Taking no input
