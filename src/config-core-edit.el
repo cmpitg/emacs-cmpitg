@@ -238,6 +238,48 @@ recursively."
   (defalias '~interactively-yank-pop #'consult-yank-pop)
   (defalias '~interactively-search #'consult-line))
 
+;;
+;; Minibuffer action
+;;
+;; Ref: https://github.com/oantolin/embark
+;;
+
+(use-package embark
+  :ensure t
+  :demand t
+
+  :bind
+  (("C-." . embark-act)
+   ("C-h B" . embark-bindings))
+
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  ;; Show the Embark target at point via Eldoc
+  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+  ;; Add Embark to the mouse context menu. Also enable `context-menu-mode'.
+  (context-menu-mode 1)
+  (add-hook 'context-menu-functions #'embark-context-menu 100)
+
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none))))
+
+  ;; (with-eval-after-load "vertico"
+  ;;   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+  ;;   (vertico-multiform-mode))
+  )
+(use-package embark-consult
+  :ensure t ; only need to install it, embark loads it after consult if found
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 ;;;
 ;; Sensible modal editing
 ;;
