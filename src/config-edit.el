@@ -55,11 +55,17 @@
 ;;
 ;; Ref: https://github.com/NixOS/nix-mode
 ;; Ref: https://github.com/nix-community/nix-ts-mode
+;; Ref: https://github.com/oxalica/nil
 ;;
 
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'")
+(use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+  :hook
+  (nix-mode . eglot-ensure))
 
 ;;
 ;; Nickel
