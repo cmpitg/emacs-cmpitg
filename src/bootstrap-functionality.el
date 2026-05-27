@@ -1537,7 +1537,7 @@ quoted with `shell-quote-argument'."
     (let ((current-shell (getenv "SHELL"))
           (process-name command))
       (if async
-          (with-eval-after-load "emacs-async"
+          (with-eval-after-load "async"
             (async-start-process process-name
                                  current-shell
                                  #'(lambda (process)
