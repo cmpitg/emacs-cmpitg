@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2018-2025 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2026 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -178,9 +178,20 @@ recursively."
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt)))
 
+(when (= emacs-major-version 30)
+  ;; Vertico 2.9 requires compat 31.  What a fucking mess!
+  (use-package compat
+    :ensure (:host github
+                   :repo "emacs-compat/compat"
+                   :tag "31.0.0.1")
+    :demand t
+    :config
+    (unload-feature 'compat t)
+    (require 'compat)))
 ;; Vertical display of candidates
 (use-package vertico
   :ensure t
+  :after compat
   :demand t
   :config
   (vertico-mode 1)

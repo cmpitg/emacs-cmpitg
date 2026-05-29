@@ -1,7 +1,7 @@
 ;;  -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2014-2025 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2026 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -16,6 +16,11 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
+
+; (unless (fboundp 'set-local)
+;   (defmacro set-local (variable value)
+;     "Fallback definition for set-local on Emacs 30."
+;     `(setq-local ,variable ,value)))
 
 ;;
 ;; Better package manager, async, ...
@@ -69,6 +74,9 @@
 ;; packages. This includes loading of saved customizations. e.g.
 (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
 (add-hook 'elpaca-after-init-hook #'(lambda () (load custom-file 'noerror)))
+
+(when (featurep 'compat)
+  (unload-feature 'compat t))
 
 ;;
 ;; use-package
