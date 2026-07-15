@@ -21,7 +21,7 @@
 (setq gc-cons-threshold (* 100 1024 1024))
 
 (defconst rmacs:+init-src-dir+ (or (file-name-directory (or load-file-name buffer-file-name))
-				   defaulte-directory))
+                                   default-directory))
 
 (defconst rmacs:+bootstrap-config-path+
   (file-name-concat rmacs:+init-src-dir+ "bootstrap-config.el")

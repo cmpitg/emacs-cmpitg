@@ -40,7 +40,8 @@
   (~load-files (~get-config "experimental")))
 
 ;; Machine/user-specific config
-(~load-files "~/.emacs-machine-specific" (~get-config "machine-specific"))
+(~load-files "~/.emacs-machine-specific"
+             (~get-config "machine-specific"))
 
 ;;
 ;; Last but not least - remember

@@ -287,9 +287,8 @@ recursively."
   ;;   (vertico-multiform-mode))
   )
 (use-package embark-consult
-  :ensure t ; only need to install it, embark loads it after consult if found
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  :ensure t  ; only need to install it, embark loads it after consult if found
+  )
 
 ;;;
 ;; Sensible modal editing
