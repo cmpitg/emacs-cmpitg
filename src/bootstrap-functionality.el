@@ -2395,6 +2395,10 @@ application."
                     ))
     (add-to-list 'org-modules module))
 
+  (require 'ob)
+  (with-eval-after-load "clojure-mode"
+    (require 'ob-clojure))
+
   ;; org-babel
   (setq org-babel-load-languages
         '((emacs-lisp . t)
