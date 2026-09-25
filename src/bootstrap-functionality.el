@@ -2398,6 +2398,8 @@ application."
   (require 'ob)
   (with-eval-after-load "clojure-mode"
     (require 'ob-clojure))
+  (with-eval-after-load "cider"
+    (setq org-babel-clojure-backend 'cider))
 
   ;; org-babel
   (setq org-babel-load-languages
