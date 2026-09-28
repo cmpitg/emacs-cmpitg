@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: -src-tangle
+# key: -src-tangle
+# --
+#+header: :tangle ${1:path}
+#+header: :no-expand yes
+#+header: :mkdirp yes
+#+begin_src ${2:language}
+$3
+#+end_src
