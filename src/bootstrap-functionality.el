@@ -2793,6 +2793,7 @@ line in Eshell."
 (bind-key "M-SPC d w d" #'delete-horizontal-space)
 (bind-key "M-SPC d w w" #'whitespace-cleanup)
 (bind-key "M-SPC d i" #'indent-rigidly)
+(bind-key "M-SPC d j" #'~join-with-next-line)
 (bind-key "M-SPC d c" #'comment-or-uncomment-region)
 (bind-key "M-SPC d d" #'~duplicate-line-or-region)
 (bind-key "M-SPC d k" #'kill-sexp)
