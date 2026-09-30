@@ -22,7 +22,7 @@
 ;; * Memory fades, thus remembering bindings is the enemy of cognitive load
 ;; * To quickly browse through the bindings, one way is to centralize it
 ;; * For high-level operations that are not specific to a library, use defalias
-;; 
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Essential keybindings

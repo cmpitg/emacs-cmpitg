@@ -2893,14 +2893,11 @@ line in Eshell."
 (bind-key "M-SPC n w" (~make-repeatable-fn #'~toggle-soft-wrapping))
 
 ;; Binding shortcut
-(bind-key "<f5>" (lookup-key global-map (kbd "M-SPC")))
-
-(bind-key "<f7>" (lookup-key global-map (kbd "M-SPC")))
 (bind-key "M-SPC <f7>" #'execute-extended-command)
-
+(bind-key "<f7>" (lookup-key global-map (kbd "M-SPC")))
 (bind-key "C-M-<return>" (lookup-key global-map (kbd "M-SPC")))
 (bind-key "C-M-RET" (lookup-key global-map (kbd "M-SPC")))
-(bind-key "<s-g>" (lookup-key global-map (kbd "C-g")))
+(bind-key "C-M-g" (lookup-key global-map (kbd "M-SPC")))
 
 ;; TODO
 ;; Context menu
