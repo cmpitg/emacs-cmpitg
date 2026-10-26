@@ -3,8 +3,9 @@
 # key: -src-tangle
 # --
 #+header: :tangle ${1:path}
+#+name: ${2:block-name}
 #+header: :no-expand yes
 #+header: :mkdirp yes
-#+begin_src ${2:language}
-$3
+#+begin_src ${3:language}
+$4
 #+end_src

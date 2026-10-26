@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: -datomic-db
+# key: -d-db
+# --
+(d/db db-conn)

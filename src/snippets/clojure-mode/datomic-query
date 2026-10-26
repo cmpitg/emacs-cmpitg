@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: -datomic-query
+# key: -d-q
+# --
+(d/q '[]
+  ${1:(d/db db-conn)})
