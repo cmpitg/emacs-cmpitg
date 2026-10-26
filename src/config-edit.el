@@ -599,6 +599,7 @@ might need manual refreshing."
 
 ;;
 ;; Ref: http://elpy.readthedocs.io/en/latest/index.html
+;; Ref: https://github.com/z80dev/uv-mode
 ;; Config with (elpy-config)
 ;;
 ;; Setup workflow:
@@ -610,6 +611,10 @@ might need manual refreshing."
 ;; * Run (pyvenv-workon)
 ;; * Have fun
 ;;
+
+(use-package uv-mode
+  :ensure t
+  :hook (python-mode . uv-mode-auto-activate-hook))
 
 (use-package elpy
   :ensure t
