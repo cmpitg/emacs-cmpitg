@@ -298,6 +298,38 @@
 ;; Allow text drap-and-drop with mouse
 (custom-set-variables `(mouse-drag-and-drop-region t))
 
+;;; EXPERIMENT Don't fuck with my windows
+;; Never split; reuse the selected window for everything
+(setq display-buffer-base-action
+      '((display-buffer-reuse-window display-buffer-same-window)))
+
+(setq split-width-threshold nil       ; never split side-by-side automatically
+      split-height-threshold nil)    ; never split top/bottom automatically
+;; or make splitting much less likely:
+;; (setq split-width-threshold 160 split-height-threshold 80)
+
+(setq even-window-sizes nil)         ; don't rebalance sizes when displaying a buffer
+
+;; Stop `switch-to-buffer' from being hijacked
+(setq switch-to-buffer-obey-display-actions t) ; make C-x b respect your rules
+(setq switch-to-buffer-in-dedicated-window 'pop) ; sane behavior with dedicated windows
+;;; END
+;;; EXPERIMENT Use child frame
+;; (setq display-buffer-alist
+;;       '(("\\*\\(Help\\|compilation\\|Messages\\)\\*"
+;;          (display-buffer-reuse-window display-buffer-in-child-frame)
+;;          (child-frame-parameters . ((width . 80)
+;;                                     (height . 25)
+;;                                     (left . 0.5)     ; fractions position relative to parent
+;;                                     (top . 0.2)
+;;                                     (minibuffer . nil)
+;;                                     (undecorated . t)
+;;                                     (border-width . 1)
+;;                                     (no-accept-focus . nil)
+;;                                     (unsplittable . t)))
+;;          (dedicated . t))))
+;;; END
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Standard behaviors for C-x, C-c, C-v
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
