@@ -384,9 +384,6 @@
       ["--" ignore]
       ["Eval last sexp or region" ~eval-last-sexp-or-region]
       ;; TODO: Include buffer list, new temp buffer, ...
-      ["--" ignore]
-      ["Undo" undo-tree-undo t]
-      ["Redo" undo-tree-redo t]
       ["--" ignore]))
 
   (defun ~popup-context-menu ()
@@ -2559,53 +2556,14 @@ line in Eshell."
 ;; Basic editing
 ;;
 
-;; Movements
-(bind-key "s-c" #'previous-line)
-(bind-key "s-t" #'next-line)
-(bind-key "s-h" #'backward-char)
-(bind-key "s-n" #'forward-char)
-(bind-key "s-d" #'~to-bol-dwim)
-(bind-key "s-D" #'move-end-of-line)
-(bind-key "M-s-c" #'~previous-line+)
-(bind-key "M-s-t" #'~next-line+)
-(bind-key "C-M-c" #'previous-line)
-(bind-key "C-M-t" #'next-line)
-(bind-key "C-M-S-c" #'~previous-line+)
-(bind-key "C-M-S-t" #'~next-line+)
-(bind-key "C-M-n" #'forward-char)
-(bind-key "C-M-h" #'backward-char)
-(bind-key "s-H" #'beginning-of-buffer)
-(bind-key "s-N" #'end-of-buffer)
-(bind-key "s-g" #'backward-word)
-(bind-key "s-G" #'backward-sexp)
-(bind-key "s-r" #'forward-word)
-(bind-key "s-R" #'forward-sexp)
-(bind-key "s-l" #'goto-line)
-
 ;; Deletion
-(bind-key "s-u" #'delete-char)
-(bind-key "s-e" #'backward-delete-char)
-(bind-key "s-p" #'kill-word)
-(bind-key "s-." #'backward-kill-word)
 (bind-key "<C-delete>" #'delete-region)
 
 ;; Searching
-(bind-key "s-f" #'query-replace-regexp)
-(bind-key "s-F" #'query-replace)
-(bind-key "s-s" #'~interactively-search)
 (bind-key "C-s" #'~interactively-search)
 
 ;; Text processing
 (bind-key "RET" #'~electrify-return-if-match)
-(bind-key "s--" #'comment-or-uncomment-region)
-(bind-key "s-w" #'whitespace-cleanup)
-(bind-key "s-@" #'~duplicate-line-or-region)
-(bind-key "s-&" #'~join-with-next-line)
-(bind-key "s-b" #'pop-to-mark-command)
-(bind-key "s-'" #'undo)
-(bind-key "s-\"" #'undo-redo)
-(bind-key "C-z" #'undo-tree-undo)
-(bind-key "S-C-z" #'undo-tree-redo)
 
 ;; Buffer management
 ;; Breaking meow-mode?

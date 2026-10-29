@@ -73,15 +73,6 @@
 ;; Added functionality to hippie-expand
 ;; (add-to-list 'hippie-expand-try-functions-list 'try-expand-flexible-abbrev)
 
-;; Hide undo-tree from mode line
-(use-package undo-tree
-  :ensure t
-  :demand t
-  :diminish undo-tree-mode
-  :custom (undo-tree-auto-save-history . nil)
-  :config
-  (global-undo-tree-mode))
-
 ;; Make shebang-ed files executable
 (add-hook 'after-save-hook #'~maybe-make-current-file-executable)
 

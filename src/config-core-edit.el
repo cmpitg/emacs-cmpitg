@@ -23,6 +23,15 @@
 (require 'subr-x)
 
 ;;
+;; A better undo/redo experience
+;;
+;; Ref: https://github.com/casouri/vundo
+;;
+
+(use-package vundo
+  :ensure t)
+
+;;
 ;; Navigate buffers based on MRU/recency
 ;;
 ;; Ref: https://github.com/jrosdahl/iflipb
