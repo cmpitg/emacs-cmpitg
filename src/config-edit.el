@@ -223,10 +223,10 @@ might need manual refreshing."
     ;; Collapse empty dirs into one when possible
     (setq treemacs-collapse-dirs 3)
     ;; Always find and focus on the current file when treemacs is built
-    (setq treemacs-follow-after-init t)
+    (setq treemacs-follow-after-init t)))
 
     ;; (treemacs-start-on-boot)
-    ))
+    
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
   :after (treemacs)
@@ -451,6 +451,11 @@ might need manual refreshing."
 ;;
 ;; Erlang & Elixir
 ;;
+
+;; Ref: https://github.com/erlang/emacs-erlang-ts
+(use-package erlang-ts
+  :ensure t
+  :mode ("\\.erl\\'" . erlang-ts-mode))
 
 ;; Ref: https://github.com/tonini/alchemist.el
 (use-package alchemist
