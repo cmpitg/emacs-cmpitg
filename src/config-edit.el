@@ -527,6 +527,22 @@ might need manual refreshing."
   :mode "\\.scss\\'")
 
 ;;
+;; D2 diagramming
+;;
+;; Ref: https://github.com/andorsk/d2-mode
+;;
+
+(use-package d2-mode
+  :ensure t)
+
+;;
+;; Structurizr C4 diagramming
+;;
+
+;; (use-package structurizr-mode
+;;   :ensure t)
+
+;;
 ;; Delphi and Pascal development
 ;;
 ;; Ref: https://github.com/ki11men0w/emacs-delphi-mode
