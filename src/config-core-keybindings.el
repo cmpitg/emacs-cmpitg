@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 ;;
-;; Copyright (C) 2018-2024 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2018-2026 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -47,9 +47,6 @@
 
 ;; Text processing
 (bind-key "C-S-<mouse-1>" 'mc/add-cursor-on-click)
-(with-eval-after-load "undo-tree"
-  (bind-key "s-'" #'undo-tree-undo)
-  (bind-key "s-\"" #'undo-tree-redo))
 
 (with-eval-after-load "smartparens"
   (bind-key "s-C" #'sp-backward-up)
