@@ -306,7 +306,7 @@ recursively."
 ;;
 
 (use-package meow
-  :ensure t
+  :disabled t
   :demand t
   :bind* (("C-M-S-i" . meow-insert-mode)
           ("C-M-S-<escape>" . meow-normal-mode))
@@ -415,6 +415,23 @@ recursively."
   (meow-global-mode 1))
 
 ;;;
+;; Helix emulation
+;;
+;; Ref: https://github.com/mgmarlow/helix-mode
+;; Ref: https://github.com/helheim-emacs/hel
+;;
+
+(use-package helix
+  :ensure t
+  :config
+  (helix-mode)
+  (helix-jj-setup 0.2))
+;; (use-package hel
+;;   :ensure t
+;;   :custom (inhibit-startup-screen t)
+;;   :config (hel-mode))
+
+;;;
 ;; Emulate a terminal
 ;;
 ;; Ref: https://codeberg.org/akib/emacs-eat
@@ -423,13 +440,13 @@ recursively."
 (use-package eat
   :demand t
   :ensure (eat :type git
-                 :host codeberg
-                 :repo "akib/emacs-eat"
-                 :files ("*.el" ("term" "term/*.el") "*.texi"
-                         "*.ti" ("terminfo/e" "terminfo/e/*")
-                         ("terminfo/65" "terminfo/65/*")
-                         ("integration" "integration/*")
-                         (:exclude ".dir-locals.el" "*-tests.el"))))
+               :host codeberg
+               :repo "akib/emacs-eat"
+               :files ("*.el" ("term" "term/*.el") "*.texi"
+                       "*.ti" ("terminfo/e" "terminfo/e/*")
+                       ("terminfo/65" "terminfo/65/*")
+                       ("integration" "integration/*")
+                       (:exclude ".dir-locals.el" "*-tests.el"))))
 
 ;; Auto-completion
 (use-package corfu
@@ -641,6 +658,7 @@ recursively."
 ;;
 
 (use-package lispy
+  :disabled t
   :hook ((emacs-lisp-mode
           scheme-mode
           common-lisp-mode
@@ -667,6 +685,45 @@ recursively."
   (add-hook 'lisp-mode-hook #'~lispy-update-keybindings)
 
   (~lispy-update-keybindings))
+
+;;
+;; Lisp editing with interence
+;;
+;; Ref: https://shaunlebron.github.io/parinfer/
+;; Ref: https://github.com/justinbarclay/parinfer-rust-mode
+;;
+
+(use-package parinfer-rust-mode
+  :disabled t
+  :hook (emacs-lisp-mode
+         scheme-mode
+         common-lisp-mode
+         lisp-mode
+         clojure-mode
+         cider-repl-mode
+         sly-mrepl-mode
+         slime-repl-mode))
+
+;;
+;; Structural editing with brackets and tags
+;;
+;; Ref: https://github.com/AmaiKinono/puni
+;;
+
+(use-package puni
+  :ensure t
+  :hook ((prog-mode
+          sgml-mode
+          nxml-mode
+          tex-mode
+          lisp-mode
+          eval-expression-minibuffer-setup) . puni-mode)
+  :init
+  ;; The autoloads of Puni are set up so you can enable `puni-mode` or
+  ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
+  ;; any key that calls Puni commands, it's loaded.
+  (puni-global-mode)
+  (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 
 ;;
 ;; TODO: keybinding
