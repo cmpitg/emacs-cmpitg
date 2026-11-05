@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t -*-
 
 ;;
-;; Copyright (C) 2014-2025 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2014-2026 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -37,5 +37,6 @@
 (require 'rmacs:config-module-simple-buffer-list      "config-module-simple-buffer-list")
 (require 'rmacs:config-header-line                    "config-header-line")
 (require 'rmacs:config-module-bowser                  "config-module-bowser")
+(require 'rmacs:config-menu                           "config-menu")
 
 (message "Finish loading bare functionalities")

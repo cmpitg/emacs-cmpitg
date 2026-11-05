@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;
-;; Copyright (C) 2021-2025 Ha-Duong Nguyen (@cmpitg)
+;; Copyright (C) 2021-2026 Ha-Duong Nguyen (@cmpitg)
 ;;
 ;; This project is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -632,6 +632,16 @@ Source: http://stackoverflow.com/a/4717026/219881"
   (defmacro ~comment (&rest body)
     "Ignores the body."
     nil)
+
+  (defun ~defalias-when-load (package-name symbol actual-symbol)
+    "Returns a not-implemented function before a package is loaded.  When
+  that package is loaded, `defalias' it with the actual symbol."
+    (fset symbol
+          #'(lambda ()
+              (interactive)
+              (message "NOT IMPLEMENTED!  Provided by %s" package-name)))
+    (with-eval-after-load package-name
+      (defalias symbol actual-symbol)))
 
   (defun ~current-dir ()
     "Current directory."
@@ -2544,6 +2554,19 @@ line in Eshell."
 (defalias '~interactively-M-x #'execute-extended-command)
 (defalias '~interactively-search #'isearch)
 
+(~defalias-when-load "dumb-jump" '~dumb-jump-go 'dumb-jump-find-references)
+(~defalias-when-load "dumb-jump" '~dumb-jump-go-back 'xref-pop-marker-stack)
+(~defalias-when-load "point-pos" '~point-save 'point-pos-save)
+(~defalias-when-load "point-pos" '~point-goto 'point-pos-goto)
+(~defalias-when-load "point-pos" '~point-next 'point-pos-next)
+(~defalias-when-load "point-pos" '~point-prev 'point-pos-previous)
+
+(~defalias-when-load "vundo" '~tree-undo 'vundo)
+
+(~defalias-when-load "magit" '~git-status 'magit-status)
+(~defalias-when-load "magit" '~git-blame 'magit-blame)
+(~defalias-when-load "magit" '~git-diff 'magit-diff)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Simple keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2556,14 +2579,11 @@ line in Eshell."
 ;; Basic editing
 ;;
 
-;; Deletion
-(bind-key "<C-delete>" #'delete-region)
-
 ;; Searching
 (bind-key "C-s" #'~interactively-search)
 
 ;; Text processing
-(bind-key "RET" #'~electrify-return-if-match)
+;; (bind-key "RET" #'~electrify-return-if-match)
 
 ;; Buffer management
 ;; Breaking meow-mode?
@@ -2578,6 +2598,8 @@ line in Eshell."
 (bind-key "<s-return>" #'~execute)
 (bind-key "<S-return>" #'~execute-line)
 (bind-key "<C-down-mouse-1>" nil)
+(bind-key "M-<down-mouse-1>" nil)
+(bind-key "M-<mouse-1>" 'mc/add-cursor-on-click)
 (bind-key "<down-mouse-2>" nil)
 (bind-key "<mouse-2>" #'~execute)
 (bind-key "<mouse-3>" #'~popup-context-menu)
@@ -2590,13 +2612,6 @@ line in Eshell."
 (bind-key "s-m"          #'~eval-then-replace-region-or-last-sexp)
 ;; TODO: ~toggle-scratch
 
-;; Window
-(with-eval-after-load "windmove"
-  (bind-key "<M-left>" #'windmove-left)
-  (bind-key "<M-right>" #'windmove-right)
-  (bind-key "<M-up>" #'windmove-up)
-  (bind-key "<M-down>" #'windmove-down))
-
 ;; Function keys & other convenient bindings
 (bind-key "<f2>" #'save-buffer)
 (bind-key "<f3>" #'~interactively-find-file)
@@ -2605,6 +2620,7 @@ line in Eshell."
 (bind-key "<M-f3>" #'~gui/open-file)
 (bind-key "<C-f4>" #'kill-current-buffer)
 (bind-key "<S-f4>" #'~delete-window)
+(bind-key "<f7>" #'~menu/main)
 (bind-key "<f8>" #'~switch-buffer)
 (bind-key "<f9>" #'compile)
 (bind-key "<f10>" #'~interactively-grep)
@@ -2628,200 +2644,41 @@ line in Eshell."
 ;; Sequence keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(bind-key "M-SPC M-SPC" #'execute-extended-command)
-(bind-key "M-SPC SPC" #'execute-extended-command)
+;; (bind-key "M-SPC M-SPC" #'execute-extended-command)
+;; (bind-key "M-SPC SPC" #'execute-extended-command)
 
-;; Buffer
-(bind-key "M-SPC b r" #'revert-buffer)
-(bind-key "M-SPC b n" #'~new-buffer)
-(bind-key "M-SPC b m" #'mark-whole-buffer)
-(bind-key "M-SPC b l" #'~show-buffer-chooser)
-(bind-key "M-SPC b b" #'list-buffers)
-(bind-key "M-SPC b k k" #'kill-current-buffer)
-(bind-key "M-SPC b k b" #'kill-buffer)
-
-(bind-key "M-SPC w s r" #'(lambda () (interactive) (~split-window 'right)))
-(bind-key "M-SPC w s b" #'(lambda () (interactive) (~split-window 'below)))
-(bind-key "M-SPC w k" #'delete-window)
-(bind-key "M-SPC w o" #'~one-window)
-(bind-key "M-SPC w t" #'~transpose-windows)
-
-;; Visit
-(bind-key "M-SPC v n" #'~open-project-notes)
-(bind-key "M-SPC v b" #'~open-project-toolbox)
-(bind-key "M-SPC v t" #'~open-toolbox)
-
-;; File
-(bind-key "M-SPC f d" #'~delete-current-file)
-(bind-key "M-SPC f r" #'~rename-current-file)
-(bind-key "M-SPC f s" #'save-buffer)
-(bind-key "M-SPC f a" #'~save-buffer-as)
-(bind-key "M-SPC f o" #'~interactively-find-file)
-(bind-key "M-SPC f f" #'~interactively-find-file-in-project)
-(bind-key "M-SPC f m" #'~open-current-file-as-admin)
-(bind-key "M-SPC f c" #'~copy-file-name-to-clipboard)
-(bind-key "M-SPC f p" #'~copy-pos-to-clipboard)
-(bind-key "M-SPC f t" #'~choose-path-and-act)
-
-;; Jumping
-(with-eval-after-load "ace-jump"
-  (bind-key "M-SPC j a" #'ace-jump-mode)
-  (bind-key "M-SPC j l" #'ace-jump-line-mode))
-(with-eval-after-load "smart-jump"
-  (bind-key "M-SPC j ." #'smart-jump-go)
-  (bind-key "M-SPC j ," #'smart-jump-back))
-(bind-key "M-SPC j j" (~make-repeatable-fn #'~goto-next-line-matching-marker))
-(bind-key "M-SPC j k" (~make-repeatable-fn #'~goto-prev-line-matching-marker))
-(with-eval-after-load "point-pos"
-  (bind-key "M-SPC j s" #'point-pos-save)
-  (bind-key "M-SPC j g" #'point-pos-goto)
-  (bind-key "M-SPC j n" (~make-repeatable-fn #'point-pos-next))
-  (bind-key "M-SPC j p" (~make-repeatable-fn #'point-pos-previous)))
-(bind-key "M-SPC j i" #'~interactively-call-symbol-menu)
-
-;; Cursor
-(with-eval-after-load "multiple-cursors"
-  (bind-key "M-SPC c l" #'mc/edit-lines)
-  (bind-key "M-SPC c n" #'mc/mark-next-like-this)
-  (bind-key "M-SPC c p" #'mc/mark-previous-like-this)
-  (bind-key "M-SPC c a" #'mc/mark-all-in-region))
-
-;; Search
-(bind-key "M-SPC / /" #'~interactively-search)
-(bind-key "M-SPC / r" #'query-replace-regexp)
-(bind-key "M-SPC / R" #'query-replace)
-
-;; Emacs Lisp
-(bind-key "M-SPC l e e" #'~eval-last-sexp-or-region)
-(bind-key "M-SPC l e p" #'pp-eval-last-sexp)
-(bind-key "M-SPC l e w" #'~eval-then-replace-region-or-last-sexp)
-(bind-key "M-SPC l e x" #'eval-expression)
-(bind-key "M-SPC l e r" #'eval-region)
-(bind-key "M-SPC l e b" #'eval-buffer)
-(bind-key "M-SPC l h f" #'describe-function)
-(bind-key "M-SPC l h v" #'describe-variable)
-(bind-key "M-SPC l h k" #'describe-key)
-(bind-key "M-SPC l h ." #'find-function)
-(bind-key "M-SPC l l" #'find-library)
-
-;; Org
-(with-eval-after-load "org"
-  (let ((repeatable-keybindings `(("i" . org-insert-heading)
-                                  ("I" . org-insert-item)
-                                  ("TAB" . org-cycle)
-                                  ("c" . org-ctrl-c-ctrl-c)
-                                  (">" . org-metaright)
-                                  ("<" . org-metaleft)
-                                  ("r >" . org-shiftmetaright)
-                                  ("r <" . org-shiftmetaleft)
-                                  ("P" . org-move-subtree-up)
-                                  ("N" . org-move-subtree-down)
-
-                                  ("j" . org-next-visible-heading)
-                                  ("k" . org-previous-visible-heading)
-                                  ("J" . org-forward-heading-same-level)
-                                  ("K" . org-backward-heading-same-level)
-
-                                  ("t a" . org-ctrl-c-ctrl-c)
-
-                                  ("o i" . org-insert-todo-heading)
-                                  ("o c" . org-todo))))
-    ;; Nagivation
-    (bind-key "M-SPC o j" (~make-repeatable-multi-fn #'org-next-visible-heading repeatable-keybindings))
-    (bind-key "M-SPC o k" (~make-repeatable-multi-fn #'org-previous-visible-heading repeatable-keybindings))
-    (bind-key "M-SPC o J" (~make-repeatable-multi-fn #'org-forward-heading-same-level repeatable-keybindings))
-    (bind-key "M-SPC o K" (~make-repeatable-multi-fn #'org-backward-heading-same-level repeatable-keybindings))
-
-    ;; List/tree
-    (bind-key "M-SPC o a" #'org-archive-subtree)
-    (bind-key "M-SPC o >" (~make-repeatable-multi-fn #'org-metaright repeatable-keybindings))
-    (bind-key "M-SPC o <" (~make-repeatable-multi-fn #'org-metaleft repeatable-keybindings))
-    (bind-key "M-SPC o r >" (~make-repeatable-multi-fn #'org-shiftmetaright repeatable-keybindings))
-    (bind-key "M-SPC o r <" (~make-repeatable-multi-fn #'org-shiftmetaleft repeatable-keybindings))
-    (bind-key "M-SPC o i" (~make-repeatable-multi-fn #'org-insert-heading repeatable-keybindings))
-    (bind-key "M-SPC o I" (~make-repeatable-multi-fn #'org-insert-item repeatable-keybindings))
-    (bind-key "M-SPC o TAB" (~make-repeatable-multi-fn #'org-cycle repeatable-keybindings))
-    (bind-key "M-SPC o c" (~make-repeatable-multi-fn #'org-ctrl-c-ctrl-c repeatable-keybindings))
-    (bind-key "M-SPC o P" (~make-repeatable-multi-fn #'org-move-subtree-up repeatable-keybindings))
-    (bind-key "M-SPC o N" (~make-repeatable-multi-fn #'org-move-subtree-down repeatable-keybindings))
-    (bind-key "M-SPC o m" #'org-mark-subtree)
-    (bind-key "M-SPC o g" #'org-goto)
-    (bind-key "M-SPC o /" #'org-sparse-tree)
-    (bind-key "M-SPC o s" #'org-insert-structure-template)
-
-    ;; Table
-    (bind-key "M-SPC o t a" (~make-repeatable-multi-fn #'org-ctrl-c-ctrl-c repeatable-keybindings))
-
-    ;; Todo
-    (bind-key "M-SPC o o i" (~make-repeatable-multi-fn #'org-insert-todo-heading repeatable-keybindings))
-    (bind-key "M-SPC o o c" (~make-repeatable-multi-fn #'org-todo repeatable-keybindings))
-    (bind-key "M-SPC o o s" #'org-schedule)
-
-    ;; Narrowing
-    (bind-key "M-SPC o n s" #'org-narrow-to-subtree)
-    (bind-key "M-SPC o n b" #'org-narrow-to-block)
-    (bind-key "M-SPC o n w" #'widen)
-
-    ;; Editing
-    (bind-key "M-SPC o m" #'org-mark-subtree)))
-
-;; Edit
-(bind-key "M-SPC d q r" #'query-replace-regexp)
-(bind-key "M-SPC d q q" #'query-replace)
-(bind-key "M-SPC d n r" #'narrow-to-region)
-(bind-key "M-SPC d n f" #'narrow-to-defun)
-(bind-key "M-SPC d n w" #'widen)
-(bind-key "M-SPC d a a" #'align)
-(bind-key "M-SPC d a c" #'align-current)
-(bind-key "M-SPC d a r" #'align-regexp)
-(bind-key "M-SPC d g s" #'magit-status)
-(bind-key "M-SPC d g b" #'magit-blame)
-(bind-key "M-SPC d g d" #'magit-diff)
-(bind-key "M-SPC d v c a" #'vc-annotate)
-(bind-key "M-SPC d v c d" #'vc-diff)
-(bind-key "M-SPC d w o" #'just-one-space)
-(bind-key "M-SPC d w d" #'delete-horizontal-space)
-(bind-key "M-SPC d w w" #'whitespace-cleanup)
-(bind-key "M-SPC d i" #'indent-rigidly)
-(bind-key "M-SPC d j" #'~join-with-next-line)
-(bind-key "M-SPC d c" #'comment-or-uncomment-region)
-(bind-key "M-SPC d d" #'~duplicate-line-or-region)
-(bind-key "M-SPC d k" #'kill-sexp)
-(bind-key "M-SPC d z" #'repeat)
-(bind-key "M-SPC d t" #'~open-term-emu)
-(bind-key "M-SPC d e" #'~edit-with-helix)
-
+;; TODO REVIEW
 ;; External exec
-(bind-key "M-SPC a e" #'~palette/exec-sh-in-term-mux-then-pause)
-(bind-key "M-SPC a i" #'~palette/point/exec-sh-in-term-mux)
-(bind-key "M-SPC a k" #'~palette/point/exec-sh-piping-here)
-(bind-key "M-SPC a x" #'~palette/point/exec-sh-in-term-mux-then-pause)
-(bind-key "M-SPC a a" #'~ansi-colorize-current-output-block)
-(bind-key "M-SPC a s" #'(lambda ()
-                          (interactive)
-                          (~palette/exec-sh-in-term-mux "zsh")))
+;; (bind-key "M-SPC a e" #'~palette/exec-sh-in-term-mux-then-pause)
+;; (bind-key "M-SPC a i" #'~palette/point/exec-sh-in-term-mux)
+;; (bind-key "M-SPC a k" #'~palette/point/exec-sh-piping-here)
+;; (bind-key "M-SPC a x" #'~palette/point/exec-sh-in-term-mux-then-pause)
+;; (bind-key "M-SPC a a" #'~ansi-colorize-current-output-block)
+;; (bind-key "M-SPC a s" #'(lambda ()
+;;                           (interactive)
+;;                           (~palette/exec-sh-in-term-mux "zsh")))
 
 ;; Text exec
-(bind-key "M-SPC x |" #'~exec-sh|)
-(bind-key "M-SPC x <" #'~exec-sh<)
-(bind-key "M-SPC x >" #'~exec-sh>)
-(bind-key "M-SPC x p" #'~exec-sh-pop-up)
-(bind-key "M-SPC x x" #'~execute-text-prompt)
-(bind-key "M-SPC x l" #'~execute-line)
-(bind-key "M-SPC x w" #'~execute-current-wand-text)
-(bind-key "M-SPC x b" #'~exec-current-block)
-(bind-key "M-SPC x L" #'(lambda ()
-                          (interactive)
-                          (call-interactively #'~execute-line)
-                          (call-interactively #'kill-current-buffer)))
-(bind-key "M-SPC x e" #'~execute)
-(bind-key "M-SPC x E" #'(lambda ()
-                          (interactive)
-                          (call-interactively #'~execute)
-                          (call-interactively #'kill-current-buffer)))
-(bind-key "M-SPC x j" (~make-repeatable-fn #'~goto-prev-command-pattern))
-(bind-key "M-SPC x k" (~make-repeatable-fn #'~goto-next-command-pattern))
-(bind-key "M-SPC x r" #'~insert-entry-from-exec-history)
+;; (bind-key "M-SPC x |" #'~exec-sh|)
+;; (bind-key "M-SPC x <" #'~exec-sh<)
+;; (bind-key "M-SPC x >" #'~exec-sh>)
+;; (bind-key "M-SPC x p" #'~exec-sh-pop-up)
+;; (bind-key "M-SPC x x" #'~execute-text-prompt)
+;; (bind-key "M-SPC x l" #'~execute-line)
+;; (bind-key "M-SPC x w" #'~execute-current-wand-text)
+;; (bind-key "M-SPC x b" #'~exec-current-block)
+;; (bind-key "M-SPC x L" #'(lambda ()
+;;                           (interactive)
+;;                           (call-interactively #'~execute-line)
+;;                           (call-interactively #'kill-current-buffer)))
+;; (bind-key "M-SPC x e" #'~execute)
+;; (bind-key "M-SPC x E" #'(lambda ()
+;;                           (interactive)
+;;                           (call-interactively #'~execute)
+;;                           (call-interactively #'kill-current-buffer)))
+;; (bind-key "M-SPC x j" (~make-repeatable-fn #'~goto-prev-command-pattern))
+;; (bind-key "M-SPC x k" (~make-repeatable-fn #'~goto-next-command-pattern))
+;; (bind-key "M-SPC x r" #'~insert-entry-from-exec-history)
 
 ;; Insertion
 (bind-key "M-SPC i ;" #'~insert-full-line-comment)
@@ -2829,66 +2686,52 @@ line in Eshell."
 ;; (bind-key "M-SPC i <" #'(lambda () (interactive) (insert *~output-beginning-marker*)))
 ;; (bind-key "M-SPC i >" #'(lambda () (interactive) (insert *~output-end-marker*)))
 ;; (bind-key "M-SPC i b" #'(lambda () (interactive) (insert *~output-beginning-marker* "\n" *~output-end-marker*) (previous-line)))
-(bind-key "M-SPC i x" #'~insert-entry-from-exec-history)
-(bind-key "M-SPC i e" #'~insert-exec)
-(bind-key "M-SPC i t t" #'~insert-today)
-(bind-key "M-SPC i t n" #'~insert-now)
 
-;; Selecting/marking
-(bind-key "M-SPC m m" #'~mark-current-block)
-(bind-key "M-SPC m o" #'~mark-current-output-block)
-(bind-key "M-SPC m f" #'mark-defun)
-(bind-key "M-SPC m SPC" #'mark-sexp)
-(with-eval-after-load "expand-region"
-  (bind-key "M-SPC m =" #'er/expand-region)
-  (bind-key "M-SPC m f" #'er/mark-defun))
-
-;; Frame
-(bind-key "M-SPC r n" #'make-frame)
-(bind-key "M-SPC r k" #'delete-frame)
+;; TODO REVIEW Selecting/marking
+;; (bind-key "M-SPC m m" #'~mark-current-block)
+;; (bind-key "M-SPC m o" #'~mark-current-output-block)
 
 ;; Window
-(bind-key "M-SPC w s r" (~make-repeatable-fn #'~split-window-right))
-(bind-key "M-SPC w s b" (~make-repeatable-fn #'~split-window-below))
-(bind-key "M-SPC w k" (~make-repeatable-fn #'delete-window))
-(bind-key "M-SPC w T" (~make-repeatable-fn #'~scroll-other-window))
-(bind-key "M-SPC w C" (~make-repeatable-fn #'~scroll-other-window-reverse))
-(bind-key "M-SPC w o" #'~one-window)
-(bind-key "M-SPC w t" (~make-repeatable-fn #'~transpose-windows))
-(bind-key "M-SPC w y" (~make-repeatable-fn #'~toggle-sticky-window))
-(bind-key "M-SPC w z" (~make-repeatable-fn #'~toggle-maximize-buffer))
+;; TODO RIGHT HERE SWAP
 (with-eval-after-load "ace-window"
   (bind-key "M-SPC w p" #'ace-swap-window)
   (bind-key "M-SPC w p" #'ace-window))
-(bind-key "M-SPC w r" #'resize-window)
-(bind-key "M-SPC w w" (~make-repeatable-fn #'other-window))
-
-;; Parens management
-(with-eval-after-load "smartparens"
-  (bind-key "M-SPC p )" (~make-repeatable-fn #'sp-forward-slurp-sexp))
-  (bind-key "M-SPC p (" (~make-repeatable-fn #'sp-backward-slurp-sexp))
-  (bind-key "M-SPC p }" (~make-repeatable-fn #'sp-forward-barf-sexp))
-  (bind-key "M-SPC p {" (~make-repeatable-fn #'sp-backward-barf-sexp))
-  (bind-key "M-SPC p l" (~make-repeatable-fn #'sp-forward-sexp))
-  (bind-key "M-SPC p h" (~make-repeatable-fn #'sp-backward-sexp))
-  (bind-key "M-SPC p j" (~make-repeatable-fn #'sp-down-sexp))
-  (bind-key "M-SPC p k" (~make-repeatable-fn #'sp-backward-up-sexp))
-  (bind-key "M-SPC p e s" (~make-repeatable-fn #'sp-split-sexp))
-  (bind-key "M-SPC p e S" (~make-repeatable-fn #'sp-splice-sexp))
-  (bind-key "M-SPC p e j" (~make-repeatable-fn #'sp-join-sexps)))
-
-;; Mode
-(bind-key "M-SPC n SPC" (~make-repeatable-fn #'whitespace-mode))
-(bind-key "M-SPC n g f" (~make-repeatable-fn #'global-font-lock-mode))
-(bind-key "M-SPC n l f" (~make-repeatable-fn #'font-lock-mode))
-(bind-key "M-SPC n w" (~make-repeatable-fn #'~toggle-soft-wrapping))
 
 ;; Binding shortcut
-(bind-key "M-SPC <f7>" #'execute-extended-command)
-(bind-key "<f7>" (lookup-key global-map (kbd "M-SPC")))
-(bind-key "C-M-<return>" (lookup-key global-map (kbd "M-SPC")))
-(bind-key "C-M-RET" (lookup-key global-map (kbd "M-SPC")))
-(bind-key "C-M-g" (lookup-key global-map (kbd "M-SPC")))
+(bind-key "C-M-g" (lookup-key global-map (kbd "<f7>")))
+
+;; Loading the menu.  Needs to defer as much as possible since `transient'
+;; exists from Emacs builtins and from package manager (by Magit)
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (require 'rmacs:config-menu "config-menu")
+              (use-package transient)
+              (bind-key "<f7>" #'~menu/main)))
+
+;; TODO REVIEW: Should this be loaded in emacs-startup-hook?
+;; TODO Doc: Gotcha: after-init-hook is loaded before emacs --load, emacs-startup-hook is loaded after
+
+;; TODO ~choose-path-and-act
+;; (defun ~choose-path-and-act ()
+;;   "Interactively chooses a path and does something with it."
+;;   (interactive)
+;;   (lexical-let ((path (read-file-name "Path: " nil nil 'confirm)))
+;;     (unless (string-empty-p path)
+;;       (defhydra local-hydra-act-on-path (:columns 4 :exit t)
+;;         "What to do?"
+;;         ("c" #'(lambda () (interactive) (~copy-to-clipboard path)) "Copy")
+;;         ("o" #'(lambda () (interactive) (find-file path)) "Open")
+;;         ("i" #'(lambda () (interactive) (insert path)) "Insert here"))
+;;       ;; TODO: Open with external program
+
+;;       (local-hydra-act-on-path/body))))
+
+;; TODO RIGHT HERE fix ~rename-current-file
+;; TODO RIGHT HERE Fix ~new-buffer
+
+;; TODO: Move this away
+(with-eval-after-load "puni"
+  (define-key puni-mode-map (kbd ")") 'up-list))
 
 ;; TODO
 ;; Context menu

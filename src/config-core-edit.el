@@ -580,7 +580,9 @@ recursively."
 ;;
 
 (use-package multiple-cursors
-  :ensure t)
+  :ensure t
+  :config
+  (setq mc/always-run-for-all t))
 
 ;;
 ;; Live doc in echo area
