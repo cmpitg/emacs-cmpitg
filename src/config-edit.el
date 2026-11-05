@@ -178,12 +178,14 @@ might need manual refreshing."
 (use-package dumb-jump
   :ensure t
   :config
-  (progn
-    ;; (setq dumb-jump-selector 'popup)
-    (setq dumb-jump-prefer-searcher 'rg)))
+  ;; (setq dumb-jump-selector 'popup)
+  (setq dumb-jump-prefer-searcher 'rg)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (with-eval-after-load "consult"
+    (setq xref-show-definitions-function #'consult-xref)))
 
 (use-package smart-jump
-  :ensure t
+  :disabled t
   :config (smart-jump-setup-default-registers))
 
 ;;

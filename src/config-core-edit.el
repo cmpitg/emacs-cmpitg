@@ -223,7 +223,7 @@ recursively."
   ;; Optionally configure the register formatting. This improves the
   ;; register preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.2
+  (setq register-preview-delay 1.0
         register-preview-function #'consult-register-format)
 
   ;; Use Consult to select xref locations with preview
@@ -468,7 +468,10 @@ recursively."
 
   ;; Automatic popup, quit when there is no match
   (setq corfu-auto t
-        corfu-quit-no-match nil))
+        corfu-quit-no-match nil)
+
+  ;; Delay preview a bit to not break editing flows
+  (setq corfu-auto-delay 1.0))
 
 ;; Completion candidates
 (use-package company
@@ -750,7 +753,7 @@ recursively."
 (use-package magit
   :ensure t
   :after (transient)
-  :commands (magit-status magit-get-top-dir)
+  ;; :commands (magit-status magit-get-top-dir)
   :init
   (setf magit-push-always-verify 'pp)
   ;; (setf git-commit-check-style-conventions nil)
