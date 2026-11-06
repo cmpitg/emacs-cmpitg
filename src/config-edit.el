@@ -227,8 +227,8 @@ might need manual refreshing."
     ;; Always find and focus on the current file when treemacs is built
     (setq treemacs-follow-after-init t)))
 
-    ;; (treemacs-start-on-boot)
-    
+;; (treemacs-start-on-boot)
+
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
   :after (treemacs)
@@ -874,6 +874,55 @@ sequence, and its index within the sequence."
       "Browses Tcl documentation."
       (interactive)
       (w3m (format "https://www.tcl.tk/man/tcl%s/" version)))))
+
+
+;;
+;; Working with web templates
+;;
+;; Ref: https://web-mode.org/
+;;
+
+(use-package web-mode
+  :ensure t
+  :mode
+  (("\\.phtml\\'" . web-mode)
+   ("\\.php\\'" . web-mode)
+   ("\\.tpl\\'" . web-mode)
+   ("\\.[agj]sp\\'" . web-mode)
+   ("\\.as[cp]x\\'" . web-mode)
+   ("\\.erb\\'" . web-mode)
+   ("\\.mustache\\'" . web-mode)
+   ("\\.djhtml\\'" . web-mode))
+  :config
+  ;; Indent contents of {% if %}, {% for %}, {% block %}... like HTML children
+  (setq web-mode-enable-control-block-indentation t)
+
+  ;; One offset for everything
+  (setq web-mode-markup-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-css-indent-offset 2)
+
+  ;; Align attributes with the first attribute
+  (setq web-mode-attr-indent-offset nil
+        web-mode-attr-value-indent-offset nil)
+  )
+
+;;
+;; Automatic code formatter
+;;
+;; Ref: https://github.com/radian-software/apheleia
+;;
+
+(use-package apheleia
+  :ensure t
+  :after web-mode
+  :config
+  (apheleia-global-mode 1)
+  ;; For Django
+  (setf (alist-get 'djhtml apheleia-formatters)
+        '("djhtml"
+          "-t" (format "%d" web-mode-markup-indent-offset) "-"))
+  (setf (alist-get 'web-mode apheleia-mode-alist) 'djhtml))
 
 ;;
 ;; Language server mode
