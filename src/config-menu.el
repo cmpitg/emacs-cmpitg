@@ -21,11 +21,13 @@
   (transient-define-prefix ~menu/main ()
     "Top-level menu, entrypoint for (almost) everything."
     [["Conveniences"
-      ("SPC" "Mark sexp"  mark-sexp            :transient t)
-      ("u"   "Tree undo"  ~tree-undo)
-      ("="   "Text scale" text-scale-adjust)
-      ("m"   "Region"     ~menu/region)
-      (","   "Pop mark"   pop-to-mark-command  :transient t)
+      ("SPC"     "Mark sexp"        mark-sexp            :transient t)
+      ("u"       "Tree undo"        ~tree-undo)
+      ("="       "Text scale"       text-scale-adjust)
+      ("m"       "Region"           ~menu/region)
+      (","       "Pop mark"         pop-to-mark-command  :transient t)
+      ("<prior>" "To the beginning" beginning-of-buffer)
+      ("<next>"  "To the end"       end-of-buffer)
       ]
      ["File"
       ("b" "Buffer"  ~menu/buffer)
@@ -46,9 +48,9 @@
       ("n"    "Mode"       ~menu/mode)
       ]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/org ()
     "Org"
@@ -94,9 +96,9 @@
       ("n w" "Widen"             widen                 :transient t)
       ]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/insert ()
     "Insert ops"
@@ -106,9 +108,9 @@
       ("t t" "Today"        ~insert-today)
       ("t n" "Now"          ~insert-now)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/jumping ()
     "Jumping ops"
@@ -121,9 +123,9 @@
       ("p" "Go to prev point"  ~point-prev        :transient t)
       ("i" "Symbol menu"       ~interactively-call-symbol-menu)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/emacs-lisp ()
     "Emacs Lisp ops"
@@ -142,20 +144,20 @@
       ("h ." "Find function"     find-function)
       ("h l" "Find library"      find-library)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/mode ()
     "Mode ops"
     [["Buffer"
-      ("s" "Toggle whitespace mode" whitespace-mode       :transient t)
+      ("s" "Toggle whitescape mode" whitespace-mode       :transient t)
       ("f" "Toggle font lock mode"  font-lock-mode        :transient t)
       ("w" "Toggle soft-wrapping"   ~toggle-soft-wrapping :transient t)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/buffer ()
     "Buffer ops"
@@ -168,9 +170,9 @@
       ("l" "Show simple chooser"   ~show-buffer-chooser)
       ("b" "Show advanced chooser" list-buffers)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   ;; TODO URGENT Fix the scroll and the toggle-max functions
   (transient-define-prefix ~menu/window ()
@@ -188,9 +190,9 @@
       ("e" "Resize window"                  resize-window)
       ("w" "Focus another"                  other-window                 :transient t)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/frame ()
     "Frame ops"
@@ -198,9 +200,9 @@
       ("n" "New frame"  make-frame)
       ("k" "Kill frame" delete-frame)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/file ()
     "File ops"
@@ -215,9 +217,9 @@
       ("c"   "Copy file name"  ~copy-file-name-to-clipboard)
       ("p"   "Copy position"   ~copy-pos-to-clipboard)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/edit ()
     "Editing ops"
@@ -229,6 +231,10 @@
       ("z"   "Repeat most recent"  repeat                      :transient t)
       ("t"   "Open term emu"       ~open-term-emu)
       ("e"   "Edit with Helix"     ~edit-with-helix)]
+     ["Highlight"
+      ("h h" "Thing"              highlight-regexp)
+      ("h h" "Line"               highlight-lines-matching-regexp)
+      ("h k" "Unhighlight regexp" unhighlight-regexp)]
      ["Aligning"
       ("a a" "Align"         align)
       ("a c" "Align current" align-current)
@@ -238,7 +244,7 @@
       ("n f" "Narrow to defun"      narrow-to-defun)
       ("n b" "Org: narrow to block" org-narrow-to-block)
       ("n w" "Widen"                widen)]
-     ["Whitespace"
+     ["Whitescape"
       ("w o" "Keep just one space" just-one-space)
       ("w d" "Delete spaces"       delete-horizontal-space)
       ("w w" "Cleanup"             whitespace-cleanup)]
@@ -253,9 +259,9 @@
       ("/" "Search"          ~menu/search)
       ]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/structural-edit ()
     "Structural editing ops"
@@ -270,9 +276,9 @@
      ["Submenus"
       ("p" "Smartparens" ~menu/smartparens)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]]
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]]
     )
 
   (transient-define-prefix ~menu/smartparens ())
@@ -290,14 +296,22 @@
         ("k" "Move down"      sp-backward-up-sexp    :transient t)
         ("s" "Split"          sp-split-sexp          :transient t)
         ("S" "Splice"         sp-splice-sexp         :transient t)
-        ("j" "Join"           sp-join-sexps          :transient t)]
+        ("j" "Join"           sp-join-sexp           :transient t)]
        ["Meta"
         ("C-g" "Quit menu" transient-quit-all)
         ("q"   "Quit menu" transient-quit-all)
         ("`"   "Back"      transient-quit-one)]]))
 
+
+  ;; TODO RIGHT HERE
+  (~defalias-when-load "expand-region" '~expand-region 'er/expand-region)
+  (~defalias-when-load "expand-region" '~mark-html-attr 'er/mark-html-attribute)
+  (~defalias-when-load "expand-region" '~mark-paragraph 'er/mark-paragraph)
+  (~defalias-when-load "expand-region" '~mark-defun 'er/mark-defun)
+
   (transient-define-prefix ~menu/region ())
   (with-eval-after-load "expand-region"
+    ;; (message-box "Loading ~menu/region")
     (setq expand-region-fast-keys-enabled nil)
     (transient-define-prefix ~menu/region ()
       "Region editing ops"
@@ -312,9 +326,9 @@
         ("h" "Mark tag"       er/mark-nxml-tag       :transient t)
         ]
        ["Meta"
-        ("C-g" "Quit menu" transient-quit-all)
-        ("q"   "Quit menu" transient-quit-all)
-        ("`"   "Back"      transient-quit-one)]]))
+        ("C-g"      "Quit menu" transient-quit-all)
+        ("q"        "Quit menu" transient-quit-all)
+        ("<escape>" "Back"      transient-quit-one)]]))
 
   (transient-define-prefix ~menu/search ()
     "Search ops"
@@ -322,9 +336,9 @@
       ("r" "Query replace"        query-replace)
       ("R" "Query replace regexp" query-replace-regexp)]
      ["Meta"
-      ("C-g" "Quit menu" transient-quit-all)
-      ("q"   "Quit menu" transient-quit-all)
-      ("`"   "Back"      transient-quit-one)]])
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]])
 
   (transient-define-prefix ~menu/multiple-cursors ())
   (with-eval-after-load "multiple-cursors"
@@ -336,9 +350,9 @@
         ("p" "Mark previous like this" mc/mark-previous-like-this)
         ("a" "Mark all in region"      mc/mark-all-in-region)]
        ["Meta"
-        ("C-g" "Quit menu" transient-quit-all)
-        ("q"   "Quit menu" transient-quit-all)
-        ("`"   "Back"      transient-quit-one)]]))
+      ("C-g"      "Quit menu" transient-quit-all)
+      ("q"        "Quit menu" transient-quit-all)
+      ("<escape>" "Back"      transient-quit-one)]]))
   )
 ;; TODO RIGHT HERE puni-slurp-forward
 ;; TODO RIGHT HERE puni-split

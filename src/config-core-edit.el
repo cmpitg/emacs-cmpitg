@@ -92,12 +92,7 @@
 
 (use-package expand-region
   :ensure t
-  :commands (er/expand-region
-             er/mark-outside-pairs
-             er/mark-outside-quotes
-             er/mark-defun)
-  :bind
-  ("C-=" . #'er/expand-region))
+  :demand t)
 
 ;;
 ;; grep command
