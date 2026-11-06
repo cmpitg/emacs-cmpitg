@@ -2602,7 +2602,7 @@ line in Eshell."
 (bind-key "M-<mouse-1>" 'mc/add-cursor-on-click)
 (bind-key "<down-mouse-2>" nil)
 (bind-key "<mouse-2>" #'~execute)
-(bind-key "<mouse-3>" #'~popup-context-menu)
+;; (bind-key "<mouse-3>" #'~popup-context-menu)
 (bind-key "<C-down-mouse-3>" #'~popup-context-menu)
 (bind-key "M-r" #'~insert-entry-from-exec-history)
 
